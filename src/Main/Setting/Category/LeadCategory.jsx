@@ -8,6 +8,8 @@ import { deleteQuery } from "../../../API/DeleteQuery"
 import MainHeading from "../../../components/design/MainHeading"
 import { toast } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
+import { Modal } from "antd"
+import DocumentModal from "../../../Model/DocumentModal"
 toast.configure()
 
 const LeadCategory = () => {
@@ -71,6 +73,8 @@ const LeadCategory = () => {
     }
   }
 
+  console.log('kbxcbzo',categoryData)
+
   return (
     <div>
         <MainHeading data={`Lead Category`} />
@@ -99,7 +103,6 @@ const LeadCategory = () => {
           </button>
         </form>
       </div>
-
       <div className="mt-4 setting-table">
         <div className="table-responsive">
           <table className="table">
@@ -108,6 +111,7 @@ const LeadCategory = () => {
                 <th scope="col">id</th>
                 <th scope="col">Name</th>
                 <th scope="col">Created Date</th>
+                {/* <th scope="col">Document</th> */}
                 <th scope="col">Delete</th>
               </tr>
             </thead>
@@ -120,11 +124,12 @@ const LeadCategory = () => {
                     <th>{status.id}</th>
                     <td>{status?.categoryName}</td>
                     <td>{new Date(status.createdDate).toLocaleDateString()}</td>
+                    {/* <td><DocumentModal document={status?.documents} /></td> */}
                     <td>
                       <i
                         onClick={() => deleteCategoryFun(status.id)}
                         className="fa-solid gray-cl fa-trash"
-                      ></i>{" "}
+                      ></i>
                     </td>
                   </tr>
                 ))

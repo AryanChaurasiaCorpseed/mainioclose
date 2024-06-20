@@ -916,3 +916,9 @@ select.form-control:not([size]):not([multiple]) {
     width: 100%;
   }
 }
+
+.slug-items-tooltip{
+  margin: 2px 4px;
+  font-size: 14px;
+  /* color: #000; */
+}
