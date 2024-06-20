@@ -10,6 +10,7 @@ import {
 import TableBoot from "../../../components/tablesData/TableBoot"
 import { toast } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
+import EditSlugModal from "../../../Model/EditSlugModal"
 toast.configure()
 
 const SlugCreate = () => {
@@ -37,7 +38,7 @@ const SlugCreate = () => {
     }
   }
 
-  const tbDtaa = ["id", "Name"]
+  const tbDtaa = ["id", "Name","Edit"]
 
   return (
     <div>
@@ -63,6 +64,7 @@ const SlugCreate = () => {
           <tr key={index}>
             <th>{status.id}</th>
             <td>{status?.name}</td>
+            <td><EditSlugModal data={status}  /></td>
           </tr>
         ))}
       </TableBoot>

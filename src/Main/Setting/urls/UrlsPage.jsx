@@ -13,6 +13,7 @@ import { getAllSlugAction } from "../../../Toolkit/Slices/LeadSlugSlice"
 import DropDownComp from "../../../components/Inputs/DropDownComp"
 import { toast } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
+import { Tooltip } from "antd"
 toast.configure()
 
 const UrlsPage = () => {
@@ -77,7 +78,15 @@ const UrlsPage = () => {
     { id: "false", number: "False" },
   ]
 
-  const tableHead = ["id", "Url Name", "Quality"]
+  const tableHead = ["id", "Url Name", "Slugs", "Quality"]
+
+  console.log("ALLLKJKGHDH", allLeadUrl)
+
+  const slugsInTooltip = (data) => {
+    return data?.map((items) => {
+      return <p className="slug-items-tooltip">{items?.name}</p>
+    })
+  }
 
   return (
     <div>
@@ -108,7 +117,7 @@ const UrlsPage = () => {
             // value={urlLeadData.quality}
             data={dataBool}
             options="Select Quality"
-            className= "pl-0"
+            className="pl-0"
           />
           <SmOneBtn
             name={createLeadUrlLoading ? "Loading..." : "Submit"}
@@ -125,7 +134,16 @@ const UrlsPage = () => {
         {allLeadUrl?.map((status, index) => (
           <tr key={index}>
             <th>{status.id}</th>
-            <td>{status?.urlsName?.slice(0,70)}</td>
+            <td>{status?.urlsName?.slice(0, 70)}</td>
+            <td>
+              {status?.urlSlug?.length > 0 ? (
+                <Tooltip title={slugsInTooltip(status?.urlSlug)}>
+                  {status?.urlSlug?.[0]?.name}
+                </Tooltip>
+              ) : (
+                "N/A"
+              )}
+            </td>
             <td>{status?.quality ? "True" : "False"}</td>
           </tr>
         ))}
