@@ -1,22 +1,30 @@
-import React, { useState } from "react"
+import React, { useCallback, useEffect, useRef, useState } from "react"
 import "./SideBar.scss"
 import { NavLink, useNavigate, useParams } from "react-router-dom"
 import { useDispatch, useSelector } from "react-redux"
 import { logoutFun } from "../Toolkit/Slices/AuthSlice"
 import { toast } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
+import { Avatar, Button, Popover, Space, Upload, message } from "antd"
+import axios from "axios"
+import { getUserProfilePhoto, updateProfilePhoto } from "../Toolkit/Slices/UserProfileSlice"
 toast.configure()
 
 const SideBar = () => {
   const [logoutBtnStatus, setLogoutBtnStatus] = useState(false)
+  const [file, setFile] = useState()
+  const [imageResponse, setImageResponse] = useState("")
+  const [uploadSucess, setUploadSucess] = useState(false)
+  const [uploadLoading, setUploadLoading] = useState(false)
   const dispatch = useDispatch()
 
   const { userid } = useParams()
 
   const navigate = useNavigate()
+  const fileRef = useRef()
 
   const logoutUser = () => {
-    if (window.confirm("Are you sure for Logout?") == true) {
+    if (window.confirm("Are you sure for Logout?") === true) {
       const key = localStorage.getItem("persist:root")
       dispatch(logoutFun())
       const token = localStorage.removeItem(key)
@@ -29,6 +37,55 @@ const SideBar = () => {
   const currentRoles = useSelector((state) => state?.auth?.roles)
   const adminRole = currentRoles?.includes("ADMIN")
   const hrRole = currentRoles?.includes("HR")
+  const profilePhoto = useSelector((state) => state.profile.profilePhoto)
+  const currentUserId = useSelector((state) => state.auth?.currentUser?.id)
+
+  console.log("dskjgfiusdayguy", currentUserId)
+
+  function getHighestPriorityRole(roles) {
+    const priority = ["ADMIN", "HR_HEAD", "HR", "USER"]
+    for (const role of priority) {
+      if (roles.includes(role)) {
+        return role
+      }
+    }
+  }
+
+  useEffect(() => {
+    if (currentUserId !== undefined) {
+      dispatch(getUserProfilePhoto(currentUserId))
+    }
+  }, [currentUserId])
+
+  function handleChange(event) {
+    setFile(event.target.files[0])
+  }
+
+  function handleSubmit(event) {
+    event.preventDefault()
+    setUploadLoading(true)
+    const url = "/leadService/api/v1/upload/uploadimageToFileSystem"
+    const formData = new FormData()
+    formData.append("file", file)
+    const config = {
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "content-type": "multipart/form-data",
+      },
+    }
+    axios.post(url, formData, config).then((response) => {
+      setUploadLoading(false)
+      // setRemarkMessage((prev) => ({ ...prev, file: response.data }))
+      setImageResponse(response.data)
+
+      setUploadSucess(true)
+    })
+  }
+
+  const submitProfile = useCallback(() => {
+    const data = { userId: currentUserId, profilePhoto: imageResponse }
+    dispatch(updateProfilePhoto(data))
+  }, [imageResponse, currentUserId])
 
   return (
     <div className="sideTab">
@@ -46,59 +103,95 @@ const SideBar = () => {
               : "Email"}
           </h6>
         </div>
-        <div
-          className="profile-image"
-          onClick={() => setLogoutBtnStatus((prev) => !prev)}
+        <Popover
+          placement="bottom"
+          trigger={"click"}
+          content={
+            // logoutBtnStatus ? (
+            <div className="logout-view-container">
+              <form onSubmit={handleSubmit}>
+                <input ref={fileRef} type="file" onChange={handleChange} />
+                <Button htmlType="submit">
+                  {uploadLoading ? "Please Wait.." : "upload"}
+                </Button>
+              </form>
+              <Space className="btn-container">
+                <Button type="primary" onClick={submitProfile}>Submit</Button>
+                <Button onClick={() => logoutUser()} >
+                  Logout
+                </Button>
+              </Space>
+            </div>
+            // ) : (
+            //   ""
+            // )
+          }
         >
-          <img
-            src={`https://images.pexels.com/photos/17739178/pexels-photo-17739178.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1`}
-          />
-        </div>
-        {logoutBtnStatus ? (
-          <button onClick={() => logoutUser()} className="logout-btn">
-            Logout
-          </button>
-        ) : (
-          ""
-        )}
+          <div
+            className="profile-image"
+            onClick={() => setLogoutBtnStatus((prev) => !prev)}
+          >
+            <Avatar size={32} src={profilePhoto} alt="profile_photo">
+              {profilePhoto
+                ? ""
+                : currentUserProfile?.username?.toUpperCase()?.[0]}
+            </Avatar>
+          </div>
+        </Popover>
       </div>
 
       <div className="pt-4">
-        {adminRole ? (
-          <div className="side-tabs">
-            <NavLink
-              to={`/erp/${userid}/users`}
-              className={`nav-heading ${({ isActive }) =>
-                isActive ? "linkactive" : ""}`}
-              data-toggle="collapse"
-              data-target={`#collapseDashboardModule`}
-              aria-expanded="true"
-              aria-controls="collapseDashboardModule"
-            >
-              <i className="fa-solid mr-1 fa-angle-right"></i>{" "}
-              <i className="fa-solid fa-house"></i> Dashboard
-            </NavLink>
-            <div
-              id={`collapseDashboardModule`}
-              className="collapse"
-              aria-labelledby="headingOne"
-              data-parent="#accordion"
-            >
-              <div className="link-child">
-                <NavLink className="link-itemss" to={`${userid}/users`}>
-                  Users
-                </NavLink>
-                <NavLink className="link-itemss" to={`${userid}/users/tickets`}>
-                  Tickets
-                </NavLink>
-                <NavLink className="link-itemss" to={`${userid}/users/manager`}>
-                  Approval
-                </NavLink>
+        <div className="side-tabs">
+          <NavLink
+            to={
+              getHighestPriorityRole(currentRoles) === "USER" ||
+              getHighestPriorityRole(currentRoles) === "HR" ||
+              getHighestPriorityRole(currentRoles) === "HR_HEAD"
+                ? `${userid}/users/manager`
+                : `/erp/${userid}/users`
+            }
+            className={`nav-heading ${({ isActive }) =>
+              isActive ? "linkactive" : ""}`}
+            data-toggle="collapse"
+            data-target={`#collapseDashboardModule`}
+            aria-expanded="true"
+            aria-controls="collapseDashboardModule"
+          >
+            <i className="fa-solid mr-1 fa-angle-right"></i>{" "}
+            <i className="fa-solid fa-house"></i> Dashboard
+          </NavLink>
+          <div
+            id={`collapseDashboardModule`}
+            className="collapse"
+            aria-labelledby="headingOne"
+            data-parent="#accordion"
+          >
+            <div className="link-child">
+              {getHighestPriorityRole(currentRoles) === "USER" ||
+              getHighestPriorityRole(currentRoles) === "HR" ||
+              getHighestPriorityRole(currentRoles) === "HR_HEAD" ? (
+                ""
+              ) : (
+                <>
+                  <NavLink className="link-itemss" to={`${userid}/users`}>
+                    Users
+                  </NavLink>
+                  <NavLink
+                    className="link-itemss"
+                    to={`${userid}/users/tickets`}
+                  >
+                    Tickets
+                  </NavLink>
+                </>
+              )}
+              <NavLink className="link-itemss" to={`${userid}/users/manager`}>
+                Approval
+              </NavLink>
 
-                {/* <NavLink className="link-itemss" to={`${userid}/muiuser`}>
+              {/* <NavLink className="link-itemss" to={`${userid}/muiuser`}>
               mui users
             </NavLink> */}
-                {/* <NavLink className="link-itemss" to="hr/hrlinktwo">
+              {/* <NavLink className="link-itemss" to="hr/hrlinktwo">
               HR Second
             </NavLink>
             <NavLink className="link-itemss" to="hr/hrlinkthree">
@@ -113,12 +206,9 @@ const SideBar = () => {
             <NavLink className="link-itemss" to="hr/hrlinksix">
               HR Six
             </NavLink> */}
-              </div>
             </div>
           </div>
-        ) : (
-          ""
-        )}
+        </div>
 
         {/*  */}
 
@@ -209,7 +299,9 @@ const SideBar = () => {
         {/* end */}
 
         {/* hr links start */}
-        {hrRole || adminRole ? (
+        {getHighestPriorityRole(currentRoles) === "USER" ? (
+          ""
+        ) : (
           <div className="side-tabs">
             <NavLink
               to={`/erp/${userid}/hr`}
@@ -233,12 +325,18 @@ const SideBar = () => {
                 <NavLink className="link-itemss" to={`/erp/${userid}/hr`}>
                   User List
                 </NavLink>
-                <NavLink
-                  className="link-itemss"
-                  to={`/erp/${userid}/hr/approveUser`}
-                >
-                  Approval List
-                </NavLink>
+                {getHighestPriorityRole(currentRoles) === "HR" ||
+                getHighestPriorityRole(currentRoles) === "USER" ? (
+                  ""
+                ) : (
+                  <NavLink
+                    className="link-itemss"
+                    to={`/erp/${userid}/hr/approveUser`}
+                  >
+                    Approval List
+                  </NavLink>
+                )}
+
                 <NavLink
                   className="link-itemss"
                   to={`/erp/${userid}/hr/userservice`}
@@ -268,8 +366,6 @@ const SideBar = () => {
             </div> */}
             </div>
           </div>
-        ) : (
-          ""
         )}
         {/* end */}
 

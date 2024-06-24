@@ -53,6 +53,9 @@ import UserService from "./Main/HR/UserService"
 
 function App() {
   const authStatus = useSelector((state) => state.auth.isAuth)
+  const authRoles=useSelector((state) => state.auth.roles)
+
+  console.log('ckjvhjdhgich',authRoles)
 
   return (
     <div className="App">
@@ -88,7 +91,7 @@ function App() {
             <Route path=":userid/users" element={<DashBoard />}>
               <Route path="" element={<DisplayDashboardUser />} />
               <Route path=":userid/history" element={<SingleUserHistory />} />
-              <Route path="tickets" element={<AllTickets />} />
+              <Route path="tickets" element={<AllTickets />} />                   
               <Route path="manager" element={<AllManagerApprovals />} />
               <Route path="muiuser" element={<DisplayUserTwo />} />
               <Route path="deactivateUser" element={<AllDeactivateUser />} />

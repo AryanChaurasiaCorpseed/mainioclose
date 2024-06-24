@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 import { getQuery } from "../../API/GetQuery"
 import { putQueryNoData } from "../../API/PutQueryWithoutData"
+import { putQuery } from "../../API/PutQuery"
 
 export const getAllUsers = createAsyncThunk("allUsers", async () => {
   const allUser = await getQuery(`/leadService/api/v1/users/getAllUser`)
@@ -24,6 +25,16 @@ export const allManagerUser = createAsyncThunk(
       `/leadService/api/v1/users/getUserForManager?id=${id}`
     )
     return managerUserData?.data
+  }
+)
+
+export const editUserLockerCount = createAsyncThunk(
+  "editLockerCount",
+  async (data) => {
+    const response = await putQuery(
+      `/leadService/api/v1/users/updateLockerCount?id=${data?.id}&count=${data?.count}&currentUserId=${data?.userId}`
+    )
+    return response.data
   }
 )
 

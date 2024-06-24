@@ -13,10 +13,12 @@ import { getAllSlugAction } from "../../../Toolkit/Slices/LeadSlugSlice"
 import DropDownComp from "../../../components/Inputs/DropDownComp"
 import { toast } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
-import { Tooltip } from "antd"
+import { Button, Form, Input, Select, Tooltip } from "antd"
+import EditUrls from "./EditUrls"
 toast.configure()
 
 const UrlsPage = () => {
+  const [form]=Form.useForm()
   const [getAllSlug, setGetAllSlug] = useState([])
   const [urlLeadData, setUrlLeadData] = useState({
     name: "",
@@ -55,18 +57,36 @@ const UrlsPage = () => {
   const { createLeadUrl, createLeadUrlLoading, createLeadUrlError } =
     useSelector((prev) => prev?.leadurls)
 
-  const createUrlFun = async (e) => {
-    e.preventDefault()
-    const createNewUrl = await dispatch(createAllUrlAction(urlLeadData))
+  // const createUrlFun = async (e) => {
+  //   e.preventDefault()
+  //   const createNewUrl = await dispatch(createAllUrlAction(urlLeadData))
+  //   if (createNewUrl.type === "createLeadUrlData/fulfilled") {
+  //     toast.success("Url Created Succesfully")
+  //     setUrlDep((prev) => !prev)
+  //     setUrlLeadData({
+  //       name: "",
+  //       urlSlug: getAllSlug,
+  //       quality: true,
+  //     })
+  //     setGetAllSlug([])
+  //   }
+  //   if (createNewUrl.type === "createLeadUrlData/rejected") {
+  //     toast.success("Something Went Wrong")
+  //   }
+  // }
+
+  const handleSubmit = async (values) => {
+    const createNewUrl = await dispatch(createAllUrlAction(values))
     if (createNewUrl.type === "createLeadUrlData/fulfilled") {
       toast.success("Url Created Succesfully")
       setUrlDep((prev) => !prev)
-      setUrlLeadData({
-        name: "",
-        urlSlug: getAllSlug,
-        quality: true,
-      })
-      setGetAllSlug([])
+      form.resetFields()
+      // setUrlLeadData({
+      //   name: "",
+      //   urlSlug: getAllSlug,
+      //   quality: true,
+      // })
+      // setGetAllSlug([])
     }
     if (createNewUrl.type === "createLeadUrlData/rejected") {
       toast.success("Something Went Wrong")
@@ -78,7 +98,7 @@ const UrlsPage = () => {
     { id: "false", number: "False" },
   ]
 
-  const tableHead = ["id", "Url Name", "Slugs", "Quality"]
+  const tableHead = ["id", "Url Name", "Slugs", "Quality", "Edit"]
 
   console.log("ALLLKJKGHDH", allLeadUrl)
 
@@ -92,7 +112,7 @@ const UrlsPage = () => {
     <div>
       <MainHeading data={`Urls Create`} />
       <div className="lead-box">
-        <form>
+        {/* <form>
           <LongInput
             type="text"
             name="name"
@@ -123,7 +143,57 @@ const UrlsPage = () => {
             name={createLeadUrlLoading ? "Loading..." : "Submit"}
             onClick={createUrlFun}
           />
-        </form>
+        </form> */}
+        <Form layout="vertical" onFinish={handleSubmit} form={form}>
+          <Form.Item
+            label="Enter Url Name"
+            name="name"
+            rules={[{ required: true, message: "please enter url" }]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item
+            label="Select Slug"
+            name="urlSlug"
+            rules={[{ required: true, message: "please select slug" }]}
+          >
+            <Select
+              mode="multiple"
+              showSearch
+              options={allLeadSlug?.map((item) => ({
+                label: item?.name,
+                value: item?.id,
+              }))}
+              filterOption={(input, option) =>
+                option.label.toLowerCase().includes(input.toLowerCase())
+              }
+            />
+          </Form.Item>
+          <Form.Item
+            label="Select Quality"
+            name="quality"
+            rules={[{ required: true, message: "please select quality" }]}
+          >
+            <Select
+              options={[
+                { label: "True", value: true },
+                { label: "False", value: false },
+              ]}
+              filterOption={(input, option) =>
+                option.label.toLowerCase().includes(input.toLowerCase())
+              }
+            />
+          </Form.Item>
+          <Form.Item>
+            <Button
+              type="primary"
+              htmlType="submit"
+              loading={createLeadUrlLoading}
+            >
+              {createLeadUrlLoading ? "Loading..." : "Submit"}
+            </Button>
+          </Form.Item>
+        </Form>
       </div>
 
       <TableBoot
@@ -145,6 +215,9 @@ const UrlsPage = () => {
               )}
             </td>
             <td>{status?.quality ? "True" : "False"}</td>
+            <td>
+              <EditUrls data={status} />
+            </td>
           </tr>
         ))}
       </TableBoot>

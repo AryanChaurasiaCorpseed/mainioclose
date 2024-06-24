@@ -922,3 +922,6 @@ select.form-control:not([size]):not([multiple]) {
   font-size: 14px;
   /* color: #000; */
 }
+.edit-iconify{
+  cursor: pointer;
+}

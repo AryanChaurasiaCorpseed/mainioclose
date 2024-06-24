@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 import { getQuery } from "../../API/GetQuery"
 import { postQuery } from "../../API/PostQuery"
+import { putQuery } from "../../API/PutQuery"
 
 export const getAllUrlAction = createAsyncThunk("showLeadUrlData", async () => {
   const showLeadUrl = await getQuery(`/leadService/api/v1/urls/getUrls`)
@@ -17,6 +18,14 @@ export const createAllUrlAction = createAsyncThunk(
     return createLeadUrl?.data
   }
 )
+
+export const editUrls=createAsyncThunk('editUrls',async(data)=>{
+  const respose =await putQuery('/leadService/api/v1/urls/updateUrls',data)
+  return respose.data
+})
+
+
+
 
 export const LeadUrlSlice = createSlice({
   name: "leadurls",
