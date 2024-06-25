@@ -4,6 +4,7 @@ import sideImage from "../Images/homePic.png"
 import SectionSaprater from "../components/design/SectionSaprater"
 import HomeImageComp from "../components/HomeImageComp"
 import HomeTextComp from "../components/HomeTextComp"
+import homeImg from '../Images/erpImg.jpg'
 
 const HeroSection = () => (
   // <div className="container hero-section home-section-padding">
@@ -70,7 +71,8 @@ const HeroSection = () => (
         </div>
         <div className="hero-image col-md-5">
           <HomeImageComp
-            imageurl={`https://images.pexels.com/photos/18409224/pexels-photo-18409224/free-photo-of-glass-ceiling-over-staircase.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1`}
+            // imageurl={`https://images.pexels.com/photos/18409224/pexels-photo-18409224/free-photo-of-glass-ceiling-over-staircase.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1`}
+            imageurl={homeImg}
             imgalt={`about image`}
             className={``}
           />
