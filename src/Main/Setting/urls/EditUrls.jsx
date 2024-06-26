@@ -43,6 +43,7 @@ const EditUrls = ({ data }) => {
         width={800}
         onClose={() => setOpenModal(false)}
         onOk={() => form.submit()}
+        okText='Submit'
       >
         <Form layout="vertical" form={form} onFinish={handleSubmit}>
           <Form.Item

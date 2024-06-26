@@ -17,6 +17,10 @@ export const updateAutoAssignnee = createAsyncThunk(
     return autoresponse?.data
   }
 )
+export const editLeadStatus = createAsyncThunk("editLeadStatus", async (data) => {
+  const response = await putQuery(`/leadService/api/v1/status/updateInLeadStatus`, data)
+  return response.data
+})
 
 export const LeadSlice = createSlice({
   name: "lead",

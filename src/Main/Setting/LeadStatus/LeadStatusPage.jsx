@@ -6,6 +6,7 @@ import InputErrorComponent from "../../../components/InputErrorComponent"
 import { postQuery } from "../../../API/PostQuery"
 import { deleteQuery } from "../../../API/DeleteQuery"
 import MainHeading from "../../../components/design/MainHeading"
+import EditStatus from "./EditStatus"
 
 const LeadStatusPage = () => {
   const [createStatus, setCreateStatus] = useState({
@@ -117,6 +118,7 @@ const LeadStatusPage = () => {
                   <th scope="col">id</th>
                   <th scope="col">Name</th>
                   <th scope="col">Description</th>
+                  <th scope="col">Edit</th>
                   <th scope="col">Delete</th>
                 </tr>
               </thead>
@@ -129,6 +131,7 @@ const LeadStatusPage = () => {
                       <th>{status.id}</th>
                       <td>{status.name}</td>
                       <td>{status.description}</td>
+                      <td><EditStatus data={status} /></td>
                       <td>
                         <i
                           onClick={() => deleteStatusFun(status.id)}
