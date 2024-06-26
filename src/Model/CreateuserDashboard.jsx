@@ -370,6 +370,7 @@ const CreateuserDashboard = ({ data, type }) => {
                                 {dep}
                               </option>
                             ))}
+                            
                           </select>
                         </div>
                       </div>
