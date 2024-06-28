@@ -11,7 +11,7 @@ import { getDefaultMiddleware } from "@reduxjs/toolkit"
 import TicketSlice from "./Slices/TicketSlice"
 import ForgetPasswordSlice from "./Slices/ForgetPasswordSlice"
 import SignUpSlice from "./Slices/SignUpSlice"
-import  ApprovedStatusSlice  from "./Slices/ApprovedStatus"
+import ApprovedStatusSlice from "./Slices/ApprovedStatus"
 import UserRatingSlice from "./Slices/UserRatingSlice"
 import LeadSlugSlice from "./Slices/LeadSlugSlice"
 import LeadUrlSlice from "./Slices/LeadUrlSlice"
@@ -20,6 +20,8 @@ import CompanySlice from "./Slices/CompanySlice"
 import ProjectSlice from "./Slices/ProjectSlice"
 import RatingSlice from "./Slices/RatingSlice"
 import UserProfileSlice from "./Slices/UserProfileSlice"
+import ComplianceSlice from "./Slices/ComplianceSlice"
+import IvrSlice from "./Slices/IvrSlice"
 
 const reducers = combineReducers({
   auth: AuthSlice,
@@ -37,7 +39,9 @@ const reducers = combineReducers({
   company: CompanySlice,
   project: ProjectSlice,
   ratingn: RatingSlice,
-  profile:UserProfileSlice
+  profile: UserProfileSlice,
+  compliance: ComplianceSlice,
+  ivr:IvrSlice
 })
 
 const persistConfig = {

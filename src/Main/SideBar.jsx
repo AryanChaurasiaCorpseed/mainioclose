@@ -7,7 +7,10 @@ import { toast } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
 import { Avatar, Button, Popover, Space, Upload, message } from "antd"
 import axios from "axios"
-import { getUserProfilePhoto, updateProfilePhoto } from "../Toolkit/Slices/UserProfileSlice"
+import {
+  getUserProfilePhoto,
+  updateProfilePhoto,
+} from "../Toolkit/Slices/UserProfileSlice"
 toast.configure()
 
 const SideBar = () => {
@@ -19,6 +22,8 @@ const SideBar = () => {
   const dispatch = useDispatch()
 
   const { userid } = useParams()
+
+  console.log("paramamamamma",useParams())
 
   const navigate = useNavigate()
   const fileRef = useRef()
@@ -40,7 +45,7 @@ const SideBar = () => {
   const profilePhoto = useSelector((state) => state.profile.profilePhoto)
   const currentUserId = useSelector((state) => state.auth?.currentUser?.id)
 
-  console.log("dskjgfiusdayguy", currentUserId)
+  console.log("dskjgfiusdayguy", profilePhoto)
 
   function getHighestPriorityRole(roles) {
     const priority = ["ADMIN", "HR_HEAD", "HR", "USER"]
@@ -116,10 +121,10 @@ const SideBar = () => {
                 </Button>
               </form>
               <Space className="btn-container">
-                <Button type="primary" onClick={submitProfile}>Submit</Button>
-                <Button onClick={() => logoutUser()} >
-                  Logout
+                <Button type="primary" onClick={submitProfile}>
+                  Submit
                 </Button>
+                <Button onClick={() => logoutUser()}>Logout</Button>
               </Space>
             </div>
             // ) : (
@@ -296,6 +301,22 @@ const SideBar = () => {
         ) : (
           ""
         )}
+
+        <div className="side-tabs">
+          <NavLink
+            to={`/erp/compliance`}
+            className={`nav-heading ${({ isActive }) =>
+              isActive ? "linkactive" : ""}`}
+            // data-toggle="collapse"
+            // data-target={`#collapseHrModule`}
+            // aria-expanded="true"
+            // aria-controls="collapseHrModule"
+          >
+            <i className="fa-solid mr-1 fa-angle-right"></i>{" "}
+            <i className="fa-solid mr-2 fa-clipboard-check"></i> Compliances
+          </NavLink>
+        </div>
+
         {/* end */}
 
         {/* hr links start */}
@@ -566,12 +587,12 @@ const SideBar = () => {
             aria-labelledby="headingOne"
             data-parent="#accordion"
           >
-            {/* <div className="link-child">
-              <NavLink className="link-itemss" to="quality">
+            <div className="link-child">
+              <NavLink className="link-itemss" to={`${userid}/quality`}>
                 {" "}
-                Quality Link 1
+                IVR
               </NavLink>
-              <NavLink className="link-itemss" to="quality/qualitytwo">
+              {/* <NavLink className="link-itemss" to="quality/qualitytwo">
                 Quality Link 2
               </NavLink>
               <NavLink className="link-itemss" to="quality/qualitythree">
@@ -585,8 +606,8 @@ const SideBar = () => {
               </NavLink>
               <NavLink className="link-itemss" to="quality/qualitysix">
                 Account Link 6
-              </NavLink>
-            </div> */}
+              </NavLink> */}
+            </div>
           </div>
         </div>
 

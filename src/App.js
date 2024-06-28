@@ -50,6 +50,9 @@ import MainCompanyPage from "./Main/Sales/company/MainCompanyPage"
 import CompDetails from "./Main/Sales/company/CompDetails"
 import ProjectPage from "./Main/Sales/Project/ProjectPage"
 import UserService from "./Main/HR/UserService"
+import Compliances from "./Main/Compliance/Compliances"
+import QualityModule from "./Main/Quality/QualityModule"
+import IVR from "./Main/Quality/IVR"
 
 function App() {
   const authStatus = useSelector((state) => state.auth.isAuth)
@@ -107,6 +110,7 @@ function App() {
               <Route path="hrlinksix" element={<div>hrlinksix</div>} />
             </Route>
             {/* end */}
+            <Route path="/erp/compliance" element={<Compliances/>} />
             {/* slaes module routes */}
             <Route path="/erp/:userid/sales" element={<SalesMod />}>
               <Route path="" element={<InboxPage />} />
@@ -232,8 +236,8 @@ function App() {
             </Route>
             {/* end */}
             {/* quality module routes */}
-            <Route path="/erp/:userid/quality" element={<ComingSoonPage />}>
-              <Route path="" element={<div>Quality Number One</div>} />
+            <Route path="/erp/:userid/quality" element={<QualityModule/>}>
+              <Route path="" element={<IVR/>} />
               <Route
                 path="qualitytwo"
                 element={<div>Quality Number Two</div>}
