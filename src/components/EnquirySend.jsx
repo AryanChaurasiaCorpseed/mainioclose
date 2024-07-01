@@ -16,7 +16,7 @@ const EnquirySend = () => {
   const [loading, setLoading] = useState(false)
 
   const currentUserId = useSelector(
-    (state) => state?.AuthReducer?.currentUser?.id
+    (state) => state?.auth?.currentUser?.id
   )
 
   const [EnquiryTicketData, setEnquiryTicketData] = useState({
@@ -66,6 +66,8 @@ const EnquirySend = () => {
     }
     submitTicketData()
   }
+
+  console.log('dkjbflkasghfdsjgh',EnquiryTicketData,currentUserId)
 
   return (
     <div>
