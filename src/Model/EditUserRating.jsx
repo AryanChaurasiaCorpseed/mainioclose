@@ -7,6 +7,7 @@ import {
   getAllUsers,
 } from "../Toolkit/Slices/UsersSlice"
 import { useParams } from "react-router-dom"
+import { allRatingUsers } from "../Toolkit/Slices/RatingSlice"
 
 export const EditUserRating = ({ data }) => {
   const [form] = Form.useForm()
@@ -30,7 +31,9 @@ export const EditUserRating = ({ data }) => {
       values.urlsManagmentId = serviceid
       values.rating = data?.rating
       console.log("sdjkcsdjkhg8", values)
-      dispatch(editUserRatingAssignee(values))
+      dispatch(editUserRatingAssignee(values)).then(() =>
+        dispatch(allRatingUsers({ id: serviceid }))
+      )
     },
     [data, serviceid, dispatch]
   )
@@ -38,10 +41,11 @@ export const EditUserRating = ({ data }) => {
   useEffect(() => {
     if (assigneeLoading === "success") {
       notification.success({ message: "Assignee is updated successfully" })
+      setOpenModal(false)
     } else if (assigneeLoading === "rejected") {
       notification.error({ message: "Something went wrong !" })
     }
-  }, [assigneeLoading])
+  }, [assigneeLoading, dispatch, serviceid])
 
   return (
     <>
