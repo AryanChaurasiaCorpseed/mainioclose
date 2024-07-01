@@ -9,6 +9,9 @@ import SomethingWrong from "../../components/usefulThings/SomethingWrong"
 import CreateRatingModel from "../../Model/CreateRatingModel"
 import { useLocation, useParams } from "react-router-dom"
 import { allRatingUsers } from "../../Toolkit/Slices/RatingSlice"
+import { EditUserRating } from "../../Model/EditUserRating"
+import { Typography } from "antd"
+const { Text } = Typography
 
 const UserRating = () => {
   const [hidebox, setHidebox] = useState(true)
@@ -21,7 +24,7 @@ const UserRating = () => {
 
   useEffect(() => {
     dispatch(allRatingUsers({ id: serviceid }))
-  }, [])
+  }, [dispatch])
 
   // useEffect(() => {
   //   dispatch(getAllRating())
@@ -31,7 +34,6 @@ const UserRating = () => {
     (prev) => prev?.ratingn
   )
 
- 
   const editRatingUser = (data) => {
     setmyObjData((prev) => ({ ...prev, data }))
     setEditRatingDep(true)
@@ -45,7 +47,13 @@ const UserRating = () => {
       width: 80,
     },
     { field: "urlsName", headerName: "Service Name", width: 250 },
-    { field: "user", headerName: "Assignee", width: 250 },
+    {
+      field: "user",
+      headerName: "Assignee",
+      width: 250,
+      renderCell: (props) =>
+        props.row?.user?.map((item) => <Text style={{margin:'0px 2px'}}>{item?.name},</Text>),
+    },
     {
       field: "rating",
       headerName: "Rating",
@@ -59,21 +67,12 @@ const UserRating = () => {
         ))
       },
     },
-    // {
-    //   field: "edit",
-    //   headerName: "Edit",
-    //   width: 250,
-    //   renderCell: (props) => {
-    //     return (
-    //       <button
-    //         className="common-btn-one mr-2"
-    //         onClick={() => editRatingUser(props?.row)}
-    //       >
-    //         edit{" "}
-    //       </button>
-    //     )
-    //   },
-    // },
+    {
+      field: "edit",
+      headerName: "Edit",
+      width: 250,
+      renderCell: (props) => <EditUserRating data={props.row} />,
+    },
   ]
 
   return (

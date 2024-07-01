@@ -58,6 +58,17 @@ export const allActiveUserFun = createAsyncThunk(
   }
 )
 
+export const editUserRatingAssignee = createAsyncThunk(
+  "editUserAsignee",
+  async (data) => {
+    const response = await putQuery(
+      `/leadService/api/v1/rating/updateUserRatingService`,
+      data
+    )
+    return response.data
+  }
+)
+
 export const UsersSlice = createSlice({
   name: "user",
   initialState: {
@@ -76,6 +87,7 @@ export const UsersSlice = createSlice({
     userActive: "",
     userActiveLoading: false,
     userActiveError: false,
+    assigneeLoading: "",
   },
   extraReducers: (builder) => {
     builder.addCase(getAllUsers.pending, (state, action) => {
@@ -136,6 +148,16 @@ export const UsersSlice = createSlice({
     builder.addCase(allActiveUserFun.rejected, (state, action) => {
       state.userActiveError = true
       state.userActiveLoading = false
+    })
+
+    builder.addCase(editUserRatingAssignee.pending, (state, action) => {
+      state.assigneeLoading = "pending"
+    })
+    builder.addCase(editUserRatingAssignee.fulfilled, (state, action) => {
+      state.assigneeLoading = "success"
+    })
+    builder.addCase(editUserRatingAssignee.rejected, (state, action) => {
+      state.assigneeLoading = "rejected"
     })
   },
 })
