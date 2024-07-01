@@ -6,10 +6,12 @@ import { toast } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
 import FirstInput from "./Inputs/FirstInput"
 import InputErrorComponent from "./InputErrorComponent"
-import { useSelector } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
+import { getAllTickets } from "../Toolkit/Slices/TicketSlice"
 toast.configure()
 
 const EnquirySend = () => {
+  const dispatch=useDispatch()
   const [openTab, setOpenTab] = useState(false)
   const [loading, setLoading] = useState(false)
 
@@ -52,8 +54,9 @@ const EnquirySend = () => {
         toast.success("Message Submit Sucessfully...")
         subjectRef.current.value = ""
         descriptionRef.current.value = ""
-
         setLoading(false)
+        setOpenTab(false)
+        dispatch(getAllTickets(currentUserId))
       } catch (err) {
         if (err.response.status === 500) {
           toast.error("Something Went Wrong...")
