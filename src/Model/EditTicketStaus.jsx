@@ -8,7 +8,6 @@ export const EditTicketStaus = ({ data }) => {
   const [form] = Form.useForm()
   const dispatch = useDispatch()
   const currentUserId = useSelector((state) => state?.auth?.currentUser?.id)
-  const statusLoading = useSelector((status) => status.tickets.ticketStatus)
   const [openModal, setOpenModal] = useState(false)
 
   const handleEdit = useCallback(() => {

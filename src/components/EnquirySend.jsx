@@ -67,8 +67,6 @@ const EnquirySend = () => {
     submitTicketData()
   }
 
-  console.log('dkjbflkasghfdsjgh',EnquiryTicketData,currentUserId)
-
   return (
     <div>
       <div className="enquiry">

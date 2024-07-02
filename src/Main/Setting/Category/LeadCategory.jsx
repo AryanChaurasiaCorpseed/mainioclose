@@ -8,8 +8,7 @@ import { deleteQuery } from "../../../API/DeleteQuery"
 import MainHeading from "../../../components/design/MainHeading"
 import { toast } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
-import { Modal } from "antd"
-import DocumentModal from "../../../Model/DocumentModal"
+import { Button } from "antd"
 toast.configure()
 
 const LeadCategory = () => {
@@ -25,7 +24,6 @@ const LeadCategory = () => {
 
   const [btnLoading, setBtnLoading] = useState(false)
   const [nameError, setNameError] = useState(false)
-
   const nameRef = useRef()
 
   const createCatFun = async (e) => {
@@ -61,7 +59,7 @@ const LeadCategory = () => {
     useCustomRoute(categoryUrl, categoryDep)
 
   const deleteCategoryFun = async (statusId) => {
-    if (window.confirm("Are you sure to delete this record?") == true) {
+    if (window.confirm("Are you sure to delete this record?") === true) {
       try {
         const leadCategoryDel = await deleteQuery(
           `/leadService/api/v1/category/deleteCategory?categoryId=${statusId}`
@@ -73,11 +71,9 @@ const LeadCategory = () => {
     }
   }
 
-  console.log('kbxcbzo',categoryData)
-
   return (
     <div>
-        <MainHeading data={`Lead Category`} />
+      <MainHeading data={`Lead Category`} />
       <div className="lead-box">
         <form>
           <label className="label-heading mb-1" htmlFor="statusCreate">
@@ -99,7 +95,7 @@ const LeadCategory = () => {
             ""
           )}
           <button onClick={(e) => createCatFun(e)} className="action-btn my-2">
-            {btnLoading ? "Loading" : "Submit"}
+            {btnLoading ? "Loading..." : "Submit"}
           </button>
         </form>
       </div>
@@ -126,10 +122,12 @@ const LeadCategory = () => {
                     <td>{new Date(status.createdDate).toLocaleDateString()}</td>
                     {/* <td><DocumentModal document={status?.documents} /></td> */}
                     <td>
-                      <i
+                      <Button
+                        size="small"
                         onClick={() => deleteCategoryFun(status.id)}
-                        className="fa-solid gray-cl fa-trash"
-                      ></i>
+                      >
+                        <i className="fa-solid gray-cl fa-trash"></i>
+                      </Button>
                     </td>
                   </tr>
                 ))

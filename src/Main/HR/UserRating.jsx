@@ -1,30 +1,27 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect } from "react"
 import TableOutlet from "../../components/design/TableOutlet"
 import MainHeading from "../../components/design/MainHeading"
 import UserListComponent from "../../Tables/UserListComponent"
 import { useDispatch, useSelector } from "react-redux"
-import { getAllRating } from "../../Toolkit/Slices/UserRatingSlice"
 import TableScalaton from "../../components/TableScalaton"
 import SomethingWrong from "../../components/usefulThings/SomethingWrong"
-import CreateRatingModel from "../../Model/CreateRatingModel"
-import { useLocation, useParams } from "react-router-dom"
+import { useParams } from "react-router-dom"
 import { allRatingUsers } from "../../Toolkit/Slices/RatingSlice"
 import { EditUserRating } from "../../Model/EditUserRating"
 import { Typography } from "antd"
 const { Text } = Typography
 
 const UserRating = () => {
-  const [hidebox, setHidebox] = useState(true)
-  const [ratingDep, setRatingDep] = useState(false)
-  const [myobjData, setmyObjData] = useState({})
-  const [editRatingDep, setEditRatingDep] = useState(false)
+  // const [hidebox, setHidebox] = useState(true)
+  // const [myobjData, setmyObjData] = useState({})
+  // const [editRatingDep, setEditRatingDep] = useState(false)
 
   const dispatch = useDispatch()
   const { serviceid } = useParams()
 
   useEffect(() => {
     dispatch(allRatingUsers({ id: serviceid }))
-  }, [dispatch])
+  }, [dispatch,serviceid])
 
   // useEffect(() => {
   //   dispatch(getAllRating())
@@ -34,11 +31,11 @@ const UserRating = () => {
     (prev) => prev?.ratingn
   )
 
-  const editRatingUser = (data) => {
-    setmyObjData((prev) => ({ ...prev, data }))
-    setEditRatingDep(true)
-    setHidebox((prev) => !prev)
-  }
+  // const editRatingUser = (data) => {
+  //   setmyObjData((prev) => ({ ...prev, data }))
+  //   setEditRatingDep(true)
+  //   setHidebox((prev) => !prev)
+  // }
 
   const columns = [
     {

@@ -16,7 +16,6 @@ export const EditUserRating = ({ data }) => {
   const allUsers = useSelector((state) => state.user.allUsers)
   const assigneeLoading = useSelector((state) => state.user.assigneeLoading)
   const [openModal, setOpenModal] = useState(false)
-  console.log("sdldshfdsj", allUsers)
 
   useEffect(() => {
     dispatch(getAllUsers())
@@ -30,7 +29,6 @@ export const EditUserRating = ({ data }) => {
       values.ratingId = data.id
       values.urlsManagmentId = serviceid
       values.rating = data?.rating
-      console.log("sdjkcsdjkhg8", values)
       dispatch(editUserRatingAssignee(values)).then(() =>
         dispatch(allRatingUsers({ id: serviceid }))
       )
