@@ -5,6 +5,7 @@ import "./BulkFileUpload.scss"
 import { useDispatch, useSelector } from "react-redux"
 import { createRemakWithFile } from "../../../Toolkit/Slices/LeadSlice"
 import { useParams } from "react-router-dom"
+import { getAllUrlAction } from "../../../Toolkit/Slices/LeadUrlSlice"
 const { Dragger } = Upload
 const { Text } = Typography
 
@@ -44,10 +45,17 @@ const BulkFileUploader = () => {
       message: text,
       file: files,
     }
-    if (text !== "") {
+    if (text !== "" && files?.length > 0) {
       dispatch(createRemakWithFile(data)).then(() => {
         setFlag(true)
         setFiles([])
+        window.location.reload()
+      })
+    } else if (text !== "") {
+      dispatch(createRemakWithFile(data)).then(() => {
+        setFlag(true)
+        setFiles([])
+        window.location.reload()
       })
     } else {
       setFlag(false)

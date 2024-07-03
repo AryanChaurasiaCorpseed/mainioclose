@@ -20,6 +20,7 @@ import AllTasksPage from "./AllTasksPage"
 import { updateAutoAssignnee } from "../../../Toolkit/Slices/LeadSlice"
 import { getAllUrlAction } from "../../../Toolkit/Slices/LeadUrlSlice"
 import BulkFileUploader from "../Leads/BulkFileUploader"
+import { Image } from "antd"
 toast.configure()
 
 const LeadDetailsPage = () => {
@@ -1976,71 +1977,87 @@ const LeadDetailsPage = () => {
 
           {/* all notes data ui */}
           <div className="lead-set-data">
-            {notesApiData.map((note, index) => (
-              <div className="lead-filter-above" key={index}>
-                {/* <FilterButton name={"note"} icon={<i className="fa-solid fa-note-sticky"></i>} data={notes1} setData={setNotes1}/> */}
-                <div className={`notes-box mt-2`}>
-                  <div className="comment-icon">
-                    <div className="icon-box h-70">
-                      <i className="fa-regular cm-icon fa-comment"></i>
+            {notesApiData.map((note, index) => {
+              console.log("renderChatImages", note)
+              return (
+                <div className="lead-filter-above" key={index}>
+                  {/* <FilterButton name={"note"} icon={<i className="fa-solid fa-note-sticky"></i>} data={notes1} setData={setNotes1}/> */}
+                  <div className={`notes-box mt-2`}>
+                    <div className="comment-icon">
+                      <div className="icon-box h-70">
+                        <i className="fa-regular cm-icon fa-comment"></i>
+                      </div>
+                      <div className="line"></div>
                     </div>
-                    <div className="line"></div>
-                  </div>
 
-                  <div className="side-notes">
-                    <p className="mb-0 write-heading text-center pb-2">
-                      <span className="mr-2 font-13">
-                        {new Date(note?.latestUpdated).toDateString()}
-                      </span>
-                      <span className="mr-2 font-13">
-                        {new Date(note?.latestUpdated).toLocaleTimeString(
-                          "en-US"
-                        )}
-                      </span>
-                    </p>
-                    <div className="comment-above">
-                      <div>
-                        <h2 className="write-heading">Notes</h2>
-                      </div>
-                      <div>
-                        {/* < /> */}
-                        {/* <ImageComp data={note} index={index} /> */}
-                        {note?.images && (
-                          <button
-                            className="image-btn"
-                            onClick={() => openImageInNewTab(note?.images)}
-                          >
-                            {" "}
-                            <i className="fa-solid fa-download"></i>
-                          </button>
-                        )}
-                        {/* <Link target="blank" to={note?.images}>show</Link> */}
-                      </div>
-                      <div className="d-flex">
-                        <div className="circle-image">
-                          {note?.updatedBy?.fullName.slice(0, 1)}
-                        </div>
-                        <span className="ml-1 write-heading">
-                          {note?.updatedBy?.fullName}
+                    <div className="side-notes">
+                      <p className="mb-0 write-heading text-center pb-2">
+                        <span className="mr-2 font-13">
+                          {new Date(note?.latestUpdated).toDateString()}
                         </span>
+                        <span className="mr-2 font-13">
+                          {new Date(note?.latestUpdated).toLocaleTimeString(
+                            "en-US"
+                          )}
+                        </span>
+                      </p>
+                      <div className="comment-above">
+                        <div>
+                          <h2 className="write-heading">Notes</h2>
+                        </div>
+                        <div>
+                          {/* < /> */}
+                          {/* <ImageComp data={note} index={index} /> */}
+                          {note?.images && (
+                            <button
+                              className="image-btn"
+                              onClick={() => openImageInNewTab(note?.images)}
+                            >
+                              {" "}
+                              <i className="fa-solid fa-download"></i>
+                            </button>
+                          )}
+                          {/* <Link target="blank" to={note?.images}>show</Link> */}
+                        </div>
+                        <div className="d-flex">
+                          <div className="circle-image">
+                            {note?.updatedBy?.fullName.slice(0, 1)}
+                          </div>
+                          <span className="ml-1 write-heading">
+                            {note?.updatedBy?.fullName}
+                          </span>
+                        </div>
                       </div>
-                    </div>
-                    <div className="text-display-box">
-                      <pre>{note.message}</pre>
-                    </div>
-                    {note.images && (
-                      <div
-                        className="img-display"
-                        onClick={handleImageSize()}
-                        ref={imageRefrence}
-                      >
-                        <img src={note?.images} />
+                      <div className="text-display-box">
+                        <pre>{note.message}</pre>
                       </div>
-                    )}
+                      {note?.imageList?.length && (
+                        // <div
+                        //   className="img-display"
+                        //   onClick={handleImageSize()}
+                        //   ref={imageRefrence}
+                        // >
+                        //   <img src={note?.images} />
+                        // </div>
+
+                        <Image.PreviewGroup
+                          preview={{
+                            onChange: (current, prev) =>
+                              console.log(
+                                `current index: ${current}, prev index: ${prev}`
+                              ),
+                          }}
+                        >
+                          {note?.imageList?.map((item) => (
+                            <Image width={100} src={item?.filePath} />
+                          ))}
+                        </Image.PreviewGroup>
+                      )}
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              )
+            })}
           </div>
           {/* all notes data ui ends */}
         </div>
