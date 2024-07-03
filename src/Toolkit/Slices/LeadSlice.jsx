@@ -17,10 +17,24 @@ export const updateAutoAssignnee = createAsyncThunk(
     return autoresponse?.data
   }
 )
-export const editLeadStatus = createAsyncThunk("editLeadStatus", async (data) => {
-  const response = await putQuery(`/leadService/api/v1/status/updateInLeadStatus`, data)
-  return response.data
-})
+export const editLeadStatus = createAsyncThunk(
+  "editLeadStatus",
+  async (data) => {
+    const response = await putQuery(
+      `/leadService/api/v1/status/updateInLeadStatus`,
+      data
+    )
+    return response.data
+  }
+)
+
+export const createRemakWithFile = createAsyncThunk(
+  "createRemark",
+  async (data) => {
+    const response = await postQuery(`/leadService/api/v1/createRemarks`, data)
+    return response.data
+  }
+)
 
 export const LeadSlice = createSlice({
   name: "lead",
@@ -31,6 +45,7 @@ export const LeadSlice = createSlice({
     autoLeadUpadte: "",
     autoLeadLoading: false,
     autoLeadError: false,
+    remarkLoading: "",
   },
   extraReducers: (builder) => {
     builder.addCase(getAllLeads.pending, (state, action) => {
@@ -59,6 +74,16 @@ export const LeadSlice = createSlice({
     builder.addCase(updateAutoAssignnee.rejected, (state, action) => {
       state.autoLeadError = true
       state.autoLeadLoading = false
+    })
+
+    builder.addCase(createRemakWithFile.pending, (state, action) => {
+      state.remarkLoading = "pending"
+    })
+    builder.addCase(createRemakWithFile.fulfilled, (state, action) => {
+      state.remarkLoading = "success"
+    })
+    builder.addCase(createRemakWithFile.rejected, (state, action) => {
+      state.remarkLoading = "rejected"
     })
   },
 })

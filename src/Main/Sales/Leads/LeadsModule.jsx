@@ -16,7 +16,9 @@ import { CSVLink } from "react-csv"
 import { getAllLeads } from "../../../Toolkit/Slices/LeadSlice"
 import MainHeading from "../../../components/design/MainHeading"
 
-const UserLeadComponent = React.lazy(() => import(`../../../Tables/UserLeadComponent`))
+const UserLeadComponent = React.lazy(() =>
+  import(`../../../Tables/UserLeadComponent`)
+)
 
 const LeadsModule = () => {
   const [allLeadData, setAllLeadData] = useState([])
@@ -476,7 +478,7 @@ const LeadsModule = () => {
       width: 150,
       renderCell: (props) => (
         <p className="m-0" onClick={() => leadDeleteResponse(props.row.id)}>
-          <i className="fa-solid fa-trash"></i>
+          <i className="fa-solid fa-trash" style={{ cursor: "pointer" }}></i>
         </p>
       ),
     },
@@ -722,39 +724,37 @@ const LeadsModule = () => {
       </div> */}
 
       <div className="table-arrow">
-      
-          <Suspense fallback={<TableScalaton />}>
-            <UserLeadComponent
-              tableName={""}
-              columns={adminRole ? columns : column2}
-              row={allLeadsData}
-              getRowId={(row) => row.id}
-              onSelectionModelChange={(newSelection) =>
-                setSelectedRows(newSelection)
-              }
-              selectionModel={selectedRows}
-              components={{
-                Toolbar: () => (
-                  <>
-                    <FormControlLabel
-                      control={
-                        <Checkbox
-                          indeterminate={
-                            selectedRows.length > 0 &&
-                            selectedRows.length < allLeadsData.length
-                          }
-                          checked={selectedRows.length === allLeadsData.length}
-                          onChange={handleSelectAllClick}
-                        />
-                      }
-                      label="Select All"
-                    />
-                  </>
-                ),
-              }}
-            />
-          </Suspense>
-     
+        <Suspense fallback={<TableScalaton />}>
+          <UserLeadComponent
+            tableName={""}
+            columns={adminRole ? columns : column2}
+            row={allLeadsData}
+            getRowId={(row) => row.id}
+            onSelectionModelChange={(newSelection) =>
+              setSelectedRows(newSelection)
+            }
+            selectionModel={selectedRows}
+            components={{
+              Toolbar: () => (
+                <>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        indeterminate={
+                          selectedRows.length > 0 &&
+                          selectedRows.length < allLeadsData.length
+                        }
+                        checked={selectedRows.length === allLeadsData.length}
+                        onChange={handleSelectAllClick}
+                      />
+                    }
+                    label="Select All"
+                  />
+                </>
+              ),
+            }}
+          />
+        </Suspense>
 
         {adminRole ? (
           <div

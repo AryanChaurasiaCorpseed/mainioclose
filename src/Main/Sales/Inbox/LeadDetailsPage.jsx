@@ -19,6 +19,7 @@ import InputErrorComponent from "../../../components/InputErrorComponent"
 import AllTasksPage from "./AllTasksPage"
 import { updateAutoAssignnee } from "../../../Toolkit/Slices/LeadSlice"
 import { getAllUrlAction } from "../../../Toolkit/Slices/LeadUrlSlice"
+import BulkFileUploader from "../Leads/BulkFileUploader"
 toast.configure()
 
 const LeadDetailsPage = () => {
@@ -1856,7 +1857,7 @@ const LeadDetailsPage = () => {
               <div className="side-notes">
                 {/* <div className="comment-above">
                   <h2 className="write-heading">Write a Notes</h2>
-                </div> */}
+                </div>
                 <textarea
                   className="text-area-box"
                   id="notes"
@@ -1869,11 +1870,11 @@ const LeadDetailsPage = () => {
                 ></textarea>
                 <div className="comment-below">
                   <div className="all-center">
-                    {/* <form  onSubmit={(e)=> submitImage(e)}>
+                    <form  onSubmit={(e)=> submitImage(e)}>
                   <input type="file"  name="files" onChange={(e) => setFileValue(e.target.files[0])} accept="image/*" />
                   <button type="submit">submit image</button>
 
-                  </form> */}
+                  </form>
                     <form onSubmit={handleSubmit}>
                       <input
                         ref={fileRef}
@@ -1893,8 +1894,8 @@ const LeadDetailsPage = () => {
                       ""
                     )}
 
-                    {/* <input type="file" onChange={handleFileChange} />
-                    <button onClick={handleUpload}>Upload</button> */}
+                    <input type="file" onChange={handleFileChange} />
+                    <button onClick={handleUpload}>Upload</button>
                   </div>
                   <button
                     className="comment-btn"
@@ -1902,7 +1903,9 @@ const LeadDetailsPage = () => {
                   >
                     {notesLoading ? "Loading" : "Submit"}
                   </button>
-                </div>
+                </div> */}
+
+                <BulkFileUploader />
               </div>
             </div>
             <div className={`notes-box mt-4 ${email === true ? "d-none" : ""}`}>

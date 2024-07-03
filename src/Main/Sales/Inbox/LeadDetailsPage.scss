@@ -89,9 +89,10 @@
   }
   .notes-box {
     display: flex;
+    flex-direction: column;
     gap: 10px;
+    justify-content: space-between;
     .comment-icon {
-      // border: 1px solid red;
       width: 40px;
       display: flex;
       flex-direction: column;
