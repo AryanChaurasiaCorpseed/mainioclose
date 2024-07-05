@@ -7,12 +7,11 @@ import SomethingWrong from "../../components/usefulThings/SomethingWrong"
 import UserListComponent from "../../Tables/UserListComponent"
 import { getAllIvr } from "../../Toolkit/Slices/IvrSlice"
 import CreateNEditIVR from "../../Model/CreateNEditIVR"
-
+import { Icon } from "@iconify/react"
+import { Tooltip } from "antd"
 
 const IVR = () => {
-  const { allIvr, ivrLoading, ivrError } = useSelector(
-    (prev) => prev?.ivr
-  )
+  const { allIvr, ivrLoading, ivrError } = useSelector((prev) => prev?.ivr)
   const dispatch = useDispatch()
 
   useEffect(() => {
@@ -31,20 +30,33 @@ const IVR = () => {
       width: 250,
     },
     {
-        field: "callerName",
-        headerName: "Caller Name",
-        width: 250,
-      },
-      {
-        field: "startTime",
-        headerName: "Start Time",
-        width: 150,
-      },
-      {
-        field: "endTime",
-        headerName: "End Time",
-        width: 150,
-      },
+      field: "callerName",
+      headerName: "Caller Name",
+      width: 250,
+    },
+    {
+      field: "startTime",
+      headerName: "Start Time",
+      width: 150,
+    },
+    {
+      field: "endTime",
+      headerName: "End Time",
+      width: 150,
+    },
+    {
+      field: "recording",
+      headerName: "Recording",
+      width: 350,
+      renderCell: (props) => (
+        <audio controls className="audio-player" style={{ height: "40px" }}>
+          <source
+            src="https://www.learningcontainer.com/wp-content/uploads/2020/02/Kalimba.mp3"
+            type="audio/mpeg"
+          />
+        </audio>
+      ),
+    },
     {
       field: "duration",
       headerName: "Duration",
@@ -55,17 +67,13 @@ const IVR = () => {
     <TableOutlet>
       <div className="create-user-box">
         <MainHeading data={"All IVR "} />
-        <CreateNEditIVR/>
+        <CreateNEditIVR />
       </div>
       <div>
         {ivrLoading && <TableScalaton />}
         {ivrError && <SomethingWrong />}
         {allIvr && !ivrLoading && !ivrError && (
-          <UserListComponent
-            tableName={""}
-            columns={columns}
-            row={allIvr}
-          />
+          <UserListComponent tableName={""} columns={columns} row={allIvr} />
         )}
       </div>
     </TableOutlet>

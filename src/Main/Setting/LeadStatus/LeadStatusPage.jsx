@@ -106,7 +106,7 @@ const LeadStatusPage = () => {
             onClick={(e) => leadStatusCreateFun(e)}
             className="action-btn my-2"
           >
-            {btnLoading ? "Loading" : "Submit"}
+            {btnLoading ? "Loading..." : "Submit"}
           </button>
         </form>
 

@@ -110,7 +110,6 @@ const ProductsChange = () => {
     { field: "professionalFees", headerName: "Professional Fees", width: 150 },
     { field: "professionalCode", headerName: "Professional Code", width: 150 },
     { field: "profesionalGst", headerName: "Profesional GST (%)", width: 150 },
-
     { field: "serviceCharge", headerName: "Service Charge", width: 150 },
     { field: "serviceCode", headerName: "Service Code", width: 150 },
     { field: "serviceGst", headerName: "Service GST (%)", width: 150 },
@@ -274,16 +273,14 @@ const ProductsChange = () => {
             onChange={(e) => getProductData(e)}
             name="otherGst"
           />
-
           <button
             onClick={(e) => createNewProduct(e)}
             className="action-btn my-2"
           >
-            {btnLoading ? "Loading" : "Submit"}
+            {btnLoading ? "Loading..." : "Submit"}
           </button>
         </form>
       </div>
-
       <div className="mt-4 setting-table">
         {productLoading ? (
           <SmallTableScalaton />
