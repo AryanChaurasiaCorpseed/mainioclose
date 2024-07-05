@@ -4,12 +4,13 @@ import {
   getCompanyLeadsAction,
   getCompanyProjectAction,
 } from "../../../Toolkit/Slices/CompanySlice"
-import { useParams } from "react-router-dom"
+import { Link, useParams } from "react-router-dom"
 import TableOutlet from "../../../components/design/TableOutlet"
 import MainHeading from "../../../components/design/MainHeading"
 import SomethingWrong from "../../../components/usefulThings/SomethingWrong"
 import TableScalaton from "../../../components/TableScalaton"
 import ColComp from "../../../components/small/ColComp"
+import { putQuery } from "../../../API/PutQuery"
 
 const UserListComponent = React.lazy(() =>
   import(`../../../Tables/UserListComponent`)
@@ -20,15 +21,15 @@ const CompDetails = () => {
 
   const [projectdep, setProjectDep] = useState(true)
 
-  const { companyId } = useParams()
+  const { companyId, userid } = useParams()
 
   useEffect(() => {
     dispatch(getCompanyProjectAction({ id: companyId }))
-  }, [])
+  }, [companyId, dispatch])
 
   useEffect(() => {
     dispatch(getCompanyLeadsAction({ id: companyId }))
-  }, [])
+  }, [companyId, dispatch])
 
   const { compProject, compProjectError } = useSelector((prev) => prev?.company)
 
@@ -41,6 +42,15 @@ const CompDetails = () => {
     setProjectDep(false)
   }
 
+  const viewHistory = async (leadId) => {
+    try {
+      const singlePage = await putQuery(
+        `/leadService/api/v1/lead/viewHistoryCreate?userId=${userid}&leadId=${leadId}`
+      )
+    } catch (err) {
+      console.log(err)
+    }
+  }
 
   const compColumns = [
     {
@@ -78,7 +88,21 @@ const CompDetails = () => {
       field: "leadName",
       headerName: "Lead Name",
       width: 150,
-      renderCell: (props) => <ColComp data={props?.row?.leadName} />,
+      renderCell: (props) => (
+        <Link
+          to={`/erp/${userid}/sales/leads/${props.row.leadId}`}
+          onClick={() => viewHistory(props.row.leadId)}
+          className={`${props.row.view ? "" : "fw-600"}`}
+        >
+          {props?.row?.leadName}
+        </Link>
+      ),
+    },
+    {
+      field: "originalName",
+      headerName: "Original Name",
+      width: 150,
+      renderCell: (props) => <ColComp data={props?.row?.originalName} />,
     },
     {
       field: "client",
@@ -87,16 +111,35 @@ const CompDetails = () => {
       renderCell: (props) => <ColComp data={props?.row?.client} />,
     },
     {
-      field: "ipAddress",
-      headerName: "IP Address",
-      width: 150,
-      renderCell: (props) => <ColComp data={props?.row?.ipAddress} />,
+      field: "email",
+      headerName: "Email",
+      width: 250,
+      renderCell: (props) => <ColComp data={props?.row?.email} />,
     },
+
     {
       field: "assignee",
       headerName: "Assignee Name",
       width: 150,
       renderCell: (props) => <ColComp data={props?.row?.assignee?.fullName} />,
+    },
+    {
+      field: "status",
+      headerName: "Status",
+      width: 150,
+      renderCell: (props) => <ColComp data={props?.row?.status?.name} />,
+    },
+    {
+      field: "city",
+      headerName: "City",
+      width: 150,
+      renderCell: (props) => <ColComp data={props?.row?.city} />,
+    },
+    {
+      field: "ipAddress",
+      headerName: "IP Address",
+      width: 150,
+      renderCell: (props) => <ColComp data={props?.row?.ipAddress} />,
     },
   ]
 

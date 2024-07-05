@@ -5,7 +5,6 @@ import "./BulkFileUpload.scss"
 import { useDispatch, useSelector } from "react-redux"
 import { createRemakWithFile } from "../../../Toolkit/Slices/LeadSlice"
 import { useParams } from "react-router-dom"
-import { getAllUrlAction } from "../../../Toolkit/Slices/LeadUrlSlice"
 const { Dragger } = Upload
 const { Text } = Typography
 
@@ -62,7 +61,6 @@ const BulkFileUploader = () => {
     }
   }, [leadid, userid, text, files, dispatch])
 
-  useEffect(() => {}, [])
 
   return (
     <>

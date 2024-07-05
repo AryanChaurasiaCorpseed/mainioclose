@@ -294,7 +294,6 @@ const LeadDetailsPage = () => {
   const taskDescription = useRef()
   const taskDate = useRef()
   const location = useLocation()
-
   const categorySelectRef = useRef()
 
   const [remarkMessage, setRemarkMessage] = useState({
@@ -818,7 +817,7 @@ const LeadDetailsPage = () => {
         createContact
       )
       setEditContactState(false)
-      setEditContactDep((prev) => !prev)
+      setEditContactDep((prev) => !prev) 
       createContact.name = ""
       createContact.email = ""
       createContact.contactNo = ""

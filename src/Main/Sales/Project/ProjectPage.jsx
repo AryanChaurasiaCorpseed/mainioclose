@@ -7,7 +7,6 @@ import UserListComponent from "../../../Tables/UserListComponent"
 import { useDispatch, useSelector } from "react-redux"
 import { getProjectAction } from "../../../Toolkit/Slices/ProjectSlice"
 import ColComp from "../../../components/small/ColComp"
-import { Link } from "react-router-dom"
 
 const ProjectPage = () => {
   const dispatch = useDispatch()
@@ -16,7 +15,7 @@ const ProjectPage = () => {
 
   useEffect(() => {
     dispatch(getProjectAction({ id: currUserId }))
-  }, [])
+  }, [currUserId,dispatch])
 
   const { allProject, loadingProject, errorProject } = useSelector(
     (prev) => prev?.project
@@ -34,7 +33,6 @@ const ProjectPage = () => {
       width: 220,
       renderCell: (props) => <ColComp data={props?.row?.projectName} />,
     },
-
     {
       field: "assigneeName",
       headerName: "Assignee Name",

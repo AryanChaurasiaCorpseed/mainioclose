@@ -16,18 +16,18 @@ const ProductsChange = () => {
     name: "",
     categoryId: null,
     userId: userid,
-    govermentfees: "",
+    govermentfees: 0,
     govermentCode: "",
-    govermentGst: "",
-    professionalFees: "",
+    govermentGst: 0,
+    professionalFees: 0,
     professionalCode: "",
-    profesionalGst: "",
-    serviceCharge: "",
+    profesionalGst: 0,
+    serviceCharge: 0,
     serviceCode: "",
-    serviceGst: "",
-    otherFees: "",
+    serviceGst: 0,
+    otherFees: 0,
     otherCode: "",
-    otherGst: "",
+    otherGst: 0,
   })
 
   const [nameError, setNameError] = useState(false)
@@ -39,7 +39,6 @@ const ProductsChange = () => {
   const catRef = useRef()
   const govermentfeesRef = useRef()
   const govermentGstRef = useRef()
-
 
   const [btnLoading, setBtnLoading] = useState(false)
 
@@ -54,7 +53,6 @@ const ProductsChange = () => {
       setNameError(true)
       return
     }
-
 
     if (addNewProduct.categoryId === null) {
       setcatError(true)
@@ -170,7 +168,6 @@ const ProductsChange = () => {
           <label className="label-heading mt-2 mb-1" htmlFor="select-product">
             Select Category
           </label>
-
           <select
             className="form-control input-focus"
             name="categoryId"
