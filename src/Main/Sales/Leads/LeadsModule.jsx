@@ -13,8 +13,13 @@ import InputErrorComponent from "../../../components/InputErrorComponent"
 import { MultiSelect } from "primereact/multiselect"
 import { useCustomRoute } from "../../../Routes/GetCustomRoutes"
 import { CSVLink } from "react-csv"
-import { getAllLeads } from "../../../Toolkit/Slices/LeadSlice"
+import {
+  craeteProjectByLeadId,
+  getAllLeads,
+} from "../../../Toolkit/Slices/LeadSlice"
 import MainHeading from "../../../components/design/MainHeading"
+import { Button } from "antd"
+import {Icon} from '@iconify/react'
 
 const UserLeadComponent = React.lazy(() =>
   import(`../../../Tables/UserLeadComponent`)
@@ -470,6 +475,19 @@ const LeadsModule = () => {
       width: 150,
       renderCell: (props) => (
         <p className="mb-0">{props?.row?.source ? props?.row?.source : "NA"}</p>
+      ),
+    },
+    {
+      field: "project",
+      headerName: "Create Project",
+      width: 150,
+      renderCell: (props) => (
+        <Button
+          size="small"
+          // onClick={() => dispatch(craeteProjectByLeadId(props?.row?.id))}
+        >
+          <Icon icon="fluent:add-20-filled" />
+        </Button>
       ),
     },
     adminRole && {

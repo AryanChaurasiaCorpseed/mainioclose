@@ -53,6 +53,8 @@ import UserService from "./Main/HR/UserService"
 import Compliances from "./Main/Compliance/Compliances"
 import QualityModule from "./Main/Quality/QualityModule"
 import IVR from "./Main/Quality/IVR"
+import Accounts from "./Main/Accounts/Accounts"
+import { AccountsList } from "./Main/Accounts/AccountsList"
 
 function App() {
   const authStatus = useSelector((state) => state.auth.isAuth)
@@ -142,8 +144,8 @@ function App() {
             </Route>
             {/* end */}
             {/* accounts module routes */}
-            <Route path="/erp/:userid/account" element={<ComingSoonPage />}>
-              <Route path="" element={<div>accounts first page</div>} />
+            <Route path="/erp/:userid/account" element={<Accounts/>}>
+              <Route path="" element={<AccountsList/>} />
               <Route
                 path="accounttwo"
                 element={<div>account second page</div>}

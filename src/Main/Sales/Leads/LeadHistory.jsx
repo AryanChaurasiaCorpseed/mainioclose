@@ -46,7 +46,6 @@ const LeadHistory = () => {
         </p>
       },
     },
-
     { field: "createdBy", headerName: "Created By", width: 150 },
     { field: "event", headerName: "Event Type", width: 200 },
     { field: "description", headerName: "Description", width: 450 },

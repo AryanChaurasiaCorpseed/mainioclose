@@ -12,22 +12,23 @@ const EstimateCreatePage = () => {
   const [allClient, setAllClient] = useState([])
   const [loadingClient, setLoadingClient] = useState(true)
 
-  useEffect(() => {
-    getAllClient()
-  }, [])
+  const getAllCompUrl = `/leadService/api/v1/company/getAllCompany`
+  const getAllCompDep = []
 
-  const getAllCompUrl  = `/leadService/api/v1/company/getAllCompany`
-  const getAllCompDep = [];
+  const {
+    productData: allCompanyData,
+    loading: compnayLoading,
+    error: companyError,
+  } = useCustomRoute(getAllCompUrl, getAllCompDep)
 
-  const { productData: allCompanyData, loading: compnayLoading, error: companyError} = useCustomRoute(getAllCompUrl, getAllCompDep);
-
- 
   const allClientUrl = `/leadService/api/v1/client/getAllClientInfo`
   const allClientDep = []
 
-  const { productData: allClientInfo, loading: clientLoading, error: clientError} = useCustomRoute(allClientUrl, allClientDep);
-
- 
+  const {
+    productData: allClientInfo,
+    loading: clientLoading,
+    error: clientError,
+  } = useCustomRoute(allClientUrl, allClientDep)
 
   const getAllClient = async () => {
     try {
@@ -43,6 +44,10 @@ const EstimateCreatePage = () => {
       console.log("Error", err)
     }
   }
+
+  useEffect(() => {
+    getAllClient()
+  }, [])
 
   return (
     <div className="estimate-box">
@@ -157,7 +162,6 @@ const EstimateCreatePage = () => {
               ></textarea>
             </div>
           </div>
-
           <input type="reset" className="filter-btn-design mr-3" />
           <input type="submit" className="filter-btn-design estimate-btn" />
         </form>

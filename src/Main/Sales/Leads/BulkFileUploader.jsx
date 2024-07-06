@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react"
+import React, { useCallback, useState } from "react"
 import { Icon } from "@iconify/react"
 import { Button, Input, Typography, Upload, message } from "antd"
 import "./BulkFileUpload.scss"
@@ -19,6 +19,7 @@ const BulkFileUploader = () => {
     name: "file",
     multiple: true,
     action: "/leadService/api/v1/upload/uploadimageToFileSystem",
+    defaultFileList:files,
     onChange(info) {
       console.log("infoModfakaklsls", info)
       setFiles(info?.fileList?.map((file) => file?.response))
@@ -75,7 +76,6 @@ const BulkFileUploader = () => {
       )}
       <Dragger {...props}>
         <p className="ant-upload-drag-icon">
-          {/* <InboxOutlined /> */}
           <Icon icon="fluent:document-add-20-filled" height={32} width={32} />
         </p>
         <p className="ant-upload-text">

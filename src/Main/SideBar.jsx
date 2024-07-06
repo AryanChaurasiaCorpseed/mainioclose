@@ -410,11 +410,11 @@ const SideBar = () => {
             aria-labelledby="headingOne"
             data-parent="#accordion"
           >
-            {/* <div className="link-child">
-              <NavLink className="link-itemss" to="account">
-                Account Link 1
+            <div className="link-child">
+              <NavLink className="link-itemss" to={`/erp/${userid}/account`}>
+                Accounts List
               </NavLink>
-              <NavLink className="link-itemss" to="account/accounttwo">
+              {/* <NavLink className="link-itemss" to="account/accounttwo">
                 Account Link 2
               </NavLink>
               <NavLink className="link-itemss" to="account/accountthird">
@@ -428,8 +428,8 @@ const SideBar = () => {
               </NavLink>
               <NavLink className="link-itemss" to="account/accountsix">
                 Account Link 6
-              </NavLink>
-            </div> */}
+              </NavLink> */}
+            </div>
           </div>
         </div>
         {/* end */}

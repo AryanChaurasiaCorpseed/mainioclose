@@ -36,6 +36,11 @@ export const createRemakWithFile = createAsyncThunk(
   }
 )
 
+export const craeteProjectByLeadId=createAsyncThunk('leadProjectByLeadId',async(id)=>{
+  const response=await postQuery(`/leadService/api/v1/project/createProjectV2?leadId=${id}`)
+  return response.data
+})
+
 export const LeadSlice = createSlice({
   name: "lead",
   initialState: {
