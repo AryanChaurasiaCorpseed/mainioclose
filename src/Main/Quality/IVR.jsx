@@ -7,8 +7,6 @@ import SomethingWrong from "../../components/usefulThings/SomethingWrong"
 import UserListComponent from "../../Tables/UserListComponent"
 import { getAllIvr } from "../../Toolkit/Slices/IvrSlice"
 import CreateNEditIVR from "../../Model/CreateNEditIVR"
-import { Icon } from "@iconify/react"
-import { Tooltip } from "antd"
 
 const IVR = () => {
   const { allIvr, ivrLoading, ivrError } = useSelector((prev) => prev?.ivr)

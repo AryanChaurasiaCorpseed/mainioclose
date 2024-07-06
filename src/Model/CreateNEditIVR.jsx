@@ -18,13 +18,20 @@ const CreateNEditIVR = () => {
     )
   }
 
-  const handleFinish = useCallback((values) => {
-    values.startTime = dayjs(values.startTime).format("hh:mm a")
-    values.endTime = dayjs(values.endTime).format("hh:mm a")
-    console.log("lskabufgsoufg", values)
-    dispatch(createIvr(values))
-    setOpenModal(false)
-  }, [dispatch])
+  const handleFinish = useCallback(
+    (values) => {
+      values.startTime = dayjs(values?.startTime).format(
+        "ddd, MMM DD YYYY HH:mm:ss"
+      )
+      values.endTime = dayjs(values?.endTime).format(
+        "ddd, MMM DD YYYY HH:mm:ss"
+      )
+      dispatch(createIvr(values))
+      setOpenModal(false)
+      window.location.reload()
+    },
+    [dispatch]
+  )
   return (
     <>
       <button

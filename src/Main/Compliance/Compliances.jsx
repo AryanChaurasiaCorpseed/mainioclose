@@ -13,7 +13,7 @@ const Compliances = () => {
   const { allCompliance, complianceLoading, complianceError } = useSelector(
     (prev) => prev?.compliance
   )
-  const dispatch = useDispatch()
+  const dispatch = useDispatch() 
 
   useEffect(() => {
     dispatch(getAllCompliances())
