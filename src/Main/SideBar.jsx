@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux"
 import { logoutFun } from "../Toolkit/Slices/AuthSlice"
 import { toast } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
-import { Avatar, Button, Popover, Space, Upload, message } from "antd"
+import { Avatar, Button, Popover, Space, } from "antd"
 import axios from "axios"
 import {
   getUserProfilePhoto,
@@ -17,14 +17,10 @@ const SideBar = () => {
   const [logoutBtnStatus, setLogoutBtnStatus] = useState(false)
   const [file, setFile] = useState()
   const [imageResponse, setImageResponse] = useState("")
-  const [uploadSucess, setUploadSucess] = useState(false)
   const [uploadLoading, setUploadLoading] = useState(false)
   const dispatch = useDispatch()
 
   const { userid } = useParams()
-
-  console.log("paramamamamma",useParams())
-
   const navigate = useNavigate()
   const fileRef = useRef()
 
@@ -44,8 +40,6 @@ const SideBar = () => {
   const hrRole = currentRoles?.includes("HR")
   const profilePhoto = useSelector((state) => state.profile.profilePhoto)
   const currentUserId = useSelector((state) => state.auth?.currentUser?.id)
-
-  console.log("dskjgfiusdayguy", profilePhoto)
 
   function getHighestPriorityRole(roles) {
     const priority = ["ADMIN", "HR_HEAD", "HR", "USER"]
@@ -82,8 +76,6 @@ const SideBar = () => {
       setUploadLoading(false)
       // setRemarkMessage((prev) => ({ ...prev, file: response.data }))
       setImageResponse(response.data)
-
-      setUploadSucess(true)
     })
   }
 
@@ -110,20 +102,20 @@ const SideBar = () => {
         </div>
         <Popover
           placement="bottom"
-          trigger={"click"}
+          trigger={['click']}
           content={
             // logoutBtnStatus ? (
             <div className="logout-view-container">
               <form onSubmit={handleSubmit}>
                 <input ref={fileRef} type="file" onChange={handleChange} />
                 <Button htmlType="submit">
-                  {uploadLoading ? "Please Wait.." : "upload"}
+                  {uploadLoading ? "Please Wait..." : "upload"}
                 </Button>
               </form>
               <Space className="btn-container">
                 <Button type="primary" onClick={submitProfile}>
                   Submit
-                </Button>
+                </Button> 
                 <Button onClick={() => logoutUser()}>Logout</Button>
               </Space>
             </div>

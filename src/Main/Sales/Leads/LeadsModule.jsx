@@ -14,12 +14,11 @@ import { MultiSelect } from "primereact/multiselect"
 import { useCustomRoute } from "../../../Routes/GetCustomRoutes"
 import { CSVLink } from "react-csv"
 import {
-  craeteProjectByLeadId,
   getAllLeads,
 } from "../../../Toolkit/Slices/LeadSlice"
 import MainHeading from "../../../components/design/MainHeading"
 import { Button } from "antd"
-import {Icon} from '@iconify/react'
+import { Icon } from "@iconify/react"
 
 const UserLeadComponent = React.lazy(() =>
   import(`../../../Tables/UserLeadComponent`)
@@ -490,16 +489,26 @@ const LeadsModule = () => {
         </Button>
       ),
     },
-    adminRole && {
-      field: "action",
-      headerName: "Action",
-      width: 150,
-      renderCell: (props) => (
-        <p className="m-0" onClick={() => leadDeleteResponse(props.row.id)}>
-          <i className="fa-solid fa-trash" style={{ cursor: "pointer" }}></i>
-        </p>
-      ),
-    },
+    ...(adminRole
+      ? [
+          {
+            field: "action",
+            headerName: "Action",
+            width: 150,
+            renderCell: (props) => (
+              <p
+                className="m-0"
+                onClick={() => leadDeleteResponse(props.row.id)}
+              >
+                <i
+                  className="fa-solid fa-trash"
+                  style={{ cursor: "pointer" }}
+                ></i>
+              </p>
+            ),
+          },
+        ]
+      : []),
   ]
 
   const leadDeleteResponse = async (id) => {
@@ -539,7 +548,6 @@ const LeadsModule = () => {
       if (err.response.status === 500) {
         console.log("Something Went Wrong")
       }
-
       console.log(err)
     }
   }

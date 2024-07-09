@@ -7,6 +7,7 @@ const CommonTable = ({ data, columns }) => {
       <Table
         columns={columns}
         dataSource={data}
+        pagination={false}
         scroll={{
           x: 1500,
           y: 550,

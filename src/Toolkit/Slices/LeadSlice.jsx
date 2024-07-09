@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 import { postQuery } from "../../API/PostQuery"
 import { putQuery } from "../../API/PutQuery"
+import { getQuery } from "../../API/GetQuery"
 
 export const getAllLeads = createAsyncThunk("allLeadsData", async (data) => {
   const allLeads = await postQuery(`/leadService/api/v1/lead/getAllLead`, data)
@@ -41,6 +42,11 @@ export const craeteProjectByLeadId=createAsyncThunk('leadProjectByLeadId',async(
   return response.data
 })
 
+export const getAllLeadsWithLabelId=createAsyncThunk('getAllLeadswithLabel',async()=>{
+  const response =await getQuery(`/leadService/api/v1/lead/getAllLeadNameAndId`)
+  return response.data
+})
+
 export const LeadSlice = createSlice({
   name: "lead",
   initialState: {
@@ -51,6 +57,7 @@ export const LeadSlice = createSlice({
     autoLeadLoading: false,
     autoLeadError: false,
     remarkLoading: "",
+    allLeadsWithLabel:[]
   },
   extraReducers: (builder) => {
     builder.addCase(getAllLeads.pending, (state, action) => {
@@ -81,15 +88,18 @@ export const LeadSlice = createSlice({
       state.autoLeadLoading = false
     })
 
-    builder.addCase(createRemakWithFile.pending, (state, action) => {
+    builder.addCase(getAllLeadsWithLabelId.pending, (state, action) => {
       state.remarkLoading = "pending"
     })
-    builder.addCase(createRemakWithFile.fulfilled, (state, action) => {
+    builder.addCase(getAllLeadsWithLabelId.fulfilled, (state, action) => {
       state.remarkLoading = "success"
+      state.allLeadsWithLabel=action.payload
     })
-    builder.addCase(createRemakWithFile.rejected, (state, action) => {
+    builder.addCase(getAllLeadsWithLabelId.rejected, (state, action) => {
       state.remarkLoading = "rejected"
     })
+
+    
   },
 })
 

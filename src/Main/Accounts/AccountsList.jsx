@@ -1,15 +1,52 @@
-import { Button, Form, Input, Modal, Table, Typography } from "antd"
-import React, { useState } from "react"
+import {
+  Button,
+  Form,
+  Input,
+  Modal,
+  Select,
+  Tag,
+  Tooltip,
+  Typography,
+} from "antd"
+import React, { useEffect, useState } from "react"
 import CommonTable from "../../components/CommonTable"
 import "./Accounts.scss"
 import { Icon } from "@iconify/react"
+import { useDispatch, useSelector } from "react-redux"
+import {
+  createCompany,
+  getAllComapany,
+} from "../../Toolkit/Slices/AccountSlice"
+import { useParams } from "react-router-dom"
+import { getAllLeadsWithLabelId } from "../../Toolkit/Slices/LeadSlice"
+import { getAllProjectList } from "../../Toolkit/Slices/ProjectSlice"
 const { Text } = Typography
 
 export const AccountsList = () => {
+  const [openModal, setModalOpen] = useState(false)
+  const [form] = Form.useForm()
+  const dispatch = useDispatch()
+  const { userid } = useParams()
+  const allCompany = useSelector((state) => state.account.allCompany)
+  const allLeadList = useSelector((state) => state.leads.allLeadsWithLabel)
+  const allProjectList = useSelector((state) => state.project.allProjectList)
+  useEffect(() => {
+    if (userid !== undefined && userid !== null) {
+      dispatch(getAllComapany(userid))
+    }
+    dispatch(getAllLeadsWithLabelId())
+    dispatch(getAllProjectList())
+  }, [userid, dispatch])
+  const handleSubmit = (values) => {
+    dispatch(createCompany(values))
+    setModalOpen(false)
+  }
+
+  console.log("dxjchbvajkxhcboas", allProjectList)
   const columns = [
     {
-      title: "Name",
-      dataIndex: "name",
+      title: "Company name",
+      dataIndex: "companyName",
       key: "1",
       fixed: "left",
     },
@@ -34,14 +71,23 @@ export const AccountsList = () => {
       key: "5",
     },
     {
-      title: "Comapny Lead",
-      dataIndex: "companyLead",
+      title: "Lead",
+      dataIndex: "lead",
       key: "6",
-      render: (_, data) => <Text>{data?.companyLead?.name}</Text>,
+      render: (_, data) => (
+        <Tooltip
+          title={data?.lead?.map((item, idx) => (
+            <Tag>{item?.leadNameame}</Tag>
+          ))}
+        >
+          <Tag>{data?.lead?.[0]?.leadNameame}</Tag>
+        </Tooltip>
+      ),
+      // <Text>{data?.lead?.leadNameame}</Text>
     },
     {
-      title: "Source",
-      dataIndex: "source",
+      title: "Country",
+      dataIndex: "country",
       key: "7",
     },
     {
@@ -53,7 +99,7 @@ export const AccountsList = () => {
       title: "Assignee",
       dataIndex: "assignee",
       key: "9",
-      render: (_, data) => <Text>{data?.assignee?.name}</Text>,
+      render: (_, data) => <Text>{data?.assignee?.fullName}</Text>,
     },
     {
       title: "Status",
@@ -63,9 +109,6 @@ export const AccountsList = () => {
     },
   ]
 
-  const [openModal, setModalOpen] = useState(false)
-  const [form] = Form.useForm()
-
   return (
     <>
       <div className="account-table-header">
@@ -73,7 +116,7 @@ export const AccountsList = () => {
           <Icon icon="fluent:add-20-filled" /> Create
         </Button>
       </div>
-      <CommonTable columns={columns} />
+      <CommonTable columns={columns} data={allCompany} />
       <Modal
         title="Create company"
         centered
@@ -81,12 +124,13 @@ export const AccountsList = () => {
         onCancel={() => setModalOpen(false)}
         onClose={() => setModalOpen(false)}
         onOk={() => form.submit()}
-        okText='Submit'
+        okText="Submit"
       >
         <Form
           form={form}
           layout="vertical"
-          style={{ height: "80vh", overflow: "auto",padding:'0px 12px' }}
+          style={{ height: "80vh", overflow: "auto", padding: "0px 12px" }}
+          onFinish={handleSubmit}
         >
           <Form.Item
             label="Company name"
@@ -132,14 +176,29 @@ export const AccountsList = () => {
             name="leadId"
             rules={[{ required: true, message: "please enter the lead" }]}
           >
-            <Input />
+            <Select
+              mode="multiple"
+              allowClear
+              showSearch
+              options={allLeadList}
+              filterOption={(input, option) =>
+                option.label.toLowerCase().includes(input.toLowerCase())
+              }
+            />
           </Form.Item>
           <Form.Item
             label="Project"
             name="projectId"
             rules={[{ required: true, message: "please enter the projects" }]}
           >
-            <Input />
+            <Select
+              options={allProjectList}
+              showSearch
+              allowClear
+              filterOption={(input, option) =>
+                option.label.toLowerCase().includes(input.toLowerCase())
+              }
+            />
           </Form.Item>
 
           <Form.Item
@@ -165,6 +224,7 @@ export const AccountsList = () => {
           >
             <Input />
           </Form.Item>
+          
           <Form.Item
             label="Country"
             name="country"

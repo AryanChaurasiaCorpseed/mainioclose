@@ -7,7 +7,6 @@ import storage from "redux-persist/lib/storage"
 import persistStore from "redux-persist/es/persistStore"
 import LeadSlice from "./Slices/LeadSlice"
 import NotificationSlice from "./Slices/NotificationSlice"
-import { getDefaultMiddleware } from "@reduxjs/toolkit"
 import TicketSlice from "./Slices/TicketSlice"
 import ForgetPasswordSlice from "./Slices/ForgetPasswordSlice"
 import SignUpSlice from "./Slices/SignUpSlice"
@@ -22,6 +21,7 @@ import RatingSlice from "./Slices/RatingSlice"
 import UserProfileSlice from "./Slices/UserProfileSlice"
 import ComplianceSlice from "./Slices/ComplianceSlice"
 import IvrSlice from "./Slices/IvrSlice"
+import AccountSlice from "./Slices/AccountSlice"
 
 const reducers = combineReducers({
   auth: AuthSlice,
@@ -41,7 +41,8 @@ const reducers = combineReducers({
   ratingn: RatingSlice,
   profile: UserProfileSlice,
   compliance: ComplianceSlice,
-  ivr:IvrSlice
+  ivr:IvrSlice,
+  account:AccountSlice
 })
 
 const persistConfig = {
