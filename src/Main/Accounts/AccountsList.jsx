@@ -80,7 +80,7 @@ export const AccountsList = () => {
             <Tag>{item?.leadNameame}</Tag>
           ))}
         >
-          <Tag>{data?.lead?.[0]?.leadNameame}</Tag>
+          <Tag className="lead-tag">{data?.lead?.[0]?.leadNameame}</Tag>
         </Tooltip>
       ),
       // <Text>{data?.lead?.leadNameame}</Text>

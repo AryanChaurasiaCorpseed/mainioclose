@@ -5,3 +5,17 @@
     width: 100%;
     padding:4px;
 }
+// .lead-tag{
+//     max-width: 60px;
+//     text-overflow: ellipsis;
+// }
+
+
+.lead-tag {
+    display: inline-block;  /* Ensure the tag respects the width constraints */
+    max-width: 80px;       /* Set the maximum width of the tag */
+    white-space: nowrap;   /* Prevent text from wrapping to the next line */
+    overflow: hidden;      /* Hide overflowed text */
+    text-overflow: ellipsis; /* Show ellipsis when text overflows */
+    vertical-align: middle; /* Optional: Align the text vertically in the middle */
+  }
