@@ -1,4 +1,10 @@
-import React, { Suspense, useEffect, useRef, useState } from "react"
+import React, {
+  Suspense,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react"
 import "./LeadsModule.scss"
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom"
 import axios from "axios"
@@ -13,12 +19,11 @@ import InputErrorComponent from "../../../components/InputErrorComponent"
 import { MultiSelect } from "primereact/multiselect"
 import { useCustomRoute } from "../../../Routes/GetCustomRoutes"
 import { CSVLink } from "react-csv"
-import {
-  getAllLeads,
-} from "../../../Toolkit/Slices/LeadSlice"
+import { getAllLeads, updateHelper } from "../../../Toolkit/Slices/LeadSlice"
 import MainHeading from "../../../components/design/MainHeading"
-import { Button } from "antd"
+import { Button, Select } from "antd"
 import { Icon } from "@iconify/react"
+import { getAllUsers } from "../../../Toolkit/Slices/UsersSlice"
 
 const UserLeadComponent = React.lazy(() =>
   import(`../../../Tables/UserLeadComponent`)
@@ -109,11 +114,14 @@ const LeadsModule = () => {
 
   useEffect(() => {
     setMultiLeadData((prev) => ({ ...prev, leadIds: selectedRows }))
-  }, [multiLeadData])
+  }, [])
 
   useEffect(() => {
     setDeleteMultiLead((prev) => ({ ...prev, leadId: selectedRows }))
-  }, [deleteMultiLead])
+  }, [])
+  useEffect(() => {
+    dispatch(getAllUsers())
+  }, [])
 
   useEffect(() => {
     dispatch(getAllLeads(allMultiFilterData))
@@ -180,6 +188,17 @@ const LeadsModule = () => {
   const currentUserRoles = useSelector((state) => state?.auth?.roles)
   const adminRole = currentUserRoles.includes("ADMIN")
   const newRole = currentUserRoles.includes("NEW")
+  const allUsers = useSelector((state) => state.user.allUsers)
+  console.log("allUseredrsdrstr", allUsers)
+
+  const handleHelperChange = useCallback((id, leadId) => {
+    let temp = {
+      leadId: leadId,
+      userId: id,
+    }
+    dispatch(updateHelper(temp))
+    // window.location.reload()
+  }, [])
 
   const exportData = allLeadsData.map((row) => ({
     "S.No": row?.id,
@@ -282,6 +301,7 @@ const LeadsModule = () => {
         <p className="mb-0">{props?.row?.assignee?.fullName}</p>
       ),
     },
+
     {
       field: "createDate",
       headerName: "Date",
@@ -423,6 +443,26 @@ const LeadsModule = () => {
       ),
     },
     {
+      field: "helper",
+      headerName: "Helper",
+      width: 150,
+      renderCell: (props) => (
+        // <p className="mb-0">{props?.row?.helper ? props?.row?.helper : "NA"}</p>
+        <Select
+          value={props?.row?.helper ? props?.row?.helper : "NA"}
+          style={{ width: "100%" }}
+          options={[
+            { label: "NA", value: "NA" },
+            ...allUsers?.map((item) => ({
+              label: item?.fullName,
+              value: item?.id,
+            })),
+          ]}
+          onChange={(e) => handleHelperChange(e, props?.row?.id)}
+        />
+      ),
+    },
+    {
       field: "createdBy",
       headerName: "Created By",
       width: 150,
@@ -444,7 +484,6 @@ const LeadsModule = () => {
         </p>
       ),
     },
-
     {
       field: "assignee",
       headerName: "Change Assignee",
@@ -454,7 +493,6 @@ const LeadsModule = () => {
           <select
             className="assignee-button"
             onChange={(e) => changeLeadAssignee(e.target.value, props.row.id)}
-            // onSelect={(e)=> }
             name="lead"
             id="lead"
           >

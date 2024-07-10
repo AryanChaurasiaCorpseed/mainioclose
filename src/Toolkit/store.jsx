@@ -21,7 +21,6 @@ import RatingSlice from "./Slices/RatingSlice"
 import UserProfileSlice from "./Slices/UserProfileSlice"
 import ComplianceSlice from "./Slices/ComplianceSlice"
 import IvrSlice from "./Slices/IvrSlice"
-import AccountSlice from "./Slices/AccountSlice"
 
 const reducers = combineReducers({
   auth: AuthSlice,
@@ -42,7 +41,6 @@ const reducers = combineReducers({
   profile: UserProfileSlice,
   compliance: ComplianceSlice,
   ivr:IvrSlice,
-  account:AccountSlice
 })
 
 const persistConfig = {

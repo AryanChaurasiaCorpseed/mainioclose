@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 import { getQuery } from "../../API/GetQuery"
+import { postQuery } from "../../API/PostQuery"
 
 export const getCompanyAction = createAsyncThunk(
   "getallCompanyData",
@@ -31,6 +32,30 @@ export const getCompanyLeadsAction = createAsyncThunk(
   }
 )
 
+export const createCompany = createAsyncThunk("createCompany", async (data) => {
+  const response = await postQuery(
+    `/leadService/api/v1/company/createCompany`,
+    data
+  )
+  return response.data
+})
+export const getAllComapany = createAsyncThunk("getAllComapny", async (id) => {
+  const response = await getQuery(
+    `/leadService/api/v1/company/getAllCompany?userId=${id}`
+  )
+  return response.data
+})
+
+export const getAllParentCompany = createAsyncThunk(
+  "allParentCompany",
+  async () => {
+    const response = await getQuery(
+      `/leadService/api/v1/company/getAllParentCompany`
+    )
+    return response.data
+  }
+)
+
 // /leadService/api/v1/company/getAllLeadByCompany?companyId=2
 
 const CompnaySlice = createSlice({
@@ -45,6 +70,9 @@ const CompnaySlice = createSlice({
     compLeads: [],
     compLeadsLoading: false,
     compLeadsError: false,
+    allCompany: [],
+    loading: "",
+    allParentCompany:[]
   },
   extraReducers: (builder) => {
     builder.addCase(getCompanyAction.pending, (state, action) => {
@@ -88,6 +116,31 @@ const CompnaySlice = createSlice({
       state.compLeadsError = true
       state.compLeadsLoading = false
     })
+
+    builder.addCase(getAllComapany.pending, (state, action) => {
+      state.loading = "pending"
+    })
+    builder.addCase(getAllComapany.fulfilled, (state, action) => {
+      state.allCompany = action.payload
+      state.loading = "success"
+    })
+    builder.addCase(getAllComapany.rejected, (state, action) => {
+      state.loading = "rejected"
+    })
+
+
+    builder.addCase(getAllParentCompany.pending, (state, action) => {
+      state.loading = "pending"
+    })
+    builder.addCase(getAllParentCompany.fulfilled, (state, action) => {
+      state.allParentCompany = action.payload
+      state.loading = "success"
+    })
+    builder.addCase(getAllParentCompany.rejected, (state, action) => {
+      state.loading = "rejected"
+    })
+
+
   },
 })
 

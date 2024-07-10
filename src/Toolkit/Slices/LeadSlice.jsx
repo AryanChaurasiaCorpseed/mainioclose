@@ -37,13 +37,30 @@ export const createRemakWithFile = createAsyncThunk(
   }
 )
 
-export const craeteProjectByLeadId=createAsyncThunk('leadProjectByLeadId',async(id)=>{
-  const response=await postQuery(`/leadService/api/v1/project/createProjectV2?leadId=${id}`)
-  return response.data
-})
+export const craeteProjectByLeadId = createAsyncThunk(
+  "leadProjectByLeadId",
+  async (id) => {
+    const response = await postQuery(
+      `/leadService/api/v1/project/createProjectV2?leadId=${id}`
+    )
+    return response.data
+  }
+)
 
-export const getAllLeadsWithLabelId=createAsyncThunk('getAllLeadswithLabel',async()=>{
-  const response =await getQuery(`/leadService/api/v1/lead/getAllLeadNameAndId`)
+export const getAllLeadsWithLabelId = createAsyncThunk(
+  "getAllLeadswithLabel",
+  async () => {
+    const response = await getQuery(
+      `/leadService/api/v1/lead/getAllLeadNameAndId`
+    )
+    return response.data
+  }
+)
+
+export const updateHelper = createAsyncThunk("updateHelper", async (data) => {
+  const response = await putQuery(
+    `/leadService/api/v1/lead/updateHelper?userId=${data?.userId}&leadId=${data?.leadId}`
+  )
   return response.data
 })
 
@@ -57,7 +74,7 @@ export const LeadSlice = createSlice({
     autoLeadLoading: false,
     autoLeadError: false,
     remarkLoading: "",
-    allLeadsWithLabel:[]
+    allLeadsWithLabel: [],
   },
   extraReducers: (builder) => {
     builder.addCase(getAllLeads.pending, (state, action) => {
@@ -93,13 +110,11 @@ export const LeadSlice = createSlice({
     })
     builder.addCase(getAllLeadsWithLabelId.fulfilled, (state, action) => {
       state.remarkLoading = "success"
-      state.allLeadsWithLabel=action.payload
+      state.allLeadsWithLabel = action.payload
     })
     builder.addCase(getAllLeadsWithLabelId.rejected, (state, action) => {
       state.remarkLoading = "rejected"
     })
-
-    
   },
 })
 
