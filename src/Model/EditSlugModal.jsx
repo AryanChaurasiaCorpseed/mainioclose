@@ -1,9 +1,10 @@
-import { Modal } from "antd"
-import React, { useCallback, useEffect, useState } from "react"
+import { Button, Modal } from "antd"
+import React, { useCallback, useState } from "react"
 import LongInput from "../components/Inputs/LongInput"
 import SmOneBtn from "../components/button/SmOneBtn"
 import { useDispatch } from "react-redux"
 import { editSulg } from "../Toolkit/Slices/LeadSlugSlice"
+import { Icon } from "@iconify/react"
 
 const EditSlugModal = ({ data }) => {
   const dispatch = useDispatch()
@@ -15,9 +16,9 @@ const EditSlugModal = ({ data }) => {
 
   return (
     <div>
-      <button className="btn btn-info" onClick={() => setOpenModal(true)}>
-        Edit
-      </button>
+      <Button onClick={() => setOpenModal(true)} size="small">
+        <Icon icon="fluent:edit-20-filled" />
+      </Button>
       <Modal
         open={openModal}
         onCancel={() => setOpenModal(false)}

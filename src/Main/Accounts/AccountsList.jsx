@@ -99,7 +99,11 @@ export const AccountsList = () => {
       <div className="account-table-header">
         <CreateCompanyModal />
       </div>
-      <CommonTable columns={columns} data={allCompany} />
+      <CommonTable
+        columns={columns}
+        data={allCompany}
+        scroll={{ x: 1500, y: 550 }}
+      />
     </TableOutlet>
   )
 }

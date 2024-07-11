@@ -3,10 +3,15 @@ import { getQuery } from "../../API/GetQuery"
 import { postQuery } from "../../API/PostQuery"
 import { putQuery } from "../../API/PutQuery"
 
-export const getAllUrlAction = createAsyncThunk("showLeadUrlData", async () => {
-  const showLeadUrl = await getQuery(`/leadService/api/v1/urls/getUrls`)
-  return showLeadUrl?.data
-})
+export const getAllUrlAction = createAsyncThunk(
+  "showLeadUrlData",
+  async (pageNo) => {
+    const showLeadUrl = await getQuery(
+      `/leadService/api/v1/urls/getUrls?pageSize=${50}&pageNo=${pageNo}`
+    )
+    return showLeadUrl?.data
+  }
+)
 
 export const createAllUrlAction = createAsyncThunk(
   "createLeadUrlData",
@@ -19,13 +24,10 @@ export const createAllUrlAction = createAsyncThunk(
   }
 )
 
-export const editUrls=createAsyncThunk('editUrls',async(data)=>{
-  const respose =await putQuery('/leadService/api/v1/urls/updateUrls',data)
+export const editUrls = createAsyncThunk("editUrls", async (data) => {
+  const respose = await putQuery("/leadService/api/v1/urls/updateUrls", data)
   return respose.data
 })
-
-
-
 
 export const LeadUrlSlice = createSlice({
   name: "leadurls",
@@ -36,6 +38,15 @@ export const LeadUrlSlice = createSlice({
     allLeadUrl: [],
     allLeadUrlLoading: false,
     allLeadUrlError: false,
+    page: 0,
+  },
+  reducers: {
+    handleNextPagination: (state, action) => {
+      state.page = state.page + 1
+    },
+    handlePrevPagination: (state, action) => {
+      state.page = state.page >= 0 ? state.page - 1 : 0
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(getAllUrlAction.pending, (state, action) => {
@@ -67,5 +78,7 @@ export const LeadUrlSlice = createSlice({
     })
   },
 })
+export const { handleNextPagination, handlePrevPagination } =
+  LeadUrlSlice.actions
 
 export default LeadUrlSlice.reducer

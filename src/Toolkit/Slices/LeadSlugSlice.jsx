@@ -15,19 +15,20 @@ export const leadSlugAction = createAsyncThunk(
 
 export const getAllSlugAction = createAsyncThunk(
   "showLeadSlugData",
-  async () => {
-    const showLeadSlug = await getQuery(`/leadService/api/v1/slug/getSlug`)
+  async (pageNo) => {
+    const showLeadSlug = await getQuery(
+      `/leadService/api/v1/slug/getSlug?pageSize=${50}&pageNo=${pageNo}`
+    )
     return showLeadSlug?.data
   }
 )
 
-export const editSulg =createAsyncThunk('editSlug',async(data)=>{
-  const response=await putQuery(`/leadService/api/v1/slug/updateSlug?name=${data?.name}&id=${data?.id}`)
+export const editSulg = createAsyncThunk("editSlug", async (data) => {
+  const response = await putQuery(
+    `/leadService/api/v1/slug/updateSlug?name=${data?.name}&id=${data?.id}`
+  )
   return response.data
 })
-
-
-
 
 export const LeadSlugSlice = createSlice({
   name: "leadslug",
@@ -38,6 +39,15 @@ export const LeadSlugSlice = createSlice({
     allLeadSlug: [],
     allLeadSlugLoading: false,
     allLeadSlugError: false,
+    page: 0,
+  },
+  reducers: {
+    handleNextPagination: (state, action) => {
+      state.page = state.page + 1
+    },
+    handlePrevPagination: (state, action) => {
+      state.page = state.page >= 0 ? state.page - 1 : 0
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(leadSlugAction.pending, (state, action) => {
@@ -68,16 +78,15 @@ export const LeadSlugSlice = createSlice({
       state.allLeadSlugLoading = false
     })
 
-
     builder.addCase(editSulg.pending, (state, action) => {
       state.allLeadSlugLoading = true
       state.allLeadSlugError = false
     })
     builder.addCase(editSulg.fulfilled, (state, action) => {
-      let data=action?.payload
-      let tempdata=[...state?.allLeadSlug]
-      const index = tempdata.findIndex(obj => obj.id ===  data?.id);
-      tempdata[index]=data
+      let data = action?.payload
+      let tempdata = [...state?.allLeadSlug]
+      const index = tempdata.findIndex((obj) => obj.id === data?.id)
+      tempdata[index] = data
       state.allLeadSlug = tempdata
       state.allLeadSlugLoading = false
       state.allLeadSlugError = false
@@ -86,12 +95,8 @@ export const LeadSlugSlice = createSlice({
       state.allLeadSlugError = true
       state.allLeadSlugLoading = false
     })
-
-
-
-
   },
 })
-
+export const { handleNextPagination, handlePrevPagination } =
+LeadSlugSlice.actions
 export default LeadSlugSlice.reducer
-

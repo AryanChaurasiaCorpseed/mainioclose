@@ -2,13 +2,14 @@ import { Button, Form, Input, Modal, Select, message } from "antd"
 import React, { useCallback, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { editUrls, getAllUrlAction } from "../../../Toolkit/Slices/LeadUrlSlice"
+import { Icon } from "@iconify/react"
 
 const EditUrls = ({ data }) => {
   const [form] = Form.useForm()
   const dispatch = useDispatch()
   const [openModal, setOpenModal] = useState(false)
   const { allLeadSlug } = useSelector((prev) => prev?.leadslug)
-  
+
   const editFormValues = useCallback(() => {
     setOpenModal(true)
     form.setFieldsValue({
@@ -22,7 +23,7 @@ const EditUrls = ({ data }) => {
     async (values) => {
       values.urlsId = data?.id
       try {
-        const response = await dispatch(editUrls(values)).unwrap() 
+        const response = await dispatch(editUrls(values)).unwrap()
         message.success("URL edited successfully!")
         setOpenModal(false)
         dispatch(getAllUrlAction())
@@ -35,7 +36,9 @@ const EditUrls = ({ data }) => {
   )
   return (
     <>
-      <Button onClick={editFormValues}>Edit</Button>
+      <Button onClick={editFormValues} size="small">
+        <Icon icon="fluent:edit-20-filled" />
+      </Button>
       <Modal
         title="Edit Url"
         open={openModal}
@@ -43,7 +46,7 @@ const EditUrls = ({ data }) => {
         width={800}
         onClose={() => setOpenModal(false)}
         onOk={() => form.submit()}
-        okText='Submit'
+        okText="Submit"
       >
         <Form layout="vertical" form={form} onFinish={handleSubmit}>
           <Form.Item

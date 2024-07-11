@@ -191,14 +191,20 @@ const LeadsModule = () => {
   const allUsers = useSelector((state) => state.user.allUsers)
   console.log("allUseredrsdrstr", allUsers)
 
-  const handleHelperChange = useCallback((id, leadId) => {
-    let temp = {
-      leadId: leadId,
-      userId: id,
-    }
-    dispatch(updateHelper(temp))
-    // window.location.reload()
-  }, [])
+  const handleHelperChange = useCallback(
+    (id, leadId) => {
+      let temp = {
+        leadId: leadId,
+        userId: id,
+      }
+      dispatch(updateHelper(temp)).then((response) => {
+        if (response?.meta?.requestStatus === "fulfilled") {
+          window.location.reload()
+        }
+      })
+    },
+    [dispatch]
+  )
 
   const exportData = allLeadsData.map((row) => ({
     "S.No": row?.id,
@@ -447,12 +453,11 @@ const LeadsModule = () => {
       headerName: "Helper",
       width: 150,
       renderCell: (props) => (
-        // <p className="mb-0">{props?.row?.helper ? props?.row?.helper : "NA"}</p>
         <Select
-          value={props?.row?.helper ? props?.row?.helper : "NA"}
+          value={props?.row?.helper ? props?.row?.helpUser?.id : ""}
           style={{ width: "100%" }}
           options={[
-            { label: "NA", value: "NA" },
+            { label: "NA", value: "" },
             ...allUsers?.map((item) => ({
               label: item?.fullName,
               value: item?.id,

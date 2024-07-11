@@ -3,52 +3,32 @@ import { useDispatch, useSelector } from "react-redux"
 import {
   createAllUrlAction,
   getAllUrlAction,
+  handleNextPagination,
+  handlePrevPagination,
 } from "../../../Toolkit/Slices/LeadUrlSlice"
 import MainHeading from "../../../components/design/MainHeading"
-import TableBoot from "../../../components/tablesData/TableBoot"
-import LongInput from "../../../components/Inputs/LongInput"
-import SmOneBtn from "../../../components/button/SmOneBtn"
-import { MultiSelect } from "primereact/multiselect"
 import { getAllSlugAction } from "../../../Toolkit/Slices/LeadSlugSlice"
-import DropDownComp from "../../../components/Inputs/DropDownComp"
 import { toast } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
-import { Button, Form, Input, Select, Tooltip } from "antd"
+import { Button, Form, Input, Select, Tooltip, Typography } from "antd"
 import EditUrls from "./EditUrls"
+import CommonTable from "../../../components/CommonTable"
+const { Text } = Typography
 toast.configure()
 
 const UrlsPage = () => {
-  const [form]=Form.useForm()
-  const [getAllSlug, setGetAllSlug] = useState([])
-  const [urlLeadData, setUrlLeadData] = useState({
-    name: "",
-    urlSlug: getAllSlug,
-    quality: true,
-  })
+  const [form] = Form.useForm()
+  const { allLeadSlug, page } = useSelector((prev) => prev?.leadslug)
+  const urlPage = useSelector((state) => state.leadurls.page)
   const [urlDep, setUrlDep] = useState(false)
-
-  useEffect(() => {
-    setUrlLeadData((prevData) => ({
-      ...prevData,
-      urlSlug: getAllSlug,
-    }))
-  }, [getAllSlug])
-
   const dispatch = useDispatch()
+  useEffect(() => {
+    dispatch(getAllSlugAction(page))
+  }, [dispatch, page])
 
   useEffect(() => {
-    dispatch(getAllSlugAction())
-  }, [dispatch])
-
-  const { allLeadSlug } = useSelector((prev) => prev?.leadslug)
-
-  const saveUrlData = (e) => {
-    setUrlLeadData((prev) => ({ ...prev, [e.target.name]: e.target.value }))
-  }
-
-  useEffect(() => {
-    dispatch(getAllUrlAction())
-  }, [dispatch, urlDep])
+    dispatch(getAllUrlAction(urlPage))
+  }, [dispatch, urlDep, urlPage])
 
   const { allLeadUrl, allLeadUrlLoading, allLeadUrlError } = useSelector(
     (prev) => prev?.leadurls
@@ -57,50 +37,17 @@ const UrlsPage = () => {
   const { createLeadUrl, createLeadUrlLoading, createLeadUrlError } =
     useSelector((prev) => prev?.leadurls)
 
-  // const createUrlFun = async (e) => {
-  //   e.preventDefault()
-  //   const createNewUrl = await dispatch(createAllUrlAction(urlLeadData))
-  //   if (createNewUrl.type === "createLeadUrlData/fulfilled") {
-  //     toast.success("Url Created Succesfully")
-  //     setUrlDep((prev) => !prev)
-  //     setUrlLeadData({
-  //       name: "",
-  //       urlSlug: getAllSlug,
-  //       quality: true,
-  //     })
-  //     setGetAllSlug([])
-  //   }
-  //   if (createNewUrl.type === "createLeadUrlData/rejected") {
-  //     toast.success("Something Went Wrong")
-  //   }
-  // }
-
   const handleSubmit = async (values) => {
     const createNewUrl = await dispatch(createAllUrlAction(values))
     if (createNewUrl.type === "createLeadUrlData/fulfilled") {
       toast.success("Url Created Succesfully")
       setUrlDep((prev) => !prev)
       form.resetFields()
-      // setUrlLeadData({
-      //   name: "",
-      //   urlSlug: getAllSlug,
-      //   quality: true,
-      // })
-      // setGetAllSlug([])
     }
     if (createNewUrl.type === "createLeadUrlData/rejected") {
       toast.success("Something Went Wrong")
     }
   }
-
-  const dataBool = [
-    { id: "true", number: "True" },
-    { id: "false", number: "False" },
-  ]
-
-  const tableHead = ["id", "Url Name", "Slugs", "Quality", "Edit"]
-
-  console.log("ALLLKJKGHDH", allLeadUrl)
 
   const slugsInTooltip = (data) => {
     return data?.map((items) => {
@@ -108,42 +55,41 @@ const UrlsPage = () => {
     })
   }
 
+  const columns = [
+    { title: "id", dataIndex: "id" },
+    {
+      title: "Url Name",
+      dataIndex: "",
+      render: (_, data) => <Text>{data?.urlsName?.slice(0, 70)}</Text>,
+    },
+    {
+      title: "Slugs",
+      dataIndex: "slugs",
+      render: (_, data) =>
+        data?.urlSlug?.length > 0 ? (
+          <Tooltip title={slugsInTooltip(data?.urlSlug)}>
+            {data?.urlSlug?.[0]?.name}
+          </Tooltip>
+        ) : (
+          "N/A"
+        ),
+    },
+    {
+      title: "Quality",
+      dataIndex: "quality",
+      render: (_, data) => <Text>{data?.quality ? "True" : "False"}</Text>,
+    },
+    {
+      title: "Edit",
+      dataIndex: "edit",
+      render: (_, data) => <EditUrls data={data} />,
+    },
+  ]
+
   return (
     <div>
       <MainHeading data={`Urls Create`} />
       <div className="lead-box">
-        {/* <form>
-          <LongInput
-            type="text"
-            name="name"
-            value={urlLeadData.name}
-            label={`Enter Url Name`}
-            onChange={saveUrlData}
-          />
-          <MultiSelect
-            style={{ dropdown: { backgroundColor: "#000" } }}
-            value={getAllSlug}
-            onChange={(e) => setGetAllSlug(e.value)}
-            options={allLeadSlug}
-            optionLabel="name"
-            placeholder="Select Slug"
-            optionValue="id"
-            maxSelectedLabels={6}
-            className="multi-select-boxx w-100 py-1 my-3"
-          />
-          <DropDownComp
-            name="quality"
-            onChange={saveUrlData}
-            // value={urlLeadData.quality}
-            data={dataBool}
-            options="Select Quality"
-            className="pl-0"
-          />
-          <SmOneBtn
-            name={createLeadUrlLoading ? "Loading..." : "Submit"}
-            onClick={createUrlFun}
-          />
-        </form> */}
         <Form layout="vertical" onFinish={handleSubmit} form={form}>
           <Form.Item
             label="Enter Url Name"
@@ -195,32 +141,16 @@ const UrlsPage = () => {
           </Form.Item>
         </Form>
       </div>
-
-      <TableBoot
-        tbRow={tableHead}
-        loading={allLeadUrlLoading}
-        error={allLeadUrlError}
-      >
-        {allLeadUrl?.map((status, index) => (
-          <tr key={index}>
-            <th>{status.id}</th>
-            <td>{status?.urlsName?.slice(0, 70)}</td>
-            <td>
-              {status?.urlSlug?.length > 0 ? (
-                <Tooltip title={slugsInTooltip(status?.urlSlug)}>
-                  {status?.urlSlug?.[0]?.name}
-                </Tooltip>
-              ) : (
-                "N/A"
-              )}
-            </td>
-            <td>{status?.quality ? "True" : "False"}</td>
-            <td>
-              <EditUrls data={status} />
-            </td>
-          </tr>
-        ))}
-      </TableBoot>
+      <CommonTable
+        columns={columns}
+        data={allLeadUrl}
+        nextPage={handleNextPagination}
+        prevPage={handlePrevPagination}
+        pagination={true}
+        scroll={{ y: 300 }}
+        prevDisable={page === 0 && true}
+        nextDisable={allLeadUrl?.length < 50 && true}
+      />
     </div>
   )
 }

@@ -19,7 +19,7 @@ const UserService = () => {
   const dispatch = useDispatch()
 
   useEffect(() => {
-    dispatch(getAllSlugAction())
+    dispatch(getAllSlugAction(0))
   }, [dispatch])
 
   const { allLeadUrl, allLeadUrlLoading, allLeadUrlError } = useSelector(
