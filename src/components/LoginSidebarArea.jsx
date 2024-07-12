@@ -4,19 +4,27 @@ import "./LoginSidebarArea.scss"
 const LoginSidebarArea = () => {
   return (
     <div className="bg-image-logo">
-      <div className="p-4">
-        <h2 className="h-one">
-          Sell, market, and service <br />
-          with the <span>world's #1 CRM.</span>
-        </h2>
-        <div className="py-2">
+      <div className="content-container">
+        <div className="heading-container">
+          <h2 className="h-one">
+            {/* Sell, market, and service 
+          with the <span>world's #1 CRM.</span> */}
+            Empower Your Business
+          </h2>
+          <h2 className="h-one">with Our Comprehensive ERP Solution</h2>
+        </div>
+        <div className="sub-content">
           <p className="side-paraa">
-            Welcome to the Salesforce Customer Success Platform. <br />
-            Our new Lightning Platform gives you the fastest, most <br />
-            complete way to put your customers at the centre of <br />
-            everything you do.
+            Optimize, streamline, and grow with our advanced ERP solution.
+            Welcome to the future of business management. Our state-of-the-art
+            ERP platform empowers you to integrate and automate your core
+            business processes, putting efficiency and accuracy at the heart of
+            your operations.
           </p>
         </div>
+      </div>
+      <div className="landing-img">
+        {/* <img src="https://img.freepik.com/premium-photo/business-people-using-laptop-with-document-management-erp-enterprise-resource-planning-conceptenterprise-resource-management-erp-software-system-business-resources-plan-presented_162459-4032.jpg?w=996" /> */}
       </div>
     </div>
   )

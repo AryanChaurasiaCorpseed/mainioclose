@@ -13,7 +13,7 @@ export const getUserProfilePhoto = createAsyncThunk(
   }
 )
 export const updateProfilePhoto=createAsyncThunk('updateProfilePhoto',async(data)=>{
-    const respose=await putQuery(`?userId=${data?.userId}&profilePic=${data?.profilePhoto}`)
+    const respose=await putQuery(`/leadService/api/v1/users/updateProfile?userId=${data?.userId}&profilePic=${data?.profilePhoto}`)
     return respose.data
 })
 

@@ -160,6 +160,7 @@ button:focus {
 .grid-two {
   display: grid;
   grid-template-columns: 1fr 1fr;
+  background-color: #eff4f5;
 }
 
 .min-box {

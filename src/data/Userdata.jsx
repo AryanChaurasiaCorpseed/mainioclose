@@ -1,6 +1,6 @@
 import { Space, Typography } from "antd"
 import ColComp from "../components/small/ColComp"
-import UserLockerEdit from "../Model/UserLockerEdit";
+import UserLockerEdit from "../Model/UserLockerEdit"
 const { Text } = Typography
 
 export const allUserdataCol = [
@@ -8,6 +8,17 @@ export const allUserdataCol = [
   { field: "designation", headerName: "Designation", width: 150 },
   { field: "department", headerName: "Department", width: 150 },
   { field: "role", headerName: "Role", width: 150 },
+  {
+    field: "managers",
+    headerName: "Manager",
+    width: 150,
+    renderCell: (props) =>
+      props?.row?.manager ? (
+        <Text>{props?.row?.managers?.fullName}</Text>
+      ) : (
+        "NA"
+      ),
+  },
   {
     field: "lockerSize",
     headerName: "Locker Size",

@@ -9,7 +9,7 @@ toast.configure()
 
 const SetNewPasswordPage = () => {
   const { userid } = useParams()
-
+  const [showPassword, setShowPassword] = useState(false)
   const [newPassword, setnewPassword] = useState({
     id: userid,
     password: "",
@@ -59,7 +59,17 @@ const SetNewPasswordPage = () => {
 
         <div>
           <div className="cm-input-box">
-            <i className="fa-regular cm-icon fa-eye-slash"></i>
+            {showPassword ? (
+              <i
+                onClick={() => setShowPassword((prev) => !prev)}
+                className="fa-solid cm-icon fa-eye"
+              ></i>
+            ) : (
+              <i
+                onClick={() => setShowPassword((prev) => !prev)}
+                className="fa-regular cm-icon fa-eye-slash"
+              ></i>
+            )}
             <input
               className="cm-input"
               type="password"
@@ -77,7 +87,17 @@ const SetNewPasswordPage = () => {
 
         <div>
           <div className="cm-input-box">
-            <i className="fa-regular cm-icon fa-eye-slash"></i>
+            {showPassword ? (
+              <i
+                onClick={() => setShowPassword((prev) => !prev)}
+                className="fa-solid cm-icon fa-eye"
+              ></i>
+            ) : (
+              <i
+                onClick={() => setShowPassword((prev) => !prev)}
+                className="fa-regular cm-icon fa-eye-slash"
+              ></i>
+            )}
             <input
               className="cm-input"
               type="password"

@@ -86,7 +86,7 @@ const ForgetPassword = () => {
   return (
     <div className="grid-two">
       <form>
-        <div className="cm-box bg-g-light container">
+        <div className="cm-box container">
           <div>
             <img src="https://www.corpseed.com/assets/img/brands/CORPSEED.webp" />
           </div>

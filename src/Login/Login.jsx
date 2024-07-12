@@ -86,7 +86,9 @@ const Login = () => {
 
   return (
     <div className="grid-two">
-      {/* background-color: #f4f6f9; */}
+      <div>
+        <LoginSidebarArea />
+      </div>
       <div className="cm-box bg-g-light container">
         <div>
           <img src="https://www.corpseed.com/assets/img/brands/CORPSEED.webp" />
@@ -170,16 +172,7 @@ const Login = () => {
             onClick={(e) => userSignIn(e)}
             className={`mt-3 w-100`}
           />
-          {/* <p className="note-user">
-        Not a User{" "}
-        <Link className="ml-1 out-none" to="/erp/signup">
-          Signup
-        </Link>
-      </p> */}
         </div>
-      </div>
-      <div>
-        <LoginSidebarArea />
       </div>
     </div>
   )

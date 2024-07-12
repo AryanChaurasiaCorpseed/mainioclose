@@ -11,34 +11,19 @@ import {
   getUserProfilePhoto,
   updateProfilePhoto,
 } from "../Toolkit/Slices/UserProfileSlice"
+import ProfileDrawer from "../components/ProfileDrawer"
 toast.configure()
 
 const SideBar = () => {
-  const [logoutBtnStatus, setLogoutBtnStatus] = useState(false)
-  const [file, setFile] = useState()
-  const [imageResponse, setImageResponse] = useState("")
-  const [uploadLoading, setUploadLoading] = useState(false)
+
   const dispatch = useDispatch()
 
   const { userid } = useParams()
   const navigate = useNavigate()
-  const fileRef = useRef()
-
-  const logoutUser = () => {
-    if (window.confirm("Are you sure for Logout?") === true) {
-      const key = localStorage.getItem("persist:root")
-      dispatch(logoutFun())
-      const token = localStorage.removeItem(key)
-      navigate("/erp/login")
-      toast.success("Logout Succesfully")
-    }
-  }
-
-  const currentUserProfile = useSelector((state) => state?.auth?.currentUser)
   const currentRoles = useSelector((state) => state?.auth?.roles)
   const adminRole = currentRoles?.includes("ADMIN")
   const hrRole = currentRoles?.includes("HR")
-  const profilePhoto = useSelector((state) => state.profile.profilePhoto)
+ 
   const currentUserId = useSelector((state) => state.auth?.currentUser?.id)
 
   function getHighestPriorityRole(roles) {
@@ -56,87 +41,13 @@ const SideBar = () => {
     }
   }, [currentUserId])
 
-  function handleChange(event) {
-    setFile(event.target.files[0])
-  }
 
-  function handleSubmit(event) {
-    event.preventDefault()
-    setUploadLoading(true)
-    const url = "/leadService/api/v1/upload/uploadimageToFileSystem"
-    const formData = new FormData()
-    formData.append("file", file)
-    const config = {
-      headers: {
-        "Access-Control-Allow-Origin": "*",
-        "content-type": "multipart/form-data",
-      },
-    }
-    axios.post(url, formData, config).then((response) => {
-      setUploadLoading(false)
-      // setRemarkMessage((prev) => ({ ...prev, file: response.data }))
-      setImageResponse(response.data)
-    })
-  }
 
-  const submitProfile = useCallback(() => {
-    const data = { userId: currentUserId, profilePhoto: imageResponse }
-    dispatch(updateProfilePhoto(data))
-  }, [imageResponse, currentUserId])
+
 
   return (
     <div className="sideTab">
-      <div className="user-profile">
-        {/* <button className="btn btn-primary" >Logout</button> */}
-        <div className="profile-info">
-          <h4>
-            {currentUserProfile?.username
-              ? currentUserProfile?.username
-              : "UserName"}
-          </h4>
-          <h6>
-            {currentUserProfile?.email
-              ? `${currentUserProfile?.email.slice(0, 13)}...`
-              : "Email"}
-          </h6>
-        </div>
-        <Popover
-          placement="bottom"
-          trigger={['click']}
-          content={
-            // logoutBtnStatus ? (
-            <div className="logout-view-container">
-              <form onSubmit={handleSubmit}>
-                <input ref={fileRef} type="file" onChange={handleChange} />
-                <Button htmlType="submit">
-                  {uploadLoading ? "Please Wait..." : "upload"}
-                </Button>
-              </form>
-              <Space className="btn-container">
-                <Button type="primary" onClick={submitProfile}>
-                  Submit
-                </Button> 
-                <Button onClick={() => logoutUser()}>Logout</Button>
-              </Space>
-            </div>
-            // ) : (
-            //   ""
-            // )
-          }
-        >
-          <div
-            className="profile-image"
-            onClick={() => setLogoutBtnStatus((prev) => !prev)}
-          >
-            <Avatar size={32} src={profilePhoto} alt="profile_photo">
-              {profilePhoto
-                ? ""
-                : currentUserProfile?.username?.toUpperCase()?.[0]}
-            </Avatar>
-          </div>
-        </Popover>
-      </div>
-
+      <ProfileDrawer/>
       <div className="pt-4">
         <div className="side-tabs">
           <NavLink
