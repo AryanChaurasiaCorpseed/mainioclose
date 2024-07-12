@@ -10,7 +10,7 @@ import MainHeading from "../../../components/design/MainHeading"
 import { getAllSlugAction } from "../../../Toolkit/Slices/LeadSlugSlice"
 import { toast } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
-import { Button, Form, Input, Select, Tooltip, Typography } from "antd"
+import { Button, Form, Input, Modal, Select, Tooltip, Typography } from "antd"
 import EditUrls from "./EditUrls"
 import CommonTable from "../../../components/CommonTable"
 const { Text } = Typography
@@ -21,6 +21,7 @@ const UrlsPage = () => {
   const { allLeadSlug, page } = useSelector((prev) => prev?.leadslug)
   const urlPage = useSelector((state) => state.leadurls.page)
   const [urlDep, setUrlDep] = useState(false)
+  const [openModal, setOpenModal] = useState(false)
   const dispatch = useDispatch()
   useEffect(() => {
     dispatch(getAllSlugAction(page))
@@ -42,6 +43,7 @@ const UrlsPage = () => {
     if (createNewUrl.type === "createLeadUrlData/fulfilled") {
       toast.success("Url Created Succesfully")
       setUrlDep((prev) => !prev)
+      setOpenModal(false)
       form.resetFields()
     }
     if (createNewUrl.type === "createLeadUrlData/rejected") {
@@ -90,6 +92,29 @@ const UrlsPage = () => {
     <div>
       <MainHeading data={`Urls Create`} />
       <div className="lead-box">
+        <Button type="primary" onClick={() => setOpenModal(true)}>
+          Create url
+        </Button>
+      </div>
+      <CommonTable
+        columns={columns}
+        data={allLeadUrl}
+        nextPage={handleNextPagination}
+        prevPage={handlePrevPagination}
+        pagination={true}
+        scroll={{ y: 450 }}
+        prevDisable={page === 0 && true}
+        nextDisable={allLeadUrl?.length < 50 && true}
+      />
+
+      <Modal
+        title="Create url"
+        open={openModal}
+        onCancel={() => setOpenModal(false)}
+        onClose={() => setOpenModal(false)}
+        onOk={() => form.submit()}
+        okText="Submit"
+      >
         <Form layout="vertical" onFinish={handleSubmit} form={form}>
           <Form.Item
             label="Enter Url Name"
@@ -130,27 +155,8 @@ const UrlsPage = () => {
               }
             />
           </Form.Item>
-          <Form.Item>
-            <Button
-              type="primary"
-              htmlType="submit"
-              loading={createLeadUrlLoading}
-            >
-              {createLeadUrlLoading ? "Loading..." : "Submit"}
-            </Button>
-          </Form.Item>
         </Form>
-      </div>
-      <CommonTable
-        columns={columns}
-        data={allLeadUrl}
-        nextPage={handleNextPagination}
-        prevPage={handlePrevPagination}
-        pagination={true}
-        scroll={{ y: 300 }}
-        prevDisable={page === 0 && true}
-        nextDisable={allLeadUrl?.length < 50 && true}
-      />
+      </Modal>
     </div>
   )
 }

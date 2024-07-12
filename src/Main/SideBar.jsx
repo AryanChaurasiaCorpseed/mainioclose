@@ -338,7 +338,7 @@ const SideBar = () => {
         {/* end */}
 
         {/* operations links start */}
-        <div className="side-tabs">
+        {/* <div className="side-tabs">
           <NavLink
             to={`/erp/${userid}/operation`}
             className={`nav-heading ${({ isActive }) =>
@@ -357,7 +357,7 @@ const SideBar = () => {
             aria-labelledby="headingOne"
             data-parent="#accordion"
           >
-            {/* <div className="link-child">
+            <div className="link-child">
               <NavLink className="link-itemss" to="operation">
                 Operation Link 1
               </NavLink>
@@ -376,13 +376,13 @@ const SideBar = () => {
               <NavLink className="link-itemss" to="operation/operationsix">
                 Operation Link 6
               </NavLink>
-            </div> */}
+            </div>
           </div>
-        </div>
+        </div> */}
         {/* end */}
 
         {/* Manage Clinets links start */}
-        <div className="side-tabs">
+        {/* <div className="side-tabs">
           <NavLink
             to={`/erp/${userid}/manageclient`}
             className={`nav-heading ${({ isActive }) =>
@@ -401,7 +401,7 @@ const SideBar = () => {
             aria-labelledby="headingOne"
             data-parent="#accordion"
           >
-            {/* <div className="link-child">
+            <div className="link-child">
               <NavLink className="link-itemss" to="manageclient">
                 {" "}
                 Manage Client 1
@@ -421,13 +421,13 @@ const SideBar = () => {
               <NavLink className="link-itemss" to="manageclient/clientsix">
                 Manage Client 6
               </NavLink>
-            </div> */}
+            </div>
           </div>
-        </div>
+        </div> */}
         {/* end */}
 
         {/* activity Master links start */}
-        <div className="side-tabs">
+        {/* <div className="side-tabs">
           <NavLink
             to={`/erp/${userid}/activity`}
             className={`nav-heading ${({ isActive }) =>
@@ -446,7 +446,7 @@ const SideBar = () => {
             aria-labelledby="headingOne"
             data-parent="#accordion"
           >
-            {/* <div className="link-child">
+            <div className="link-child">
               <NavLink className="link-itemss" to="activity">
                 Activity Link 1
               </NavLink>
@@ -465,9 +465,9 @@ const SideBar = () => {
               <NavLink className="link-itemss" to="activity/activitysix">
                 Activity Link 6
               </NavLink>
-            </div> */}
+            </div>
           </div>
-        </div>
+        </div> */}
         {/* end */}
 
         {/* Quality links start */}
@@ -530,7 +530,7 @@ const SideBar = () => {
         {/* end */}
 
         {/* Profile links start */}
-        <div className="side-tabs">
+        {/* <div className="side-tabs">
           <NavLink
             to={`/erp/${userid}/profile`}
             className={`nav-heading ${({ isActive }) =>
@@ -549,7 +549,7 @@ const SideBar = () => {
             aria-labelledby="headingOne"
             data-parent="#accordion"
           >
-            {/* <div className="link-child">
+            <div className="link-child">
               <NavLink className="link-itemss" to="profile">
                 Profile Link 1
               </NavLink>
@@ -562,9 +562,9 @@ const SideBar = () => {
               <NavLink className="link-itemss" to="profile/profilefour">
                 Profile Link 4
               </NavLink>
-            </div> */}
+            </div>
           </div>
-        </div>
+        </div> */}
         {/* end */}
       </div>
     </div>

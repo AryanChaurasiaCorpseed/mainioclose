@@ -13,12 +13,13 @@ import TableBoot from "../../../components/tablesData/TableBoot"
 import { toast } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
 import EditSlugModal from "../../../Model/EditSlugModal"
-import { Button, Form, Input } from "antd"
+import { Button, Form, Input, Modal } from "antd"
 import CommonTable from "../../../components/CommonTable"
 toast.configure()
 
 const SlugCreate = () => {
   const [slugDep, setSlugDep] = useState(false)
+  const [openModal, setOpenModal] = useState(false)
   const page = useSelector((state) => state.leadslug.page)
 
   const dispatch = useDispatch()
@@ -55,6 +56,28 @@ const SlugCreate = () => {
     <div>
       <MainHeading data={`Slug Create`} />
       <div className="lead-box">
+        <Button type="primary" onClick={() => setOpenModal(true)}>
+          Create slug
+        </Button>
+      </div>
+      <CommonTable
+        columns={columns}
+        data={allLeadSlug}
+        nextPage={handleNextPagination}
+        prevPage={handlePrevPagination}
+        pagination={true}
+        scroll={{ y: 445 }}
+        prevDisable={page === 0 && true}
+        nextDisable={allLeadSlug?.length < 50 && true}
+      />
+      <Modal
+        title="Create slug"
+        open={openModal}
+        onCancel={() => setOpenModal(false)}
+        onClose={() => setOpenModal(false)}
+        onOk={() => form.submit()}
+        okText="Submit"
+      >
         <Form layout="vertical" form={form} onFinish={handleSubmit}>
           <Form.Item
             label="Enter slug name"
@@ -63,23 +86,8 @@ const SlugCreate = () => {
           >
             <Input />
           </Form.Item>
-          <Form.Item>
-            <Button htmlType="submit" type="primary">
-              Submit
-            </Button>
-          </Form.Item>
         </Form>
-      </div>
-      <CommonTable
-        columns={columns}
-        data={allLeadSlug}
-        nextPage={handleNextPagination}
-        prevPage={handlePrevPagination}
-        pagination={true}
-        scroll={{ y: 345 }}
-        prevDisable={page === 0 && true}
-        nextDisable={allLeadSlug?.length < 50 && true}
-      />
+      </Modal>
     </div>
   )
 }
