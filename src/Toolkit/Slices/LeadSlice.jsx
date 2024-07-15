@@ -64,6 +64,28 @@ export const updateHelper = createAsyncThunk("updateHelper", async (data) => {
   return response.data
 })
 
+export const createLead = createAsyncThunk(
+  "createLead",
+  async (createStatus) => {
+    const response = await postQuery(
+      `/leadService/api/v1/status/CreateLeadStatus`,
+      createStatus
+    )
+    return response.data
+  }
+)
+
+export const createLeadCateogry = createAsyncThunk(
+  "createLeadCategory",
+  async (leadCategory) => {
+    const response = await postQuery(
+      `/leadService/api/v1/category/createCategory`,
+      leadCategory
+    )
+    return response.data
+  }
+)
+
 export const LeadSlice = createSlice({
   name: "lead",
   initialState: {

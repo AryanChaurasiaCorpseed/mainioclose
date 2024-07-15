@@ -39,7 +39,7 @@ export const ticketsColumns = [
   },
   {
     field: "status",
-    headerName: "Edit",
+    headerName: "Status",
     width: 100,
     renderCell: (props) => (
       <Tag

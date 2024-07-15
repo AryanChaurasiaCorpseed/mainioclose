@@ -8,6 +8,8 @@ import { deleteQuery } from "../../../API/DeleteQuery"
 import LongInput from "../../../components/Inputs/LongInput"
 import UserLeadComponent from "../../../Tables/UserLeadComponent"
 import MainHeading from "../../../components/design/MainHeading"
+import { Button, Form, Input, Modal, Select } from "antd"
+import { useDispatch } from "react-redux"
 
 const ProductsChange = () => {
   const { userid } = useParams()
@@ -39,7 +41,9 @@ const ProductsChange = () => {
   const catRef = useRef()
   const govermentfeesRef = useRef()
   const govermentGstRef = useRef()
-
+  const dispatch = useDispatch()
+  const [form] = Form.useForm()
+  const [openModal, setOpenModal] = useState(false)
   const [btnLoading, setBtnLoading] = useState(false)
 
   const getProductData = (e) => {
@@ -142,144 +146,27 @@ const ProductsChange = () => {
     }
   }
 
+  const handleFinish = async (values) => {
+    try {
+      const productData = await postQuery(
+        `/leadService/api/v1/product/createProduct`,
+        values
+      )
+      if (productData && productData.status === 200) {
+        window.location.reload()
+      }
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
   return (
     <div>
       <MainHeading data={`Lead Product`} />
-      <div className="py-3">
-        <form>
-          <label className="label-heading mb-1" htmlFor="statusCreate">
-            Enter Product Name
-          </label>
-          <br />
-          <input
-            type="text"
-            ref={nameRef}
-            onChange={(e) => getProductData(e)}
-            name="name"
-            value={addNewProduct.name}
-            className="form-control input-focus"
-          />
-          {nameError ? (
-            <InputErrorComponent value="Product Name can't be Blank" />
-          ) : (
-            ""
-          )}
-          <label className="label-heading mt-2 mb-1" htmlFor="select-product">
-            Select Category
-          </label>
-          <select
-            className="form-control input-focus"
-            name="categoryId"
-            ref={catRef}
-            value={addNewProduct.categoryId}
-            onChange={(e) => getProductData(e)}
-            id="select-product"
-          >
-            <option>Select Category</option>
-            {categoryData.map((status, index) => (
-              <option key={index} value={status?.id}>
-                {status?.categoryName}
-              </option>
-            ))}
-          </select>
-          {catError ? (
-            <InputErrorComponent value="Please Select Category" />
-          ) : (
-            ""
-          )}
-          <LongInput
-            label="Goverment fees"
-            type="text"
-            ref={govermentfeesRef}
-            value={addNewProduct.govermentfees}
-            onChange={(e) => getProductData(e)}
-            name="govermentfees"
-          />
-          <LongInput
-            label="Goverment Code"
-            type="text"
-            // ref={nameRef}
-            value={addNewProduct.govermentCode}
-            onChange={(e) => getProductData(e)}
-            name="govermentCode"
-          />
-          <LongInput
-            label="Goverment GST (%)"
-            type="text"
-            ref={govermentGstRef}
-            onChange={(e) => getProductData(e)}
-            name="govermentGst"
-          />
-          <LongInput
-            label="Professional Fees"
-            type="text"
-            // ref={nameRef}
-            onChange={(e) => getProductData(e)}
-            name="professionalFees"
-          />
-          <LongInput
-            label="Professional Code"
-            type="text"
-            // ref={nameRef}
-            onChange={(e) => getProductData(e)}
-            name="professionalCode"
-          />
-          <LongInput
-            label="Profesional GST (%)"
-            type="text"
-            // ref={nameRef}
-            onChange={(e) => getProductData(e)}
-            name="profesionalGst"
-          />
-          <LongInput
-            label="Service Charge"
-            type="text"
-            // ref={nameRef}
-            onChange={(e) => getProductData(e)}
-            name="serviceCharge"
-          />
-          <LongInput
-            label="Service Code"
-            type="text"
-            // ref={nameRef}
-            onChange={(e) => getProductData(e)}
-            name="serviceCode"
-          />
-          <LongInput
-            label="Service GST (%)"
-            type="text"
-            // ref={nameRef}
-            onChange={(e) => getProductData(e)}
-            name="serviceGst"
-          />
-          <LongInput
-            label="Other Fees"
-            type="text"
-            // ref={nameRef}
-            onChange={(e) => getProductData(e)}
-            name="otherFees"
-          />
-          <LongInput
-            label="Other Code"
-            type="text"
-            // ref={nameRef}
-            onChange={(e) => getProductData(e)}
-            name="otherCode"
-          />
-          <LongInput
-            label="Other GST (%)"
-            type="text"
-            // ref={nameRef}
-            onChange={(e) => getProductData(e)}
-            name="otherGst"
-          />
-          <button
-            onClick={(e) => createNewProduct(e)}
-            className="action-btn my-2"
-          >
-            {btnLoading ? "Loading..." : "Submit"}
-          </button>
-        </form>
+      <div className="lead-box">
+        <Button type="primary" onClick={() => setOpenModal(true)}>
+          Add product
+        </Button>
       </div>
       <div className="mt-4 setting-table">
         {productLoading ? (
@@ -288,6 +175,85 @@ const ProductsChange = () => {
           <UserLeadComponent columns={ProductCol} row={productData} />
         )}
       </div>
+      <Modal
+        title="Add product"
+        centered
+        open={openModal}
+        onCancel={() => setOpenModal(false)}
+        onClose={() => setOpenModal(false)}
+        onOk={() => form.submit()}
+        okText="Submit"
+      >
+        <Form
+          layout="vertical"
+          style={{ maxHeight: "70vh", overflow: "auto" }}
+          form={form}
+          onFinish={handleFinish}
+        >
+          <Form.Item
+            label="Enter product name"
+            name="name"
+            rules={[
+              { required: true, message: "please enter the product name" },
+            ]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item
+            label="Select category"
+            name="categoryId"
+            rules={[{ required: true, message: "please select category" }]}
+          >
+            <Select
+              options={
+                categoryData?.map((item) => ({
+                  label: item?.categoryName,
+                  value: item?.id,
+                })) || []
+              }
+              filterOption={(input, option) =>
+                option.label.toLowerCase().includes(input.toLowerCase())
+              }
+            />
+          </Form.Item>
+          <Form.Item label="Government fees" name="govermentfees">
+            <Input />
+          </Form.Item>
+          <Form.Item label="Government codes" name="govermentCode">
+            <Input />
+          </Form.Item>
+          <Form.Item label="Goverment GST (%)" name="govermentGst">
+            <Input />
+          </Form.Item>
+          <Form.Item label="Professional Fees" name="professionalFees">
+            <Input />
+          </Form.Item>
+          <Form.Item label="Professional Code" name="professionalCode">
+            <Input />
+          </Form.Item>
+          <Form.Item label="Profesional GST (%)" name="profesionalGst">
+            <Input />
+          </Form.Item>
+          <Form.Item label="Service Charge" name="serviceCharge">
+            <Input />
+          </Form.Item>
+          <Form.Item label="Service Code" name="serviceCode">
+            <Input />
+          </Form.Item>
+          <Form.Item label="Service GST (%)" name="serviceGst">
+            <Input />
+          </Form.Item>
+          <Form.Item label="Other Fees" name="otherFees">
+            <Input />
+          </Form.Item>
+          <Form.Item label="Other Code" name="otherCode">
+            <Input />
+          </Form.Item>
+          <Form.Item label="Other GST (%)" name="otherGst">
+            <Input />
+          </Form.Item>
+        </Form>
+      </Modal>
     </div>
   )
 }

@@ -72,11 +72,11 @@ function App() {
             borderRadius: 4,
             borderRadiusSM: 4,
           },
-          Modal:{
-            borderRadius:4,
-            borderRadiusLG:4,
-            borderRadiusSM:4
-          }
+          Modal: {
+            borderRadius: 4,
+            borderRadiusLG: 4,
+            borderRadiusSM: 4,
+          },
         },
       }}
     >

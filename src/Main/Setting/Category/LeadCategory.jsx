@@ -8,11 +8,16 @@ import { deleteQuery } from "../../../API/DeleteQuery"
 import MainHeading from "../../../components/design/MainHeading"
 import { toast } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
-import { Button } from "antd"
+import { Button, Form, Input, Modal } from "antd"
+import { useDispatch } from "react-redux"
+import { createLeadCateogry } from "../../../Toolkit/Slices/LeadSlice"
 toast.configure()
 
 const LeadCategory = () => {
   const { userid } = useParams()
+  const [form] = Form.useForm()
+  const dispatch = useDispatch()
+  const [openModal, setOpenModal] = useState(false)
 
   const [leadCategory, setLeadCategory] = useState({
     name: "",
@@ -71,33 +76,17 @@ const LeadCategory = () => {
     }
   }
 
+  const handleFinish = (values) => {
+    dispatch(createLeadCateogry(values)).then(() => window.location.reload())
+  }
+
   return (
     <div>
       <MainHeading data={`Lead Category`} />
       <div className="lead-box">
-        <form>
-          <label className="label-heading mb-1" htmlFor="statusCreate">
-            Enter Category Name
-          </label>
-          <br />
-          <input
-            type="text"
-            ref={nameRef}
-            onChange={(e) =>
-              setLeadCategory((cat) => ({ ...cat, name: e.target.value }))
-            }
-            name="name"
-            className="form-control input-focus"
-          />
-          {nameError ? (
-            <InputErrorComponent value="Category Name can't be Blank" />
-          ) : (
-            ""
-          )}
-          <button onClick={(e) => createCatFun(e)} className="action-btn my-2">
-            {btnLoading ? "Loading..." : "Submit"}
-          </button>
-        </form>
+        <Button type="primary" onClick={() => setOpenModal(true)}>
+          Create lead category
+        </Button>
       </div>
       <div className="mt-4 setting-table">
         <div className="table-responsive">
@@ -136,6 +125,25 @@ const LeadCategory = () => {
           </table>
         </div>
       </div>
+      <Modal
+        open={openModal}
+        onCancel={() => setOpenModal(false)}
+        onClose={() => setOpenModal(false)}
+        okText="Submit"
+        onOk={() => form.submit()}
+      >
+        <Form layout="vertical" form={form} onFinish={handleFinish}>
+          <Form.Item
+            label="Enter lead category name"
+            name="name"
+            rules={[
+              { required: true, message: "please enter the lead category" },
+            ]}
+          >
+            <Input />
+          </Form.Item>
+        </Form>
+      </Modal>
     </div>
   )
 }
