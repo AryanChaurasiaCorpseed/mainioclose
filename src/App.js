@@ -129,7 +129,7 @@ function App() {
                 <Route path="hrlinksix" element={<div>hrlinksix</div>} />
               </Route>
               {/* end */}
-              <Route path="/erp/compliance" element={<Compliances />} />
+              <Route path="/erp/:userid/compliance" element={<Compliances />} />
               {/* slaes module routes */}
               <Route path="/erp/:userid/sales" element={<SalesMod />}>
                 <Route path="" element={<InboxPage />} />

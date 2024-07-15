@@ -17,6 +17,11 @@ export const changePasswordAuthentication = createAsyncThunk(
   }
 )
 
+export const getDepartmentOfUser=createAsyncThunk('getDepartment',async(id)=>{
+  const response=await getQuery(`/leadService/api/v1/users/getSingleUserById?userId=${id}`)
+  return response.data
+})
+
 export const AuthSlice = createSlice({
   name: "auth",
   initialState: {
@@ -27,6 +32,7 @@ export const AuthSlice = createSlice({
     jwt: "",
     isAuth: false,
     isManagerApproved: false,
+    getDepartmentDetail:{}
   },
   reducers: {
     logoutFun: (state, action) => {
@@ -62,6 +68,19 @@ export const AuthSlice = createSlice({
     builder.addCase(changePasswordAuthentication.rejected, (state, action) => {
       state.loginError = true
     })
+
+    builder.addCase(getDepartmentOfUser.pending, (state, action) => {
+      state.loginLoading = true
+      state.loginError = false
+    })
+    builder.addCase(getDepartmentOfUser.fulfilled, (state, action) => {
+      state.getDepartmentDetail = action.payload
+    })
+    builder.addCase(getDepartmentOfUser.rejected, (state, action) => {
+      state.loginError = true
+    })
+
+
   },
 })
 

@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from "react-redux"
 import { toast } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
 import { getNotificationFun } from "../Toolkit/Slices/NotificationSlice"
+import { getDepartmentOfUser } from "../Toolkit/Slices/AuthSlice"
 toast.configure()
 
 const MainPage = () => {
@@ -39,6 +40,9 @@ const MainPage = () => {
   //     }
   //   }, 1000)
   // }, [toasterData])
+  useEffect(()=>{
+    dispatch(getDepartmentOfUser(userid))
+  },[dispatch,userid])
 
   const authStatus = useSelector((state) => state.auth.isAuth)
 
