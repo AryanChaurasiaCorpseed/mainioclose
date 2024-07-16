@@ -84,7 +84,7 @@ const BulkFileUploader = () => {
         options={
           allComments?.map((item) => ({
             label: item?.name,
-            value: item?.id,
+            value: item?.name,
           })) || []
         }
         filterOption={(input, option) =>
