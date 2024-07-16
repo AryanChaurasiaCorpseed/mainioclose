@@ -103,8 +103,8 @@ const UrlsPage = () => {
         prevPage={handlePrevPagination}
         pagination={true}
         scroll={{ y: 450 }}
-        prevDisable={page === 0 && true}
-        nextDisable={allLeadUrl?.length < 50 && true}
+        prevDisable={urlPage === 0 ? true : false}
+        nextDisable={allLeadUrl?.length < 50 ? true : false}
       />
 
       <Modal
@@ -129,7 +129,7 @@ const UrlsPage = () => {
             rules={[{ required: true, message: "please select slug" }]}
           >
             <Select
-            allowClear
+              allowClear
               mode="multiple"
               showSearch
               options={allLeadSlug?.map((item) => ({
@@ -147,8 +147,8 @@ const UrlsPage = () => {
             rules={[{ required: true, message: "please select quality" }]}
           >
             <Select
-            allowClear
-            showSearch
+              allowClear
+              showSearch
               options={[
                 { label: "True", value: true },
                 { label: "False", value: false },

@@ -19,7 +19,7 @@ import InputErrorComponent from "../../../components/InputErrorComponent"
 import { MultiSelect } from "primereact/multiselect"
 import { useCustomRoute } from "../../../Routes/GetCustomRoutes"
 import { CSVLink } from "react-csv"
-import { getAllLeads, updateHelper } from "../../../Toolkit/Slices/LeadSlice"
+import { craeteProjectByLeadId, getAllLeads, updateHelper } from "../../../Toolkit/Slices/LeadSlice"
 import MainHeading from "../../../components/design/MainHeading"
 import { Button, Select } from "antd"
 import { Icon } from "@iconify/react"
@@ -526,7 +526,7 @@ const LeadsModule = () => {
       renderCell: (props) => (
         <Button
           size="small"
-          // onClick={() => dispatch(craeteProjectByLeadId(props?.row?.id))}
+          onClick={() => dispatch(craeteProjectByLeadId(props?.row?.id))}
         >
           <Icon icon="fluent:add-20-filled" />
         </Button>
@@ -701,7 +701,7 @@ const LeadsModule = () => {
             onChange={(e) => setAllUserMulti(e.value)}
             options={leadUserNew}
             optionLabel="fullName"
-            placeholder="Select Users"
+            placeholder="Select users"
             optionValue="id"
             maxSelectedLabels={3}
             className="multi-select-boxx"
@@ -745,52 +745,6 @@ const LeadsModule = () => {
           </button>
         </div>
       </div>
-
-      {/* <div className="all-between">
-        <div className="one-line">
-          <p className="my-2">
-            <select
-              className="p-1 status-select"
-              name="status"
-              onChange={(e) => setStatusDataId(e.target.value)}
-              id="status"
-              form="statusChange"
-            >
-              <option>Filter Status</option>
-              {getAllStatus.map((status, index) => (
-                <option value={status.id} key={index}>
-                  {status.name}
-                </option>
-              ))}
-            </select>
-          </p>
-
-          <button
-            className="common-btn-one"
-            onClick={() => window.location.reload()}
-          >
-            Remove Filter
-          </button>
-        </div>
-        <div>
-          <input
-            className="mr-2"
-            onChange={(e) => setToDate(e.target.value)}
-            type="date"
-          />
-          <input
-            className="mr-2"
-            onChange={(e) => setFromDate(e.target.value)}
-            type="date"
-          />
-          <button
-            className="common-btn-one"
-            onClick={() => setDateFilter((prev) => !prev)}
-          >
-            Apply
-          </button>
-        </div>
-      </div> */}
 
       <div className="table-arrow">
         <Suspense fallback={<TableScalaton />}>
@@ -869,7 +823,6 @@ const LeadsModule = () => {
                     assigneId: e.target.value,
                   }))
                 }
-                // onSelect={(e)=> }
                 name="lead"
                 id="lead"
               >
@@ -886,7 +839,7 @@ const LeadsModule = () => {
                 onClick={() => multiAssignee()}
                 className="common-btn-one"
               >
-                {multibtn ? "Loading" : "Send"}
+                {multibtn ? "Loading..." : "Send"}
               </button>
             </div>
           </div>
@@ -894,17 +847,17 @@ const LeadsModule = () => {
           ""
         )}
         {multiLeadError ? (
-          <InputErrorComponent value="Please Select At Least One Status ya Assignee column" />
+          <InputErrorComponent value="please select at least one status or assignee column" />
         ) : (
           ""
         )}
         {selectLeadError ? (
-          <InputErrorComponent value="Please Select At Least 2 Leads" />
+          <InputErrorComponent value="please select at least 2 leads" />
         ) : (
           ""
         )}
         {leadDeleteErr ? (
-          <InputErrorComponent value="Please Select At Least one Lead " />
+          <InputErrorComponent value="please select at least one lead " />
         ) : (
           ""
         )}

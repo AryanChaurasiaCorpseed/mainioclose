@@ -10,20 +10,15 @@ import EditStatus from "./EditStatus"
 import { Button, Form, Input, Modal } from "antd"
 import { useDispatch } from "react-redux"
 import { createLead } from "../../../Toolkit/Slices/LeadSlice"
+import CommonTable from "../../../components/CommonTable"
+import { Icon } from "@iconify/react"
 
 const LeadStatusPage = () => {
   const [form] = Form.useForm()
   const dispatch = useDispatch()
-
-  const [nameError, setNameError] = useState(false)
-  const [btnLoading, setBtnLoading] = useState(false)
   const [leadCreateDep, setLeadCreateDep] = useState(false)
   const [deleteStatusDep, setDeleteStatusDep] = useState(false)
   const [openModal, setOpenModal] = useState(false)
-
-  const nameRef = useRef()
-  const descriptionRef = useRef()
-
   const statusUrl = `/leadService/api/v1/status/getAllStatus`
   const statusDep = [leadCreateDep, deleteStatusDep]
 
@@ -48,6 +43,34 @@ const LeadStatusPage = () => {
   const handleFinish = (values) => {
     dispatch(createLead(values)).then(() => window.location.reload())
   }
+  const columns = [
+    {
+      title: "Id",
+      dataIndex: "id",
+    },
+    {
+      title: "Name",
+      dataIndex: "name",
+    },
+    {
+      title: "Description",
+      dataIndex: "description",
+    },
+    {
+      title: "Edit",
+      dataIndex: "edit",
+      render: (_, info) => <EditStatus data={info} />,
+    },
+    {
+      title: "Delete",
+      dataIndex: "delete",
+      render: (_, info) => (
+        <Button size="small" onClick={() => deleteStatusFun(info.id)}>
+          <Icon icon="fluent:delete-20-filled" />
+        </Button>
+      ),
+    },
+  ]
 
   return (
     <div>
@@ -60,39 +83,15 @@ const LeadStatusPage = () => {
 
       <div className="mt-4 setting-table">
         <div className="table-responsive">
-          <table className="table">
-            <thead>
-              <tr>
-                <th scope="col">id</th>
-                <th scope="col">Name</th>
-                <th scope="col">Description</th>
-                <th scope="col">Edit</th>
-                <th scope="col">Delete</th>
-              </tr>
-            </thead>
-            <tbody>
-              {statusLoading ? (
-                <SmallTableScalaton />
-              ) : (
-                statusData.map((status, index) => (
-                  <tr key={index}>
-                    <th>{status.id}</th>
-                    <td>{status.name}</td>
-                    <td>{status.description}</td>
-                    <td>
-                      <EditStatus data={status} />
-                    </td>
-                    <td>
-                      <i
-                        onClick={() => deleteStatusFun(status.id)}
-                        className="fa-solid gray-cl fa-trash"
-                      ></i>{" "}
-                    </td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
+          {statusLoading ? (
+            <SmallTableScalaton />
+          ) : (
+            <CommonTable
+              data={statusData}
+              columns={columns}
+              scroll={{ y: 480 }}
+            />
+          )}
         </div>
       </div>
 

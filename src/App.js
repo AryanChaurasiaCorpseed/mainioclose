@@ -57,6 +57,8 @@ import Accounts from "./Main/Accounts/Accounts"
 import { AccountsList } from "./Main/Accounts/AccountsList"
 import { ConfigProvider } from "antd"
 import Comments from "./Main/Setting/Comments/Comments"
+import { lazy, Suspense } from "react"
+const SpinLoading = lazy(() => import("./components/SpinLoading"))
 
 function App() {
   const authStatus = useSelector((state) => state.auth.isAuth)
@@ -67,18 +69,21 @@ function App() {
   return (
     <ConfigProvider
       theme={{
-        components: {
-          Button: {
-            borderRadiusLG: 4,
-            borderRadius: 4,
-            borderRadiusSM: 4,
-          },
-          Modal: {
-            borderRadius: 4,
-            borderRadiusLG: 4,
-            borderRadiusSM: 4,
-          },
+        token: {
+          borderRadius: 4,
         },
+        // components: {
+        //   Button: {
+        //     borderRadiusLG: 4,
+        //     borderRadius: 4,
+        //     borderRadiusSM: 4,
+        //   },
+        //   Modal: {
+        //     borderRadius: 4,
+        //     borderRadiusLG: 4,
+        //     borderRadiusSM: 4,
+        //   },
+        // },
       }}
     >
       <div className="App">
@@ -295,7 +300,14 @@ function App() {
                 <Route path="category" element={<LeadCategory />} />
                 <Route path="slug" element={<SlugCreate />} />
                 <Route path="urls" element={<UrlsPage />} />
-                <Route path="comments" element={<Comments/>} />
+                <Route
+                  path="comments"
+                  element={
+                    <Suspense fallback={<SpinLoading />}>
+                      <Comments />
+                    </Suspense>
+                  }
+                />
               </Route>
 
               {/* profile routes */}

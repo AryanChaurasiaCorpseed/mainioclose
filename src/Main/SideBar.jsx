@@ -444,7 +444,7 @@ const SideBar = () => {
 
         {/* accounts links start */}
         {currentUserDetail?.department === "Accounts" &&
-        getHighestPriorityRole === "ADMIN" ? (
+        getHighestPriorityRole(currentRoles) === "ADMIN" ? (
           <div className="side-tabs">
             <NavLink
               to={`/erp/${userid}/account`}
@@ -471,7 +471,7 @@ const SideBar = () => {
               </div>
             </div>
           </div>
-        ) : getHighestPriorityRole === "ADMIN" ? (
+        ) : getHighestPriorityRole(currentRoles) === "ADMIN" ? (
           <div className="side-tabs">
             <NavLink
               to={`/erp/${userid}/account`}

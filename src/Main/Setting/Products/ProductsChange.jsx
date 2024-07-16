@@ -10,6 +10,8 @@ import UserLeadComponent from "../../../Tables/UserLeadComponent"
 import MainHeading from "../../../components/design/MainHeading"
 import { Button, Form, Input, Modal, Select } from "antd"
 import { useDispatch } from "react-redux"
+import CommonTable from "../../../components/CommonTable"
+import { Icon } from "@iconify/react"
 
 const ProductsChange = () => {
   const { userid } = useParams()
@@ -106,29 +108,33 @@ const ProductsChange = () => {
   )
 
   const ProductCol = [
-    { field: "id", headerName: "ID", width: 80 },
-    { field: "productName", headerName: "Product name", width: 150 },
-    { field: "govermentfees", headerName: "Goverment fees", width: 150 },
-    { field: "govermentCode", headerName: "Goverment Code", width: 150 },
-    { field: "govermentGst", headerName: "Goverment GST (%)", width: 150 },
-    { field: "professionalFees", headerName: "Professional Fees", width: 150 },
-    { field: "professionalCode", headerName: "Professional Code", width: 150 },
-    { field: "profesionalGst", headerName: "Profesional GST (%)", width: 150 },
-    { field: "serviceCharge", headerName: "Service Charge", width: 150 },
-    { field: "serviceCode", headerName: "Service Code", width: 150 },
-    { field: "serviceGst", headerName: "Service GST (%)", width: 150 },
-    { field: "otherFees", headerName: "Other Fees", width: 150 },
-    { field: "otherCode", headerName: "Other Code", width: 150 },
-    { field: "otherGst", headerName: "Other GST (%)", width: 150 },
+    { dataIndex: "id", title: "ID", fixed: "left", width: 80 },
     {
-      field: "Action",
-      headerName: "Delete",
+      dataIndex: "productName",
+      title: "Product name",
+      fixed: "left",
       width: 150,
-      renderCell: (props) => (
-        <i
-          onClick={() => deleteProductFun(props.row.id)}
-          className="fa-solid gray-cl fa-trash"
-        ></i>
+    },
+    { dataIndex: "govermentfees", title: "Govt. fees", width: 150 },
+    { dataIndex: "govermentCode", title: "Govt. Code", width: 150 },
+    { dataIndex: "govermentGst", title: "Govt. GST (%)", width: 150 },
+    { dataIndex: "professionalFees", title: "Prof. Fees", width: 150 },
+    { dataIndex: "professionalCode", title: "Prof. Code", width: 150 },
+    { dataIndex: "profesionalGst", title: "Prof. GST (%)", width: 150 },
+    { dataIndex: "serviceCharge", title: "Service Charge", width: 150 },
+    { dataIndex: "serviceCode", title: "Service Code", width: 150 },
+    { dataIndex: "serviceGst", title: "Service GST (%)", width: 150 },
+    { dataIndex: "otherFees", title: "Other Fees", width: 150 },
+    { dataIndex: "otherCode", title: "Other Code", width: 150 },
+    { dataIndex: "otherGst", title: "Other GST (%)", width: 150 },
+    {
+      dataIndex: "Action",
+      title: "Delete",
+      width: 150,
+      render: (_, props) => (
+        <Button size="small" onClick={() => deleteProductFun(props.id)}>
+          <Icon icon="fluent:delete-20-filled" />
+        </Button>
       ),
     },
   ]
@@ -172,7 +178,12 @@ const ProductsChange = () => {
         {productLoading ? (
           <SmallTableScalaton />
         ) : (
-          <UserLeadComponent columns={ProductCol} row={productData} />
+          // <UserLeadComponent columns={ProductCol} row={productData} />
+          <CommonTable
+            data={productData}
+            columns={ProductCol}
+            scroll={{ y: 500, x: 1500 }}
+          />
         )}
       </div>
       <Modal
@@ -205,8 +216,8 @@ const ProductsChange = () => {
             rules={[{ required: true, message: "please select category" }]}
           >
             <Select
-            allowClear
-            showSearch
+              allowClear
+              showSearch
               options={
                 categoryData?.map((item) => ({
                   label: item?.categoryName,

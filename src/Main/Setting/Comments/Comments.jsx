@@ -44,6 +44,7 @@ const Comments = () => {
         </div>
       </div>
       <Modal
+        title="Write comment"
         open={openModal}
         onCancel={() => setOpenModal(false)}
         onClose={() => setOpenModal(false)}
@@ -52,7 +53,7 @@ const Comments = () => {
       >
         <Form layout="vertical" form={form} onFinish={handleFinish}>
           <Form.Item
-            label="Write comment "
+            label="Comment "
             name="comment"
             rules={[
               {

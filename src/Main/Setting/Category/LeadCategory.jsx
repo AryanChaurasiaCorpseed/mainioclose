@@ -11,6 +11,8 @@ import "react-toastify/dist/ReactToastify.css"
 import { Button, Form, Input, Modal } from "antd"
 import { useDispatch } from "react-redux"
 import { createLeadCateogry } from "../../../Toolkit/Slices/LeadSlice"
+import CommonTable from "../../../components/CommonTable"
+import { Icon } from "@iconify/react"
 toast.configure()
 
 const LeadCategory = () => {
@@ -79,6 +81,35 @@ const LeadCategory = () => {
   const handleFinish = (values) => {
     dispatch(createLeadCateogry(values)).then(() => window.location.reload())
   }
+  const columns = [
+    {
+      title: "Id",
+      dataIndex: "id",
+    },
+    {
+      title: "Name",
+      dataIndex: "categoryName",
+    },
+    {
+      title: "Created Date",
+      dataIndex: "createdDate",
+      render: (_, status) => new Date(status.createdDate).toLocaleDateString(),
+    },
+    // {
+    //   title: "Document",
+    //   dataIndex: "documents",
+    //   render: (_, status) => <DocumentModal document={status?.documents} />,
+    // },
+    {
+      title: "Delete",
+      dataIndex: "delete",
+      render: (_, status) => (
+        <Button onClick={() => deleteCategoryFun(status.id)} size="small">
+          <Icon icon="fluent:delete-20-filled" />
+        </Button>
+      ),
+    },
+  ]
 
   return (
     <div>
@@ -90,13 +121,18 @@ const LeadCategory = () => {
       </div>
       <div className="mt-4 setting-table">
         <div className="table-responsive">
-          <table className="table">
+          <CommonTable
+            data={categoryData}
+            columns={columns}
+            scroll={{ y: 500 }}
+          />
+          {/* <table className="table">
             <thead>
               <tr>
                 <th scope="col">id</th>
                 <th scope="col">Name</th>
                 <th scope="col">Created Date</th>
-                {/* <th scope="col">Document</th> */}
+                <th scope="col">Document</th>
                 <th scope="col">Delete</th>
               </tr>
             </thead>
@@ -109,7 +145,7 @@ const LeadCategory = () => {
                     <th>{status.id}</th>
                     <td>{status?.categoryName}</td>
                     <td>{new Date(status.createdDate).toLocaleDateString()}</td>
-                    {/* <td><DocumentModal document={status?.documents} /></td> */}
+                    <td><DocumentModal document={status?.documents} /></td>
                     <td>
                       <Button
                         size="small"
@@ -122,7 +158,7 @@ const LeadCategory = () => {
                 ))
               )}
             </tbody>
-          </table>
+          </table> */}
         </div>
       </div>
       <Modal
