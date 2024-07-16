@@ -56,6 +56,7 @@ import IVR from "./Main/Quality/IVR"
 import Accounts from "./Main/Accounts/Accounts"
 import { AccountsList } from "./Main/Accounts/AccountsList"
 import { ConfigProvider } from "antd"
+import Comments from "./Main/Setting/Comments/Comments"
 
 function App() {
   const authStatus = useSelector((state) => state.auth.isAuth)
@@ -294,6 +295,7 @@ function App() {
                 <Route path="category" element={<LeadCategory />} />
                 <Route path="slug" element={<SlugCreate />} />
                 <Route path="urls" element={<UrlsPage />} />
+                <Route path="comments" element={<Comments/>} />
               </Route>
 
               {/* profile routes */}

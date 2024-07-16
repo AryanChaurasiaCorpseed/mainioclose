@@ -194,7 +194,7 @@ const LeadDetailsPage = () => {
   }
 
   useEffect(() => {
-    dispatch(getAllUrlAction())
+    dispatch(getAllUrlAction(0))
   }, [dispatch])
 
   const { allLeadUrl } = useSelector((prev) => prev?.leadurls)

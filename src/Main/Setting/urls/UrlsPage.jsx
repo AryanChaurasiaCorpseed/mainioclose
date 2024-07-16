@@ -129,6 +129,7 @@ const UrlsPage = () => {
             rules={[{ required: true, message: "please select slug" }]}
           >
             <Select
+            allowClear
               mode="multiple"
               showSearch
               options={allLeadSlug?.map((item) => ({
@@ -146,6 +147,8 @@ const UrlsPage = () => {
             rules={[{ required: true, message: "please select quality" }]}
           >
             <Select
+            allowClear
+            showSearch
               options={[
                 { label: "True", value: true },
                 { label: "False", value: false },

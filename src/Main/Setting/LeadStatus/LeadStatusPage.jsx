@@ -54,7 +54,7 @@ const LeadStatusPage = () => {
       <MainHeading data={`Lead Status`} />
       <div className="lead-box">
         <Button type="primary" onClick={() => setOpenModal(true)}>
-          Add Lead
+          Add lead
         </Button>
       </div>
 

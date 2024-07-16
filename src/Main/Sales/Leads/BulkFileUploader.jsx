@@ -1,25 +1,30 @@
-import React, { useCallback, useState } from "react"
+import React, { useCallback, useEffect, useState } from "react"
 import { Icon } from "@iconify/react"
-import { Button, Input, Typography, Upload, message } from "antd"
+import { Button, Input, Select, Typography, Upload, message } from "antd"
 import "./BulkFileUpload.scss"
 import { useDispatch, useSelector } from "react-redux"
 import { createRemakWithFile } from "../../../Toolkit/Slices/LeadSlice"
 import { useParams } from "react-router-dom"
+import { getAllComments } from "../../../Toolkit/Slices/UserRatingSlice"
 const { Dragger } = Upload
 const { Text } = Typography
 
 const BulkFileUploader = () => {
   const dispatch = useDispatch()
   const loading = useSelector((state) => state.leads.remarkLoading)
+  const allComments = useSelector((state) => state.rating.allComments)
   const { userid, leadid } = useParams()
   const [files, setFiles] = useState([])
   const [text, setText] = useState("")
   const [flag, setFlag] = useState(null)
+  useEffect(() => {
+    dispatch(getAllComments())
+  }, [dispatch])
   const props = {
     name: "file",
     multiple: true,
     action: "/leadService/api/v1/upload/uploadimageToFileSystem",
-    defaultFileList:files,
+    defaultFileList: files,
     onChange(info) {
       console.log("infoModfakaklsls", info)
       setFiles(info?.fileList?.map((file) => file?.response))
@@ -62,14 +67,30 @@ const BulkFileUploader = () => {
     }
   }, [leadid, userid, text, files, dispatch])
 
-
   return (
     <>
-      <Input.TextArea
+      {/* <Input.TextArea
         style={{ margin: "5px 0px" }}
         autoSize={{ minRows: 2, maxRows: 6 }}
         placeholder="Write captions for uploading files"
         onChange={(e) => setText(e.target.value)}
+      /> */}
+      <Select
+        style={{ width: "100%", margin: "12px 0px" }}
+        placeholder='select comment...'
+        size="large"
+        showSearch
+        allowClear
+        options={
+          allComments?.map((item) => ({
+            label: item?.name,
+            value: item?.id,
+          })) || []
+        }
+        filterOption={(input, option) =>
+          option.label.toLowerCase().includes(input.toLowerCase())
+        }
+        onChange={(e) => setText(e)}
       />
       {flag === false && (
         <Text type="danger">Please give the caption then submit</Text>

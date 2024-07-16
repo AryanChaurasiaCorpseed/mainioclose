@@ -31,7 +31,6 @@
         font-size: 8em;
         transition: font-size 200ms ease-in-out;
         border-bottom: 1px dashed white;
-  
         span#digit1 { animation-delay: 200ms; }
         span#digit2 { animation-delay: 300ms; }
         span#digit3 { animation-delay: 400ms; }
@@ -73,4 +72,11 @@
     100% {
       opacity: 1;
     }
+  }
+
+  .container-page{
+    display: flex;
+    padding: 24px 12px;
+    justify-content: flex-start;
+    align-items: center;
   }

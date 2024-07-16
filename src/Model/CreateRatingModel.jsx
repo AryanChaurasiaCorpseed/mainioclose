@@ -19,7 +19,7 @@ const CreateRatingModel = ({
   const dispatch = useDispatch()
 
   useEffect(() => {
-    dispatch(getAllUrlAction())
+    dispatch(getAllUrlAction(0))
   }, [])
 
   const { addRating, addRatingLoading, addratingError } = useSelector(

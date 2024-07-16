@@ -26,7 +26,7 @@ const EditUrls = ({ data }) => {
         const response = await dispatch(editUrls(values)).unwrap()
         message.success("URL edited successfully!")
         setOpenModal(false)
-        dispatch(getAllUrlAction())
+        dispatch(getAllUrlAction(0))
       } catch (error) {
         message.error("Failed to edit the URL. Please try again.")
         setOpenModal(false)
@@ -62,6 +62,8 @@ const EditUrls = ({ data }) => {
             rules={[{ required: true, message: "please select slug" }]}
           >
             <Select
+            allowClear
+            showSearch
               mode="multiple"
               options={allLeadSlug?.map((item) => ({
                 label: item?.name,
@@ -78,6 +80,8 @@ const EditUrls = ({ data }) => {
             rules={[{ required: true, message: "please select quality" }]}
           >
             <Select
+            allowClear
+            showSearch
               options={[
                 { label: "True", value: true },
                 { label: "False", value: false },

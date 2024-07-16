@@ -47,6 +47,8 @@ export const EditTicketStaus = ({ data }) => {
         <Form form={form} onFinish={handleSubmit} layout="vertical">
           <Form.Item label="Status" name="status">
             <Select
+            showSearch
+            allowClear
               options={[
                 { label: "To-Do", value: "To-Do" },
                 { label: "In-Progress", value: "In-Progress" },

@@ -101,6 +101,7 @@ const CreateCompanyModal = () => {
                     ]}
                   >
                     <Select
+                    allowClear
                       options={allParentCompany}
                       showSearch
                       filterOption={(input, option) =>

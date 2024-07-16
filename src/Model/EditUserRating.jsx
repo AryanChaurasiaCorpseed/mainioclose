@@ -68,6 +68,7 @@ export const EditUserRating = ({ data }) => {
           >
             <Select
               showSearch
+              allowClear
               mode="multiple"
               options={
                 allUsers?.map((item) => ({

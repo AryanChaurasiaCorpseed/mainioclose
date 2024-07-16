@@ -205,6 +205,8 @@ const ProductsChange = () => {
             rules={[{ required: true, message: "please select category" }]}
           >
             <Select
+            allowClear
+            showSearch
               options={
                 categoryData?.map((item) => ({
                   label: item?.categoryName,
