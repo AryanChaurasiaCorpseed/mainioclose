@@ -17,7 +17,7 @@ const Comments = () => {
     dispatch(getAllComments())
   }, [dispatch])
   const handleFinish = (values) => {
-    dispatch(createComments(values))
+    dispatch(createComments(values)).then(() => window.location.reload())
   }
 
   const columns = [
@@ -27,7 +27,7 @@ const Comments = () => {
     },
     {
       title: "Comment",
-      dataIndex: "comment",
+      dataIndex: "name",
     },
   ]
   return (
