@@ -33,7 +33,7 @@ const CommonTable = ({
                         disabled={prevDisable}
                         onClick={() => dispatch(prevPage())}
                       >
-                        <Icon icon="fluent:chevron-left-16-filled" />
+                        <Icon icon="fluent:chevron-left-20-regular" />
                       </Button>
                     </Tooltip>
                     <Tooltip title="Next page">
@@ -42,7 +42,7 @@ const CommonTable = ({
                         disabled={nextDisable}
                         onClick={() => dispatch(nextPage())}
                       >
-                        <Icon icon="fluent:chevron-right-16-filled" />
+                        <Icon icon="fluent:chevron-right-20-regular" />
                       </Button>
                     </Tooltip>
                   </Space>

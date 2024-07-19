@@ -463,7 +463,7 @@ const LeadDetailsPage = () => {
       label: "Contacts",
       extra: (
         <Button size="small" type="text" onClick={() => setOpenModal(true)}>
-          <Icon icon="fluent:add-20-filled" />
+          <Icon icon="fluent:add-20-regular" />
         </Button>
       ),
       children: (
@@ -476,11 +476,11 @@ const LeadDetailsPage = () => {
                 description={
                   <Space size={2} direction="vertical">
                     <div className="flex-vert-hori-center">
-                      <Icon icon="fluent:mail-20-filled" />
+                      <Icon icon="fluent:mail-20-regular" />
                       <Text type="secondary">{item.email}</Text>
                     </div>
                     <div className="flex-vert-hori-center">
-                      <Icon icon="fluent:call-20-filled" />
+                      <Icon icon="fluent:call-20-regular" />
                       <Text type="secondary">{item.contactNo}</Text>
                     </div>
                   </Space>
@@ -492,7 +492,7 @@ const LeadDetailsPage = () => {
                   type="text"
                   onClick={() => handleUpdateContact(item)}
                 >
-                  <Icon icon="fluent:edit-20-filled" />
+                  <Icon icon="fluent:edit-20-regular" />
                 </Button>
                 <Popconfirm
                   title="Delete the task"
@@ -500,7 +500,7 @@ const LeadDetailsPage = () => {
                   onConfirm={() => deleteContactFun(item.clientId)}
                 >
                   <Button size="small" danger type="text">
-                    <Icon icon="fluent:delete-20-filled" />
+                    <Icon icon="fluent:delete-20-regular" />
                   </Button>
                 </Popconfirm>
               </Space>
@@ -514,7 +514,7 @@ const LeadDetailsPage = () => {
       label: "Tasks",
       extra: (
         <Button type="text" size="small" onClick={() => setOpenTaskModal(true)}>
-          <Icon icon="fluent:add-20-filled" />
+          <Icon icon="fluent:add-20-regular" />
         </Button>
       ),
       children: (
@@ -561,7 +561,7 @@ const LeadDetailsPage = () => {
                   type="text"
                   onClick={() => updateTaskData(item)}
                 >
-                  <Icon icon="fluent:edit-20-filled" />
+                  <Icon icon="fluent:edit-20-regular" />
                 </Button>
                 <Popconfirm
                   title="Delete the task"
@@ -569,7 +569,7 @@ const LeadDetailsPage = () => {
                   onConfirm={() => deleteTask({ id: item.id, userid: userid })}
                 >
                   <Button size="small" type="text" danger>
-                    <Icon icon="fluent:delete-20-filled" />
+                    <Icon icon="fluent:delete-20-regular" />
                   </Button>
                 </Popconfirm>
               </Space>
@@ -587,7 +587,7 @@ const LeadDetailsPage = () => {
           type="text"
           onClick={() => setOpenProductModal(true)}
         >
-          <Icon icon="fluent:add-20-filled" />
+          <Icon icon="fluent:add-20-regular" />
         </Button>
       ),
       children: (
@@ -615,7 +615,7 @@ const LeadDetailsPage = () => {
                   okButtonProps={{ disabled: adminRole ? true : false }}
                 >
                   <Button size="small" type="text" danger>
-                    <Icon icon="fluent:delete-20-filled" />
+                    <Icon icon="fluent:delete-20-regular" />
                   </Button>
                 </Popconfirm>
               </Space>
@@ -652,7 +652,7 @@ const LeadDetailsPage = () => {
                   description="Are you sure to delete this product?"
                 >
                   <Button size="small" type="text" danger>
-                    <Icon icon="fluent:delete-20-filled" />
+                    <Icon icon="fluent:delete-20-regular" />
                   </Button>
                 </Popconfirm>
               </Space>
@@ -714,17 +714,17 @@ const LeadDetailsPage = () => {
                   ) : (
                     <Icon icon="fluent:circle-20-filled" color="green" />
                   )}
-                  <Title level={1} style={{ margin: 0 }}>
+                  <Text className="heading-text">
                     {singleLeadResponseData?.originalName
                       ? singleLeadResponseData?.originalName
                       : "NA"}
-                  </Title>
+                  </Text>
                   <Button
                     type="text"
                     size="small"
                     onClick={() => setUpdateOriginalName(true)}
                   >
-                    <Icon icon="fluent:edit-20-filled" />
+                    <Icon icon="fluent:edit-20-regular" />
                   </Button>
                 </div>
               </div>
@@ -733,15 +733,15 @@ const LeadDetailsPage = () => {
             {updateLeadNameToggle ? (
               <div className="comp-container">
                 <div className="flex-vert-hori-center">
-                  <Title level={2} style={{ margin: 0 }}>
+                  <Text className="heading-text">
                     {singleLeadResponseData?.leadName}
-                  </Title>
+                  </Text>
                   <Button
                     type="text"
                     size="small"
                     onClick={() => setUpdateLeadNameToggle(false)}
                   >
-                    <Icon icon="fluent:edit-20-filled" />
+                    <Icon icon="fluent:edit-20-regular" />
                   </Button>
                 </div>
               </div>
@@ -868,7 +868,6 @@ const LeadDetailsPage = () => {
           </div>
         </Col>
         <Col span={18}>
-          {/* notes ui */}
           <div className="lead-filter-above">
             <div className="filter-box">
               <FilterButton
@@ -1072,7 +1071,7 @@ const LeadDetailsPage = () => {
           <Form.Item
             label="Name"
             name="name"
-            rules={[{ required: true, message: "name filed can not blank" }]}
+            rules={[{ required: true, message: "name field can not blank" }]}
           >
             <Input />
           </Form.Item>

@@ -105,7 +105,7 @@ const LeadCategory = () => {
       dataIndex: "delete",
       render: (_, status) => (
         <Button onClick={() => deleteCategoryFun(status.id)} size="small">
-          <Icon icon="fluent:delete-20-filled" />
+          <Icon icon="fluent:delete-20-regular" />
         </Button>
       ),
     },

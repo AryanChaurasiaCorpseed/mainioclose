@@ -34,6 +34,7 @@ export const AccountsList = () => {
       dataIndex: "companyName",
       key: "1",
       fixed: "left",
+      width: 300,
     },
     {
       title: "Pan",
@@ -62,8 +63,9 @@ export const AccountsList = () => {
       render: (_, data) => (
         <Tooltip
           title={data?.lead?.map((item, idx) => (
-            <Tag>{item?.leadNameame}</Tag>
+            <Tag >{item?.leadNameame}</Tag>
           ))}
+          color="#fff"
         >
           <Tag className="lead-tag">{data?.lead?.[0]?.leadNameame}</Tag>
         </Tooltip>

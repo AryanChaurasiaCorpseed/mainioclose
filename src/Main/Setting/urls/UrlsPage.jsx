@@ -102,7 +102,7 @@ const UrlsPage = () => {
         nextPage={handleNextPagination}
         prevPage={handlePrevPagination}
         pagination={true}
-        scroll={{ y: 450 }}
+        scroll={{ y: 550 }}
         prevDisable={urlPage === 0 ? true : false}
         nextDisable={allLeadUrl?.length < 50 ? true : false}
       />

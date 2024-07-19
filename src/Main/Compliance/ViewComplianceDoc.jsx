@@ -19,7 +19,7 @@ export const ViewComplianceDoc = ({ data }) => {
         </Tag>
       ))}
       <Tag className="btn-tag">
-        <Icon icon="fluent:add-20-filled" />
+        <Icon icon="fluent:add-20-regular" />
       </Tag>
 
       <Modal

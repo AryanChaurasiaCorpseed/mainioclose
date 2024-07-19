@@ -81,6 +81,21 @@ a:hover {
 }
 */
 
+
+
+
+html, body {
+  height: 100%;
+  width: 100%;
+}
+
+
+
+
+
+
+
+
 .disk-size {
   font-size: 22px;
 }
@@ -572,7 +587,6 @@ button:focus {
 .setting-table {
   padding: 20px 0px;
   font-size: 14px;
-  width: 70vw;
 }
 
 .css-t89xny-MuiDataGrid-columnHeaderTitle {
@@ -958,4 +972,15 @@ select.form-control:not([size]):not([multiple]) {
   /* justify-content: center; */
   align-items: center;
   gap: 6px;
+}
+
+.heading-text{
+  font-size: 18px;
+  font-weight: 550;
+  color: #0f0f0f;
+}
+
+.ant-tooltip .ant-tooltip-inner {
+  color: #fff;
+  opacity: 0.8;
 }

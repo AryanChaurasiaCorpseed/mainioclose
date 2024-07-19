@@ -97,7 +97,7 @@ const BulkFileUploader = () => {
       )}
       <Dragger {...props}>
         <p className="ant-upload-drag-icon">
-          <Icon icon="fluent:document-add-20-filled" height={32} width={32} />
+          <Icon icon="fluent:document-add-20-regular" height={32} width={32} />
         </p>
         <p className="ant-upload-text">
           Click or drag file to this area to upload

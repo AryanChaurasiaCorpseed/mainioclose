@@ -48,7 +48,7 @@ export const EditUserRating = ({ data }) => {
   return (
     <>
       <Button size="small" onClick={handleEdit}>
-        <Icon icon="fluent:edit-20-filled" />
+        <Icon icon="fluent:edit-20-regular" />
       </Button>
       <Modal
         title="Edit user"

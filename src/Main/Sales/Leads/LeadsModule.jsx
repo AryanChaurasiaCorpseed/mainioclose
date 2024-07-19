@@ -527,7 +527,7 @@ const LeadsModule = () => {
           size="small"
           onClick={() => dispatch(craeteProjectByLeadId(props?.row?.id))}
         >
-          <Icon icon="fluent:add-20-filled" />
+          <Icon icon="fluent:add-20-regular" />
         </Button>
       ),
     },

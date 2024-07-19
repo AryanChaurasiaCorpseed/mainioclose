@@ -108,32 +108,35 @@ const ProductsChange = () => {
   )
 
   const ProductCol = [
-    { dataIndex: "id", title: "ID", fixed: "left", width: 80 },
+    { dataIndex: "id", title: "ID", fixed: "left", width: 50 },
     {
       dataIndex: "productName",
       title: "Product name",
       fixed: "left",
-      width: 150,
     },
-    { dataIndex: "govermentfees", title: "Govt. fees", width: 150 },
-    { dataIndex: "govermentCode", title: "Govt. Code", width: 150 },
-    { dataIndex: "govermentGst", title: "Govt. GST (%)", width: 150 },
-    { dataIndex: "professionalFees", title: "Prof. Fees", width: 150 },
-    { dataIndex: "professionalCode", title: "Prof. Code", width: 150 },
-    { dataIndex: "profesionalGst", title: "Prof. GST (%)", width: 150 },
-    { dataIndex: "serviceCharge", title: "Service Charge", width: 150 },
-    { dataIndex: "serviceCode", title: "Service Code", width: 150 },
-    { dataIndex: "serviceGst", title: "Service GST (%)", width: 150 },
-    { dataIndex: "otherFees", title: "Other Fees", width: 150 },
-    { dataIndex: "otherCode", title: "Other Code", width: 150 },
-    { dataIndex: "otherGst", title: "Other GST (%)", width: 150 },
+    { dataIndex: "govermentfees", title: "Govt. fees" },
+    { dataIndex: "govermentCode", title: "Govt. Code" },
+    { dataIndex: "govermentGst", title: "Govt. GST (%)" },
+    { dataIndex: "professionalFees", title: "Prof. Fees" },
+    { dataIndex: "professionalCode", title: "Prof. Code" },
+    { dataIndex: "profesionalGst", title: "Prof. GST (%)" },
+    { dataIndex: "serviceCharge", title: "Service Charge" },
+    { dataIndex: "serviceCode", title: "Service Code" },
+    { dataIndex: "serviceGst", title: "Service GST (%)" },
+    { dataIndex: "otherFees", title: "Other Fees" },
+    { dataIndex: "otherCode", title: "Other Code" },
+    { dataIndex: "otherGst", title: "Other GST (%)" },
     {
       dataIndex: "Action",
       title: "Delete",
-      width: 150,
       render: (_, props) => (
-        <Button size="small" onClick={() => deleteProductFun(props.id)}>
-          <Icon icon="fluent:delete-20-filled" />
+        <Button
+          size="small"
+          type="text"
+          danger
+          onClick={() => deleteProductFun(props.id)}
+        >
+          <Icon icon="fluent:delete-20-regular" />
         </Button>
       ),
     },
@@ -174,18 +177,16 @@ const ProductsChange = () => {
           Add product
         </Button>
       </div>
-      <div className="mt-4 setting-table">
-        {productLoading ? (
-          <SmallTableScalaton />
-        ) : (
-          // <UserLeadComponent columns={ProductCol} row={productData} />
-          <CommonTable
-            data={productData}
-            columns={ProductCol}
-            scroll={{ y: 500, x: 1500 }}
-          />
-        )}
-      </div>
+      {productLoading ? (
+        <SmallTableScalaton />
+      ) : (
+        <CommonTable
+          data={productData}
+          columns={ProductCol}
+          scroll={{ y: 500, x: 2500 }}
+        />
+      )}
+
       <Modal
         title="Add product"
         centered

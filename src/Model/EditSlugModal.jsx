@@ -17,7 +17,7 @@ const EditSlugModal = ({ data }) => {
   return (
     <div>
       <Button onClick={() => setOpenModal(true)} size="small">
-        <Icon icon="fluent:edit-20-filled" />
+        <Icon icon="fluent:edit-20-regular" />
       </Button>
       <Modal
         open={openModal}

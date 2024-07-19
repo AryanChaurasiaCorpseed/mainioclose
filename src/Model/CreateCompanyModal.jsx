@@ -1,9 +1,10 @@
 import { Button, Form, Input, Modal, Select, Switch } from "antd"
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { useParams } from "react-router-dom"
 import { createCompany } from "../Toolkit/Slices/CompanySlice"
 import { Icon } from "@iconify/react"
+import { getAllUsers } from "../Toolkit/Slices/UsersSlice"
 
 const CreateCompanyModal = () => {
   const dispatch = useDispatch()
@@ -12,18 +13,25 @@ const CreateCompanyModal = () => {
   const [form] = Form.useForm()
   const allLeadList = useSelector((state) => state.leads.allLeadsWithLabel)
   const allProjectList = useSelector((state) => state.project.allProjectList)
+  const allUsers = useSelector((state) => state.user.allUsers)
   const allParentCompany = useSelector(
     (state) => state.company.allParentCompany
   )
+
+  useEffect(() => {
+    dispatch(getAllUsers())
+  }, [dispatch])
+
   const handleSubmit = (values) => {
     dispatch(createCompany(values))
     setModalOpen(false)
   }
+  console.log("sdvashkvj", allUsers)
 
   return (
     <>
       <Button type="primary" onClick={() => setModalOpen(true)}>
-        <Icon icon="fluent:add-20-filled" /> Create
+        <Icon icon="fluent:add-20-regular" /> Create
       </Button>
       <Modal
         title="Create company"
@@ -92,7 +100,7 @@ const CreateCompanyModal = () => {
                 {getFieldValue("parent") ? (
                   <Form.Item
                     label="Select parent company"
-                    name="name"
+                    name="parentId"
                     rules={[
                       {
                         required: true,
@@ -101,7 +109,7 @@ const CreateCompanyModal = () => {
                     ]}
                   >
                     <Select
-                    allowClear
+                      allowClear
                       options={allParentCompany}
                       showSearch
                       filterOption={(input, option) =>
@@ -117,7 +125,19 @@ const CreateCompanyModal = () => {
                       { required: true, message: "please enter the assignee" },
                     ]}
                   >
-                    <Input />
+                    <Select
+                      showSearch
+                      allowClear
+                      options={
+                        allUsers?.map((item) => ({
+                          label: item?.fullName,
+                          value: item?.id,
+                        })) || []
+                      }
+                      filterOption={(input, option) =>
+                        option.label.toLowerCase().includes(input.toLowerCase())
+                      }
+                    />
                   </Form.Item>
                 )}
               </>
@@ -146,6 +166,7 @@ const CreateCompanyModal = () => {
           >
             <Select
               options={allProjectList}
+              mode="multiple"
               showSearch
               allowClear
               filterOption={(input, option) =>

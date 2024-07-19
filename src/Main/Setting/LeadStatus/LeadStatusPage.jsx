@@ -66,7 +66,7 @@ const LeadStatusPage = () => {
       dataIndex: "delete",
       render: (_, info) => (
         <Button size="small" onClick={() => deleteStatusFun(info.id)}>
-          <Icon icon="fluent:delete-20-filled" />
+          <Icon icon="fluent:delete-20-regular" />
         </Button>
       ),
     },

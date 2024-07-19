@@ -39,7 +39,7 @@ const UserLockerEdit = ({data}) => {
   return (
     <>
       <Button size="small" onClick={editFormValues}>
-        <Icon icon="fluent:edit-20-filled" className="edit-iconify" />
+        <Icon icon="fluent:edit-20-regular" className="edit-iconify" />
       </Button>
       <Modal
         title="Edit Locker Count"
