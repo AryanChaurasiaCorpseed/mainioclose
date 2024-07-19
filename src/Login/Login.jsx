@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react"
+import React, { useEffect, useRef, useState } from "react"
 import "./Login.scss"
 import { Link, useNavigate } from "react-router-dom"
 import { useDispatch, useSelector } from "react-redux"
@@ -6,8 +6,10 @@ import { toast } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
 import LongButton from "../components/button/LongButton"
 import InputErrorComponent from "../components/InputErrorComponent"
-import { getCurrentUser } from "../Toolkit/Slices/AuthSlice"
+import { getCurrentUser, handleLoadingState } from "../Toolkit/Slices/AuthSlice"
 import LoginSidebarArea from "../components/LoginSidebarArea"
+import { Typography } from "antd"
+const { Text } = Typography
 toast.configure()
 
 const Login = () => {
@@ -42,6 +44,11 @@ const Login = () => {
 
   const currentUserID = useSelector((state) => state?.auth?.currentUser?.id)
   const CurrentuserData = useSelector((prev) => prev.AuthReducer)
+  const userLoading = useSelector((prev) => prev.auth.userLoading)
+
+  useEffect(() => {
+    dispatch(handleLoadingState(""))
+  }, [])
 
   const userSignIn = (e) => {
     e.preventDefault()
@@ -63,7 +70,7 @@ const Login = () => {
       return
     }
     setLoadingBtn(true)
-
+    
     const loginMyUser = async () => {
       try {
         const loginUser = await dispatch(getCurrentUser(userLoginData))
@@ -167,8 +174,11 @@ const Login = () => {
               </Link>
             </div>
           </div>
+          {userLoading === "rejected" && (
+            <Text type="danger">password does not match</Text>
+          )}
           <LongButton
-            data={loadingBtn ? "Loading..." : "Login"}
+            data={userLoading === "pending" ? "Loading..." : "Login"}
             onClick={(e) => userSignIn(e)}
             className={`mt-3 w-100`}
           />

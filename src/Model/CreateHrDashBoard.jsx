@@ -119,7 +119,6 @@ const CreateHrDashBoard = ({ data, type }) => {
 
   const roleUrl = `/securityService/api/v1/roles/getRole`
   const roleData = []
-
   const { productData: allDataRole } = useCustomRoute(roleUrl, roleData)
 
   const getAllRole = async () => {

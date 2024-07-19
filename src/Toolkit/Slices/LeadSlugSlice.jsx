@@ -30,6 +30,11 @@ export const editSulg = createAsyncThunk("editSlug", async (data) => {
   return response.data
 })
 
+export const getAllSlugList=createAsyncThunk('getSlugList',async()=>{
+  const response = await getQuery(`/leadService/api/v1/slug/getAllSlug`)
+  return response.data
+})
+
 export const LeadSlugSlice = createSlice({
   name: "leadslug",
   initialState: {
@@ -40,6 +45,7 @@ export const LeadSlugSlice = createSlice({
     allLeadSlugLoading: false,
     allLeadSlugError: false,
     page: 0,
+    slugList:[]
   },
   reducers: {
     handleNextPagination: (state, action) => {
@@ -92,6 +98,21 @@ export const LeadSlugSlice = createSlice({
       state.allLeadSlugError = false
     })
     builder.addCase(editSulg.rejected, (state, action) => {
+      state.allLeadSlugError = true
+      state.allLeadSlugLoading = false
+    })
+
+
+    builder.addCase(getAllSlugList.pending, (state, action) => {
+      state.allLeadSlugLoading = true
+      state.allLeadSlugError = false
+    })
+    builder.addCase(getAllSlugList.fulfilled, (state, action) => {
+      state.slugList = action.payload
+      state.allLeadSlugLoading = false
+      state.allLeadSlugError = false
+    })
+    builder.addCase(getAllSlugList.rejected, (state, action) => {
       state.allLeadSlugError = true
       state.allLeadSlugLoading = false
     })

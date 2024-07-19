@@ -124,7 +124,7 @@ const LeadCategory = () => {
           <CommonTable
             data={categoryData}
             columns={columns}
-            scroll={{ y: 500 }}
+            scroll={{ y: 550 }}
           />
           {/* <table className="table">
             <thead>

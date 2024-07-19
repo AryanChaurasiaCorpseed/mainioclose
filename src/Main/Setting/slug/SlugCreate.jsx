@@ -66,7 +66,7 @@ const SlugCreate = () => {
         nextPage={handleNextPagination}
         prevPage={handlePrevPagination}
         pagination={true}
-        scroll={{ y: 445 }}
+        scroll={{ y: 580 }}
         prevDisable={page === 0 && true}
         nextDisable={allLeadSlug?.length < 50 && true}
       />

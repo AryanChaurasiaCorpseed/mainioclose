@@ -1,6 +1,8 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 import { getQuery } from "../../API/GetQuery"
 import { postQuery } from "../../API/PostQuery"
+import { deleteQuery } from "../../API/DeleteQuery"
+import { putQuery } from "../../API/PutQuery"
 
 export const getAllRating = createAsyncThunk("alluser/rating", async () => {
   const allRatings = await getQuery(
@@ -21,6 +23,18 @@ export const createComments = createAsyncThunk(
 
 export const getAllComments = createAsyncThunk("getAllComments", async () => {
   const response = await getQuery(`/leadService/api/v1/lead/getAllComments`)
+  return response.data
+})
+
+export const deleteComments = createAsyncThunk("deletecomments", async (id) => {
+  const response = await deleteQuery(
+    `/leadService/api/v1/lead/deleteComments?id=${id}`
+  )
+  return response.data
+})
+
+export const updateComments=createAsyncThunk('updateComments',async(data)=>{
+  const response=await putQuery(`/leadService/api/v1/lead/updateComments?id=${data?.id}&comment=${data?.comment}`)
   return response.data
 })
 

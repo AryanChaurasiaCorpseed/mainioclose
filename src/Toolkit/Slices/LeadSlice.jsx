@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 import { postQuery } from "../../API/PostQuery"
 import { putQuery } from "../../API/PutQuery"
 import { getQuery } from "../../API/GetQuery"
+import { deleteQuery } from "../../API/DeleteQuery"
 
 export const getAllLeads = createAsyncThunk("allLeadsData", async (data) => {
   const allLeads = await postQuery(`/leadService/api/v1/lead/getAllLead`, data)
@@ -86,6 +87,154 @@ export const createLeadCateogry = createAsyncThunk(
   }
 )
 
+export const createLeads = createAsyncThunk("createLeads", async (data) => {
+  const response = await postQuery(`/leadService/api/v1/lead/createLead`, data)
+  return response.data
+})
+
+export const getAllLeadUsers = createAsyncThunk("getAllUsers", async () => {
+  const response = await getQuery(`/leadService/api/v1/users/getAllUser`)
+  return response.data
+})
+
+export const createLeadContacts = createAsyncThunk(
+  "createLeadContact",
+  async (createContact) => {
+    const response = await postQuery(
+      `/leadService/api/v1/client/createClient`,
+      createContact
+    )
+    return response.data
+  }
+)
+
+export const updateLeadsContact = createAsyncThunk(
+  "updateContacts",
+  async (data) => {
+    const response = await putQuery(
+      `/leadService/api/v1/client/updateClientInfo`,
+      data
+    )
+    return response.data
+  }
+)
+export const deleteLeadContact = createAsyncThunk(
+  "deleteLeadContacts",
+  async (data) => {
+    const response = await deleteQuery(
+      `/leadService/api/v1/client/deleteClient?leadId=${data?.leadid}&clientId=${data?.id}&currentUserId=${data?.userid}`
+    )
+    return response.data
+  }
+)
+
+export const createNewLeadTask = createAsyncThunk(
+  "newLeadTask",
+  async (taskData) => {
+    const response = await postQuery(
+      `/leadService/api/v1/task/createTask`,
+      taskData
+    )
+    return response.data
+  }
+)
+
+export const updateLeadTask = createAsyncThunk(
+  "updateLeadTasd",
+  async (addNewTask) => {
+    const response = await postQuery(
+      `/leadService/api/v1/task/updateTaskData`,
+      addNewTask
+    )
+    return response.data
+  }
+)
+
+export const getAllTaskStatus = createAsyncThunk("allTaskStatus", async () => {
+  const response = await getQuery(`/leadService/api/v1/getAllTaskStatus`)
+  return response.data
+})
+
+export const getAllOppurtunities = createAsyncThunk(
+  "getAllOppurtunities",
+  async () => {
+    const response = await getQuery(
+      `/leadService/api/v1/leadOpportunity/getAllOpportunity`
+    )
+    return response.data
+  }
+)
+
+export const getAllProductData = createAsyncThunk(
+  "getAllProductData",
+  async () => {
+    const response = await getQuery(
+      `/leadService/api/v1/product/getAllProducts`
+    )
+    return response.data
+  }
+)
+
+export const getAllLeadUser = createAsyncThunk(
+  "getAllLeadUserss",
+  async (userid) => {
+    const response = await getQuery(
+      `/leadService/api/v1/users/getAllUserByHierarchy?userId=${userid}`
+    )
+    return response.data
+  }
+)
+
+export const deleteProduct = createAsyncThunk("deleteProduct", async (data) => {
+  const response = await putQuery(
+    `/leadService/api/v1/lead/deleteProductInLead?leadId=${data?.leadid}&serviceId=${data?.serviceId}&userId=${data?.userid}`
+  )
+  return response.data
+})
+
+export const deleteTask = createAsyncThunk("deleteTask", async (data) => {
+  const response = await deleteQuery(
+    `/leadService/api/v1/task/deleteTaskById?taskId=${data?.id}&currentUserId=${data?.userid}`
+  )
+  return response.data
+})
+
+export const updateLeadProducts = createAsyncThunk(
+  "updateLeadProduct",
+  async (data) => {
+    const response = await putQuery(
+      `/leadService/api/v1/lead/createProductInLead`,
+      data
+    )
+    return response.data
+  }
+)
+
+export const getAllProductWithCattegory = createAsyncThunk(
+  "getAllProductWithCattegory",
+  async () => {
+    const response = await getQuery(
+      "/leadService/api/v1/category/getAllCategories"
+    )
+    return response.data
+  }
+)
+
+export const getAllStatusData = createAsyncThunk(
+  "getAllStatusData",
+  async () => {
+    const response = await getQuery(`/leadService/api/v1/status/getAllStatus`)
+    return response.data
+  }
+)
+
+export const editViewData = createAsyncThunk("editViewData", async (leadid) => {
+  const response = await getQuery(
+    `/leadService/api/v1/inbox/editView?leadId=${leadid}`
+  )
+  return response.data
+})
+
 export const LeadSlice = createSlice({
   name: "lead",
   initialState: {
@@ -97,6 +246,19 @@ export const LeadSlice = createSlice({
     autoLeadError: false,
     remarkLoading: "",
     allLeadsWithLabel: [],
+    allLeadUsers: [],
+    loading: "",
+    allTaskStatusData: [],
+    allOportunities: [],
+    allProductData: [],
+    getAllLeadUserData: [],
+    categoryData: [],
+    getAllStatus: [],
+  },
+  reducers: {
+    handleLoadingState: (state, action) => {
+      state.loading = action.payload
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(getAllLeads.pending, (state, action) => {
@@ -137,7 +299,83 @@ export const LeadSlice = createSlice({
     builder.addCase(getAllLeadsWithLabelId.rejected, (state, action) => {
       state.remarkLoading = "rejected"
     })
+
+    builder.addCase(getAllLeadUsers.pending, (state, action) => {
+      state.loading = "pending"
+    })
+    builder.addCase(getAllLeadUsers.fulfilled, (state, action) => {
+      state.loading = "success"
+      state.allLeadUsers = action.payload
+    })
+    builder.addCase(getAllLeadUsers.rejected, (state, action) => {
+      state.loading = "rejected"
+    })
+
+    builder.addCase(getAllTaskStatus.pending, (state, action) => {
+      state.loading = "pending"
+    })
+    builder.addCase(getAllTaskStatus.fulfilled, (state, action) => {
+      state.loading = "success"
+      state.allTaskStatusData = action.payload
+    })
+    builder.addCase(getAllTaskStatus.rejected, (state, action) => {
+      state.loading = "rejected"
+    })
+
+    builder.addCase(getAllOppurtunities.pending, (state, action) => {
+      state.loading = "pending"
+    })
+    builder.addCase(getAllOppurtunities.fulfilled, (state, action) => {
+      state.loading = "success"
+      state.allOportunities = action.payload
+    })
+    builder.addCase(getAllOppurtunities.rejected, (state, action) => {
+      state.loading = "rejected"
+    })
+    builder.addCase(getAllProductData.pending, (state, action) => {
+      state.loading = "pending"
+    })
+    builder.addCase(getAllProductData.fulfilled, (state, action) => {
+      state.loading = "success"
+      state.allProductData = action.payload
+    })
+    builder.addCase(getAllProductData.rejected, (state, action) => {
+      state.loading = "rejected"
+    })
+
+    builder.addCase(getAllLeadUser.pending, (state, action) => {
+      state.loading = "pending"
+    })
+    builder.addCase(getAllLeadUser.fulfilled, (state, action) => {
+      state.loading = "success"
+      state.getAllLeadUserData = action.payload
+    })
+    builder.addCase(getAllLeadUser.rejected, (state, action) => {
+      state.loading = "rejected"
+    })
+
+    builder.addCase(getAllProductWithCattegory.pending, (state, action) => {
+      state.loading = "pending"
+    })
+    builder.addCase(getAllProductWithCattegory.fulfilled, (state, action) => {
+      state.loading = "success"
+      state.categoryData = action.payload
+    })
+    builder.addCase(getAllProductWithCattegory.rejected, (state, action) => {
+      state.loading = "rejected"
+    })
+
+    builder.addCase(getAllStatusData.pending, (state, action) => {
+      state.loading = "pending"
+    })
+    builder.addCase(getAllStatusData.fulfilled, (state, action) => {
+      state.loading = "success"
+      state.getAllStatus = action.payload
+    })
+    builder.addCase(getAllStatusData.rejected, (state, action) => {
+      state.loading = "rejected"
+    })
   },
 })
-
+export const { handleLoadingState } = LeadSlice.actions
 export default LeadSlice.reducer

@@ -9,7 +9,7 @@ const UserLeadComponent = ({ row, columns, tableName, getRowId }) => {
   const adminRole = currentUserRoles.includes("ADMIN")
 
   return (
-    <Box sx={{ height: 485, width: "100%" }}>
+    <Box sx={{ height: 580, width: "100%" }}>
       <h1 className="table-main-heading">{tableName}</h1>
       <DataGrid
         // checkboxSelection

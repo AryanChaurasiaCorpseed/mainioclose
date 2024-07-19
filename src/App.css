@@ -949,3 +949,13 @@ select.form-control:not([size]):not([multiple]) {
 .edit-iconify{
   cursor: pointer;
 }
+.ant-btn {
+  line-height: normal;
+}
+
+.flex-vert-hori-center{
+  display: flex;
+  /* justify-content: center; */
+  align-items: center;
+  gap: 6px;
+}

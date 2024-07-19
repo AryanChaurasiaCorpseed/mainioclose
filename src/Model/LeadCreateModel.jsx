@@ -1,487 +1,214 @@
-import React, { useRef, useState } from "react"
+import React, { useCallback, useEffect, useRef, useState } from "react"
 import "./Model.css"
 import { postQuery } from "../API/PostQuery"
 import InputErrorComponent from "../components/InputErrorComponent"
 import { useCustomRoute } from "../Routes/GetCustomRoutes"
 import { leadSource } from "../data/FakeData"
 import { useLocation, useParams } from "react-router"
+import { Button, Form, Input, message, Modal, Select } from "antd"
+import { useDispatch, useSelector } from "react-redux"
+import {
+  createLeads,
+  getAllLeadUsers,
+  handleLoadingState,
+} from "../Toolkit/Slices/LeadSlice"
 
 const LeadCreateModel = () => {
-  const location = useLocation()
-
+  const [form] = Form.useForm()
+  const dispatch = useDispatch()
   const { userid } = useParams()
+  const allLeadUser = useSelector((state) => state.leads.allLeadUsers)
+  const loading = useSelector((state) => state.leads.loading)
+  const [openModal, setOpenModal] = useState(false)
+  const [messageApi, contextHolder] = message.useMessage()
 
-  const [leadData, setLeadData] = useState({
-    uuid: "",
-    name: "",
-    leadName: "",
-    email: "",
-    leadDescription: "",
-    mobileNo: "",
-    urls: "",
-    lastUpdated: "",
-    latestStatusChangeDate: "",
-    source: "",
-    city: "",
-    categoryId: "1",
-    createdById: userid,
-    serviceId: "1",
-    industryId: "1",
-    ipAddress: "",
-    displayStatus: "string",
-    assigneeId: userid,
-    whatsAppStatus: 0,
-    deleted: false,
-    primaryAddress: "",
-  })
+  useEffect(() => {
+    dispatch(getAllLeadUsers())
+    dispatch(handleLoadingState(""))
+  }, [dispatch])
 
-  
-  const [nameError, setNameError] = useState(false)
-  const [emailError, setEmailError] = useState(false)
-  const [mobileNoError, setMobileNoError] = useState(false)
-  const [cityError, setCityError] = useState(false)
-  const [ipAddressError, setIpAddressError] = useState(false)
-  const [sourceError, setSourceError] = useState(false)
-  const [leadLoading, setLeadLoading] = useState()
-
-  const nameRef = useRef()
-  const emailRef = useRef()
-  const leadDescriptionRef = useRef()
-  const mobileNoRef = useRef()
-  const urlsRef = useRef()
-  const cityRef = useRef()
-  const ipAddressRef = useRef()
-  const assigneeIdRef = useRef()
-  const primaryAddressRef = useRef()
-  const sourceRef = useRef()
-  const leadNameRef = useRef()
-
-  const leadRowData = (e) => {
-    setLeadData((prev) => ({ ...prev, [e.target.name]: e.target.value }))
-
-    if (mobileNoRef.current.value !== "") {
-      setMobileNoError(false)
-    }
+  const success = (type) => {
+    messageApi.open({
+      type: type,
+      content:
+        type == "success"
+          ? "Lead created successfull"
+          : type == "pending"
+          ? "Loading..."
+          : "something went wrong",
+      className: "custom-class",
+      style: {
+        marginTop: "10vh",
+      },
+    })
   }
-
-  const newLeadCreate = (e) => {
-    e.preventDefault()
-    if (nameRef.current.value === "") {
-      setNameError(true)
+  useEffect(() => {
+    if (loading === "success") {
+      success("success")
+    } else if (loading === "rejected") {
+      success("error")
+    } else if (loading === "pending") {
+      success("loading")
     }
+  }, [loading])
 
-    if (mobileNoRef.current.value === "" || mobileNoRef.current.value.length !== 10) {
-      setMobileNoError(true)
-      return
-    }
-    setLeadLoading(true)
-
-    const leadCreateFun = async () => {
-      try {
-        const createNewLeadData = await postQuery(
-          `/leadService/api/v1/lead/createLead`,
-          leadData
-        )
+  const handleFinish = useCallback(
+    (values) => {
+      values.categoryId = "1"
+      values.createdById = userid
+      values.serviceId = "1"
+      values.industryId = "1"
+      dispatch(createLeads(values)).then(() => {
+        setOpenModal(false)
         window.location.reload()
-        setLeadLoading(false)
-      } catch (err) {
-        console.log(err)
-        setLeadLoading(false)
-      }
-    }
-    leadCreateFun()
-  }
+      })
+    },
 
-  const leadUserUrl = `/leadService/api/v1/users/getAllUser`
-  const leadUserData = []
-
-  const { productData: allLeadUser } = useCustomRoute(leadUserUrl, leadUserData)
+    [userid, dispatch]
+  )
 
   return (
-    <nav>
+    <>
       <div className="team-model">
-        <button
-          type="button"
-          className="team-edit-button create-user-btn"
-          data-toggle="modal"
-          data-target="#createLead"
-        >
-          <i className="fa-solid mr-1 fa-circle-plus"></i>
-        </button>
-
-        {/* MODAL */}
-        <div
-          className="modal fade"
-          id="createLead"
-          tabIndex="-1"
-          role="dialog"
-          aria-labelledby="exampleModalCenterTitle"
-          aria-hidden="true"
-        >
-          <div
-            className="modal-dialog mod-center modal-dialog-centered"
-            role="document"
-          >
-            <div className="modal-content all-center-2">
-              <div className="add-team-body">
-                {/* START */}
-                <div className="personal-info container">
-                  <h4 className="info-text model-heading">Add New Lead</h4>
-                  <div className="cross-icon">
-                    <i
-                      data-dismiss="modal"
-                      className="fa-sharp fa-solid fa-circle-xmark"
-                    ></i>
-                  </div>
-                  <form>
-                    <div className="first-form form-row">
-                      <div className="form-group col-md-6">
-                        <div className="pr-ten">
-                          <label
-                            className="label-heading mb-1"
-                            htmlFor="teamName"
-                          >
-                            Lead Name *
-                          </label>
-                          <input
-                            type="text"
-                            className="form-control input-focus"
-                            id="leadName"
-                            ref={leadNameRef}
-                            placeholder="Enter Team Name"
-                            name="leadName"
-                            onChange={(e) => leadRowData(e)}
-                          />
-                        </div>
-                        {nameError ? (
-                          <InputErrorComponent value={"Name can't be Blank!"} />
-                        ) : (
-                          ""
-                        )}
-                      </div>
-
-                      <div className="form-group col-md-6">
-                        <div className="pr-ten">
-                          <label
-                            className="label-heading mb-1"
-                            htmlFor="teamName"
-                          >
-                            Client Name *
-                          </label>
-                          <input
-                            type="text"
-                            className="form-control input-focus"
-                            id="teamName"
-                            ref={nameRef}
-                            placeholder="Enter Team Name"
-                            name="name"
-                            onChange={(e) => leadRowData(e)}
-                          />
-                        </div>
-                        {nameError ? (
-                          <InputErrorComponent value={"Name can't be Blank!"} />
-                        ) : (
-                          ""
-                        )}
-                      </div>
-                      <div className="form-group col-md-6">
-                        <div className="pl-ten">
-                          <label
-                            className="label-heading mb-1"
-                            htmlFor="teamLeadName"
-                          >
-                            Client Email
-                          </label>
-                          <input
-                            type="email"
-                            className="form-control input-focus"
-                            id="teamLeadName"
-                            placeholder="Enter Email"
-                            name="email"
-                            ref={emailRef}
-                            onChange={(e) => leadRowData(e)}
-                          />
-                        </div>
-                        {/* {emailError ? (
-                          <InputErrorComponent value={"Email can't be Blank!"} />
-                        ) : (
-                          ""
-                        )} */}
-                      </div>
-                      <div className="form-group col-md-6">
-                        <div className="pr-ten">
-                          <label
-                            className="label-heading mb-1"
-                            htmlFor="mobileNo"
-                          >
-                            Mobile Number*
-                          </label>
-                          <input
-                            type="text"
-                            className="form-control input-focus"
-                            id="mobileNo"
-                            ref={mobileNoRef}
-                            placeholder="Enter Team Name"
-                            name="mobileNo"
-                            onChange={(e) => leadRowData(e)}
-                          />
-                        </div>
-                        {mobileNoError ? (
-                          <InputErrorComponent
-                            value={"Mobile Number should be 10 Digit only!"}
-                          />
-                        ) : (
-                          ""
-                        )}
-                      </div>
-                      <div className="form-group col-md-6">
-                        <div className="pr-ten">
-                          <label
-                            className="label-heading mb-1"
-                            htmlFor="mobileNo"
-                          >
-                            Company
-                          </label>
-                          <input
-                            type="text"
-                            className="form-control input-focus"
-                            id="mobileNo"
-                            ref={urlsRef}
-                            placeholder="Enter Company"
-                            name="urls"
-                            onChange={(e) => leadRowData(e)}
-                          />
-                        </div>
-                      </div>
-                      <div className="form-group col-md-6">
-                        <div className="pr-ten">
-                          <label
-                            className="label-heading mb-1"
-                            htmlFor="mobileNo"
-                          >
-                            State
-                          </label>
-                          <input
-                            type="text"
-                            className="form-control input-focus"
-                            id="mobileNo"
-                            // ref={cityRef}
-                            placeholder="Enter city"
-                            // name="city"
-                            // onChange={(e) => leadRowData(e)}
-                          />
-                        </div>
-                        {/* {cityError ? (
-                          <InputErrorComponent value={"City can't be Blank!"} />
-                        ) : (
-                          ""
-                        )} */}
-                      </div>
-                      <div className="form-group col-md-6">
-                        <div className="pr-ten">
-                          <label
-                            className="label-heading mb-1"
-                            htmlFor="mobileNo"
-                          >
-                            City
-                          </label>
-                          <input
-                            type="text"
-                            className="form-control input-focus"
-                            id="mobileNo"
-                            ref={cityRef}
-                            placeholder="Enter city"
-                            name="city"
-                            onChange={(e) => leadRowData(e)}
-                          />
-                        </div>
-                        {/* {cityError ? (
-                          <InputErrorComponent value={"City can't be Blank!"} />
-                        ) : (
-                          ""
-                        )} */}
-                      </div>
-
-                      <div className="form-group col-md-6">
-                        <div className="pr-ten">
-                          <label
-                            className="label-heading mb-1"
-                            htmlFor="mobileNo"
-                          >
-                            IP Address
-                          </label>
-                          <input
-                            type="text"
-                            className="form-control input-focus"
-                            id="mobileNo"
-                            ref={ipAddressRef}
-                            placeholder="IP Address"
-                            name="ipAddress"
-                            onChange={(e) => leadRowData(e)}
-                          />
-                        </div>
-                        {/* {ipAddressError ? (
-                          <InputErrorComponent value={"Ip Address can't be Blank!"} />
-                        ) : (
-                          ""
-                        )} */}
-                      </div>
-                      <div className="form-group col-md-6">
-                        <div className="pr-ten">
-                          <label
-                            className="label-heading mb-1"
-                            htmlFor="mobileNo"
-                          >
-                            Assignee User
-                          </label>
-                          <select
-                            className="form-control input-focus"
-                            name="assigneeId"
-                            id="select-product"
-                            ref={assigneeIdRef}
-                            onChange={(e) => leadRowData(e)}
-                          >
-                            <option>Select User</option>
-                            {allLeadUser.map((client, index) => (
-                              <option key={index} value={client.id}>
-                                {client.fullName}
-                              </option>
-                            ))}
-                          </select>
-
-                          {/* <input
-                            type="text"
-                            className="form-control input-focus"
-                            id="mobileNo"
-                            ref={assigneeIdRef}
-                            placeholder="Assignee ID"
-                            name="assigneeId"
-                            onChange={(e) => leadRowData(e)}
-                          /> */}
-                        </div>
-                      </div>
-                      <div className="form-group col-md-6">
-                        <div className="pr-ten">
-                          <label
-                            className="label-heading mb-1"
-                            htmlFor="mobileNo"
-                          >
-                            Source
-                          </label>
-                          <select
-                            className="form-control input-focus"
-                            name="source"
-                            id="Source"
-                            ref={sourceRef}
-                            onChange={(e) => leadRowData(e)}
-                          >
-                            <option>Select Source</option>
-                            {leadSource.map((client, index) => (
-                              <option key={index} value={client}>
-                                {client}
-                              </option>
-                            ))}
-                          </select>
-                        </div>
-                      </div>
-                      {/* <div className="form-group col-md-6">
-                        <div className="pr-ten">
-                          <label
-                            className="label-heading mb-1"
-                            htmlFor="mobileNo"
-                          >
-                            Source
-                          </label>
-                          <input
-                            type="text"
-                            className="form-control input-focus"
-                            id="Source"
-                            ref={sourceRef}
-                            placeholder="Enter Source"
-                            name="source"
-                            onChange={(e) => leadRowData(e)}
-                          />
-                        </div>
-                        {/* {sourceError ? (
-                          <InputErrorComponent value={"Source can't be Blank!"} />
-                        ) : (
-                          ""
-                        )} */}
-                      {/* </div> */}
-
-                      <div className="form-group col-md-6">
-                        <div className="pr-ten">
-                          <label
-                            className="label-heading mb-1"
-                            htmlFor="mobileNo"
-                          >
-                            Primary Address
-                          </label>
-                          <textarea
-                            className="form-control input-focus"
-                            id="opunit"
-                            rows="4"
-                            cols="50"
-                            placeholder="Enter Address here..."
-                            value={leadData.primaryAddress || ""}
-                            name="primaryAddress"
-                            ref={primaryAddressRef}
-                            onChange={(e) => leadRowData(e)}
-                            required
-                          ></textarea>
-                        </div>
-                      </div>
-
-                      <div className="form-group col-md-6">
-                        <div className="pr-ten">
-                          <label
-                            className="label-heading mb-1"
-                            htmlFor="mobileNo"
-                          >
-                            Lead Description
-                          </label>
-                          <textarea
-                            className="form-control input-focus"
-                            id="opunit"
-                            rows="4"
-                            cols="50"
-                            placeholder="Enter Description here..."
-                            value={leadData.leadDescription || ""}
-                            name="leadDescription"
-                            ref={leadDescriptionRef}
-                            onChange={(e) => leadRowData(e)}
-                            required
-                          ></textarea>
-                        </div>
-                        {/* {leadDescriptionError ? (
-                          <InputErrorComponent
-                            value={"lead Description can't be Blank!"}
-                          />
-                        ) : (
-                          ""
-                        )} */}
-                      </div>
-
-                      <div className="all-between-items">
-                        <div className="all-center-2"></div>
-                        <div>
-                          <button
-                            onClick={(e) => newLeadCreate(e)}
-                            className="first-button form-prev-btn"
-                          >
-                            {leadLoading ? "Loading..." : "Submit"}
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  </form>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+        <Button type="primary" onClick={() => setOpenModal(true)}>
+          Create lead
+        </Button>
       </div>
-    </nav>
+      <Modal
+        title="Create lead"
+        centered
+        width={650}
+        open={openModal}
+        onCancel={() => setOpenModal(false)}
+        onClose={() => setOpenModal(false)}
+        onOk={() => form.submit()}
+        okText="Submit"
+      >
+        <Form
+          layout="vertical"
+          form={form}
+          onFinish={handleFinish}
+          scrollToFirstError
+          style={{ maxHeight: "80vh", overflow: "auto" }}
+        >
+          <Form.Item
+            label="Lead name"
+            name="leadName"
+            rules={[{ required: true, message: "please enter the lead name" }]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item
+            label="Client name"
+            name="name"
+            rules={[
+              { required: true, message: "please enter the client name" },
+            ]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item
+            label="Client email"
+            name="email"
+            rules={[
+              {
+                required: true,
+                message: "please enter the client email",
+                type: "email",
+              },
+            ]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item
+            label="Mobile number"
+            name="mobileNo"
+            rules={[
+              {
+                required: true,
+                message: "please enter the mobile number",
+              },
+            ]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item
+            label="Company"
+            name="urls"
+            rules={[
+              {
+                required: true,
+                message: "please enter the company",
+              },
+            ]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item label="City" name="city">
+            <Input />
+          </Form.Item>
+          <Form.Item label="State" name="state">
+            <Input />
+          </Form.Item>
+          <Form.Item label="Ip Address" name="ipAddress">
+            <Input />
+          </Form.Item>
+          <Form.Item label="Assignee user" name="assigneeId">
+            <Select
+              showSearch
+              allowClear
+              options={
+                allLeadUser?.map((item) => ({
+                  label: item?.fullName,
+                  value: item?.id,
+                })) || []
+              }
+              filterOption={(input, option) =>
+                option.label.toLowerCase().includes(input.toLowerCase())
+              }
+            />
+          </Form.Item>
+          <Form.Item
+            label="Source"
+            name="source"
+            rules={[{ required: true, message: "please select source" }]}
+          >
+            <Select
+              placeholder="Select source"
+              showSearch
+              allowClear
+              options={
+                leadSource?.map((item) => ({
+                  label: item,
+                  value: item,
+                })) || []
+              }
+              filterOption={(input, option) =>
+                option.label.toLowerCase().includes(input.toLowerCase())
+              }
+            />
+          </Form.Item>
+          <Form.Item
+            label="Primary address"
+            name="primaryAddress"
+            rules={[
+              { required: true, message: "please enter primary address" },
+            ]}
+          >
+            <Input.TextArea autoSize={{ minRows: 2, maxRows: 5 }} />
+          </Form.Item>
+          <Form.Item
+            label="Lead description"
+            name="leadDescription"
+            rules={[
+              { required: true, message: "please enter lead description" },
+            ]}
+          >
+            <Input.TextArea autoSize={{ minRows: 2, maxRows: 5 }} />
+          </Form.Item>
+        </Form>
+      </Modal>
+    </>
   )
 }
 

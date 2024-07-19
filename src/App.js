@@ -72,18 +72,11 @@ function App() {
         token: {
           borderRadius: 4,
         },
-        // components: {
-        //   Button: {
-        //     borderRadiusLG: 4,
-        //     borderRadius: 4,
-        //     borderRadiusSM: 4,
-        //   },
-        //   Modal: {
-        //     borderRadius: 4,
-        //     borderRadiusLG: 4,
-        //     borderRadiusSM: 4,
-        //   },
-        // },
+        components: {
+          Card: {
+            actionsLiMargin: 6,
+          },
+        },
       }}
     >
       <div className="App">

@@ -17,10 +17,15 @@ export const changePasswordAuthentication = createAsyncThunk(
   }
 )
 
-export const getDepartmentOfUser=createAsyncThunk('getDepartment',async(id)=>{
-  const response=await getQuery(`/leadService/api/v1/users/getSingleUserById?userId=${id}`)
-  return response.data
-})
+export const getDepartmentOfUser = createAsyncThunk(
+  "getDepartment",
+  async (id) => {
+    const response = await getQuery(
+      `/leadService/api/v1/users/getSingleUserById?userId=${id}`
+    )
+    return response.data
+  }
+)
 
 export const AuthSlice = createSlice({
   name: "auth",
@@ -32,18 +37,23 @@ export const AuthSlice = createSlice({
     jwt: "",
     isAuth: false,
     isManagerApproved: false,
-    getDepartmentDetail:{}
+    getDepartmentDetail: {},
+    userLoading: "",
   },
   reducers: {
     logoutFun: (state, action) => {
       state.isAuth = false
       state.currentUser = null
     },
+    handleLoadingState:(state,action)=>{
+      state.userLoading=action.payload
+    }
   },
   extraReducers: (builder) => {
     builder.addCase(getCurrentUser.pending, (state, action) => {
       state.loginLoading = true
       state.loginError = false
+      state.userLoading = "pending"
     })
     builder.addCase(getCurrentUser.fulfilled, (state, action) => {
       state.currentUser = action.payload
@@ -52,10 +62,12 @@ export const AuthSlice = createSlice({
       state.loginLoading = false
       state.isAuth = true
       state.loginError = false
+      state.userLoading = "success"
     })
     builder.addCase(getCurrentUser.rejected, (state, action) => {
       state.loginError = true
       state.loginLoading = false
+      state.userLoading = "rejected"
     })
 
     builder.addCase(changePasswordAuthentication.pending, (state, action) => {
@@ -79,10 +91,8 @@ export const AuthSlice = createSlice({
     builder.addCase(getDepartmentOfUser.rejected, (state, action) => {
       state.loginError = true
     })
-
-
   },
 })
 
-export const { logoutFun } = AuthSlice.actions
+export const { logoutFun,handleLoadingState } = AuthSlice.actions
 export default AuthSlice.reducer

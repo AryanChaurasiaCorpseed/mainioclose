@@ -1,8 +1,12 @@
-.lead-details{
+.lead-details {
   background-color: #f8f8f8;
 }
 
 .left-lead-section {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
   .company-name {
     font-size: 24px;
     font-weight: 600;
@@ -10,12 +14,11 @@
     color: #262e39;
     margin-bottom: 0px;
   }
-  .status-select{
+  .status-select {
     font-size: 13px;
     border-radius: 4px;
-    border: 1px solid rgba(0,0,0,.2);
+    border: 1px solid rgba(0, 0, 0, 0.2);
     outline: none;
-
   }
   .card {
     .card-btn {
@@ -23,7 +26,7 @@
       justify-content: space-between;
       align-items: center;
       padding: 8px 12px;
-      background: rgba(38, 46, 57, .05);
+      background: rgba(38, 46, 57, 0.05);
       border: 1px solid #e5e5e5;
     }
     .save-lead-data {
@@ -55,7 +58,7 @@
     font-size: 12px;
     .lead-cancel-btn {
       color: #262e39;
-      border: 1px solid rgba(0,0,0,.2);
+      border: 1px solid rgba(0, 0, 0, 0.2);
       padding: 6px 16px;
       border-radius: 4px;
       background-color: #fff;
@@ -71,9 +74,20 @@
   }
 }
 
-.lead-set-data{
-  height: 100vh;
-  overflow: auto;
+.comp-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  .comp-component-1 {
+    flex: 1;
+  }
+  .comp-component-2 {
+    flex-shrink: 0;
+  }
+}
+
+.lead-set-data {
+  padding: auto;
 }
 
 .lead-set-data::-webkit-scrollbar {
@@ -82,7 +96,7 @@
 
 .lead-filter-above {
   padding: 5px;
-  .filter-box{
+  .filter-box {
     display: flex;
     align-items: center;
     gap: 5px;
@@ -98,27 +112,27 @@
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      .icon-box{
+      .icon-box {
         height: 42px;
         width: 42px;
         border-radius: 50%;
         display: flex;
         justify-content: center;
         align-items: center;
-        background-color: #FAD6A5;
+        background-color: #fad6a5;
         color: #fff;
-      }  
-      .notes-cl{
-        background-color: #FAD6A5;   
-      } 
-      .email-cl{
-        background-color: #C08081;
       }
-      .sms-cl{
-        background-color: #5C5248;
+      .notes-cl {
+        background-color: #fad6a5;
+      }
+      .email-cl {
+        background-color: #c08081;
+      }
+      .sms-cl {
+        background-color: #5c5248;
       }
       .line {
-        border: 1px solid rgba(0,0,0,.2);
+        border: 1px solid rgba(0, 0, 0, 0.2);
         height: 100%;
       }
     }
@@ -142,7 +156,7 @@
       }
       .comment-below {
         background-color: #fff;
-        border: 1px solid rgba(0,0,0,.2);
+        border: 1px solid rgba(0, 0, 0, 0.2);
         padding: 5px 10px;
         margin-top: 0px;
         position: relative;
@@ -151,7 +165,7 @@
         justify-content: space-between;
         border-bottom-left-radius: 4px;
         border-bottom-right-radius: 4px;
-        
+
         .comment-btn {
           padding: 5px 10px;
           font-size: 13px;
@@ -170,11 +184,11 @@
         width: 100%;
         resize: none;
         padding: 10px;
-        border: 1px solid rgba(0,0,0, .2);
+        border: 1px solid rgba(0, 0, 0, 0.2);
         border-radius: 4px;
         // border-radius: 4px;
       }
-      .text-display-box{
+      .text-display-box {
         width: 100%;
         resize: none;
         padding: 10px;
@@ -189,4 +203,11 @@
       }
     }
   }
+}
+
+.card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 4px 2px;
 }

@@ -1,11 +1,12 @@
-import { DataGrid, GridToolbar } from "@mui/x-data-grid";
-import React from "react";
+import { Box } from "@mui/material"
+import { DataGrid, GridToolbar } from "@mui/x-data-grid"
+import React from "react"
 
-const UserListComponent = ({row, columns, tableName,  getRowId}) => {
+const UserListComponent = ({ row, columns, tableName, getRowId }) => {
   return (
-    <div>
-        <h1 className="table-main-heading">{tableName}</h1>
-        <DataGrid
+    <Box sx={{ height: "65vh", width: "100%" }}>
+      <h1 className="table-main-heading">{tableName}</h1>
+      <DataGrid
         checkboxSelection
         rows={row}
         getRowId={getRowId}
@@ -17,8 +18,8 @@ const UserListComponent = ({row, columns, tableName,  getRowId}) => {
           },
         }}
       />
-    </div>
+    </Box>
   )
-};
+}
 
-export default UserListComponent;
+export default UserListComponent

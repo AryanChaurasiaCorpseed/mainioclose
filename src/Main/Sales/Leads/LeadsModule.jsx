@@ -30,7 +30,6 @@ const UserLeadComponent = React.lazy(() =>
 )
 
 const LeadsModule = () => {
-  const [allLeadData, setAllLeadData] = useState([])
   const [leadUserNew, setLeadUserNew] = useState([])
   const [updateActive, setUpdateActive] = useState(false)
   const [getAllStatus, setGetAllStatus] = useState([])
