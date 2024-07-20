@@ -37,9 +37,7 @@ const SideBar = () => {
     }
   }, [currentUserId])
 
-  function getRouteByDepartment(department, role) {}
 
-  console.log("currentUser", currentUserDetail)
 
   return (
     <div className="sideTab">
@@ -363,14 +361,14 @@ const SideBar = () => {
             >
               <div className="link-child">
                 <NavLink className="link-itemss" to={`/erp/${userid}/hr`}>
-                  User List
+                  User list
                 </NavLink>
 
                 <NavLink
                   className="link-itemss"
                   to={`/erp/${userid}/hr/approveUser`}
                 >
-                  Approval List
+                  Approval list
                 </NavLink>
               </div>
             </div>
@@ -397,21 +395,21 @@ const SideBar = () => {
             >
               <div className="link-child">
                 <NavLink className="link-itemss" to={`/erp/${userid}/hr`}>
-                  User List
+                  User list
                 </NavLink>
 
                 <NavLink
                   className="link-itemss"
                   to={`/erp/${userid}/hr/approveUser`}
                 >
-                  Approval List
+                  Approval list
                 </NavLink>
 
                 <NavLink
                   className="link-itemss"
                   to={`/erp/${userid}/hr/userservice`}
                 >
-                  Rating List
+                  Rating list
                 </NavLink>
               </div>
               {/* <div className="link-child">
@@ -466,7 +464,7 @@ const SideBar = () => {
             >
               <div className="link-child">
                 <NavLink className="link-itemss" to={`/erp/${userid}/account`}>
-                  Accounts List
+                  Accounts list
                 </NavLink>
               </div>
             </div>

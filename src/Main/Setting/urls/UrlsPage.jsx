@@ -90,7 +90,7 @@ const UrlsPage = () => {
 
   return (
     <div>
-      <MainHeading data={`Urls Create`} />
+      <MainHeading data={`Urls create`} />
       <div className="lead-box">
         <Button type="primary" onClick={() => setOpenModal(true)}>
           Create url

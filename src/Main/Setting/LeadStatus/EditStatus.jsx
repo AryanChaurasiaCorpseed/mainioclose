@@ -6,7 +6,7 @@ import { editLeadStatus } from "../../../Toolkit/Slices/LeadSlice"
 
 const EditStatus = ({ data }) => {
   const [form] = Form.useForm()
-  const dispatch=useDispatch()
+  const dispatch = useDispatch()
   const [openModal, setOpenModal] = useState(false)
   const handleEdit = useCallback(() => {
     setOpenModal(true)
@@ -24,7 +24,7 @@ const EditStatus = ({ data }) => {
 
   return (
     <>
-      <Button size="small" onClick={handleEdit}>
+      <Button size="small" type="text" onClick={handleEdit}>
         <Icon icon="fluent:edit-20-regular" />
       </Button>
       <Modal
@@ -46,7 +46,9 @@ const EditStatus = ({ data }) => {
           <Form.Item
             label="Description"
             name="description"
-            rules={[{ required: true, message: "please enter the description" }]}
+            rules={[
+              { required: true, message: "please enter the description" },
+            ]}
           >
             <Input.TextArea />
           </Form.Item>

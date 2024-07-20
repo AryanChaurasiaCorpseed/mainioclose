@@ -142,7 +142,7 @@ const DisplayDashboardUser = () => {
   return (
     <>
       <div className="create-user-box">
-        <MainHeading data={`User List (${userCount})`} />
+        <MainHeading data={`User list (${userCount})`} />
         <div className="all-center">
           <Link to={`deactivateuser`} className="common-btn-one mr-2">
             Deactivate Users

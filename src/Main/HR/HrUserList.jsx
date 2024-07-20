@@ -8,6 +8,7 @@ import CreateHrDashBoard from "../../Model/CreateHrDashBoard"
 import MainHeading from "../../components/design/MainHeading"
 import SomethingWrong from "../../components/usefulThings/SomethingWrong"
 import { hrUserData } from "../../data/HrData"
+import CommonTable from "../../components/CommonTable"
 
 const HrUserList = () => {
   const dispatch = useDispatch()
@@ -31,21 +32,19 @@ const HrUserList = () => {
     setEditType(true)
   }
 
-
   const columns = [
     ...hrUserData,
     {
-      field: "Action",
-      headerName: "Action",
-      width: 180,
-      renderCell: (props) => {
+      dataIndex: "Action",
+      title: "Action",
+      render: (_, props) => {
         return (
           <>
             <button
               className="common-btn-one mr-2"
               data-toggle="modal"
               data-target="#createhrdashboard"
-              onClick={() => myNewId(props?.row)}
+              onClick={() => myNewId(props)}
             >
               Edit
             </button>
@@ -58,7 +57,7 @@ const HrUserList = () => {
   return (
     <SideBox>
       <div className="create-user-box">
-        <MainHeading data={`User List (${userCount})`} />
+        <MainHeading data={`User list (${userCount})`} />
         <div className="all-center">
           <CreateHrDashBoard data={getId} type={editType} />
         </div>
@@ -66,7 +65,12 @@ const HrUserList = () => {
       {userLoading && <TableScalaton />}
       {userError && <SomethingWrong />}
       {allMainUser && !userLoading && !userError && (
-        <UserListComponent tableName={""} columns={columns} row={allMainUser} />
+        <CommonTable
+          data={allMainUser}
+          columns={columns}
+          rowSelection={true}
+          scroll={{ y: 500, x: 5500 }}
+        />
       )}
     </SideBox>
   )

@@ -14,7 +14,7 @@ const SettingMainPage = () => {
       key: "1",
       label: (
         <Link className="link-four" to={`/erp/${currentUserId}/setting`}>
-          Lead Status
+          Lead status
         </Link>
       ),
     },
@@ -25,7 +25,7 @@ const SettingMainPage = () => {
           className="link-four"
           to={`/erp/${currentUserId}/setting/category`}
         >
-          Lead Category
+          Lead category
         </Link>
       ),
     },
@@ -36,7 +36,7 @@ const SettingMainPage = () => {
           className="link-four"
           to={`/erp/${currentUserId}/setting/products`}
         >
-          Lead Product
+          Lead product
         </Link>
       ),
     },
@@ -44,7 +44,7 @@ const SettingMainPage = () => {
       key: "4",
       label: (
         <Link className="link-four" to={`/erp/${currentUserId}/setting/slug`}>
-          Lead Slug
+          Lead slug
         </Link>
       ),
     },
@@ -52,7 +52,7 @@ const SettingMainPage = () => {
       key: "5",
       label: (
         <Link className="link-four" to={`/erp/${currentUserId}/setting/urls`}>
-          Lead Urls
+          Lead urls
         </Link>
       ),
     },
@@ -67,64 +67,31 @@ const SettingMainPage = () => {
         </Link>
       ),
     },
+    {
+      key: "7",
+      label: (
+        <Link
+          className="link-four"
+          to={`/erp/${currentUserId}/setting/desigination`}
+        >
+          Desigination
+        </Link>
+      ),
+    },
   ]
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken()
   return (
     <>
-      {/* <div className="setting">
-        <div className="side-links">
-          <div className="customization">
-            <h3 className="heading-four">Customization</h3>
-            <Link className="link-four" to={`/erp/${currentUserId}/setting`}>
-              Lead Status
-            </Link>
-            <Link
-              className="link-four"
-              to={`/erp/${currentUserId}/setting/category`}
-            >
-              Lead Category
-            </Link>
-            <Link
-              className="link-four"
-              to={`/erp/${currentUserId}/setting/products`}
-            >
-              Lead Product
-            </Link>
-            <Link
-              className="link-four"
-              to={`/erp/${currentUserId}/setting/slug`}
-            >
-              Lead Slug
-            </Link>
-            <Link
-              className="link-four"
-              to={`/erp/${currentUserId}/setting/urls`}
-            >
-              Lead Urls
-            </Link>
-            <Link
-              className="link-four"
-              to={`/erp/${currentUserId}/setting/comments`}
-            >
-              Comments
-            </Link>
-          </div>
-        </div>
-        <div className="side-data">
-          <Outlet />
-        </div>
-      </div> */}
-
-      <Layout >
+      <Layout>
         <Sider
           style={{
             padding: 0,
             background: colorBgContainer,
           }}
         >
-          <Menu mode="inline" items={items} />
+          <Menu mode="inline" items={items} defaultSelectedKeys={["1"]} />
         </Sider>
         <Layout>
           {/* <Header

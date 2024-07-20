@@ -12,6 +12,7 @@ import {
   getAllParentCompany,
 } from "../../Toolkit/Slices/CompanySlice"
 import TableOutlet from "../../components/design/TableOutlet"
+import MainHeading from "../../components/design/MainHeading"
 const { Text } = Typography
 
 export const AccountsList = () => {
@@ -63,7 +64,7 @@ export const AccountsList = () => {
       render: (_, data) => (
         <Tooltip
           title={data?.lead?.map((item, idx) => (
-            <Tag >{item?.leadNameame}</Tag>
+            <Tag>{item?.leadNameame}</Tag>
           ))}
           color="#fff"
         >
@@ -98,9 +99,13 @@ export const AccountsList = () => {
 
   return (
     <TableOutlet>
+      <div className="create-user-box">
+        <MainHeading data={`Account list`} />
+      </div>
       <div className="account-table-header">
         <CreateCompanyModal />
       </div>
+
       <CommonTable
         columns={columns}
         data={allCompany}

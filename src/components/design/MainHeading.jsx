@@ -1,10 +1,12 @@
+import { Typography } from "antd"
 import React from "react"
+const {Text}=Typography
 
 const MainHeading = ({ count, data }) => {
   return (
-    <h2 className="table-heading">
+    <Text className="heading-text">
       {data} {count && { count }}
-    </h2>
+    </Text>
   )
 }
 

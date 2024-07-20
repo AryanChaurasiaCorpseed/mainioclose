@@ -13,6 +13,9 @@ const CommonTable = ({
   pagination,
   prevDisable,
   nextDisable,
+  rowSelection,
+  onRowSelection,
+  selectedRowKeys,
 }) => {
   const dispatch = useDispatch()
   return (
@@ -22,12 +25,20 @@ const CommonTable = ({
         dataSource={data}
         pagination={false}
         scroll={scroll}
+        rowKey={(record) => record?.id}
+        rowSelection={
+          rowSelection && {
+            type: "checkbox",
+            selectedRowKeys: selectedRowKeys,
+            onChange: onRowSelection,
+          }
+        }
         footer={
           pagination
             ? () => (
                 <div className="table-footer">
                   <Space>
-                    <Tooltip title="Prev page">
+                    <Tooltip title="Prev page" arrow={false}>
                       <Button
                         size="small"
                         disabled={prevDisable}
@@ -36,7 +47,7 @@ const CommonTable = ({
                         <Icon icon="fluent:chevron-left-20-regular" />
                       </Button>
                     </Tooltip>
-                    <Tooltip title="Next page">
+                    <Tooltip title="Next page" arrow={false}>
                       <Button
                         size="small"
                         disabled={nextDisable}

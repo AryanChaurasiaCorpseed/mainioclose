@@ -19,11 +19,17 @@ import InputErrorComponent from "../../../components/InputErrorComponent"
 import { MultiSelect } from "primereact/multiselect"
 import { useCustomRoute } from "../../../Routes/GetCustomRoutes"
 import { CSVLink } from "react-csv"
-import { craeteProjectByLeadId, getAllLeads, updateHelper } from "../../../Toolkit/Slices/LeadSlice"
+import {
+  craeteProjectByLeadId,
+  getAllLeads,
+  updateHelper,
+} from "../../../Toolkit/Slices/LeadSlice"
 import MainHeading from "../../../components/design/MainHeading"
-import { Button, Select } from "antd"
+import { Button, Select, Typography } from "antd"
 import { Icon } from "@iconify/react"
 import { getAllUsers } from "../../../Toolkit/Slices/UsersSlice"
+import CommonTable from "../../../components/CommonTable"
+const { Text } = Typography
 
 const UserLeadComponent = React.lazy(() =>
   import(`../../../Tables/UserLeadComponent`)
@@ -141,7 +147,8 @@ const LeadsModule = () => {
     getAllStatusData()
   }, [])
 
-  const allLeadsData = useSelector((state) => state.leads.allLeads)
+  const allLeadData = useSelector((state) => state.leads.allLeads)
+  const allLeadsData=[...allLeadData]
 
   const leadCount = allLeadsData.length
 
@@ -219,187 +226,37 @@ const LeadsModule = () => {
     Source: row?.source,
   }))
 
-  const column2 = [
-    {
-      field: "id",
-      headerName: "S.No",
-      width: 60,
-      filterable: false,
-      renderCell: (props) => {
-        return (
-          <p className="mb-0">
-            {props.api.getRowIndexRelativeToVisibleRows(props?.row?.id) + 1}
-          </p>
-        )
-      },
-    },
-    {
-      field: "leadName",
-      headerName: "Lead Name",
-      width: 250,
-      renderCell: (props) => (
-        <Link
-          to={`/erp/${userid}/sales/leads/${props.row.id}`}
-          onClick={() => viewHistory(props.row.id)}
-          className={`${props.row.view ? "" : "fw-600"}`}
-        >
-          {props?.row?.leadName}
-        </Link>
-      ),
-    },
-    {
-      field: "name",
-      headerName: "Client Name",
-      width: 130,
-      renderCell: (props) => (
-        <p className="mb-0">
-          {props.row.clients[0]?.name ? props.row.clients[0]?.name : "NA"}
-        </p>
-      ),
-    },
-    { field: "mobileNo", headerName: "Mobile No", width: 150 },
-    { field: "email", headerName: "Email", width: 150 },
-    {
-      field: "missedTaskDate",
-      headerName: "Missed Task",
-      width: 200,
-      renderCell: (props) => {
-        const taskmissed = props?.row
-        const taskStatus = props?.row?.missedTaskStatus
-        const taskName = props?.row?.missedTaskName
-        const taskDate = new Date(
-          props?.row?.missedTaskDate
-        ).toLocaleDateString()
-        const hours = new Date(props?.row?.missedTaskDate).getHours()
-        const minutes = new Date(props?.row?.missedTaskDate).getMinutes()
-        const taskCreated = props?.row?.missedTaskCretedBy
-        return taskName !== null ? (
-          <p className={`mb-0 ${taskName !== null ? "text-danger" : ""}`}>
-            {taskStatus} - {taskCreated} - {taskName}
-            <br />
-            {taskDate} {hours}:{minutes}
-          </p>
-        ) : (
-          <p className="mb-0">NA</p>
-        )
-      },
-    },
-    {
-      field: "status",
-      headerName: "Status",
-      width: 120,
-      renderCell: (props) => (
-        <p
-          className={`mb-0 ${
-            props.row.status?.name === "New" ? "lead-new" : ""
-          }`}
-        >
-          {props.row.status?.name ? props.row.status?.name : "NA"}
-        </p>
-      ),
-    },
-    {
-      field: "assigneeName",
-      headerName: "Assignee Person",
-      width: 150,
-      renderCell: (props) => (
-        <p className="mb-0">{props?.row?.assignee?.fullName}</p>
-      ),
-    },
-
-    {
-      field: "createDate",
-      headerName: "Date",
-      width: 150,
-      renderCell: (props) => (
-        <p className="mb-0">
-          {new Date(props.row.createDate).toLocaleDateString()}
-        </p>
-      ),
-    },
-    {
-      field: "assignee",
-      headerName: "Change Assignee",
-      width: 170,
-      renderCell: (props) => {
-        return (
-          <select
-            className="assignee-button"
-            onChange={(e) => changeLeadAssignee(e.target.value, props.row.id)}
-            // onSelect={(e)=> }
-            name="lead"
-            id="lead"
-          >
-            <option>Select Assignee</option>
-            {leadUserNew.map((user, index) => (
-              <option key={index} value={user.id}>
-                {user?.fullName}
-              </option>
-            ))}
-          </select>
-        )
-      },
-    },
-  ]
-
   const columns = [
     {
-      field: "select",
-      headerName: "Select",
-      width: 60,
-      renderCell: (params) => (
-        <FormControlLabel
-          control={
-            <Checkbox
-              checked={selectedRows.includes(params.row.id)}
-              onChange={(event) => handleCheckboxClick(event, params.row.id)}
-            />
-          }
-        />
-      ),
+      dataIndex: "id",
+      title: "Id",
+      fixed: "left",
+      width: 50,
     },
     {
-      field: "id",
-      headerName: "S.No",
-      width: 60,
-      filterable: false,
-      renderCell: (props) => {
-        return (
-          <p className="mb-0">
-            {props.api.getRowIndexRelativeToVisibleRows(props.row.id) + 1}
-          </p>
-        )
-      },
-    },
-    {
-      field: "leadName",
-      headerName: "Lead Name",
-      width: 300,
-      sortable: true,
-      renderCell: (props) => (
+      dataIndex: "leadName",
+      title: "Lead name",
+      fixed: "left",
+      render: (_, data) => (
         <Link
-          to={`/erp/${userid}/sales/leads/${props.row.id}`}
-          onClick={() => viewHistory(props.row.id)}
-          className={`${props.row.view ? "" : "fw-600"}`}
+          to={`/erp/${userid}/sales/leads/${data?.id}`}
+          onClick={() => viewHistory(data?.id)}
+          className="link-heading"
         >
-          {props?.row?.leadName}
+          {data?.leadName}
         </Link>
       ),
     },
     {
-      field: "missedTaskDate",
-      headerName: "Missed Task",
-      width: 220,
-      renderCell: (props) => {
-        const taskmissed = props?.row
-        const taskStatus = props?.row?.missedTaskStatus
-        const taskName = props?.row?.missedTaskName
-        const taskDate = new Date(
-          props?.row?.missedTaskDate
-        ).toLocaleDateString()
-        const hours = new Date(props?.row?.missedTaskDate).getHours()
-        const minutes = new Date(props?.row?.missedTaskDate).getMinutes()
-        const taskCreated = props?.row?.missedTaskCretedBy
+      title: "Missed task",
+      dataIndex: "missedTaskDate",
+      render: (_, data) => {
+        const taskStatus = data?.missedTaskStatus
+        const taskName = data?.missedTaskName
+        const taskDate = new Date(data?.missedTaskDate).toLocaleDateString()
+        const hours = new Date(data?.missedTaskDate).getHours()
+        const minutes = new Date(data?.missedTaskDate).getMinutes()
+        const taskCreated = data?.missedTaskCretedBy
         return taskName !== null ? (
           <p className={`mb-0 ${taskName !== null ? "text-danger" : ""}`}>
             {taskStatus} - {taskCreated} - {taskName}
@@ -412,141 +269,133 @@ const LeadsModule = () => {
       },
     },
     {
-      field: "status",
-      headerName: "Status",
-      width: 120,
-      renderCell: (props) => (
-        <p
-          className={`mb-0 ${
-            props.row.status?.name === "New" ? "lead-new" : ""
-          }`}
-        >
-          {props.row.status?.name ? props.row.status?.name : "NA"}
-        </p>
+      title: "Status",
+      dataIndex: "status",
+      render: (_, data) => (
+        <Text type={data?.status?.name ? "success" : ""}>
+          {data?.status?.name ? data?.status?.name : "NA"}
+        </Text>
       ),
     },
     {
-      field: "name",
-      headerName: "Client Name",
-      width: 150,
-      renderCell: (props) => (
-        <p className="mb-0">
-          {props.row.clients[0]?.name ? props.row.clients[0]?.name : "NA"}
-        </p>
+      title: "Client name",
+      dataIndex: "name",
+      render: (_, data) => (
+        <Text>{data?.clients[0]?.name ? data?.clients[0]?.name : "NA"}</Text>
       ),
+    },
+    {
+      title: "Mobile no.",
+      dataIndex: "mobileNo",
+    },
+    {
+      title: "Email",
+      dataIndex: "email",
+      width: 300,
+    },
+    {
+      title: "Assignee person",
+      dataIndex: "assigneeName",
+      render: (_, data) => <Text>{data?.assignee?.fullName}</Text>,
     },
 
-    { field: "mobileNo", headerName: "Mobile No", width: 150 },
-    { field: "email", headerName: "Email", width: 150 },
-
     {
-      field: "assigneeName",
-      headerName: "Assignee Person",
-      width: 150,
-      renderCell: (props) => (
-        <p className="mb-0">{props?.row?.assignee?.fullName}</p>
+      title: "Date",
+      dataIndex: "createDate",
+      render: (_, data) => (
+        <Text>{new Date(data?.createDate).toLocaleDateString()}</Text>
       ),
     },
     {
-      field: "helper",
-      headerName: "Helper",
-      width: 150,
-      renderCell: (props) => (
+      title: "Change assignee",
+      dataIndex: "assignee",
+      render: (_, data) => (
         <Select
-          value={props?.row?.helper ? props?.row?.helpUser?.id : ""}
+          showSearch
+          allowClear
           style={{ width: "100%" }}
-          options={[
-            { label: "NA", value: "" },
-            ...allUsers?.map((item) => ({
-              label: item?.fullName,
-              value: item?.id,
-            })),
-          ]}
-          onChange={(e) => handleHelperChange(e, props?.row?.id)}
+          value={data?.assignee?.id}
+          placeholder="select assignee"
+          options={
+            leadUserNew?.map((ele) => ({
+              label: ele?.fullName,
+              value: ele?.id,
+            })) || []
+          }
+          filterOption={(input, option) =>
+            option.label.toLowerCase().includes(input.toLowerCase())
+          }
         />
-      ),
-    },
-    {
-      field: "createdBy",
-      headerName: "Created By",
-      width: 150,
-      renderCell: (props) => (
-        <p className="mb-0">
-          {props?.row?.createdBy?.fullName
-            ? props?.row?.createdBy?.fullName
-            : "NA"}
-        </p>
-      ),
-    },
-    {
-      field: "createDate",
-      headerName: "Date",
-      width: 150,
-      renderCell: (props) => (
-        <p className="mb-0">
-          {new Date(props.row.createDate).toLocaleDateString()}
-        </p>
-      ),
-    },
-    {
-      field: "assignee",
-      headerName: "Change Assignee",
-      width: 170,
-      renderCell: (props) => {
-        return (
-          <select
-            className="assignee-button"
-            onChange={(e) => changeLeadAssignee(e.target.value, props.row.id)}
-            name="lead"
-            id="lead"
-          >
-            <option>Select Assignee</option>
-            {leadUserNew.map((user, index) => (
-              <option key={index} value={user.id}>
-                {user?.fullName}
-              </option>
-            ))}
-          </select>
-        )
-      },
-    },
-    {
-      field: "source",
-      headerName: "Source",
-      width: 150,
-      renderCell: (props) => (
-        <p className="mb-0">{props?.row?.source ? props?.row?.source : "NA"}</p>
-      ),
-    },
-    {
-      field: "project",
-      headerName: "Create Project",
-      width: 150,
-      renderCell: (props) => (
-        <Button
-          size="small"
-          onClick={() => dispatch(craeteProjectByLeadId(props?.row?.id))}
-        >
-          <Icon icon="fluent:add-20-regular" />
-        </Button>
       ),
     },
     ...(adminRole
       ? [
           {
-            field: "action",
-            headerName: "Action",
-            width: 150,
-            renderCell: (props) => (
-              <p
-                className="m-0"
-                onClick={() => leadDeleteResponse(props.row.id)}
+            title: "Helper",
+            dataIndex: "helper",
+            render: (_, data) => (
+              <Select
+                showSearch
+                allowClear
+                value={data?.helper ? data?.helpUser?.id : ""}
+                style={{ width: "100%" }}
+                options={
+                  [
+                    { label: "NA", value: "" },
+                    ...allUsers?.map((item) => ({
+                      label: item?.fullName,
+                      value: item?.id,
+                    })),
+                  ] || []
+                }
+                filterOption={(input, option) =>
+                  option.label.toLowerCase().includes(input.toLowerCase())
+                }
+                onChange={(e) => handleHelperChange(e, data?.id)}
+              />
+            ),
+          },
+          {
+            title: "Created by",
+            dataIndex: "createdBy",
+            render: (_, data) => (
+              <Text>
+                {data?.createdBy?.fullName ? data?.createdBy?.fullName : "NA"}
+              </Text>
+            ),
+          },
+          {
+            title: "Source",
+            dataIndex: "source",
+            render: (_, data) => (
+              <Text>{data?.source ? data?.source : "NA"}</Text>
+            ),
+          },
+          {
+            title: "Create project",
+            dataIndex: "project",
+            render: (_, data) => (
+              <Button
+                type="text"
+                size="small"
+                onClick={() => dispatch(craeteProjectByLeadId(data?.id))}
               >
-                <i
-                  className="fa-solid fa-trash"
-                  style={{ cursor: "pointer" }}
-                ></i>
-              </p>
+                <Icon icon="fluent:add-20-regular" />
+              </Button>
+            ),
+          },
+          {
+            dataIndex: "action",
+            title: "Action",
+            render: (_, data) => (
+              <Button
+                type="text"
+                size="small"
+                danger
+                onClick={() => leadDeleteResponse(data?.id)}
+              >
+                <Icon icon="fluent:delete-20-regular" />
+              </Button>
             ),
           },
         ]
@@ -666,7 +515,7 @@ const LeadsModule = () => {
                 <CSVLink
                   className="text-white"
                   data={exportData}
-                  headers={columns.map((column) => column.headerName)}
+                  // headers={columns.map((column) => column.headerName)}
                   filename={"exported_data.csv"}
                 >
                   Export
@@ -747,34 +596,11 @@ const LeadsModule = () => {
 
       <div className="table-arrow">
         <Suspense fallback={<TableScalaton />}>
-          <UserLeadComponent
-            tableName={""}
-            columns={adminRole ? columns : column2}
-            row={allLeadsData}
-            getRowId={(row) => row.id}
-            onSelectionModelChange={(newSelection) =>
-              setSelectedRows(newSelection)
-            }
-            selectionModel={selectedRows}
-            components={{
-              Toolbar: () => (
-                <>
-                  <FormControlLabel
-                    control={
-                      <Checkbox
-                        indeterminate={
-                          selectedRows.length > 0 &&
-                          selectedRows.length < allLeadsData.length
-                        }
-                        checked={selectedRows.length === allLeadsData.length}
-                        onChange={handleSelectAllClick}
-                      />
-                    }
-                    label="Select All"
-                  />
-                </>
-              ),
-            }}
+          <CommonTable
+            data={allLeadsData.reverse()}
+            columns={columns}
+            scroll={{ y: 550, x: 2300 }}
+            rowSelection={true}
           />
         </Suspense>
 

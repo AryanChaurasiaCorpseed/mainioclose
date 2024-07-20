@@ -81,20 +81,11 @@ a:hover {
 }
 */
 
-
-
-
-html, body {
+html,
+body {
   height: 100%;
   width: 100%;
 }
-
-
-
-
-
-
-
 
 .disk-size {
   font-size: 22px;
@@ -561,8 +552,8 @@ button:focus {
   font-size: 13px;
 }
 
-.font-sixteen{
-  font-size: 16px  !important;
+.font-sixteen {
+  font-size: 16px !important;
 }
 
 .form-control.input-focus {
@@ -955,26 +946,26 @@ select.form-control:not([size]):not([multiple]) {
   }
 }
 
-.slug-items-tooltip{
+.slug-items-tooltip {
   margin: 2px 4px;
   font-size: 14px;
   /* color: #000; */
 }
-.edit-iconify{
+.edit-iconify {
   cursor: pointer;
 }
 .ant-btn {
   line-height: normal;
 }
 
-.flex-vert-hori-center{
+.flex-vert-hori-center {
   display: flex;
   /* justify-content: center; */
   align-items: center;
   gap: 6px;
 }
 
-.heading-text{
+.heading-text {
   font-size: 18px;
   font-weight: 550;
   color: #0f0f0f;
@@ -983,4 +974,17 @@ select.form-control:not([size]):not([multiple]) {
 .ant-tooltip .ant-tooltip-inner {
   color: #fff;
   opacity: 0.8;
+}
+
+.ant-btn {
+  display: inline-flex;
+  gap: 4px;
+  justify-content: center;
+  align-items: center;
+}
+
+.link-heading {
+  color: #1677ff;
+  font-size: 13px;
+  font-weight: 400;
 }

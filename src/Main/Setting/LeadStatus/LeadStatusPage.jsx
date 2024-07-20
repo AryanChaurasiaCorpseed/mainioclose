@@ -65,7 +65,7 @@ const LeadStatusPage = () => {
       title: "Delete",
       dataIndex: "delete",
       render: (_, info) => (
-        <Button size="small" onClick={() => deleteStatusFun(info.id)}>
+        <Button size="small" type="text" danger onClick={() => deleteStatusFun(info.id)}>
           <Icon icon="fluent:delete-20-regular" />
         </Button>
       ),
@@ -74,7 +74,7 @@ const LeadStatusPage = () => {
 
   return (
     <div>
-      <MainHeading data={`Lead Status`} />
+      <MainHeading data={`Lead status`} />
       <div className="lead-box">
         <Button type="primary" onClick={() => setOpenModal(true)}>
           Add lead

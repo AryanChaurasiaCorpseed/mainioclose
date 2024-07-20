@@ -171,7 +171,7 @@ const ProductsChange = () => {
 
   return (
     <div>
-      <MainHeading data={`Lead Product`} />
+      <MainHeading data={`Lead product`} />
       <div className="lead-box">
         <Button type="primary" onClick={() => setOpenModal(true)}>
           Add product

@@ -40,7 +40,7 @@ const Compliances = () => {
   return (
     <TableOutlet>
       <div className="create-user-box">
-        <MainHeading data={"All Compliances"} />
+        <MainHeading data={"All compliances"} />
         <button
           className="team-edit-button create-user-btn"
           // onClick={() => setHidebox((prev) => !prev)}

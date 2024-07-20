@@ -104,7 +104,7 @@ const LeadCategory = () => {
       title: "Delete",
       dataIndex: "delete",
       render: (_, status) => (
-        <Button onClick={() => deleteCategoryFun(status.id)} size="small">
+        <Button type="text" danger onClick={() => deleteCategoryFun(status.id)} size="small">
           <Icon icon="fluent:delete-20-regular" />
         </Button>
       ),
@@ -113,7 +113,7 @@ const LeadCategory = () => {
 
   return (
     <div>
-      <MainHeading data={`Lead Category`} />
+      <MainHeading data={`Lead category`} />
       <div className="lead-box">
         <Button type="primary" onClick={() => setOpenModal(true)}>
           Create lead category

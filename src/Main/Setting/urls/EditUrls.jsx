@@ -36,7 +36,7 @@ const EditUrls = ({ data }) => {
   )
   return (
     <>
-      <Button onClick={editFormValues} size="small">
+      <Button type="text" onClick={editFormValues} size="small">
         <Icon icon="fluent:edit-20-regular" />
       </Button>
       <Modal

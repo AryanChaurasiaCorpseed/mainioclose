@@ -58,6 +58,7 @@ import { AccountsList } from "./Main/Accounts/AccountsList"
 import { ConfigProvider } from "antd"
 import Comments from "./Main/Setting/Comments/Comments"
 import { lazy, Suspense } from "react"
+import Desigination from "./Main/Setting/Desigination/Desigination"
 const SpinLoading = lazy(() => import("./components/SpinLoading"))
 
 function App() {
@@ -71,10 +72,21 @@ function App() {
       theme={{
         token: {
           borderRadius: 4,
+          colorBorder: "#cccccc",
         },
         components: {
           Card: {
             actionsLiMargin: 6,
+          },
+          Typography: {
+            fontSize: 13,
+          },
+          Button: {
+            contentFontSize: 13,
+            contentFontSizeSM: 12,
+          },
+          Popconfirm: {
+            fontSize: 13,
           },
         },
       }}
@@ -298,6 +310,14 @@ function App() {
                   element={
                     <Suspense fallback={<SpinLoading />}>
                       <Comments />
+                    </Suspense>
+                  }
+                />
+                <Route
+                  path="desigination"
+                  element={
+                    <Suspense fallback={<SpinLoading />}>
+                      <Desigination />
                     </Suspense>
                   }
                 />

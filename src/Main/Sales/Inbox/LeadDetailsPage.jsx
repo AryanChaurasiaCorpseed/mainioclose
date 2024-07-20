@@ -58,6 +58,7 @@ import {
 import { getAllSlugList } from "../../../Toolkit/Slices/LeadSlugSlice"
 import { Icon } from "@iconify/react"
 import dayjs from "dayjs"
+import { BTN_ICON_HEIGHT, BTN_ICON_WIDTH } from "../../../components/Constants"
 const { Text, Title } = Typography
 
 toast.configure()
@@ -462,7 +463,14 @@ const LeadDetailsPage = () => {
       key: "1",
       label: "Contacts",
       extra: (
-        <Button size="small" type="text" onClick={() => setOpenModal(true)}>
+        <Button
+          size="small"
+          type="text"
+          onClick={(e) => {
+            e.stopPropagation()
+            setOpenModal(true)
+          }}
+        >
           <Icon icon="fluent:add-20-regular" />
         </Button>
       ),
@@ -486,7 +494,7 @@ const LeadDetailsPage = () => {
                   </Space>
                 }
               />
-              <Space>
+              <Space size={1}>
                 <Button
                   size="small"
                   type="text"
@@ -513,7 +521,14 @@ const LeadDetailsPage = () => {
       key: "2",
       label: "Tasks",
       extra: (
-        <Button type="text" size="small" onClick={() => setOpenTaskModal(true)}>
+        <Button
+          type="text"
+          size="small"
+          onClick={(e) => {
+            e.stopPropagation()
+            setOpenTaskModal(true)
+          }}
+        >
           <Icon icon="fluent:add-20-regular" />
         </Button>
       ),
@@ -555,7 +570,7 @@ const LeadDetailsPage = () => {
                   </Space>
                 }
               />
-              <Space>
+              <Space size={1}>
                 <Button
                   size="small"
                   type="text"
@@ -585,7 +600,10 @@ const LeadDetailsPage = () => {
         <Button
           size="small"
           type="text"
-          onClick={() => setOpenProductModal(true)}
+          onClick={(e) => {
+            e.stopPropagation()
+            setOpenProductModal(true)
+          }}
         >
           <Icon icon="fluent:add-20-regular" />
         </Button>
@@ -673,7 +691,7 @@ const LeadDetailsPage = () => {
 
       {openAllTask ? <AllTasksPage setOpenAllTask={setOpenAllTask} /> : ""}
       <Row gutter={8}>
-        <Col span={6}>
+        <Col span={7}>
           <div className="left-lead-section">
             {updateOriginalName ? (
               <div className="comp-container">
@@ -791,6 +809,7 @@ const LeadDetailsPage = () => {
             <Select
               showSearch
               allowClear
+              placeholder="change status"
               options={
                 getAllStatus?.map((item) => ({
                   label: item?.name,
@@ -867,46 +886,60 @@ const LeadDetailsPage = () => {
             />
           </div>
         </Col>
-        <Col span={18}>
+        <Col span={17}>
           <div className="lead-filter-above">
             <div className="filter-box">
-              <FilterButton
+              {/* <FilterButton
                 name={"Notes"}
                 icon={<i className="fa-regular  fa-note-sticky"></i>}
                 data={notes}
                 setData={setNotes}
-              />
+              /> */}
+              <Button onClick={() => setNotes((prev) => !prev)}>
+                <Icon
+                  icon="fluent:document-text-20-regular"
+                  height={BTN_ICON_HEIGHT}
+                  width={BTN_ICON_WIDTH}
+                />
+                Notes
+              </Button>
 
-              <Link to={`history`} className="filter-btn-design">
-                <i className="fa-regular mr-1 fa-clipboard"></i>History
+              <Link to={`history`}>
+                <Button>
+                  <Icon
+                    icon="fluent:history-20-regular"
+                    height={BTN_ICON_HEIGHT}
+                    width={BTN_ICON_WIDTH}
+                  />
+                  History
+                </Button>
               </Link>
-              <Link
-                to={`/erp/${userid}/sales/leads`}
-                className="filter-btn-design"
-              >
-                <i className="fa-solid mr-1 fa-backward-step"></i>Back
+              <Link to={`/erp/${userid}/sales/leads`}>
+                <Button>
+                  <Icon
+                    icon="fluent:chevron-left-20-regular"
+                    height={BTN_ICON_HEIGHT}
+                    width={BTN_ICON_WIDTH}
+                  />
+                  Back
+                </Button>
               </Link>
-              <button
-                className="filter-btn-design"
-                onClick={() => openTasksFun()}
-              >
-                All Tasks
-              </button>
+              <Button onClick={() => openTasksFun()}>All Tasks</Button>
             </div>
             <div className="filter-box mt-3">
-              <select
-                className="user-assign-tab"
-                onChange={(e) => changeLeadAssignee(e.target.value)}
-                name="user"
-                id="user"
-              >
-                <option>Change Assignee</option>
-                {userDataResponse.map((user, index) => (
-                  <option key={index} value={user?.id}>
-                    {user?.fullName}
-                  </option>
-                ))}
-              </select>
+              <Select
+                placeholder="Change assignee"
+                options={
+                  userDataResponse?.map((ele) => ({
+                    label: ele?.fullName,
+                    value: ele?.id,
+                  })) || []
+                }
+                filterOption={(input, option) =>
+                  option.label.toLowerCase().includes(input.toLowerCase())
+                }
+                onChange={(e) => changeLeadAssignee(e)}
+              />
             </div>
 
             <div></div>

@@ -33,6 +33,8 @@ const SlugCreate = () => {
     (prev) => prev?.leadslug
   )
 
+  const allLeadSlugs = [...allLeadSlug]
+
   const handleSubmit = async (values) => {
     const slugCreation = await dispatch(leadSlugAction(values?.slugName))
     if ((slugCreation.type = "createLeadSlugData/fulfilled")) {
@@ -54,7 +56,7 @@ const SlugCreate = () => {
 
   return (
     <div>
-      <MainHeading data={`Slug Create`} />
+      <MainHeading data={`Slug create`} />
       <div className="lead-box">
         <Button type="primary" onClick={() => setOpenModal(true)}>
           Create slug
@@ -62,13 +64,13 @@ const SlugCreate = () => {
       </div>
       <CommonTable
         columns={columns}
-        data={allLeadSlug}
+        data={allLeadSlugs?.reverse()}
         nextPage={handleNextPagination}
         prevPage={handlePrevPagination}
         pagination={true}
         scroll={{ y: 580 }}
         prevDisable={page === 0 && true}
-        nextDisable={allLeadSlug?.length < 50 && true}
+        nextDisable={allLeadSlugs?.length < 50 && true}
       />
       <Modal
         title="Create slug"
