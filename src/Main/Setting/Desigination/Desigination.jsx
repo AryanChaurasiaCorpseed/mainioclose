@@ -1,4 +1,4 @@
-import { Button, Form, Input, Modal } from "antd"
+import { Button, Form, Input, Modal, notification } from "antd"
 import React, { useCallback, useEffect, useState } from "react"
 import CommonTable from "../../../components/CommonTable"
 import MainHeading from "../../../components/design/MainHeading"
@@ -7,6 +7,7 @@ import {
   createDesigination,
   getAllDesiginations,
 } from "../../../Toolkit/Slices/SettingSlice"
+import { createAuthDesigination } from "../../../Toolkit/Slices/AuthSlice"
 
 const Desigination = () => {
   const [form] = Form.useForm()
@@ -18,8 +19,25 @@ const Desigination = () => {
 
   const handleFinish = useCallback(
     (values) => {
-      dispatch(createDesigination(values))
-      setOpenModal(false)
+      dispatch(createAuthDesigination(values)).then((resp) => {
+        if (resp.meta.requestStatus === "fulfilled") {
+          const temp = resp?.payload?.data
+          dispatch(createDesigination({ name: temp?.name })).then((info) => {
+            if (info.meta.requestStatus === "fulfilled") {
+              notification.success({
+                message: "Desigination created successfully",
+              })
+              setOpenModal(false)
+              dispatch(getAllDesiginations())
+            } else if (info.meta.requestStatus === "rejected") {
+              notification.success({
+                message: "Something went wrong",
+              })
+              setOpenModal(false)
+            }
+          })
+        }
+      })
     },
     [dispatch]
   )

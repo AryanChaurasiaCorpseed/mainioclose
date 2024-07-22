@@ -1,47 +1,49 @@
 import { Space, Typography } from "antd"
 import ColComp from "../components/small/ColComp"
 import UserLockerEdit from "../Model/UserLockerEdit"
+import { Icon } from "@iconify/react"
 const { Text } = Typography
 
 export const allUserdataCol = [
-  { field: "email", headerName: "Email", width: 240, hideable: false },
-  { field: "designation", headerName: "Designation", width: 150 },
-  { field: "department", headerName: "Department", width: 150 },
-  { field: "role", headerName: "Role", width: 150 },
+  { dataIndex: "email", title: "Email", width: 350 },
   {
-    field: "managers",
-    headerName: "Manager",
-    width: 150,
-    renderCell: (props) =>
-      props?.row?.manager ? (
-        <Text>{props?.row?.managers?.fullName}</Text>
-      ) : (
-        "NA"
-      ),
+    dataIndex: "designation",
+    title: "Designation",
+    render: (_, data) => <Text>{data?.userDesignation?.name}</Text>,
   },
   {
-    field: "lockerSize",
-    headerName: "Locker Size",
-    width: 120,
-    renderCell: (props) => (
-      <Space>
-        <Text>{props?.row?.lockerSize}</Text>
-        <UserLockerEdit data={props?.row} />
-      </Space>
+    dataIndex: "department",
+    title: "Department",
+    render: (_, data) => <Text>{data?.userDepartment?.name}</Text>,
+  },
+  { dataIndex: "role", title: "Role" },
+  {
+    dataIndex: "managers",
+    title: "Manager",
+    renderCell: (_, props) =>
+      props?.manager ? <Text>{props?.managers?.fullName}</Text> : "NA",
+  },
+  {
+    dataIndex: "lockerSize",
+    title: "Locker size",
+    renderCell: (_, props) => (
+      <div className="flex-vert-hori-center">
+        <Text>{props?.lockerSize}</Text>
+        <UserLockerEdit data={props} />
+      </div>
     ),
   },
   {
-    field: "backupTeam",
-    headerName: "Backup Team",
-    width: 120,
-    renderCell: (props) => (
-      <p>
-        {props?.row?.backupTeam ? (
-          <i className="fa-solid text-success fa-check"></i>
+    dataIndex: "backupTeam",
+    title: "Backup team",
+    renderCell: (_, props) => (
+      <div className="flex-vert-hori-center">
+        {props?.backupTeam ? (
+          <Icon icon="fluent:checkmark-20-filled" color="green" />
         ) : (
-          <i className="fa-solid text-danger fa-xmark"></i>
-        )}{" "}
-      </p>
+          <Icon icon="fluent:dismiss-20-filled" color="red" />
+        )}
+      </div>
     ),
   },
 ]

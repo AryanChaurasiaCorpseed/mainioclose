@@ -3,12 +3,24 @@ import UserListComponent from "../../Tables/UserListComponent"
 import { Link } from "react-router-dom"
 import CreateuserDashboard from "../../Model/CreateuserDashboard"
 import { deleteQuery } from "../../API/DeleteQuery"
-import { allActiveUserFun, getAllUsers } from "../../Toolkit/Slices/UsersSlice"
+import {
+  allActiveUserFun,
+  getAllRoles,
+  getAllUsers,
+} from "../../Toolkit/Slices/UsersSlice"
 import { useDispatch, useSelector } from "react-redux"
 import TableScalaton from "../../components/TableScalaton"
 import MainHeading from "../../components/design/MainHeading"
 import SomethingWrong from "../../components/usefulThings/SomethingWrong"
 import { allUserdataCol } from "../../data/Userdata"
+import { Button, Space, Typography } from "antd"
+import { Icon } from "@iconify/react"
+import CommonTable from "../../components/CommonTable"
+import {
+  getAllDepartment,
+  getAllDesiginations,
+} from "../../Toolkit/Slices/SettingSlice"
+const { Text } = Typography
 
 const DisplayDashboardUser = () => {
   const [userSuspand, setUserSuspand] = useState(false)
@@ -29,6 +41,11 @@ const DisplayDashboardUser = () => {
     dispatch(getAllUsers())
   }, [dispatch, userSuspand, userToggle])
 
+  useEffect(() => {
+    dispatch(getAllDepartment())
+    dispatch(getAllDesiginations())
+    dispatch(getAllRoles())
+  }, [dispatch])
 
   const deleteUser = async (id) => {
     if (window.confirm("Are you sure to deActivate this User?") == true) {
@@ -54,40 +71,49 @@ const DisplayDashboardUser = () => {
   const presentUserFun = async (id) => {
     const activeRowData = {
       id: id,
-      currentUserId: 2
+      currentUserId: 2,
     }
-     if (window.confirm( "Do you really want to Not Assign Any Lead To User?")) {
-      const toggleData = await dispatch(allActiveUserFun(activeRowData)) 
+    if (window.confirm("Do you really want to Not Assign Any Lead To User?")) {
+      const toggleData = await dispatch(allActiveUserFun(activeRowData))
       setUserToggle((prev) => !prev)
     }
   }
 
   const columns = [
     {
-      field: "id",
-      headerName: "ID",
-      width: 150,
-      renderCell: (props) => {
-        return <p className="mb-0">CORP00{props?.row?.id}</p>
+      dataIndex: "id",
+      title: "Employer id",
+      fixed: "left",
+      width: 120,
+      render: (_, props) => {
+        return <Text>CORP00{props?.id}</Text>
       },
     },
-    { field: "fullName", headerName: "Full Name", width: 150,
-    renderCell: (props) => <p className="all-center m-0"><span className={`sm-point  ${props?.row?.autoActive ? "point-success" : "point-error"}`}></span>{props?.row?.fullName} </p>
-     },
+    {
+      dataIndex: "fullName",
+      title: "Full Name",
+      fixed: "left",
+      render: (_, props) => (
+        <div className="flex-vert-hori-center">
+          <Icon
+            icon="fluent:circle-20-filled"
+            color={props?.autoActive ? "green" : "red"}
+          />
+          <Text>{props?.fullName} </Text>
+        </div>
+      ),
+    },
     ...allUserdataCol,
-     {
-      field: "viewHistory",
-      headerName: "View History",
-      width: 160,
-      renderCell: (props) => {
+    {
+      dataIndex: "viewHistory",
+      title: "View History",
+      render: (_, props) => {
         return (
           <>
-            <Link
-            to={`${props?.row?.id}/history`}
-              // onClick={() => presentUserFun(props.row.id)}
-              className="info-button"
-            >
-              <i className="fa-regular fa-eye"></i> History
+            <Link to={`${props?.id}/history`}>
+              <Button>
+                <Icon icon="fluent:history-20-regular" /> History
+              </Button>
             </Link>
           </>
         )
@@ -95,44 +121,43 @@ const DisplayDashboardUser = () => {
     },
 
     {
-      field: "autoActive",
-      headerName: "Present",
-      width: 150,
-      renderCell: (props) => {
+      dataIndex: "autoActive",
+      title: "Present",
+      render: (_, props) => {
         return (
           <>
-            <button
-              onClick={() => presentUserFun(props.row.id)}
-              className={`btn ${props?.row?.autoActive ? "present-btn" : "absent-btn"}`}
+            <Button
+              onClick={() => presentUserFun(props?.id)}
+              type={props?.autoActive ? "primary" : "default"}
+              danger={props?.autoActive ? false : true}
             >
-              {props?.row?.autoActive ? "Present" : "Absent"}
-            </button>
+              {props?.autoActive ? "Present" : "Absent"}
+            </Button>
           </>
         )
       },
     },
 
     {
-      field: "Action",
-      headerName: "Action",
-      width: 180,
-      renderCell: (props) => {
+      dataIndex: "Action",
+      title: "Action",
+      render: (_, props) => {
         return (
           <>
-            <button
-              className="common-btn-one mr-2"
-              data-toggle="modal"
-              data-target="#createuserdashboard"
-              onClick={() => myNewId(props?.row)}
+            <CreateuserDashboard
+              data={props}
+              type={editType}
+              edit={true}
+              modalText={"Edit user"}
+            />
+            <Button
+              type="text"
+              size="small"
+              danger
+              onClick={() => deleteUser(props?.id)}
             >
-              Edit
-            </button>
-            <button
-              className="common-btn-one"
-              onClick={() => deleteUser(props?.row?.id)}
-            >
-              Suspand
-            </button>
+              <Icon icon="fluent:delete-20-regular" />
+            </Button>
           </>
         )
       },
@@ -144,16 +169,28 @@ const DisplayDashboardUser = () => {
       <div className="create-user-box">
         <MainHeading data={`User list (${userCount})`} />
         <div className="all-center">
-          <Link to={`deactivateuser`} className="common-btn-one mr-2">
-            Deactivate Users
-          </Link>
-          <CreateuserDashboard data={getId} type={editType} />
+          <Space>
+            <Link to={`deactivateuser`}>
+              <Button type="primary">Deactivate Users</Button>
+            </Link>
+            <CreateuserDashboard
+              data={getId}
+              type={editType}
+              modalText={"Create user"}
+            />
+          </Space>
         </div>
       </div>
       {userLoading && <TableScalaton />}
       {userError && <SomethingWrong />}
       {allMainUser && !userLoading && !userError && (
-        <UserListComponent tableName={""} columns={columns} row={allMainUser} />
+        // <UserListComponent tableName={""} columns={columns} row={allMainUser} />
+        <CommonTable
+          columns={columns}
+          data={allMainUser}
+          rowSelection={true}
+          scroll={{ y: 550, x: 2000 }}
+        />
       )}
     </>
   )

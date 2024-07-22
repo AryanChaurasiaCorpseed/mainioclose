@@ -108,7 +108,7 @@ const ProductsChange = () => {
   )
 
   const ProductCol = [
-    { dataIndex: "id", title: "Id", fixed: "left", width: 50 },
+    { dataIndex: "id", title: "Employer id", fixed: "left", width: 50 },
     {
       dataIndex: "productName",
       title: "Product name",

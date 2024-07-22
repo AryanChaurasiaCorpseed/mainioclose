@@ -27,6 +27,26 @@ export const getDepartmentOfUser = createAsyncThunk(
   }
 )
 
+export const createAuthDepartment = createAsyncThunk(
+  "createDepartment",
+  async (data) => {
+    const response = await postQuery(
+      `/securityService/api/department/createDepartment?name=${data?.name}`
+    )
+    return response
+  }
+)
+
+export const createAuthDesigination = createAsyncThunk(
+  "createAuthDesignibnation",
+  async (data) => {
+    const response = await postQuery(
+      `/securityService/api/designation/createDesignation?name=${data?.name}`
+    )
+    return response
+  }
+)
+
 export const AuthSlice = createSlice({
   name: "auth",
   initialState: {
@@ -45,9 +65,9 @@ export const AuthSlice = createSlice({
       state.isAuth = false
       state.currentUser = null
     },
-    handleLoadingState:(state,action)=>{
-      state.userLoading=action.payload
-    }
+    handleLoadingState: (state, action) => {
+      state.userLoading = action.payload
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(getCurrentUser.pending, (state, action) => {
@@ -94,5 +114,5 @@ export const AuthSlice = createSlice({
   },
 })
 
-export const { logoutFun,handleLoadingState } = AuthSlice.actions
+export const { logoutFun, handleLoadingState } = AuthSlice.actions
 export default AuthSlice.reducer

@@ -6,7 +6,7 @@ const { Text } = Typography
 export const hrUserData = [
   {
     dataIndex: "id",
-    title: "Id",
+    title: "Employer id",
     fixed:'left',
     width:100,
     render: (_, props) => {

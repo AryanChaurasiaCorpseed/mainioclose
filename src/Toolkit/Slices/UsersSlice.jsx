@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 import { getQuery } from "../../API/GetQuery"
 import { putQueryNoData } from "../../API/PutQueryWithoutData"
 import { putQuery } from "../../API/PutQuery"
+import { postQuery } from "../../API/PostQuery"
 
 export const getAllUsers = createAsyncThunk("allUsers", async () => {
   const allUser = await getQuery(`/leadService/api/v1/users/getAllUser`)
@@ -69,6 +70,60 @@ export const editUserRatingAssignee = createAsyncThunk(
   }
 )
 
+export const addNewUser = createAsyncThunk("newUser", async (data) => {
+  const response = await postQuery(
+    ` /securityService/api/auth/createNewUserByEmail`,
+    data
+  )
+  return response
+})
+
+
+export const createLeadUserbyEmail = createAsyncThunk(
+  "createLeadUser",
+  async (data) => {
+    const response = await postQuery(
+      `/leadService/api/v1/users/createUserByEmail`,
+      data
+    )
+    return response.data
+  }
+)
+export const updateLeadUser = createAsyncThunk(
+  "updateLeadUser",
+  async (data) => {
+    const response = await putQuery(
+      `/leadService/api/v1/users/updateUserData`,
+      data
+    )
+    return response
+  }
+)
+
+export const updateUserData = createAsyncThunk("updateUser", async (data) => {
+  const response = await putQuery(
+    `/securityService/api/auth/updateUserData`,
+    data
+  )
+  return response
+})
+
+export const updateLeadUserData = createAsyncThunk(
+  "updateLeadData",
+  async (data) => {
+    const response = await putQuery(
+      `/leadService/api/v1/users/updateUserData`,
+      data
+    )
+    return response.data
+  }
+)
+
+export const getAllRoles = createAsyncThunk("allRoles", async () => {
+  const response = await getQuery(`/securityService/api/v1/roles/getRole`)
+  return response.data
+})
+
 export const UsersSlice = createSlice({
   name: "user",
   initialState: {
@@ -88,6 +143,8 @@ export const UsersSlice = createSlice({
     userActiveLoading: false,
     userActiveError: false,
     assigneeLoading: "",
+    leadUserList: {},
+    allRoles: [],
   },
   extraReducers: (builder) => {
     builder.addCase(getAllUsers.pending, (state, action) => {
@@ -157,6 +214,38 @@ export const UsersSlice = createSlice({
       state.assigneeLoading = "success"
     })
     builder.addCase(editUserRatingAssignee.rejected, (state, action) => {
+      state.assigneeLoading = "rejected"
+    })
+
+    builder.addCase(addNewUser.pending, (state, action) => {
+      state.assigneeLoading = "pending"
+    })
+    builder.addCase(addNewUser.fulfilled, (state, action) => {
+      state.assigneeLoading = "success"
+      state.leadUserList = action.payload
+    })
+    builder.addCase(addNewUser.rejected, (state, action) => {
+      state.assigneeLoading = "rejected"
+    })
+
+    builder.addCase(createLeadUserbyEmail.pending, (state, action) => {
+      state.assigneeLoading = "pending"
+    })
+    builder.addCase(createLeadUserbyEmail.fulfilled, (state, action) => {
+      state.assigneeLoading = "success"
+    })
+    builder.addCase(createLeadUserbyEmail.rejected, (state, action) => {
+      state.assigneeLoading = "rejected"
+    })
+
+    builder.addCase(getAllRoles.pending, (state, action) => {
+      state.assigneeLoading = "pending"
+    })
+    builder.addCase(getAllRoles.fulfilled, (state, action) => {
+      state.assigneeLoading = "success"
+      state.allRoles = action.payload
+    })
+    builder.addCase(getAllRoles.rejected, (state, action) => {
       state.assigneeLoading = "rejected"
     })
   },

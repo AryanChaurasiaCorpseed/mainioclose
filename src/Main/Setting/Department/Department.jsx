@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react"
 import MainHeading from "../../../components/design/MainHeading"
-import { Button, Form, Input, Modal } from "antd"
+import { Button, Form, Input, Modal, notification } from "antd"
 import CommonTable from "../../../components/CommonTable"
 import { useDispatch, useSelector } from "react-redux"
 import {
   createDepartment,
   getAllDepartment,
 } from "../../../Toolkit/Slices/SettingSlice"
+import { createAuthDepartment } from "../../../Toolkit/Slices/AuthSlice"
 
 const Department = () => {
   const [form] = Form.useForm()
@@ -17,8 +18,25 @@ const Department = () => {
     dispatch(getAllDepartment())
   }, [])
   const handleFinish = (values) => {
-    dispatch(createDepartment(values))
-    setOpenModal(false)
+    dispatch(createAuthDepartment(values)).then((resp) => {
+      if (resp.meta.requestStatus === "fulfilled") {
+        const temp = resp?.payload?.data
+        dispatch(createDepartment({ name: temp?.name })).then((info) => {
+          if (info.meta.requestStatus === "fulfilled") {
+            notification.success({
+              message: "Department created successfully",
+            })
+            setOpenModal(false)
+            dispatch(getAllDepartment())
+          } else if (info.meta.requestStatus === "rejected") {
+            notification.error({
+              message: "Something went wrong",
+            })
+            setOpenModal(false)
+          }
+        })
+      }
+    })
   }
   const columns = [
     {
