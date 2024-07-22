@@ -9,9 +9,17 @@ const SettingMainPage = () => {
   // const currentUserId = useSelector((auth) => auth.AuthReducer.currentUser.id)
   const currentUserId = useSelector((state) => state?.auth?.currentUser?.id)
 
+  const pathname = window.location.pathname
+
+  const getPathKey = () => {
+    const parts = pathname.split("/")
+    const lastWord = parts[parts.length - 1]
+    return lastWord
+  }
+
   const items = [
     {
-      key: "1",
+      key: "setting",
       label: (
         <Link className="link-four" to={`/erp/${currentUserId}/setting`}>
           Lead status
@@ -19,7 +27,7 @@ const SettingMainPage = () => {
       ),
     },
     {
-      key: "2",
+      key: "category",
       label: (
         <Link
           className="link-four"
@@ -30,7 +38,7 @@ const SettingMainPage = () => {
       ),
     },
     {
-      key: "3",
+      key: "products",
       label: (
         <Link
           className="link-four"
@@ -41,7 +49,7 @@ const SettingMainPage = () => {
       ),
     },
     {
-      key: "4",
+      key: "slug",
       label: (
         <Link className="link-four" to={`/erp/${currentUserId}/setting/slug`}>
           Lead slug
@@ -49,7 +57,7 @@ const SettingMainPage = () => {
       ),
     },
     {
-      key: "5",
+      key: "urls",
       label: (
         <Link className="link-four" to={`/erp/${currentUserId}/setting/urls`}>
           Lead urls
@@ -57,7 +65,7 @@ const SettingMainPage = () => {
       ),
     },
     {
-      key: "6",
+      key: "comments",
       label: (
         <Link
           className="link-four"
@@ -68,13 +76,24 @@ const SettingMainPage = () => {
       ),
     },
     {
-      key: "7",
+      key: "desigination",
       label: (
         <Link
           className="link-four"
           to={`/erp/${currentUserId}/setting/desigination`}
         >
           Desigination
+        </Link>
+      ),
+    },
+    {
+      key: "department",
+      label: (
+        <Link
+          className="link-four"
+          to={`/erp/${currentUserId}/setting/department`}
+        >
+          Department
         </Link>
       ),
     },
@@ -91,7 +110,7 @@ const SettingMainPage = () => {
             background: colorBgContainer,
           }}
         >
-          <Menu mode="inline" items={items} defaultSelectedKeys={["1"]} />
+          <Menu mode="inline" items={items} defaultSelectedKeys={[getPathKey()]} />
         </Sider>
         <Layout>
           {/* <Header

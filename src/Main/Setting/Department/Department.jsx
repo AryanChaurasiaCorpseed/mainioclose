@@ -1,61 +1,54 @@
-import { Button, Form, Input, Modal } from "antd"
-import React, { useCallback, useEffect, useState } from "react"
-import CommonTable from "../../../components/CommonTable"
+import React, { useEffect, useState } from "react"
 import MainHeading from "../../../components/design/MainHeading"
+import { Button, Form, Input, Modal } from "antd"
+import CommonTable from "../../../components/CommonTable"
 import { useDispatch, useSelector } from "react-redux"
 import {
-  createDesigination,
-  getAllDesiginations,
+  createDepartment,
+  getAllDepartment,
 } from "../../../Toolkit/Slices/SettingSlice"
 
-const Desigination = () => {
+const Department = () => {
   const [form] = Form.useForm()
   const dispatch = useDispatch()
-  const desiginationList = useSelector(
-    (state) => state.setting.desiginationList
-  )
-  const [openModal, setOpenModal] = useState()
-
-  const handleFinish = useCallback(
-    (values) => {
-      dispatch(createDesigination(values))
-      setOpenModal(false)
-    },
-    [dispatch]
-  )
-
+  const departmentList = useSelector((state) => state.setting.allDepartment)
+  const [openModal, setOpenModal] = useState(false)
   useEffect(() => {
-    dispatch(getAllDesiginations())
-  }, [dispatch])
+    dispatch(getAllDepartment())
+  }, [])
+  const handleFinish = (values) => {
+    dispatch(createDepartment(values))
+    setOpenModal(false)
+  }
   const columns = [
     {
       title: "Id",
       dataIndex: "id",
     },
     {
-      title: "Desigination",
+      title: "Department",
       dataIndex: "name",
     },
   ]
   return (
     <div>
-      <MainHeading data={`Desigination`} />
+      <MainHeading data={`Department`} />
       <div className="lead-box">
         <Button type="primary" onClick={() => setOpenModal(true)}>
-          Add desigination
+          Add department
         </Button>
       </div>
       <div className="mt-4 setting-table">
         <div className="table-responsive">
           <CommonTable
-            data={desiginationList}
+            data={departmentList}
             columns={columns}
             scroll={{ y: 550 }}
           />
         </div>
       </div>
       <Modal
-        title={"Create desigination"}
+        title={"Create department"}
         open={openModal}
         onCancel={() => setOpenModal(false)}
         onClose={() => setOpenModal(false)}
@@ -81,4 +74,4 @@ const Desigination = () => {
   )
 }
 
-export default Desigination
+export default Department

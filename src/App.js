@@ -59,6 +59,7 @@ import { ConfigProvider } from "antd"
 import Comments from "./Main/Setting/Comments/Comments"
 import { lazy, Suspense } from "react"
 import Desigination from "./Main/Setting/Desigination/Desigination"
+import Department from "./Main/Setting/Department/Department"
 const SpinLoading = lazy(() => import("./components/SpinLoading"))
 
 function App() {
@@ -318,6 +319,14 @@ function App() {
                   element={
                     <Suspense fallback={<SpinLoading />}>
                       <Desigination />
+                    </Suspense>
+                  }
+                />
+                <Route
+                  path="department"
+                  element={
+                    <Suspense fallback={<SpinLoading />}>
+                      <Department />
                     </Suspense>
                   }
                 />

@@ -21,11 +21,31 @@ export const createDesigination = createAsyncThunk(
   }
 )
 
+export const getAllDepartment = createAsyncThunk(
+  "getAllDepartment",
+  async () => {
+    const response = await getQuery(
+      `/leadService/api/v1/designation/getAllDepartment`
+    )
+    return response.data
+  }
+)
+export const createDepartment = createAsyncThunk(
+  "createDepartment",
+  async (data) => {
+    const response = await postQuery(
+      `/leadService/api/v1/designation/createDepartment?name=${data?.name}`
+    )
+    return response.data
+  }
+)
+
 const settingSlice = createSlice({
   name: "setting",
   initialState: {
     desiginationList: [],
     loading: "",
+    allDepartment: [],
   },
   extraReducers: (builder) => {
     builder.addCase(getAllDesiginations.pending, (state, action) => {
@@ -46,6 +66,27 @@ const settingSlice = createSlice({
       state.desiginationList = [...state.desiginationList, action.payload]
     })
     builder.addCase(createDesigination.rejected, (state, action) => {
+      state.loading = "rejected"
+    })
+    builder.addCase(getAllDepartment.pending, (state, action) => {
+      state.loading = "pending"
+    })
+    builder.addCase(getAllDepartment.fulfilled, (state, action) => {
+      state.loading = "success"
+      state.allDepartment = action.payload
+    })
+    builder.addCase(getAllDepartment.rejected, (state, action) => {
+      state.loading = "rejected"
+    })
+
+    builder.addCase(createDepartment.pending, (state, action) => {
+      state.loading = "pending"
+    })
+    builder.addCase(createDepartment.fulfilled, (state, action) => {
+      state.loading = "success"
+      state.allDepartment = [...state.allDepartment, action.payload]
+    })
+    builder.addCase(createDepartment.rejected, (state, action) => {
       state.loading = "rejected"
     })
   },

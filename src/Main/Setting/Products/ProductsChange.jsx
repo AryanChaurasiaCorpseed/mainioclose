@@ -108,23 +108,23 @@ const ProductsChange = () => {
   )
 
   const ProductCol = [
-    { dataIndex: "id", title: "ID", fixed: "left", width: 50 },
+    { dataIndex: "id", title: "Id", fixed: "left", width: 50 },
     {
       dataIndex: "productName",
       title: "Product name",
       fixed: "left",
     },
     { dataIndex: "govermentfees", title: "Govt. fees" },
-    { dataIndex: "govermentCode", title: "Govt. Code" },
+    { dataIndex: "govermentCode", title: "Govt. code" },
     { dataIndex: "govermentGst", title: "Govt. GST (%)" },
-    { dataIndex: "professionalFees", title: "Prof. Fees" },
-    { dataIndex: "professionalCode", title: "Prof. Code" },
+    { dataIndex: "professionalFees", title: "Prof. fees" },
+    { dataIndex: "professionalCode", title: "Prof. code" },
     { dataIndex: "profesionalGst", title: "Prof. GST (%)" },
-    { dataIndex: "serviceCharge", title: "Service Charge" },
-    { dataIndex: "serviceCode", title: "Service Code" },
+    { dataIndex: "serviceCharge", title: "Service charge" },
+    { dataIndex: "serviceCode", title: "Service code" },
     { dataIndex: "serviceGst", title: "Service GST (%)" },
-    { dataIndex: "otherFees", title: "Other Fees" },
-    { dataIndex: "otherCode", title: "Other Code" },
+    { dataIndex: "otherFees", title: "Other fees" },
+    { dataIndex: "otherCode", title: "Other code" },
     { dataIndex: "otherGst", title: "Other GST (%)" },
     {
       dataIndex: "Action",
