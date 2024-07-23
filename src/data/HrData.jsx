@@ -8,7 +8,7 @@ export const hrUserData = [
     dataIndex: "id",
     title: "Employer id",
     fixed:'left',
-    width:100,
+    width:120,
     render: (_, props) => {
       return <Text>CORP00{props?.id}</Text>
     },

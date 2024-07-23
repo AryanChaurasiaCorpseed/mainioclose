@@ -17,6 +17,7 @@ const CreateuserDashboard = ({ data, type, modalText, edit }) => {
   const dispatch = useDispatch()
   const [form] = Form.useForm()
   const [openModal, setOpenModal] = useState(false)
+  const [loading, setLoading] = useState("")
   const leadUsers = useSelector((state) => state.user.leadUserList)
   const departmentList = useSelector((state) => state?.setting?.allDepartment)
   const desiginationList = useSelector(
@@ -38,51 +39,99 @@ const CreateuserDashboard = ({ data, type, modalText, edit }) => {
   const handleSubmitUser = useCallback(
     (values) => {
       if (edit) {
+        setLoading("pending")
         values.id = data?.id
-        dispatch(updateUserData(values)).then((response) => {
-          if (response.meta.requestStatus === "fulfilled") {
-            dispatch(updateLeadUserData(values)).then((res) => {
-              if (res.meta.requestStatus === "fulfilled") {
-                notification.success({ message: "User updated successfully" })
-                setOpenModal(false)
-                dispatch(getAllUsers())
-              } else if (res.meta.requestStatus === "rejected") {
-                notification.error({ message: "Something went wrong" })
-                setOpenModal(false)
-              }
-            })
-          }
-        })
-      } else {
-        dispatch(addNewUser(values)).then((resp) => {
-          if (resp.meta.requestStatus === "fulfilled") {
-            const temp = resp?.payload?.data?.data
-            const obj = {
-              id: temp.userId,
-              email: temp.email,
-              designationId: temp.designation?.id,
-              role: temp.role?.map((ele) => ele?.name),
-              departmentId: temp.department?.id,
-              userName: temp.name,
+        dispatch(updateUserData(values))
+          .then((response) => {
+            if (response.meta.requestStatus === "fulfilled") {
+              dispatch(updateLeadUserData(values))
+                .then((res) => {
+                  if (res.meta.requestStatus === "fulfilled") {
+                    notification.success({
+                      message: "User updated successfully",
+                    })
+                    setLoading("success")
+                    setOpenModal(false)
+                    dispatch(getAllUsers())
+                  } else if (res.meta.requestStatus === "rejected") {
+                    setLoading("rejected")
+                    notification.error({ message: "Something went wrong" })
+                    setOpenModal(false)
+                    form.resetFields()
+                  }
+                })
+                .catch(() => {
+                  setLoading("rejected")
+                  notification.error({ message: "Something went wrong" })
+                  setOpenModal(false)
+                  form.resetFields()
+                })
+            } else if (response.meta.requestStatus === "rejected") {
+              setLoading("rejected")
+              notification.error({ message: "Something went wrong" })
+              setOpenModal(false)
+              form.resetFields()
             }
-            dispatch(createLeadUserbyEmail(obj)).then((info) => {
-              if (info.meta.requestStatus === "fulfilled") {
-                notification.success({ message: "User created successfully" })
-                setOpenModal(false)
-                dispatch(getAllUsers())
-              } else if (info.meta.requestStatus === "rejected") {
-                notification.error({ message: "Something went wrong" })
-                setOpenModal(false)
+          })
+          .catch(() => {
+            setLoading("rejected")
+            notification.error({ message: "Something went wrong" })
+            setOpenModal(false)
+            form.resetFields()
+          })
+      } else {
+        setLoading("pending")
+        dispatch(addNewUser(values))
+          .then((resp) => {
+            if (resp.meta.requestStatus === "fulfilled") {
+              const temp = resp?.payload?.data?.data
+              const obj = {
+                id: temp.userId,
+                email: temp.email,
+                designationId: temp.designation?.id,
+                role: temp.role?.map((ele) => ele?.name),
+                departmentId: temp.department?.id,
+                userName: temp.name,
               }
-            })
-          }
-        })
+              dispatch(createLeadUserbyEmail(obj))
+                .then((info) => {
+                  if (info.meta.requestStatus === "fulfilled") {
+                    notification.success({
+                      message: "User created successfully",
+                    })
+                    setLoading("success")
+                    setOpenModal(false)
+                    dispatch(getAllUsers())
+                  } else if (info.meta.requestStatus === "rejected") {
+                    notification.error({ message: "Something went wrong" })
+                    setLoading("rejected")
+                    setOpenModal(false)
+                    form.resetFields()
+                  }
+                })
+                .catch(() => {
+                  notification.error({ message: "Something went wrong" })
+                  setLoading("rejected")
+                  setOpenModal(false)
+                  form.resetFields()
+                })
+            } else if (resp.meta.requestStatus === "rejected") {
+              notification.error({ message: "Something went wrong" })
+              setLoading("rejected")
+              setOpenModal(false)
+              form.resetFields()
+            }
+          })
+          .catch(() => {
+            notification.error({ message: "Something went wrong" })
+            setLoading("rejected")
+            setOpenModal(false)
+            form.resetFields()
+          })
       }
     },
     [dispatch, data, edit]
   )
-
-  console.log(leadUsers, "dskghfsadgfjds")
 
   return (
     <>
@@ -103,6 +152,7 @@ const CreateuserDashboard = ({ data, type, modalText, edit }) => {
         onClose={() => setOpenModal(false)}
         okText="Submit"
         onOk={() => form.submit()}
+        okButtonProps={{ loading: loading === "pending" ? true : false }}
       >
         <Form layout="vertical" form={form} onFinish={handleSubmitUser}>
           <Form.Item

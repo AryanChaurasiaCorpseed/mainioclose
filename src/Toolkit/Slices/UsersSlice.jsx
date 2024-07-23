@@ -78,7 +78,6 @@ export const addNewUser = createAsyncThunk("newUser", async (data) => {
   return response
 })
 
-
 export const createLeadUserbyEmail = createAsyncThunk(
   "createLeadUser",
   async (data) => {
@@ -122,6 +121,22 @@ export const updateLeadUserData = createAsyncThunk(
 export const getAllRoles = createAsyncThunk("allRoles", async () => {
   const response = await getQuery(`/securityService/api/v1/roles/getRole`)
   return response.data
+})
+
+export const createdLeadByHr = createAsyncThunk(
+  "createdLeadbyHr",
+  async (data) => {
+    const response = await postQuery(
+      `/leadService/api/v1/users/createUserByHr`,
+      data
+    )
+    return response
+  }
+)
+
+export const updateLeadByHr=createAsyncThunk('upDateLeadByHr',async(data)=>{
+  const response =await putQuery(`/leadService/api/v1/users/editUserByHr`,data)
+  return response
 })
 
 export const UsersSlice = createSlice({

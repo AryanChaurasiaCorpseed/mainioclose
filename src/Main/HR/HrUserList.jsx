@@ -2,13 +2,17 @@ import React, { useEffect, useState } from "react"
 import SideBox from "../../components/SideBox"
 import { useDispatch, useSelector } from "react-redux"
 import UserListComponent from "../../Tables/UserListComponent"
-import { getAllUsers } from "../../Toolkit/Slices/UsersSlice"
+import { getAllRoles, getAllUsers } from "../../Toolkit/Slices/UsersSlice"
 import TableScalaton from "../../components/TableScalaton"
 import CreateHrDashBoard from "../../Model/CreateHrDashBoard"
 import MainHeading from "../../components/design/MainHeading"
 import SomethingWrong from "../../components/usefulThings/SomethingWrong"
 import { hrUserData } from "../../data/HrData"
 import CommonTable from "../../components/CommonTable"
+import {
+  getAllDepartment,
+  getAllDesiginations,
+} from "../../Toolkit/Slices/SettingSlice"
 
 const HrUserList = () => {
   const dispatch = useDispatch()
@@ -27,6 +31,12 @@ const HrUserList = () => {
     dispatch(getAllUsers())
   }, [dispatch])
 
+  useEffect(() => {
+    dispatch(getAllDepartment())
+    dispatch(getAllDesiginations())
+    dispatch(getAllRoles())
+  }, [dispatch])
+
   const myNewId = (id) => {
     setGetId(id)
     setEditType(true)
@@ -40,14 +50,11 @@ const HrUserList = () => {
       render: (_, props) => {
         return (
           <>
-            <button
-              className="common-btn-one mr-2"
-              data-toggle="modal"
-              data-target="#createhrdashboard"
-              onClick={() => myNewId(props)}
-            >
-              Edit
-            </button>
+            <CreateHrDashBoard
+              data={props}
+              edit={true}
+              modalTitle={"Edit user"}
+            />
           </>
         )
       },
@@ -59,7 +66,7 @@ const HrUserList = () => {
       <div className="create-user-box">
         <MainHeading data={`User list (${userCount})`} />
         <div className="all-center">
-          <CreateHrDashBoard data={getId} type={editType} />
+          <CreateHrDashBoard modalTitle={"Create user"} />
         </div>
       </div>
       {userLoading && <TableScalaton />}

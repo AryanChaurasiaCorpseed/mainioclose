@@ -1,27 +1,44 @@
-import React, { useRef, useState } from "react"
-import { postQuery } from "../API/PostQuery"
-import { useCustomRoute } from "../Routes/GetCustomRoutes"
-import { useEffect } from "react"
-import { getQuery } from "../API/GetQuery"
-import InputErrorComponent from "../components/InputErrorComponent"
+import React, { useCallback, useRef, useState } from "react"
 import { toast } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
-import { userDepartment } from "../data/FakeData"
-import { putQuery } from "../API/PutQuery"
-import ModelInput from "../components/Inputs/ModelInput"
-import TextFieldInput from "../components/Inputs/TextFieldInput"
-import { useSelector } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
+import {
+  Button,
+  Col,
+  Form,
+  Input,
+  Modal,
+  Row,
+  Select,
+  DatePicker,
+  notification,
+} from "antd"
+import { Icon } from "@iconify/react"
+import {
+  addNewUser,
+  createdLeadByHr,
+  getAllUsers,
+  updateLeadByHr,
+  updateUserData,
+} from "../Toolkit/Slices/UsersSlice"
+import dayjs from "dayjs"
+import {
+  emailChecker,
+  getDesiginationById,
+  getManagerById,
+} from "../Toolkit/Slices/CommonSlice"
 toast.configure()
 
-const CreateHrDashBoard = ({ data, type }) => {
-  const [roleGetRole, setRoleGetRole] = useState([])
-  const [userSecurityData, setUserSecurityData] = useState({
-    userName: "",
-    email: "",
-    role: [],
-    designation: "",
-    department: "",
-  })
+const CreateHrDashBoard = ({ data, edit, modalTitle }) => {
+  const [form] = Form.useForm()
+  const dispatch = useDispatch()
+  const [openModal, setOpenModal] = useState(false)
+  const [loading, setLoading] = useState("")
+  const desiginationList = useSelector(
+    (state) => state.setting.desiginationList
+  )
+  const departmentList = useSelector((state) => state?.setting?.allDepartment)
+  const allRoles = useSelector((state) => state.user.allRoles)
   const [userRowData, setUserRowData] = useState({
     userName: "",
     email: "",
@@ -57,785 +74,530 @@ const CreateHrDashBoard = ({ data, type }) => {
     backupTeam: true,
   })
 
-
-  const [aadharCardError, setAadharCardError] = useState(false)
-
-  const aadharCardRef = useRef()
-  const employeeIdRef = useRef()
-  const managerIdRef = useRef()
-  const expInMonthRef = useRef()
-  const expInYearRef = useRef()
-  const dateOfJoiningRef = useRef()
-  const fatherNameRef = useRef()
-  const fatherOccupationRef = useRef()
-  const motherNameRef = useRef()
-  const motherOccupationRef = useRef()
-  const nationalityRef = useRef()
-  const languageRef = useRef()
-  const emergencyNumberRef = useRef()
-  const panNumberRef = useRef()
-  const permanentAddressRef = useRef()
-  const residentialAddressRef = useRef()
-
-
-  const [btnLoading, setBtnLoading] = useState(false)
-  const [allRoles, setAllRoles] = useState([])
-
-  const [nameError, setNameError] = useState(false)
-  const [emailError, setEmailError] = useState(false)
-  const [roleError, setRoleError] = useState(false)
-  const [editUserLoading, setEditUserLoading] = useState(false)
-
   const allUserList = useSelector((prev) => prev.user.allUsers)
+  const allDesiginationListById = useSelector(
+    (state) => state.common.desiginationListById
+  )
+  const managerListById = useSelector((state) => state.common.managerListById)
 
-  const nameRef = useRef()
-  const emailRef = useRef()
-  const roleRef = useRef()
-  const designationRef = useRef()
-
-  let myBool = [
-    { id: 1, name: "true" },
-    { id: 2, name: "false" },
-  ]
-
-  const GetRoleFun = (e) => {
-    setUserRowData((prev) => ({ ...prev, role: [e.target.value] }))
-  }
-
-
-  const userRowDataFetch = (e) => {
-    if (type) {
-      setUserRowData((prev) => ({ ...prev, ...data }))
-      setUserRowData((prev) => ({ ...prev, [e?.target.name]: e?.target.value }))
-    } else {
-      setUserRowData((prev) => ({ ...prev, [e?.target.name]: e?.target.value }))
-    }
-  }
-
-
-  useEffect(() => {
-    getAllRole()
-  }, [])
-
-  const roleUrl = `/securityService/api/v1/roles/getRole`
-  const roleData = []
-  const { productData: allDataRole } = useCustomRoute(roleUrl, roleData)
-
-  const getAllRole = async () => {
-    try {
-      const allRoleResponse = await getQuery(
-        `/securityService/api/v1/roles/getRole`
+  const validateUsername = (_, value) => {
+    const usernamePattern = /^[a-zA-Z\s]+$/
+    if (!value) {
+      return Promise.reject(new Error("Please enter the username"))
+    } else if (!usernamePattern.test(value)) {
+      return Promise.reject(
+        new Error("Username should contain only alphabets and spaces")
       )
-      setAllRoles(allRoleResponse.data)
-    } catch (err) {
-      console.log("err", err)
     }
+    return Promise.resolve()
   }
 
-  const createuserData = (e) => {
-    e.preventDefault()
-    if (nameRef.current.value === "") {
-      setNameError(true)
+  const validateAadharNumber = (_, value) => {
+    const aadharPattern = /^[0-9]+$/
+    if (!value) {
+      return Promise.reject(new Error("Please enter aadhar number"))
+    } else if (!aadharPattern.test(value)) {
+      return Promise.reject(
+        new Error("Aadhar number should contain only numbers")
+      )
     }
-    if (emailRef.current.value === "") {
-      setEmailError(true)
-    }
-    if (roleRef.current.value.length === 0) {
-      setRoleError(true)
-    }
-    if (
-      roleRef.current.value === "" ||
-      emailRef.current.value === "" ||
-      nameRef.current.value === ""
-    ) {
-      return
-    }
+    return Promise.resolve()
+  }
 
-    setBtnLoading(true)
-
-    const userData = {
-      userName: userRowData.userName,
-      email: userRowData.email,
-      role: userRowData.role,
-      designation: userRowData.designation,
-      department: userRowData.department,
+  const validateEmail = (dispatch) => async (_, value) => {
+    if (!value) {
+      return Promise.reject(new Error("Please enter the email"))
+    }
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    if (!emailPattern.test(value)) {
+      return Promise.reject(new Error("Please enter a valid email"))
     }
 
-    const userCreateFun = async () => {
-      try {
-        const createNewUserData = await postQuery(
-          `/securityService/api/auth/createNewUserByEmail`,
-          userData
-        )
-
-        let roleData = createNewUserData.data.data.role.map((role) => role.name)
-
-        const newLeadObject = {
-          id: createNewUserData?.data?.data?.userId,
-          email: createNewUserData?.data?.data?.email,
-          role: roleData,
-          designation: createNewUserData?.data?.data?.designation,
-          department: createNewUserData?.data?.data?.department,
-          userName: createNewUserData?.data?.data?.name,
-          epfNo: userRowData?.epfNo,
-          aadharCard: userRowData?.aadharCard,
-          employeeId: userRowData?.employeeId,
-          managerId: userRowData?.managerId,
-          expInMonth: userRowData?.expInMonth,
-          expInYear: userRowData?.expInYear,
-          dateOfJoining: userRowData?.dateOfJoining,
-          type: userRowData?.type,
-          fatherName: userRowData?.fatherName,
-          fatherOccupation: userRowData?.a?.fatherOccupation,
-          fatherContactNo: userRowData?.fatherContactNo,
-          motherName: userRowData?.motherName,
-          motherOccupation: userRowData?.motherOccupation,
-          motherContactNo: userRowData?.motherContactNo,
-          spouseName: userRowData?.spouseName,
-          spouseContactNo: userRowData?.spouseContactNo,
-          nationality: userRowData?.nationality,
-          language: userRowData?.language,
-          emergencyNumber: userRowData?.emergencyNumber,
-          panNumber: userRowData?.panNumber,
-          permanentAddress: userRowData?.permanentAddress,
-          residentialAddress: userRowData?.residentialAddress,
-          manager: true,
+    try {
+      const resp = await dispatch(emailChecker(value))
+      if (resp.meta.requestStatus === "fulfilled") {
+        const temp = resp?.payload?.data
+        if (temp) {
+          return Promise.reject(new Error("Email already exists"))
+        } else {
+          return Promise.resolve()
         }
-
-        const createLeadUserByEmail = await postQuery(
-          `/leadService/api/v1/users/createUserByHr`,
-          newLeadObject
-        )
-        setBtnLoading(false)
-        roleRef.current.value = ""
-        emailRef.current.value = ""
-        nameRef.current.value = ""
-        designationRef.current.value = ""
-
-        toast.success("user craeted Sucessfully")
-        window.location.reload()
-      } catch (err) {
-        console.log(err)
-        setBtnLoading(false)
+      } else {
+        return Promise.reject(new Error("Error validating email"))
       }
+    } catch (error) {
+      return Promise.reject(new Error("Error validating email"))
     }
-    userCreateFun()
   }
 
-  const editUserData = async (e) => {
-    e.preventDefault()
-    setEditUserLoading(true)
-    // const updateUser = putQuery()
-    const upadtedData = {
-      id: userRowData.id,
-      name: userRowData.fullName,
-      email: userRowData.email,
-      designation: userRowData.designation,
-      roles: userRowData.role,
-    }
-
-    const updateLeadData = {
-      id: userRowData.id,
-      firstName: "",
-      lastName: "",
-      fullName: userRowData.fullName,
-      email: userRowData.email,
-      designation: userRowData.designation,
-      department: userRowData.department,
-      role: userRowData.role,
-      epfNo: userRowData?.epfNo,
-      aadharCard: userRowData?.aadharCard,
-      employeeId: userRowData?.employeeId,
-      managerId: userRowData?.managerId,
-      expInMonth: userRowData?.expInMonth,
-      expInYear: userRowData?.expInYear,
-      dateOfJoining: userRowData?.dateOfJoining,
-      type: userRowData?.type,
-      fatherName: userRowData?.fatherName,
-      fatherOccupation: userRowData?.a?.fatherOccupation,
-      fatherContactNo: userRowData?.fatherContactNo,
-      motherName: userRowData?.motherName,
-      motherOccupation: userRowData?.motherOccupation,
-      motherContactNo: userRowData?.motherContactNo,
-      spouseName: userRowData?.spouseName,
-      spouseContactNo: userRowData?.spouseContactNo,
-      nationality: userRowData?.nationality,
-      language: userRowData?.language,
-      emergencyNumber: userRowData?.emergencyNumber,
-      panNumber: userRowData?.panNumber,
-      permanentAddress: userRowData?.permanentAddress,
-      residentialAddress: userRowData?.residentialAddress,
+  const handleEdit = useCallback(() => {
+    setOpenModal(true)
+    form.setFieldsValue({
+      userName: data?.fullName,
+      email: data.email,
+      designationId: data?.userDesignation?.id,
+      departmentId: data?.userDepartment?.id,
+      role: data?.role,
+      epfNo: data?.epfNo,
+      aadharCard: data?.aadharCard,
+      managerId: data?.managerId,
+      expInMonth: data?.expInMonth,
+      expInYear: data?.expInYear,
+      dateOfJoining: dayjs(data?.dateOfJoining),
+      type: data?.type,
+      fatherName: data?.fatherName,
+      fatherOccupation: data?.a?.fatherOccupation,
+      fatherContactNo: data?.fatherContactNo,
+      motherName: data?.motherName,
+      motherOccupation: data?.motherOccupation,
+      motherContactNo: data?.motherContactNo,
+      spouseName: data?.spouseName,
+      spouseContactNo: data?.spouseContactNo,
+      nationality: data?.nationality,
+      language: data?.language,
+      emergencyNumber: data?.emergencyNumber,
+      panNumber: data?.panNumber,
+      permanentAddress: data?.permanentAddress,
+      residentialAddress: data?.residentialAddress,
       manager: true,
-    }
+      backupTeam: data?.backupTeam,
+      master: data?.master,
+    })
+  }, [data, form])
 
-    try {
-      const updateUserData = await putQuery(
-        `/securityService/api/auth/updateUserData`,
-        upadtedData
+  const handleSubmitUser = useCallback(
+    (values) => {
+      values.dateOfJoining = dayjs(values?.dateOfJoining).format(
+        "YYYY-MM-DDTHH:mm:ss.SSSZ"
       )
-      const updateLeadUserData = await putQuery(
-        `/leadService/api/v1/users/editUserByHr`,
-        updateLeadData
-      )
-      window.location.reload()
-      toast.success("User Edit Succesfully")
-    } catch (err) {
-      console.log(err)
-      setEditUserLoading(false)
-    }
-  }
+      if (edit) {
+        setLoading("pending")
+        values.id = data?.id
+        let tempObj = {
+          id: data?.id,
+          userName: values?.userName,
+          email: values?.email,
+          designationId: values?.designationId,
+          departmentId: values?.departmentId,
+          role: values?.role,
+        }
+        dispatch(updateUserData(tempObj))
+          .then((response) => {
+            if (response.meta.requestStatus === "fulfilled") {
+              dispatch(updateLeadByHr(values))
+                .then((res) => {
+                  if (res.meta.requestStatus === "fulfilled") {
+                    notification.success({
+                      message: "User updated successfully",
+                    })
+                    setLoading("success")
+                    setOpenModal(false)
+                    dispatch(getAllUsers())
+                  } else if (res.meta.requestStatus === "rejected") {
+                    setLoading("rejected")
+                    notification.error({ message: "Something went wrong" })
+                    setOpenModal(false)
+                    form.resetFields()
+                  }
+                })
+                .catch(() => {
+                  setLoading("rejected")
+                  notification.error({ message: "Something went wrong" })
+                  setOpenModal(false)
+                  form.resetFields()
+                })
+            } else if (response.meta.requestStatus === "rejected") {
+              setLoading("rejected")
+              notification.error({ message: "Something went wrong" })
+              setOpenModal(false)
+              form.resetFields()
+            }
+          })
+          .catch(() => {
+            setLoading("rejected")
+            notification.error({ message: "Something went wrong" })
+            setOpenModal(false)
+            form.resetFields()
+          })
+      } else {
+        setLoading("pending")
+        dispatch(addNewUser(values))
+          .then((resp) => {
+            if (resp.meta.requestStatus === "fulfilled") {
+              const temp = resp?.payload?.data?.data
+              const obj = {
+                id: temp.userId,
+                ...values,
+              }
+              dispatch(createdLeadByHr(obj))
+                .then((info) => {
+                  if (info.meta.requestStatus === "fulfilled") {
+                    notification.success({
+                      message: "User created successfully",
+                    })
+                    setLoading("success")
+                    setOpenModal(false)
+                    dispatch(getAllUsers())
+                  } else if (info.meta.requestStatus === "rejected") {
+                    notification.error({ message: "Something went wrong" })
+                    setLoading("rejected")
+                    setOpenModal(false)
+                    form.resetFields()
+                  }
+                })
+                .catch(() => {
+                  notification.error({ message: "Something went wrong" })
+                  setLoading("rejected")
+                  setOpenModal(false)
+                  form.resetFields()
+                })
+            } else if (resp.meta.requestStatus === "rejected") {
+              notification.error({ message: "Something went wrong" })
+              setLoading("rejected")
+              setOpenModal(false)
+              form.resetFields()
+            }
+          })
+          .catch(() => {
+            notification.error({ message: "Something went wrong" })
+            setLoading("rejected")
+            setOpenModal(false)
+            form.resetFields()
+          })
+      }
+    },
+    [dispatch, data, edit]
+  )
 
   return (
-    <nav className="all-center">
-      <div className="team-model">
-        <button
-          type="button"
-          className="team-edit-button create-user-btn"
-          data-toggle="modal"
-          data-target="#createhrdashboard"
+    <>
+      {modalTitle === "Create user" ? (
+        <Button type="primary" onClick={() => setOpenModal(true)}>
+          Create user
+        </Button>
+      ) : (
+        <Button type="text" size="small" onClick={handleEdit}>
+          <Icon icon="fluent:edit-20-regular" />
+        </Button>
+      )}
+
+      <Modal
+        title={modalTitle}
+        open={openModal}
+        width={1000}
+        centered
+        onCancel={() => {
+          form.resetFields()
+          setOpenModal(false)
+        }}
+        onClose={() => {
+          form.resetFields()
+          setOpenModal(false)
+        }}
+        okText="Submit"
+        onOk={() => form.submit()}
+        okButtonProps={{ loading: loading === "pending" ? true : false }}
+      >
+        <Form
+          layout="vertical"
+          form={form}
+          scrollToFirstError
+          onFinish={handleSubmitUser}
+          style={{ maxHeight: "80vh", overflow: "auto" }}
         >
-          <i className="fa-solid mr-1 fa-circle-plus"></i>
-        </button>
-
-        {/* MODAL */}
-        <div
-          className="modal fade"
-          id="createhrdashboard"
-          tabIndex="-1"
-          role="dialog"
-          aria-labelledby="exampleModalCenterTitle"
-          aria-hidden="true"
-        >
-          <div
-            className="modal-dialog mod-center modal-dialog-centered"
-            role="document"
-          >
-            <div className="modal-content all-center">
-              <div className="add-team-body">
-                {/* START */}
-                <div className="personal-info container">
-                  <h4 className="info-text model-heading">
-                    {type ? "Edit New user" : "Create New User"}
-                    {type ? (
-                      <span className="pencil-ui" onClick={userRowDataFetch}>
-                        <i className="fa-solid fa-pencil"></i>
-                      </span>
-                    ) : (
-                      ""
-                    )}
-                  </h4>
-                  <div className="cross-icon">
-                    <i
-                      data-dismiss="modal"
-                      className="fa-sharp fa-solid fa-circle-xmark"
-                    ></i>
-                  </div>
-                  <form>
-                    <div className="first-form form-row">
-                      <div className="form-group col-md-6">
-                        <div className="pr-ten">
-                          <label
-                            className="label-heading mb-1"
-                            htmlFor="teamName"
-                          >
-                            Username*
-                          </label>
-                          <input
-                            type="text"
-                            className="form-control input-focus"
-                            id="teamName"
-                            value={
-                              type ? userRowData.fullName : userRowData.fullName
-                            }
-                            ref={nameRef}
-                            placeholder="Enter Username"
-                            name={type ? "fullName" : "userName"}
-                            onChange={(e) => userRowDataFetch(e)}
-                          />
-                        </div>
-                        {nameError ? (
-                          <InputErrorComponent value={"Name can't be Blank!"} />
-                        ) : (
-                          ""
-                        )}
-                      </div>
-                      <div className="form-group col-md-6">
-                        <div className="pl-ten">
-                          <label
-                            className="label-heading mb-1"
-                            htmlFor="teamLeadName"
-                          >
-                            Email*
-                          </label>
-                          <input
-                            type="email"
-                            className="form-control input-focus"
-                            id="teamLeadName"
-                            placeholder="Enter Email"
-                            name="email"
-                            value={type ? userRowData.email : userRowData.email}
-                            ref={emailRef}
-                            onChange={(e) => userRowDataFetch(e)}
-                          />
-                        </div>
-                        {emailError ? (
-                          <InputErrorComponent
-                            value={"Email can't be Blank!"}
-                          />
-                        ) : (
-                          ""
-                        )}
-                      </div>
-                      <div className="form-group col-md-6">
-                        <div className="pr-ten">
-                          <label
-                            className="label-heading mb-1"
-                            htmlFor="mobileNo"
-                          >
-                            Role*
-                          </label>
-
-                          <select
-                            className="form-control input-focus"
-                            name="role"
-                            id="select-product"
-                            value={type ? userRowData.role : userRowData.role}
-                            ref={roleRef}
-                            onChange={(e) => GetRoleFun(e)}
-                          >
-                            <option>Select Role</option>
-                            {allRoles.map((role, index) => (
-                              <option key={index} value={role?.name}>
-                                {role?.name}
-                              </option>
-                            ))}
-                          </select>
-                        </div>
-                        {roleError ? (
-                          <InputErrorComponent value={"Role can't be Blank!"} />
-                        ) : (
-                          ""
-                        )}
-                      </div>
-                      <div className="form-group col-md-6">
-                        <div className="pr-ten">
-                          <label
-                            className="label-heading mb-1"
-                            htmlFor="mobileNo"
-                          >
-                            Designation
-                          </label>
-                          <input
-                            type="text"
-                            className="form-control input-focus"
-                            id="mobileNo"
-                            value={
-                              type
-                                ? userRowData.designation
-                                : userRowData.designation
-                            }
-                            ref={designationRef}
-                            placeholder="Enter Designation"
-                            name="designation"
-                            onChange={(e) => userRowDataFetch(e)}
-                          />
-                        </div>
-                      </div>
-                      <div className="form-group col-md-6">
-                        <div className="pr-ten">
-                          <label
-                            className="label-heading mb-1"
-                            htmlFor="mobileNo"
-                          >
-                            Department*
-                          </label>
-
-                          <select
-                            className="form-control input-focus"
-                            name="department"
-                            id="select-product"
-                            value={
-                              type
-                                ? userRowData.department
-                                : userRowData.department
-                            }
-                            ref={roleRef}
-                            onChange={(e) => userRowDataFetch(e)}
-                          >
-                            <option>Select Department</option>
-                            {userDepartment.map((dep, index) => (
-                              <option key={index} value={dep}>
-                                {dep}
-                              </option>
-                            ))}
-                          </select>
-                        </div>
-                      </div>
-                      <ModelInput
-                        label="EPFO Number"
-                        type="text"
-                        placeholder="Enter EPFO Number"
-                        name="epfNo"
-                        value={type ? userRowData.epfNo : userRowData.epfNo}
-                        onChange={(e) => userRowDataFetch(e)}
-                      />
-                      <ModelInput
-                        label="Aadhar Card"
-                        type="text"
-                        placeholder="Enter Aadhar Card"
-                        ref={aadharCardRef}
-                        name="aadharCard"
-                        error={aadharCardError}
-                        errorData={"Aadhar Card Number Can't be Blank"}
-                        value={
-                          type ? userRowData.aadharCard : userRowData.aadharCard
-                        }
-                        onChange={(e) => userRowDataFetch(e)}
-                      />
-                      <ModelInput
-                        label="Employee ID"
-                        type="text"
-                        placeholder="Enter Employee ID"
-                        name="employeeId"
-                        value={
-                          type ? userRowData.employeeId : userRowData.employeeId
-                        }
-                        onChange={(e) => userRowDataFetch(e)}
-                      />
-                      <div className="form-group col-md-6">
-                        <div className="pr-ten">
-                          <label
-                            className="label-heading mb-1"
-                            htmlFor="mobileNo"
-                          >
-                            Manager Name*
-                          </label>
-
-                          <select
-                            className="form-control input-focus"
-                            name="managerId"
-                            id="select-product"
-                            value={
-                              type
-                                ? userRowData.managerId
-                                : userRowData.managerId
-                            }
-                            // ref={roleRef}
-                            onChange={(e) => userRowDataFetch(e)}
-                          >
-                            <option>Select Manager</option>
-                            {allUserList.map((dep, index) => (
-                              <option key={index} value={dep?.id}>
-                                {dep?.fullName}
-                              </option>
-                            ))}
-                          </select>
-                        </div>
-                      </div>
-                      <ModelInput
-                        label="Experience In Months"
-                        type="text"
-                        placeholder="Enter Experience In Months"
-                        name="expInMonth"
-                        value={
-                          type ? userRowData.expInMonth : userRowData.expInMonth
-                        }
-                        onChange={(e) => userRowDataFetch(e)}
-                      />
-                      <ModelInput
-                        label="Experience in Years"
-                        type="text"
-                        placeholder="Enter Experience in Years"
-                        name="expInYear"
-                        value={
-                          type ? userRowData.expInYear : userRowData.expInYear
-                        }
-                        onChange={(e) => userRowDataFetch(e)}
-                      />
-                      <ModelInput
-                        label="Date of Joining"
-                        type="date"
-                        placeholder="Enter Date of Joinning"
-                        name="dateOfJoining"
-                        value={
-                          type
-                            ? userRowData.dateOfJoining
-                            : userRowData.dateOfJoining
-                        }
-                        onChange={(e) => userRowDataFetch(e)}
-                      />
-                      <ModelInput
-                        label="Type"
-                        type="text"
-                        placeholder="Enter Type"
-                        name="type"
-                        value={type ? userRowData.type : userRowData.type}
-                        onChange={(e) => userRowDataFetch(e)}
-                      />
-                      <ModelInput
-                        label="Father Name"
-                        type="text"
-                        placeholder="Enter Father Name"
-                        name="fatherName"
-                        value={
-                          type ? userRowData.fatherName : userRowData.fatherName
-                        }
-                        onChange={(e) => userRowDataFetch(e)}
-                      />
-                      <ModelInput
-                        label="Father Occupation"
-                        type="text"
-                        placeholder="Enter Father Occupation"
-                        name="fatherOccupation"
-                        value={
-                          type
-                            ? userRowData.fatherOccupation
-                            : userRowData.fatherOccupation
-                        }
-                        onChange={(e) => userRowDataFetch(e)}
-                      />
-                      <ModelInput
-                        label="Father Contact No"
-                        type="text"
-                        placeholder="Enter Father Contact No"
-                        name="fatherContactNo"
-                        value={
-                          type
-                            ? userRowData.fatherContactNo
-                            : userRowData.fatherContactNo
-                        }
-                        onChange={(e) => userRowDataFetch(e)}
-                      />
-                      <ModelInput
-                        label="Mother Name"
-                        type="text"
-                        placeholder="Enter Mother Name"
-                        name="motherName"
-                        value={
-                          type ? userRowData.motherName : userRowData.motherName
-                        }
-                        onChange={(e) => userRowDataFetch(e)}
-                      />
-                      <ModelInput
-                        label="Mother Occupation"
-                        type="text"
-                        placeholder="Enter Mother Occupation"
-                        name="motherOccupation"
-                        value={
-                          type
-                            ? userRowData.motherOccupation
-                            : userRowData.motherOccupation
-                        }
-                        onChange={(e) => userRowDataFetch(e)}
-                      />
-                      <ModelInput
-                        label="Mother Contact No."
-                        type="text"
-                        placeholder="Enter Mother Contact No."
-                        name="motherContactNo"
-                        value={
-                          type
-                            ? userRowData.motherContactNo
-                            : userRowData.motherContactNo
-                        }
-                        onChange={(e) => userRowDataFetch(e)}
-                      />
-                      <ModelInput
-                        label="Spouse Name"
-                        type="text"
-                        placeholder="Enter Spouse Name"
-                        name="spouseName"
-                        value={
-                          type ? userRowData.spouseName : userRowData.spouseName
-                        }
-                        onChange={(e) => userRowDataFetch(e)}
-                      />
-                      <ModelInput
-                        label="Spouse Contact Number"
-                        type="text"
-                        placeholder="Enter Spouse Contact Number"
-                        name="spouseContactNo"
-                        value={
-                          type
-                            ? userRowData.spouseContactNo
-                            : userRowData.spouseContactNo
-                        }
-                        onChange={(e) => userRowDataFetch(e)}
-                      />
-                      <ModelInput
-                        label="Nationality"
-                        type="text"
-                        placeholder="Enter Nationality"
-                        name="nationality"
-                        value={
-                          type
-                            ? userRowData.nationality
-                            : userRowData.nationality
-                        }
-                        onChange={(e) => userRowDataFetch(e)}
-                      />
-                      <ModelInput
-                        label="Language"
-                        type="text"
-                        placeholder="Enter Language"
-                        name="language"
-                        value={
-                          type ? userRowData.language : userRowData.language
-                        }
-                        onChange={(e) => userRowDataFetch(e)}
-                      />
-                      <ModelInput
-                        label="Emergency Contact"
-                        type="text"
-                        placeholder="Enter Emergency Contact"
-                        name="emergencyNumber"
-                        value={
-                          type
-                            ? userRowData.emergencyNumber
-                            : userRowData.emergencyNumber
-                        }
-                        onChange={(e) => userRowDataFetch(e)}
-                      />
-                      {/* lockerSize */}
-                      <TextFieldInput
-                        label="Permanenet Address"
-                        type="text"
-                        placeholder="Enter Permanenet Address"
-                        name="permanentAddress"
-                        value={
-                          type
-                            ? userRowData.permanentAddress
-                            : userRowData.permanentAddress
-                        }
-                        onChange={(e) => userRowDataFetch(e)}
-                      />
-                      <TextFieldInput
-                        label="Residential Address"
-                        type="text"
-                        placeholder="Enter Residential Address"
-                        name="residentialAddress"
-                        value={
-                          type
-                            ? userRowData.residentialAddress
-                            : userRowData.residentialAddress
-                        }
-                        onChange={(e) => userRowDataFetch(e)}
-                      />
-
-                      <ModelInput
-                        label="Locker Size"
-                        type="text"
-                        placeholder="Enter Locker Size (Enter Digit Only)"
-                        name="lockerSize"
-                        value={
-                          type ? userRowData.lockerSize : userRowData.lockerSize
-                        }
-                        onChange={(e) => userRowDataFetch(e)}
-                      />
-
-                      {/* {type && 
-                       } */}
-
-                      {type && (
-                        <div className="form-group col-md-6">
-                          <div className="pr-ten">
-                            <label
-                              className="label-heading mb-1"
-                              htmlFor="mobileNo"
-                            >
-                              Master*
-                            </label>
-
-                            <select
-                              className="form-control input-focus"
-                              name="master"
-                              id="select-product"
-                              value={
-                                type ? userRowData.master : userRowData.master
-                              }
-                              // ref={roleRef}
-                              onChange={(e) => userRowDataFetch(e)}
-                            >
-                              <option>Select Master</option>
-                              {myBool.map((dep, index) => (
-                                <option key={index} value={dep?.name}>
-                                  {dep?.name}
-                                </option>
-                              ))}
-                            </select>
-                          </div>
-                        </div>
-                      )}
-
-                      {type && (
-                        <div className="form-group col-md-6">
-                          <div className="pr-ten">
-                            <label
-                              className="label-heading mb-1"
-                              htmlFor="mobileNo"
-                            >
-                              Backup Team*
-                            </label>
-
-                            <select
-                              className="form-control input-focus"
-                              name="backupTeam"
-                              id="select-product"
-                              value={
-                                type
-                                  ? userRowData.backupTeam
-                                  : userRowData.backupTeam
-                              }
-                              // ref={roleRef}
-                              onChange={(e) => userRowDataFetch(e)}
-                            >
-                              <option>Select Backup Team</option>
-                              {myBool.map((dep, index) => (
-                                <option key={index} value={dep?.name}>
-                                  {dep?.name}
-                                </option>
-                              ))}
-                            </select>
-                          </div>
-                        </div>
-                      )}
-
-                      {/* <ModelInput
-                        label="Manager Name"
-                        type="text"
-                        placeholder="Enter Manager Name"
-                        name="manager"
-                        onChange={(e) => userRowDataFetch(e)}
-                      /> */}
-                      <div className="all-between-items">
-                        <div className="all-center"></div>
-                        <div>
-                          {type ? (
-                            <button
-                              onClick={(e) => editUserData(e)}
-                              className="first-button form-prev-btn"
-                            >
-                              {editUserLoading ? "Please wait..." : "Edit User"}
-                            </button>
-                          ) : (
-                            <button
-                              onClick={(e) => createuserData(e)}
-                              className="first-button form-prev-btn"
-                            >
-                              {btnLoading ? "Loading" : "Submit"}
-                            </button>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  </form>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </nav>
+          <Row>
+            <Col span={11}>
+              <Form.Item
+                label="Username"
+                name="userName"
+                rules={[
+                  {
+                    required: true,
+                    message: "",
+                  },
+                  {
+                    validator: validateUsername,
+                  },
+                ]}
+              >
+                <Input />
+              </Form.Item>
+              <Form.Item
+                label="Role"
+                name="role"
+                rules={[
+                  {
+                    required: true,
+                    message: "please select the role",
+                  },
+                ]}
+              >
+                <Select
+                  mode="multiple"
+                  showSearch
+                  allowClear
+                  options={
+                    allRoles?.length > 0
+                      ? allRoles?.map((ele) => ({
+                          label: ele?.name,
+                          value: ele?.name,
+                        }))
+                      : []
+                  }
+                  filterOption={(input, option) =>
+                    option.label.toLowerCase().includes(input.toLowerCase())
+                  }
+                />
+              </Form.Item>
+              <Form.Item
+                label="Desigination"
+                name="designationId"
+                rules={[
+                  {
+                    required: true,
+                    message: "please select the designation",
+                  },
+                ]}
+              >
+                <Select
+                  showSearch
+                  allowClear
+                  options={
+                    allDesiginationListById?.length > 0
+                      ? allDesiginationListById?.map((ele) => ({
+                          label: ele?.name,
+                          value: ele?.id,
+                        }))
+                      : []
+                  }
+                  filterOption={(input, option) =>
+                    option.label.toLowerCase().includes(input.toLowerCase())
+                  }
+                />
+              </Form.Item>
+              <Form.Item
+                label="Aadhar card no."
+                name="aadharCard"
+                rules={[
+                  {
+                    required: true,
+                    message: "",
+                  },
+                  {
+                    validator: validateAadharNumber,
+                  },
+                ]}
+              >
+                <Input />
+              </Form.Item>
+              <Form.Item
+                label={`Experience (in year)`}
+                name="expInYear"
+                rules={[
+                  {
+                    required: true,
+                    message: "please enter experience in year",
+                  },
+                ]}
+              >
+                <Input />
+              </Form.Item>
+              <Form.Item
+                label="Date of joining"
+                name="dateOfJoining"
+                rules={[{ required: true, message: "please select the date" }]}
+              >
+                <DatePicker style={{ width: "100%" }} />
+              </Form.Item>
+              <Form.Item
+                label="Father's name"
+                name="fatherName"
+                rules={[
+                  { required: true, message: "please enter father's name " },
+                ]}
+              >
+                <Input />
+              </Form.Item>
+              <Form.Item label="Father's contact no." name="fatherContactNo">
+                <Input />
+              </Form.Item>
+              <Form.Item label="Mother's occupation" name="motherOccupation">
+                <Input />
+              </Form.Item>
+              <Form.Item label="Spouse name" name="spouseName">
+                <Input />
+              </Form.Item>
+              <Form.Item label="Nationality" name="nationality">
+                <Input />
+              </Form.Item>
+              <Form.Item label="Emergency contact no." name="emergencyNumber">
+                <Input />
+              </Form.Item>
+              {edit && (
+                <Form.Item
+                  label="Master"
+                  name="master"
+                  rules={[{ required: true, message: "please select master" }]}
+                >
+                  <Select
+                    options={[
+                      { label: "True", value: 1 },
+                      { label: "False", value: 2 },
+                    ]}
+                    showSearch
+                    allowClear
+                  />
+                </Form.Item>
+              )}
+              <Form.Item label="Residential address" name="residentialAddress">
+                <Input.TextArea />
+              </Form.Item>
+            </Col>
+            <Col span={1} />
+            <Col span={11}>
+              <Form.Item
+                label="Email"
+                name="email"
+                rules={[
+                  {
+                    required: true,
+                    type: "email",
+                    message: "",
+                  },
+                  {
+                    validator: validateEmail(dispatch),
+                  },
+                ]}
+              >
+                <Input />
+              </Form.Item>
+              <Form.Item
+                label="Department"
+                name="departmentId"
+                rules={[
+                  {
+                    required: true,
+                    message: "please select the designation",
+                  },
+                ]}
+              >
+                <Select
+                  showSearch
+                  allowClear
+                  options={
+                    departmentList?.length > 0
+                      ? departmentList?.map((ele) => ({
+                          label: ele?.name,
+                          value: ele?.id,
+                        }))
+                      : []
+                  }
+                  onChange={(e) => {
+                    dispatch(getDesiginationById(e))
+                    dispatch(getManagerById(e))
+                  }}
+                  filterOption={(input, option) =>
+                    option.label.toLowerCase().includes(input.toLowerCase())
+                  }
+                />
+              </Form.Item>
+              <Form.Item label="EPFO number" name="epfNo">
+                <Input />
+              </Form.Item>
+              <Form.Item label="Manager name" name="managerId">
+                <Select
+                  showSearch
+                  allowClear
+                  options={
+                    managerListById?.length > 0
+                      ? managerListById?.map((item) => ({
+                          label: item?.fullName,
+                          value: item?.id,
+                        }))
+                      : []
+                  }
+                  filterOption={(input, option) =>
+                    option.label.toLowerCase().includes(input.toLowerCase())
+                  }
+                />
+              </Form.Item>
+              <Form.Item
+                label={`Experience (in months)`}
+                name="expInMonth"
+                rules={[
+                  {
+                    required: true,
+                    message: "please enter experience in months",
+                  },
+                ]}
+              >
+                <Input />
+              </Form.Item>
+              <Form.Item
+                label="Gender"
+                name="type"
+                rules={[{ required: true, message: "please select gender" }]}
+              >
+                <Select
+                  showSearch
+                  allowClear
+                  options={[
+                    { label: "Male", value: "male" },
+                    { label: "Female", value: "female" },
+                    { label: "Others", value: "others" },
+                  ]}
+                />
+              </Form.Item>
+              <Form.Item label="Father's occupation" name="fatherOccupation">
+                <Input />
+              </Form.Item>
+              <Form.Item
+                label="Mother's name"
+                name="motherName"
+                rules={[
+                  { required: true, message: "please enter mother's name" },
+                ]}
+              >
+                <Input />
+              </Form.Item>
+              <Form.Item label="Mother's contact no." name="motherContactNo">
+                <Input />
+              </Form.Item>
+              <Form.Item label="Spouse contact number" name="spouseContactNo">
+                <Input />
+              </Form.Item>
+              <Form.Item label="Language" name="language">
+                <Input />
+              </Form.Item>
+              <Form.Item label="Locker size" name="lockerSize">
+                <Input />
+              </Form.Item>
+              {edit && (
+                <Form.Item
+                  label="Backup team"
+                  name="backupTeam"
+                  rules={[
+                    { required: true, message: "please select backup team" },
+                  ]}
+                >
+                  <Select
+                    options={[
+                      { label: "True", value: 1 },
+                      { label: "False", value: 2 },
+                    ]}
+                    showSearch
+                    allowClear
+                  />
+                </Form.Item>
+              )}
+              <Form.Item label="Permanenet address" name="permanentAddress">
+                <Input.TextArea />
+              </Form.Item>
+            </Col>
+          </Row>
+        </Form>
+      </Modal>
+    </>
   )
 }
 
