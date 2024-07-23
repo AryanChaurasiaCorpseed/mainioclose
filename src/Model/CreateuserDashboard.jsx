@@ -211,10 +211,12 @@ const CreateuserDashboard = ({ data, type, modalText, edit }) => {
               showSearch
               allowClear
               options={
-                desiginationList?.map((ele) => ({
-                  label: ele?.name,
-                  value: ele?.id,
-                })) || []
+                desiginationList?.length > 0
+                  ? desiginationList?.map((ele) => ({
+                      label: ele?.name,
+                      value: ele?.id,
+                    }))
+                  : []
               }
               filterOption={(input, option) =>
                 option.label.toLowerCase().includes(input.toLowerCase())

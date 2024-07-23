@@ -22,9 +22,7 @@ const Desigination = () => {
       dispatch(createAuthDesigination(values)).then((resp) => {
         if (resp.meta.requestStatus === "fulfilled") {
           const temp = resp?.payload?.data
-          dispatch(
-            createDesigination(values)
-          )
+          dispatch(createDesigination(values))
             .then((info) => {
               if (info.meta.requestStatus === "fulfilled") {
                 notification.success({
@@ -79,7 +77,7 @@ const Desigination = () => {
       <div className="mt-4 setting-table">
         <div className="table-responsive">
           <CommonTable
-            data={desiginationList}
+            data={desiginationList?.length > 0 ? desiginationList : []}
             columns={columns}
             scroll={{ y: 550 }}
           />

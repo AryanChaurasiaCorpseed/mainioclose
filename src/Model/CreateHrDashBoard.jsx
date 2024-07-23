@@ -491,6 +491,7 @@ const CreateHrDashBoard = ({ data, edit, modalTitle }) => {
               </Form.Item>
               <Form.Item
                 label="Department"
+                
                 name="departmentId"
                 rules={[
                   {
