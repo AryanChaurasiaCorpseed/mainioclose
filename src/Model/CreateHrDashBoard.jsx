@@ -107,7 +107,7 @@ const CreateHrDashBoard = ({ data, edit, modalTitle }) => {
   const validateMobileNumber = (_, value) => {
     const aadharPattern = /^[0-9]+$/
     if (!value) {
-      return
+      return Promise.reject(new Error("please enter mobile number"))
     } else if (!aadharPattern.test(value)) {
       return Promise.reject(new Error("Number should contain only numbers"))
     }
@@ -431,7 +431,13 @@ const CreateHrDashBoard = ({ data, edit, modalTitle }) => {
               <Form.Item
                 label="Father's contact no."
                 name="fatherContactNo"
-                rules={[{ validator: validateMobileNumber }]}
+                rules={[
+                  {
+                    required: true,
+                    message: "",
+                    validator: validateMobileNumber,
+                  },
+                ]}
               >
                 <Input />
               </Form.Item>
@@ -447,7 +453,13 @@ const CreateHrDashBoard = ({ data, edit, modalTitle }) => {
               <Form.Item
                 label="Emergency contact no."
                 name="emergencyNumber"
-                rules={[{ validator: validateMobileNumber }]}
+                rules={[
+                  {
+                    required: true,
+                    message: "",
+                    validator: validateMobileNumber,
+                  },
+                ]}
               >
                 <Input />
               </Form.Item>
@@ -491,7 +503,6 @@ const CreateHrDashBoard = ({ data, edit, modalTitle }) => {
               </Form.Item>
               <Form.Item
                 label="Department"
-                
                 name="departmentId"
                 rules={[
                   {
@@ -582,14 +593,26 @@ const CreateHrDashBoard = ({ data, edit, modalTitle }) => {
               <Form.Item
                 label="Mother's contact no."
                 name="motherContactNo"
-                rules={[{ validator: validateMobileNumber }]}
+                rules={[
+                  {
+                    required: true,
+                    message: "",
+                    validator: validateMobileNumber,
+                  },
+                ]}
               >
                 <Input />
               </Form.Item>
               <Form.Item
                 label="Spouse contact number"
                 name="spouseContactNo"
-                rules={[{ validator: validateMobileNumber }]}
+                rules={[
+                  {
+                    required: true,
+                    message: "",
+                    validator: validateMobileNumber,
+                  },
+                ]}
               >
                 <Input />
               </Form.Item>
