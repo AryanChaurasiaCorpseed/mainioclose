@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react"
-import UserListComponent from "../../Tables/UserListComponent"
 import { Link } from "react-router-dom"
 import CreateuserDashboard from "../../Model/CreateuserDashboard"
 import { deleteQuery } from "../../API/DeleteQuery"
@@ -91,7 +90,7 @@ const DisplayDashboardUser = () => {
     },
     {
       dataIndex: "fullName",
-      title: "Full Name",
+      title: "Full name",
       fixed: "left",
       render: (_, props) => (
         <div className="flex-vert-hori-center">
@@ -106,7 +105,7 @@ const DisplayDashboardUser = () => {
     ...allUserdataCol,
     {
       dataIndex: "viewHistory",
-      title: "View History",
+      title: "View history",
       render: (_, props) => {
         return (
           <>
@@ -184,7 +183,6 @@ const DisplayDashboardUser = () => {
       {userLoading && <TableScalaton />}
       {userError && <SomethingWrong />}
       {allMainUser && !userLoading && !userError && (
-        // <UserListComponent tableName={""} columns={columns} row={allMainUser} />
         <CommonTable
           columns={columns}
           data={allMainUser}

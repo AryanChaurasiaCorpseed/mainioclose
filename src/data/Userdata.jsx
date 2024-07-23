@@ -20,13 +20,13 @@ export const allUserdataCol = [
   {
     dataIndex: "managers",
     title: "Manager",
-    renderCell: (_, props) =>
+    render: (_, props) =>
       props?.manager ? <Text>{props?.managers?.fullName}</Text> : "NA",
   },
   {
     dataIndex: "lockerSize",
     title: "Locker size",
-    renderCell: (_, props) => (
+    render: (_, props) => (
       <div className="flex-vert-hori-center">
         <Text>{props?.lockerSize}</Text>
         <UserLockerEdit data={props} />
@@ -36,7 +36,7 @@ export const allUserdataCol = [
   {
     dataIndex: "backupTeam",
     title: "Backup team",
-    renderCell: (_, props) => (
+    render: (_, props) => (
       <div className="flex-vert-hori-center">
         {props?.backupTeam ? (
           <Icon icon="fluent:checkmark-20-filled" color="green" />
@@ -57,7 +57,7 @@ export const deactivateUserListCol = [
       return <p className="mb-0">CORP00{props?.row?.id}</p>
     },
   },
-  { field: "fullName", headerName: "Full Name", width: 150 },
+  { field: "fullName", headerName: "Full name", width: 150 },
   { field: "email", headerName: "Email", width: 240, hideable: false },
   { field: "designation", headerName: "Designation", width: 150 },
   { field: "department", headerName: "Department", width: 150 },
@@ -73,7 +73,7 @@ export const allManagerCol = [
       return <p className="mb-0">CORP00{props?.row?.id}</p>
     },
   },
-  { field: "fullName", headerName: "Full Name", width: 150 },
+  { field: "fullName", headerName: "Full name", width: 150 },
   {
     field: "email",
     headerName: "Email",
@@ -107,7 +107,7 @@ export const allManagerCol = [
   },
   {
     field: "dateOfJoining",
-    headerName: "Joining Date",
+    headerName: "Joining date",
     width: 150,
     renderCell: (props) => (
       <p className="m-0">
@@ -119,7 +119,7 @@ export const allManagerCol = [
   },
   {
     field: "employeeId",
-    headerName: "Employee ID",
+    headerName: "Employee id",
     width: 150,
     renderCell: (props) => <ColComp data={props?.row?.employeeId} />,
   },
@@ -149,7 +149,7 @@ export const allManagerCol = [
   },
   {
     field: "panNumber",
-    headerName: "pan Number",
+    headerName: "Pan number",
     width: 150,
     renderCell: (props) => <ColComp data={props?.row?.panNumber} />,
   },
@@ -161,61 +161,61 @@ export const allManagerCol = [
   },
   {
     field: "permanentAddress",
-    headerName: "Permanent Address",
+    headerName: "Permanent address",
     width: 250,
     renderCell: (props) => <ColComp data={props?.row?.permanentAddress} />,
   },
   {
     field: "residentialAddress",
-    headerName: "Residential Address",
+    headerName: "Residential address",
     width: 250,
     renderCell: (props) => <ColComp data={props?.row?.residentialAddress} />,
   },
   {
     field: "fatherName",
-    headerName: "Father Name",
+    headerName: "Father name",
     width: 150,
     renderCell: (props) => <ColComp data={props?.row?.fatherName} />,
   },
   {
     field: "fatherContactNo",
-    headerName: "Father Contact No",
+    headerName: "Father contact no.",
     width: 150,
     renderCell: (props) => <ColComp data={props?.row?.fatherContactNo} />,
   },
   {
     field: "fatherOccupation",
-    headerName: "Father Occupation",
+    headerName: "Father occupation",
     width: 150,
     renderCell: (props) => <ColComp data={props?.row?.fatherOccupation} />,
   },
   {
     field: "motherName",
-    headerName: "Mother Name",
+    headerName: "Mother name",
     width: 150,
     renderCell: (props) => <ColComp data={props?.row?.motherName} />,
   },
   {
     field: "motherContactNo",
-    headerName: "Mother Contact No",
+    headerName: "Mother contact no.",
     width: 150,
     renderCell: (props) => <ColComp data={props?.row?.motherContactNo} />,
   },
   {
     field: "motherOccupation",
-    headerName: "Mother Occupation",
+    headerName: "Mother occupation",
     width: 150,
     renderCell: (props) => <ColComp data={props?.row?.motherOccupation} />,
   },
   {
     field: "spouseName",
-    headerName: "Spouse Name",
+    headerName: "Spouse name",
     width: 150,
     renderCell: (props) => <ColComp data={props?.row?.spouseName} />,
   },
   {
     field: "spouseContactNo",
-    headerName: "Spouse Contact No",
+    headerName: "Spouse contact no",
     width: 150,
     renderCell: (props) => <ColComp data={props?.row?.spouseContactNo} />,
   },
@@ -227,7 +227,7 @@ export const allManagerCol = [
   },
   {
     field: "emergencyNumber",
-    headerName: "Emergency Number",
+    headerName: "Emergency number",
     width: 150,
     renderCell: (props) => <ColComp data={props?.row?.emergencyNumber} />,
   },
