@@ -15,7 +15,7 @@ export const createDesigination = createAsyncThunk(
   "createDesination",
   async (data) => {
     const response = await postQuery(
-      `/leadService/api/v1/designation/createDesignation?name=${data?.name}`
+      `/leadService/api/v1/designation/createDesignation?name=${data?.name}&weight=${data?.weight}`
     )
     return response.data
   }

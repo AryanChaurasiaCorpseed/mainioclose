@@ -15,84 +15,12 @@ import { Icon } from "@iconify/react"
 
 const ProductsChange = () => {
   const { userid } = useParams()
-
-  const [addNewProduct, setAddNewProduct] = useState({
-    name: "",
-    categoryId: null,
-    userId: userid,
-    govermentfees: 0,
-    govermentCode: "",
-    govermentGst: 0,
-    professionalFees: 0,
-    professionalCode: "",
-    profesionalGst: 0,
-    serviceCharge: 0,
-    serviceCode: "",
-    serviceGst: 0,
-    otherFees: 0,
-    otherCode: "",
-    otherGst: 0,
-  })
-
-  const [nameError, setNameError] = useState(false)
-  const [catError, setcatError] = useState(false)
   const [addProductDep, setAddProductDep] = useState(false)
   const [deleteCategoryDep, setDeleteCategoryDep] = useState(false)
-
-  const nameRef = useRef()
-  const catRef = useRef()
-  const govermentfeesRef = useRef()
-  const govermentGstRef = useRef()
   const dispatch = useDispatch()
   const [form] = Form.useForm()
   const [openModal, setOpenModal] = useState(false)
-  const [btnLoading, setBtnLoading] = useState(false)
-
-  const getProductData = (e) => {
-    setAddNewProduct((prev) => ({ ...prev, [e.target.name]: e.target.value }))
-  }
-
-  const createNewProduct = async (e) => {
-    e.preventDefault()
-
-    if (nameRef.current.value === "") {
-      setNameError(true)
-      return
-    }
-
-    if (addNewProduct.categoryId === null) {
-      setcatError(true)
-      return
-    }
-
-    try {
-      const productData = await postQuery(
-        `/leadService/api/v1/product/createProduct`,
-        addNewProduct
-      )
-      setAddProductDep((prev) => !prev)
-      setAddNewProduct({
-        name: "",
-        categoryId: null,
-        userId: userid,
-        govermentfees: 0,
-        govermentCode: "",
-        govermentGst: 0,
-        professionalFees: 0,
-        professionalCode: "",
-        profesionalGst: 0,
-        serviceCharge: 0,
-        serviceCode: "",
-        serviceGst: 0,
-        otherFees: 0,
-        otherCode: "",
-        otherGst: 0,
-      })
-    } catch (err) {
-      console.log(err)
-    }
-  }
-
+ 
   const categoryUrl = `/leadService/api/v1/category/getAllCategories`
   const categoryDep = []
 
@@ -108,7 +36,7 @@ const ProductsChange = () => {
   )
 
   const ProductCol = [
-    { dataIndex: "id", title: "Employer id", fixed: "left", width: 50 },
+    { dataIndex: "id", title: "Id", fixed: "left", width: 50 },
     {
       dataIndex: "productName",
       title: "Product name",

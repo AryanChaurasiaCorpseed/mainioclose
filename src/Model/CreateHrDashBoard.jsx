@@ -104,6 +104,18 @@ const CreateHrDashBoard = ({ data, edit, modalTitle }) => {
     return Promise.resolve()
   }
 
+  const validateMobileNumber = (_, value) => {
+    const aadharPattern = /^[0-9]+$/
+    if (!value) {
+      return
+    } else if (!aadharPattern.test(value)) {
+      return Promise.reject(
+        new Error("Number should contain only numbers")
+      )
+    }
+    return Promise.resolve()
+  }
+
   const validateEmail = (dispatch) => async (_, value) => {
     if (!value) {
       return Promise.reject(new Error("Please enter the email"))
@@ -418,7 +430,11 @@ const CreateHrDashBoard = ({ data, edit, modalTitle }) => {
               >
                 <Input />
               </Form.Item>
-              <Form.Item label="Father's contact no." name="fatherContactNo">
+              <Form.Item
+                label="Father's contact no."
+                name="fatherContactNo"
+                rules={[{ validator: validateMobileNumber }]}
+              >
                 <Input />
               </Form.Item>
               <Form.Item label="Mother's occupation" name="motherOccupation">
@@ -430,7 +446,11 @@ const CreateHrDashBoard = ({ data, edit, modalTitle }) => {
               <Form.Item label="Nationality" name="nationality">
                 <Input />
               </Form.Item>
-              <Form.Item label="Emergency contact no." name="emergencyNumber">
+              <Form.Item
+                label="Emergency contact no."
+                name="emergencyNumber"
+                rules={[{ validator: validateMobileNumber }]}
+              >
                 <Input />
               </Form.Item>
               {edit && (
@@ -441,8 +461,8 @@ const CreateHrDashBoard = ({ data, edit, modalTitle }) => {
                 >
                   <Select
                     options={[
-                      { label: "True", value: 1 },
-                      { label: "False", value: 2 },
+                      { label: "True", value: true },
+                      { label: "False", value: false },
                     ]}
                     showSearch
                     allowClear
@@ -560,10 +580,18 @@ const CreateHrDashBoard = ({ data, edit, modalTitle }) => {
               >
                 <Input />
               </Form.Item>
-              <Form.Item label="Mother's contact no." name="motherContactNo">
+              <Form.Item
+                label="Mother's contact no."
+                name="motherContactNo"
+                rules={[{ validator: validateMobileNumber }]}
+              >
                 <Input />
               </Form.Item>
-              <Form.Item label="Spouse contact number" name="spouseContactNo">
+              <Form.Item
+                label="Spouse contact number"
+                name="spouseContactNo"
+                rules={[{ validator: validateMobileNumber }]}
+              >
                 <Input />
               </Form.Item>
               <Form.Item label="Language" name="language">
@@ -582,8 +610,8 @@ const CreateHrDashBoard = ({ data, edit, modalTitle }) => {
                 >
                   <Select
                     options={[
-                      { label: "True", value: 1 },
-                      { label: "False", value: 2 },
+                      { label: "True", value: true },
+                      { label: "False", value: false },
                     ]}
                     showSearch
                     allowClear

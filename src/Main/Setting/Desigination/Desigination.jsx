@@ -1,4 +1,4 @@
-import { Button, Form, Input, Modal, notification } from "antd"
+import { Button, Form, Input, Modal, notification, Select } from "antd"
 import React, { useCallback, useEffect, useState } from "react"
 import CommonTable from "../../../components/CommonTable"
 import MainHeading from "../../../components/design/MainHeading"
@@ -22,20 +22,29 @@ const Desigination = () => {
       dispatch(createAuthDesigination(values)).then((resp) => {
         if (resp.meta.requestStatus === "fulfilled") {
           const temp = resp?.payload?.data
-          dispatch(createDesigination({ name: temp?.name })).then((info) => {
-            if (info.meta.requestStatus === "fulfilled") {
-              notification.success({
-                message: "Desigination created successfully",
-              })
-              setOpenModal(false)
-              dispatch(getAllDesiginations())
-            } else if (info.meta.requestStatus === "rejected") {
+          dispatch(
+            createDesigination(values)
+          )
+            .then((info) => {
+              if (info.meta.requestStatus === "fulfilled") {
+                notification.success({
+                  message: "Desigination created successfully",
+                })
+                setOpenModal(false)
+                dispatch(getAllDesiginations())
+              } else if (info.meta.requestStatus === "rejected") {
+                notification.success({
+                  message: "Something went wrong",
+                })
+                setOpenModal(false)
+              }
+            })
+            .catch(() => {
               notification.success({
                 message: "Something went wrong",
               })
               setOpenModal(false)
-            }
-          })
+            })
         }
       })
     },
@@ -53,6 +62,10 @@ const Desigination = () => {
     {
       title: "Desigination",
       dataIndex: "name",
+    },
+    {
+      title: "Weight value",
+      dataIndex: "weightValue",
     },
   ]
   return (
@@ -92,6 +105,66 @@ const Desigination = () => {
             ]}
           >
             <Input />
+          </Form.Item>
+          <Form.Item
+            label="Weight "
+            name="weight"
+            rules={[
+              {
+                required: true,
+                message: "please select the weight for the desigination ",
+              },
+            ]}
+          >
+            <Select
+              options={[
+                {
+                  label: "1",
+                  value: 1,
+                },
+                {
+                  label: "2",
+                  value: 2,
+                },
+                {
+                  label: "3",
+                  value: 3,
+                },
+                {
+                  label: "4",
+                  value: 4,
+                },
+                {
+                  label: "5",
+                  value: 5,
+                },
+                {
+                  label: "6",
+                  value: 6,
+                },
+                {
+                  label: "7",
+                  value: 7,
+                },
+                {
+                  label: "8",
+                  value: 8,
+                },
+                {
+                  label: "9",
+                  value: 9,
+                },
+                {
+                  label: "10",
+                  value: 10,
+                },
+              ]}
+              filterOption={(input, option) =>
+                option.label.toLowerCase().includes(input.toLowerCase())
+              }
+              allowClear
+              showSearch
+            />
           </Form.Item>
         </Form>
       </Modal>

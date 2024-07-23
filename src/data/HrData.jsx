@@ -7,31 +7,34 @@ export const hrUserData = [
   {
     dataIndex: "id",
     title: "Employer id",
-    fixed:'left',
-    width:120,
+    fixed: "left",
+    width: 120,
     render: (_, props) => {
       return <Text>CORP00{props?.id}</Text>
     },
   },
-  { dataIndex: "fullName", title: "Full name",fixed:'left' },
+  { dataIndex: "fullName", title: "Full name", fixed: "left" },
   {
     dataIndex: "email",
     title: "Email",
-    width:300,
+    width: 300,
     render: (_, props) => <Text>{props?.email} </Text>,
   },
   {
     dataIndex: "designation",
     title: "Designation",
+    render: (_, data) => <Text>{data?.userDesignation?.name}</Text>,
   },
   {
     dataIndex: "department",
     title: "Department",
+    render: (_, data) => <Text>{data?.userDepartment?.name}</Text>,
   },
 
   {
     dataIndex: "role",
     title: "Role",
+    render:(_,data)=><Text>{data?.role?.[0]}</Text>
   },
   {
     dataIndex: "aadharCard",
