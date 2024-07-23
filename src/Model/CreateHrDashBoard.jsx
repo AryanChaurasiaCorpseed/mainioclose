@@ -109,9 +109,7 @@ const CreateHrDashBoard = ({ data, edit, modalTitle }) => {
     if (!value) {
       return
     } else if (!aadharPattern.test(value)) {
-      return Promise.reject(
-        new Error("Number should contain only numbers")
-      )
+      return Promise.reject(new Error("Number should contain only numbers"))
     }
     return Promise.resolve()
   }
@@ -485,11 +483,11 @@ const CreateHrDashBoard = ({ data, edit, modalTitle }) => {
                     message: "",
                   },
                   {
-                    validator: validateEmail(dispatch),
+                    validator: !edit && validateEmail(dispatch),
                   },
                 ]}
               >
-                <Input />
+                <Input disabled={edit} />
               </Form.Item>
               <Form.Item
                 label="Department"
