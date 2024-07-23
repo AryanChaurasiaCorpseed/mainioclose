@@ -59,7 +59,7 @@ const Department = () => {
       <div className="mt-4 setting-table">
         <div className="table-responsive">
           <CommonTable
-            data={departmentList}
+            data={departmentList?.length > 0 ? departmentList : []}
             columns={columns}
             scroll={{ y: 550 }}
           />
