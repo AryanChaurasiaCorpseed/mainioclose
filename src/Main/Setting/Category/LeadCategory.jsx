@@ -126,39 +126,6 @@ const LeadCategory = () => {
             columns={columns}
             scroll={{ y: 550 }}
           />
-          {/* <table className="table">
-            <thead>
-              <tr>
-                <th scope="col">id</th>
-                <th scope="col">Name</th>
-                <th scope="col">Created Date</th>
-                <th scope="col">Document</th>
-                <th scope="col">Delete</th>
-              </tr>
-            </thead>
-            <tbody>
-              {categoryLoading ? (
-                <SmallTableScalaton />
-              ) : (
-                categoryData.map((status, index) => (
-                  <tr key={index}>
-                    <th>{status.id}</th>
-                    <td>{status?.categoryName}</td>
-                    <td>{new Date(status.createdDate).toLocaleDateString()}</td>
-                    <td><DocumentModal document={status?.documents} /></td>
-                    <td>
-                      <Button
-                        size="small"
-                        onClick={() => deleteCategoryFun(status.id)}
-                      >
-                        <i className="fa-solid gray-cl fa-trash"></i>
-                      </Button>
-                    </td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table> */}
         </div>
       </div>
       <Modal

@@ -1,4 +1,4 @@
-import { Form, Input, Modal, TimePicker } from "antd"
+import { Button, Form, Input, Modal, TimePicker } from "antd"
 import React, { useCallback, useState } from "react"
 import { useDispatch } from "react-redux"
 import { createIvr } from "../Toolkit/Slices/IvrSlice"
@@ -34,14 +34,9 @@ const CreateNEditIVR = () => {
   )
   return (
     <>
-      <button
-        className="team-edit-button create-user-btn"
-        onClick={() => setOpenModal(true)}
-      >
-        <i className="fa-solid mr-1 fa-circle-plus"></i>
-      </button>
+      <Button type="primary" onClick={() => setOpenModal(true)}>Add ivr</Button>
       <Modal
-        title="Add Ivr"
+        title="Add ivr"
         open={openModal}
         centered
         onCancel={() => setOpenModal(false)}
@@ -50,14 +45,14 @@ const CreateNEditIVR = () => {
       >
         <Form form={form} layout="vertical" onFinish={handleFinish}>
           <Form.Item
-            label="Agent Name"
+            label="Agent name"
             name="agentName"
             rules={[{ required: true, message: "please enter agent name" }]}
           >
             <Input />
           </Form.Item>
           <Form.Item
-            label="Agent Phone Number"
+            label="Agent phone number"
             name="aggentNumber"
             rules={[
               { required: true, message: "please enter agent phone number" },
@@ -67,7 +62,7 @@ const CreateNEditIVR = () => {
             <Input />
           </Form.Item>
           <Form.Item
-            label="Caller Number"
+            label="Caller number"
             name="callerNumber"
             rules={[
               {
@@ -81,14 +76,14 @@ const CreateNEditIVR = () => {
           </Form.Item>
 
           <Form.Item
-            label="Start Time"
+            label="Start time"
             name="startTime"
             rules={[{ required: true, message: "please enter start time" }]}
           >
             <TimePicker use12Hours format="h:mm a" style={{ width: "100%" }} />
           </Form.Item>
           <Form.Item
-            label="End Time"
+            label="End time"
             name="endTime"
             rules={[{ required: true, message: "please enter start time" }]}
           >
@@ -102,7 +97,7 @@ const CreateNEditIVR = () => {
             <Input />
           </Form.Item>
           <Form.Item
-            label="Call Recording  Url"
+            label="Call recording  url"
             name="callRecordingUrl"
             rules={[
               {

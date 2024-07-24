@@ -142,6 +142,8 @@ const CreateHrDashBoard = ({ data, edit, modalTitle }) => {
 
   const handleEdit = useCallback(() => {
     setOpenModal(true)
+    dispatch(getDesiginationById(data?.userDepartment?.id))
+    dispatch(getManagerById(data?.userDepartment?.id))
     form.setFieldsValue({
       userName: data?.fullName,
       email: data.email,
@@ -153,7 +155,8 @@ const CreateHrDashBoard = ({ data, edit, modalTitle }) => {
       managerId: data?.managerId,
       expInMonth: data?.expInMonth,
       expInYear: data?.expInYear,
-      dateOfJoining: dayjs(data?.dateOfJoining),
+      dateOfJoining:
+        data?.dateOfJoining === null ? dayjs() : dayjs(data?.dateOfJoining),
       type: data?.type,
       fatherName: data?.fatherName,
       fatherOccupation: data?.a?.fatherOccupation,

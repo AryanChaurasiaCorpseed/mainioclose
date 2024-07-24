@@ -50,18 +50,19 @@ export const allUserdataCol = [
 
 export const deactivateUserListCol = [
   {
-    field: "id",
-    headerName: "ID",
-    width: 150,
-    renderCell: (props) => {
-      return <p className="mb-0">CORP00{props?.row?.id}</p>
+    dataIndex: "id",
+    title: "Id",
+    fixed: "left",
+    width: 120,
+    render: (_, props) => {
+      return <Text>CORP00{props?.id}</Text>
     },
   },
-  { field: "fullName", headerName: "Full name", width: 150 },
-  { field: "email", headerName: "Email", width: 240, hideable: false },
-  { field: "designation", headerName: "Designation", width: 150 },
-  { field: "department", headerName: "Department", width: 150 },
-  { field: "role", headerName: "Role", width: 150 },
+  { dataIndex: "fullName", title: "Full name", width: 150, fixed: "left" },
+  { dataIndex: "email", title: "Email" },
+  { dataIndex: "designation", title: "Designation" },
+  { dataIndex: "department", title: "Department" },
+  { dataIndex: "role", title: "Role" },
 ]
 
 export const allManagerCol = [

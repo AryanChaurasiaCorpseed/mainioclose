@@ -11,6 +11,7 @@ import {
   updateUserData,
 } from "../Toolkit/Slices/UsersSlice"
 import { Icon } from "@iconify/react"
+import { getDesiginationById } from "../Toolkit/Slices/CommonSlice"
 toast.configure()
 
 const CreateuserDashboard = ({ data, type, modalText, edit }) => {
@@ -21,12 +22,14 @@ const CreateuserDashboard = ({ data, type, modalText, edit }) => {
   const leadUsers = useSelector((state) => state.user.leadUserList)
   const departmentList = useSelector((state) => state?.setting?.allDepartment)
   const desiginationList = useSelector(
-    (state) => state.setting.desiginationList
+    (state) => state.common.desiginationListById
   )
+
   const allRoles = useSelector((state) => state.user.allRoles)
 
   const editUserDetails = useCallback(() => {
     setOpenModal(true)
+    dispatch(getDesiginationById(data?.userDepartment?.id))
     form.setFieldsValue({
       userName: data?.fullName,
       email: data?.email,
@@ -198,32 +201,6 @@ const CreateuserDashboard = ({ data, type, modalText, edit }) => {
             />
           </Form.Item>
           <Form.Item
-            label="Desigination"
-            name="designationId"
-            rules={[
-              {
-                required: true,
-                message: "please select desigination",
-              },
-            ]}
-          >
-            <Select
-              showSearch
-              allowClear
-              options={
-                desiginationList?.length > 0
-                  ? desiginationList?.map((ele) => ({
-                      label: ele?.name,
-                      value: ele?.id,
-                    }))
-                  : []
-              }
-              filterOption={(input, option) =>
-                option.label.toLowerCase().includes(input.toLowerCase())
-              }
-            />
-          </Form.Item>
-          <Form.Item
             label="Department"
             name="departmentId"
             rules={[
@@ -239,6 +216,33 @@ const CreateuserDashboard = ({ data, type, modalText, edit }) => {
               options={
                 departmentList?.length > 0
                   ? departmentList?.map((ele) => ({
+                      label: ele?.name,
+                      value: ele?.id,
+                    }))
+                  : []
+              }
+              onChange={(e) => dispatch(getDesiginationById(e))}
+              filterOption={(input, option) =>
+                option.label.toLowerCase().includes(input.toLowerCase())
+              }
+            />
+          </Form.Item>
+          <Form.Item
+            label="Desigination"
+            name="designationId"
+            rules={[
+              {
+                required: true,
+                message: "please select desigination",
+              },
+            ]}
+          >
+            <Select
+              showSearch
+              allowClear
+              options={
+                desiginationList?.length > 0
+                  ? desiginationList?.map((ele) => ({
                       label: ele?.name,
                       value: ele?.id,
                     }))

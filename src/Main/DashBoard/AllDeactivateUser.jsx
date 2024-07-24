@@ -6,6 +6,8 @@ import { useDispatch, useSelector } from "react-redux"
 import { allDeactivateUserFun } from "../../Toolkit/Slices/UsersSlice"
 import SomethingWrong from "../../components/usefulThings/SomethingWrong"
 import TableScalaton from "../../components/TableScalaton"
+import CommonTable from "../../components/CommonTable"
+import { Button } from "antd"
 
 const UserListComponent = React.lazy(() =>
   import(`../../Tables/UserListComponent`)
@@ -44,17 +46,11 @@ const AllDeactivateUser = () => {
   const columns = [
     ...deactivateUserListCol,
     {
-      field: "Action",
-      headerName: "Action",
-      width: 150,
-      renderCell: (props) => {
+      dataIndex: "Action",
+      title: "Action",
+      render: (_, props) => {
         return (
-          <button
-            className="common-btn-one"
-            onClick={() => activateUserFun(props?.row?.id)}
-          >
-            Activate
-          </button>
+          <Button onClick={() => activateUserFun(props?.id)}>Activate</Button>
         )
       },
     },
@@ -69,11 +65,17 @@ const AllDeactivateUser = () => {
         {userDeactivateError && <SomethingWrong />}
         {!userDeactivateError && (
           <Suspense fallback={<TableScalaton />}>
-            <UserListComponent
+            {/* <UserListComponent
               tableName={""}
               columns={columns}
               getRowId={(row) => row.companyId}
               row={allDeactivateUsers}
+            /> */}
+
+            <CommonTable
+              data={allDeactivateUsers}
+              columns={columns}
+              scroll={{ y: 600, x: 1500 }}
             />
           </Suspense>
         )}

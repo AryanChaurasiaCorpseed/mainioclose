@@ -9,7 +9,7 @@ export const addNewRating = createAsyncThunk(
       `/leadService/api/v1/rating/addUserAndRating`,
       data
     )
-    return createRating?.data
+    return createRating
   }
 )
 

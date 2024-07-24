@@ -29,6 +29,11 @@ export const editUrls = createAsyncThunk("editUrls", async (data) => {
   return respose.data
 })
 
+export const getAllUrlList=createAsyncThunk('allUrlsList',async()=>{
+  const response=await getQuery(`/leadService/api/v1/urls/getAllUrls`)
+  return response.data
+})
+
 export const LeadUrlSlice = createSlice({
   name: "leadurls",
   initialState: {
@@ -39,6 +44,7 @@ export const LeadUrlSlice = createSlice({
     allLeadUrlLoading: false,
     allLeadUrlError: false,
     page: 0,
+    allUrlList:[]
   },
   reducers: {
     handleNextPagination: (state, action) => {
@@ -73,6 +79,20 @@ export const LeadUrlSlice = createSlice({
       state.createLeadUrlError = false
     })
     builder.addCase(createAllUrlAction.rejected, (state, action) => {
+      state.createLeadUrlError = true
+      state.createLeadUrlLoading = false
+    })
+
+    builder.addCase(getAllUrlList.pending, (state, action) => {
+      state.createLeadUrlLoading = true
+      state.createLeadUrlError = false
+    })
+    builder.addCase(getAllUrlList.fulfilled, (state, action) => {
+      state.allUrlList = action.payload
+      state.createLeadUrlLoading = false
+      state.createLeadUrlError = false
+    })
+    builder.addCase(getAllUrlList.rejected, (state, action) => {
       state.createLeadUrlError = true
       state.createLeadUrlLoading = false
     })

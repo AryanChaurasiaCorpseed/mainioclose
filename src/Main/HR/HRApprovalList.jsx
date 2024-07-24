@@ -9,7 +9,9 @@ import TableScalaton from "../../components/TableScalaton"
 import SomethingWrong from "../../components/usefulThings/SomethingWrong"
 import { ApproveduserByHr } from "../../Toolkit/Slices/ApprovedStatus"
 import CommonTable from "../../components/CommonTable"
-import { Typography } from "antd"
+import { Button, Typography } from "antd"
+import { Icon } from "@iconify/react"
+import CreateHrDashBoard from "../../Model/CreateHrDashBoard"
 const { Text } = Typography
 
 const HRApprovalList = () => {
@@ -43,36 +45,36 @@ const HRApprovalList = () => {
     {
       dataIndex: "email",
       title: "Email",
-      render: (props) => <ColComp data={props?.row?.email} />,
+      render: (_, props) => <ColComp data={props?.email} />,
     },
     {
       dataIndex: "designation",
       title: "Designation",
-      render: (props) => <ColComp data={props?.row?.designation} />,
+      render: (_, props) => <ColComp data={props?.designation} />,
     },
     {
       dataIndex: "department",
       title: "Department",
-      render: (props) => <ColComp data={props?.row?.department} />,
+      render: (_, props) => <ColComp data={props?.department} />,
     },
 
     {
       dataIndex: "role",
       title: "Role",
-      render: (props) => <ColComp data={props?.row?.role} />,
+      render: (_, props) => <ColComp data={props?.role} />,
     },
     {
       dataIndex: "aadharCard",
       title: "Aadhar card",
-      render: (props) => <ColComp data={props?.row?.aadharCard} />,
+      render: (_, props) => <ColComp data={props?.aadharCard} />,
     },
     {
       dataIndex: "dateOfJoining",
       title: "Joining date",
-      render: (props) => (
+      render: (_, props) => (
         <Text>
-          {props?.row?.dateOfJoining
-            ? new Date(props?.row?.dateOfJoining)?.toLocaleDateString()
+          {props?.dateOfJoining
+            ? new Date(props?.dateOfJoining)?.toLocaleDateString()
             : "NA"}
         </Text>
       ),
@@ -80,130 +82,121 @@ const HRApprovalList = () => {
     {
       dataIndex: "employeeId",
       title: "Employee id",
-      render: (props) => <ColComp data={props?.row?.employeeId} />,
+      render: (_, props) => <ColComp data={props?.employeeId} />,
     },
     {
       dataIndex: "epfNo",
       title: "Employee id",
-      render: (props) => <ColComp data={props?.row?.epfNo} />,
+      render: (_, props) => <ColComp data={props?.epfNo} />,
     },
     {
       dataIndex: "experience",
       title: "Experience",
-      render: (props) => (
+      render: (_, props) => (
         <Text>
-          {props?.row?.expInYear ? props?.row?.expInYear + " years" : "NA"} and{" "}
-          {props?.row?.expInMonth ? props?.row?.expInMonth + " months" : "NA"}
+          {props?.expInYear ? props?.row?.expInYear + " years" : "NA"} and{" "}
+          {props?.expInMonth ? props?.row?.expInMonth + " months" : "NA"}
         </Text>
       ),
     },
     {
       dataIndex: "managers",
       title: "Manager",
-      render: (props) => <ColComp data={props?.row?.managers?.fullName} />,
+      render: (_, props) => <ColComp data={props?.managers?.fullName} />,
     },
     {
       dataIndex: "panNumber",
       title: "Pan number",
-      render: (props) => <ColComp data={props?.row?.panNumber} />,
+      render: (_, props) => <ColComp data={props?.panNumber} />,
     },
     {
       dataIndex: "nationality",
       title: "Nationality",
-      render: (props) => <ColComp data={props?.row?.nationality} />,
+      render: (_, props) => <ColComp data={props?.nationality} />,
     },
     {
       dataIndex: "permanentAddress",
       title: "Permanent address",
-      render: (props) => <ColComp data={props?.row?.permanentAddress} />,
+      render: (_, props) => <ColComp data={props?.permanentAddress} />,
     },
     {
       dataIndex: "residentialAddress",
       title: "Residential address",
-      render: (props) => <ColComp data={props?.row?.residentialAddress} />,
+      render: (_, props) => <ColComp data={props?.residentialAddress} />,
     },
     {
       dataIndex: "fatherName",
       title: "Father name",
-      render: (props) => <ColComp data={props?.row?.fatherName} />,
+      render: (_, props) => <ColComp data={props?.fatherName} />,
     },
     {
       dataIndex: "fatherContactNo",
       title: "Father contact no.",
-      render: (props) => <ColComp data={props?.row?.fatherContactNo} />,
+      render: (_, props) => <ColComp data={props?.fatherContactNo} />,
     },
     {
       dataIndex: "fatherOccupation",
       title: "Father occupation",
-      render: (props) => <ColComp data={props?.row?.fatherOccupation} />,
+      render: (_, props) => <ColComp data={props?.fatherOccupation} />,
     },
     {
       dataIndex: "motherName",
       title: "Mother name",
-      render: (props) => <ColComp data={props?.row?.motherName} />,
+      render: (_, props) => <ColComp data={props?.motherName} />,
     },
     {
       dataIndex: "motherContactNo",
       title: "Mother contact no.",
-      render: (props) => <ColComp data={props?.row?.motherContactNo} />,
+      render: (_, props) => <ColComp data={props?.motherContactNo} />,
     },
     {
       dataIndex: "motherOccupation",
       title: "Mother occupation",
-      render: (props) => <ColComp data={props?.row?.motherOccupation} />,
+      render: (_, props) => <ColComp data={props?.motherOccupation} />,
     },
     {
       dataIndex: "spouseName",
       title: "Spouse name",
-      render: (props) => <ColComp data={props?.row?.spouseName} />,
+      render: (_, props) => <ColComp data={props?.spouseName} />,
     },
     {
       dataIndex: "spouseContactNo",
       title: "Spouse contact no.",
-      render: (props) => <ColComp data={props?.row?.spouseContactNo} />,
+      render: (_, props) => <ColComp data={props?.spouseContactNo} />,
     },
     {
       dataIndex: "language",
       title: "Language",
-      render: (props) => <ColComp data={props?.row?.language} />,
+      render: (_, props) => <ColComp data={props?.language} />,
     },
     {
       dataIndex: "emergencyNumber",
       title: "Emergency number",
-      render: (props) => <ColComp data={props?.row?.emergencyNumber} />,
+      render: (_, props) => <ColComp data={props?.emergencyNumber} />,
     },
 
     {
       dataIndex: "Action",
       title: "Action",
-      render: (props) => {
+      render: (_, props) => {
         return (
-          <>
-            <button
-              className="common-btn-one mr-2"
-              data-toggle="modal"
-              data-target="#createhrdashboard"
-              onClick={() => approvedUserFun("data")}
-            >
-              Edit
-            </button>
-          </>
+          <CreateHrDashBoard
+            data={props}
+            edit={true}
+            modalTitle={"Edit user"}
+          />
         )
       },
     },
-
     {
       dataIndex: "Approved",
       title: "Appproved",
-      render: (props) => {
+      render: (_, props) => {
         return (
-          <button
-            className="common-btn-one mr-2"
-            onClick={() => approvedUserFun(props.row.id)}
-          >
-            {hrLoading ? "Please Wait..." : "Approved"}{" "}
-            <i className="fa-solid mr-2 fa-check"></i>
-          </button>
+          <Button onClick={() => approvedUserFun(props.id)}>
+            {hrLoading ? "Please Wait..." : "Approved"}
+            <Icon icon="fluent:checkmark-20-filled" color="green" />
+          </Button>
         )
       },
     },
@@ -224,11 +217,6 @@ const HRApprovalList = () => {
         {userHRLoading && <TableScalaton />}
         {userHRError && <SomethingWrong />}
         {hrApprovalUser && !userHRLoading && !userHRError && (
-          // <UserListComponent
-          //   tableName={""}
-          //   columns={columns}
-          //   row={hrApprovalUser}
-          // />
           <CommonTable
             data={hrApprovalUser}
             columns={columns}

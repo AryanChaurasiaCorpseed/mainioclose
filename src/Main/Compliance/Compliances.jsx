@@ -6,14 +6,15 @@ import UserListComponent from "../../Tables/UserListComponent"
 import TableScalaton from "../../components/TableScalaton"
 import SomethingWrong from "../../components/usefulThings/SomethingWrong"
 import MainHeading from "../../components/design/MainHeading"
-import './Compliance.scss'
+import "./Compliance.scss"
 import { ViewComplianceDoc } from "./ViewComplianceDoc"
+import CommonTable from "../../components/CommonTable"
 
 const Compliances = () => {
   const { allCompliance, complianceLoading, complianceError } = useSelector(
     (prev) => prev?.compliance
   )
-  const dispatch = useDispatch() 
+  const dispatch = useDispatch()
 
   useEffect(() => {
     dispatch(getAllCompliances())
@@ -21,41 +22,32 @@ const Compliances = () => {
 
   const columns = [
     {
-      field: "id",
-      headerName: "ID",
-      width: 80,
+      dataIndex: "id",
+      title: "Id",
     },
     {
-      field: "name",
-      headerName: "Catagory Name",
-      width: 250,
+      dataIndex: "name",
+      title: "Catagory name",
     },
     {
-      field: "documents",
-      headerName: "Documents",
-      width: 250,
-      renderCell: (props) => <ViewComplianceDoc data={props?.row} />,
+      dataIndex: "documents",
+      title: "Documents",
+      render: (_, props) => <ViewComplianceDoc data={props} />,
     },
   ]
   return (
     <TableOutlet>
       <div className="create-user-box">
         <MainHeading data={"All compliances"} />
-        <button
-          className="team-edit-button create-user-btn"
-          // onClick={() => setHidebox((prev) => !prev)}
-        >
-          <i className="fa-solid mr-1 fa-circle-plus"></i>
-        </button>
       </div>
       <div>
         {complianceLoading && <TableScalaton />}
         {complianceError && <SomethingWrong />}
         {allCompliance && !complianceLoading && !complianceError && (
-          <UserListComponent
-            tableName={""}
+          <CommonTable
+            data={allCompliance}
             columns={columns}
-            row={allCompliance}
+            scroll={{ y: 600 }}
           />
         )}
       </div>

@@ -7,6 +7,7 @@ import SomethingWrong from "../../components/usefulThings/SomethingWrong"
 import UserListComponent from "../../Tables/UserListComponent"
 import { getAllIvr } from "../../Toolkit/Slices/IvrSlice"
 import CreateNEditIVR from "../../Model/CreateNEditIVR"
+import CommonTable from "../../components/CommonTable"
 
 const IVR = () => {
   const { allIvr, ivrLoading, ivrError } = useSelector((prev) => prev?.ivr)
@@ -18,35 +19,38 @@ const IVR = () => {
 
   const columns = [
     {
-      field: "id",
-      headerName: "ID",
+      dataIndex: "id",
+      title: "Id",
+      fixed: "left",
       width: 80,
     },
     {
-      field: "agentName",
-      headerName: "Agent Name",
-      width: 250,
+      dataIndex: "agentName",
+      title: "Agent name",
+      fixed: "left",
+      width:250,
     },
     {
-      field: "callerName",
-      headerName: "Caller Name",
-      width: 250,
+      dataIndex: "callerName",
+      title: "Caller name"
     },
     {
-      field: "startTime",
-      headerName: "Start Time",
-      width: 150,
+      dataIndex: "startTime",
+      title: "Start time",
     },
     {
-      field: "endTime",
-      headerName: "End Time",
-      width: 150,
+      dataIndex: "endTime",
+      title: "End time",
     },
     {
-      field: "recording",
-      headerName: "Recording",
-      width: 350,
-      renderCell: (props) => (
+      dataIndex: "duration",
+      title: "Duration",
+    },
+    {
+      dataIndex: "recording",
+      title: "Recording",
+      width:400,
+      render: (_, props) => (
         <audio controls className="audio-player" style={{ height: "40px" }}>
           <source
             src="https://www.learningcontainer.com/wp-content/uploads/2020/02/Kalimba.mp3"
@@ -55,11 +59,7 @@ const IVR = () => {
         </audio>
       ),
     },
-    {
-      field: "duration",
-      headerName: "Duration",
-      width: 150,
-    },
+   
   ]
   return (
     <TableOutlet>
@@ -71,7 +71,11 @@ const IVR = () => {
         {ivrLoading && <TableScalaton />}
         {ivrError && <SomethingWrong />}
         {allIvr && !ivrLoading && !ivrError && (
-          <UserListComponent tableName={""} columns={columns} row={allIvr} />
+          <CommonTable
+            data={allIvr}
+            columns={columns}
+            scroll={{ y: 600,x:1200 }}
+          />
         )}
       </div>
     </TableOutlet>

@@ -31,7 +31,7 @@ const CreateCompanyModal = () => {
   return (
     <>
       <Button type="primary" onClick={() => setModalOpen(true)}>
-        <Icon icon="fluent:add-20-regular" /> Create
+        Create company
       </Button>
       <Modal
         title="Create company"
