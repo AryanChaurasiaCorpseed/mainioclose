@@ -1,14 +1,11 @@
 import { Button, Form, Input, Modal, Select, Switch } from "antd"
 import React, { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import { useParams } from "react-router-dom"
 import { createCompany } from "../Toolkit/Slices/CompanySlice"
-import { Icon } from "@iconify/react"
 import { getAllUsers } from "../Toolkit/Slices/UsersSlice"
 
 const CreateCompanyModal = () => {
   const dispatch = useDispatch()
-  const { userid } = useParams()
   const [openModal, setModalOpen] = useState(false)
   const [form] = Form.useForm()
   const allLeadList = useSelector((state) => state.leads.allLeadsWithLabel)
@@ -26,7 +23,6 @@ const CreateCompanyModal = () => {
     dispatch(createCompany(values))
     setModalOpen(false)
   }
-  console.log("sdvashkvj", allUsers)
 
   return (
     <>

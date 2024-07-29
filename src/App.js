@@ -60,6 +60,7 @@ import Comments from "./Main/Setting/Comments/Comments"
 import { lazy, Suspense } from "react"
 import Desigination from "./Main/Setting/Desigination/Desigination"
 import Department from "./Main/Setting/Department/Department"
+import CompanyForm from "./Main/Accounts/CompanyForm"
 const SpinLoading = lazy(() => import("./components/SpinLoading"))
 
 function App() {
@@ -88,6 +89,13 @@ function App() {
           },
           Popconfirm: {
             fontSize: 13,
+          },
+          Select: {
+            fontSize: 13,
+          },
+          Divider: {
+            colorSplit: "gray",
+            margin: 4,
           },
         },
       }}
@@ -175,6 +183,7 @@ function App() {
               {/* accounts module routes */}
               <Route path="/erp/:userid/account" element={<Accounts />}>
                 <Route path="" element={<AccountsList />} />
+                <Route path="companyForm" element={<CompanyForm />} />
                 <Route
                   path="accounttwo"
                   element={<div>account second page</div>}

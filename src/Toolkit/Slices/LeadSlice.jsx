@@ -235,6 +235,50 @@ export const editViewData = createAsyncThunk("editViewData", async (leadid) => {
   return response.data
 })
 
+export const getCompanyDetailsByLeadId = createAsyncThunk(
+  "getCompanyDetailsByLeadId",
+  async (id) => {
+    const response = await getQuery(
+      `/leadService/api/v1/company/checkCompanyExist?leadId=${id}`
+    )
+    return response.data
+  }
+)
+
+export const getCompanyUnitsById=createAsyncThunk('getCompanyUnits',async(id)=>{
+  const response=await getQuery(`/leadService/api/v1/company/getAllCompanyUnit?id=${id}`)
+  return response.data
+})
+
+export const getCompanyDetailsByGst=createAsyncThunk('getCompanyDetailsByGst',async(gst)=>{
+  const response=await getQuery(`/leadService/api/v1/company/getCompanyByGst?gst=${gst}`)
+  return response.data
+})
+export const getCompanyByUnitId=createAsyncThunk('getCompanyByUnitId',async(id)=>{
+  const response = await getQuery(`/leadService/api/v1/company/getCompanyById?id=${id}`)
+  return response.data
+})
+
+export const getAllContactDetails=createAsyncThunk('getAllContactDetail',async()=>{
+  const response=await getQuery(`/leadService/api/v1/contact/getAllContact`)
+  return response.data
+})
+
+export const getContactById=createAsyncThunk(`contactById`,async(id)=>{
+  const response=await getQuery(`/leadService/api/v1/contact/getContactById?id=${id}`)
+  return response.data
+})
+
+export const createCompanyForm=createAsyncThunk('createCompanyForm',async(data)=>{
+  const response=await postQuery(`/leadService/api/v1/company/createCompanyForm`,data)
+  return response.data
+})
+
+export const updateStatusById=createAsyncThunk('updateStatebyid',async(data)=>{
+  const response=await putQuery(`/leadService/api/v1/company/updateCompanyStatus?status=${data?.status}&id=${data?.id}`)
+  return response.data
+})
+
 export const LeadSlice = createSlice({
   name: "lead",
   initialState: {
@@ -254,6 +298,12 @@ export const LeadSlice = createSlice({
     getAllLeadUserData: [],
     categoryData: [],
     getAllStatus: [],
+    companyDetailsById:{},
+    companyUnits:[],
+    companyDetailsByGst:[],
+    companyDetailByUnitId:{},
+    allContactList:[],
+    contactDetail:{}
   },
   reducers: {
     handleLoadingState: (state, action) => {
@@ -375,6 +425,77 @@ export const LeadSlice = createSlice({
     builder.addCase(getAllStatusData.rejected, (state, action) => {
       state.loading = "rejected"
     })
+
+    builder.addCase(getCompanyDetailsByLeadId.pending, (state, action) => {
+      state.loading = "pending"
+    })
+    builder.addCase(getCompanyDetailsByLeadId.fulfilled, (state, action) => {
+      state.loading = "success"
+      state.companyDetailsById = action.payload
+    })
+    builder.addCase(getCompanyDetailsByLeadId.rejected, (state, action) => {
+      state.loading = "rejected"
+    })
+
+    builder.addCase(getCompanyUnitsById.pending, (state, action) => {
+      state.loading = "pending"
+    })
+    builder.addCase(getCompanyUnitsById.fulfilled, (state, action) => {
+      state.loading = "success"
+      state.companyUnits = action.payload
+    })
+    builder.addCase(getCompanyUnitsById.rejected, (state, action) => {
+      state.loading = "rejected"
+    })
+
+
+    builder.addCase(getCompanyDetailsByGst.pending, (state, action) => {
+      state.loading = "pending"
+    })
+    builder.addCase(getCompanyDetailsByGst.fulfilled, (state, action) => {
+      state.loading = "success"
+      state.companyDetailsByGst = action.payload
+    })
+    builder.addCase(getCompanyDetailsByGst.rejected, (state, action) => {
+      state.loading = "rejected"
+    })
+
+    
+    builder.addCase(getCompanyByUnitId.pending, (state, action) => {
+      state.loading = "pending"
+    })
+    builder.addCase(getCompanyByUnitId.fulfilled, (state, action) => {
+      state.loading = "success"
+      state.companyDetailByUnitId = action.payload
+    })
+    builder.addCase(getCompanyByUnitId.rejected, (state, action) => {
+      state.loading = "rejected"
+    })
+
+
+    builder.addCase(getAllContactDetails.pending, (state, action) => {
+      state.loading = "pending"
+    })
+    builder.addCase(getAllContactDetails.fulfilled, (state, action) => {
+      state.loading = "success"
+      state.allContactList = action.payload
+    })
+    builder.addCase(getAllContactDetails.rejected, (state, action) => {
+      state.loading = "rejected"
+    })
+
+    builder.addCase(getContactById.pending, (state, action) => {
+      state.loading = "pending"
+    })
+    builder.addCase(getContactById.fulfilled, (state, action) => {
+      state.loading = "success"
+      state.contactDetail = action.payload
+    })
+    builder.addCase(getContactById.rejected, (state, action) => {
+      state.loading = "rejected"
+    })
+
+
   },
 })
 export const { handleLoadingState } = LeadSlice.actions

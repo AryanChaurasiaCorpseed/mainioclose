@@ -56,7 +56,17 @@ export const getAllParentCompany = createAsyncThunk(
   }
 )
 
-// /leadService/api/v1/company/getAllLeadByCompany?companyId=2
+
+export const createCompanyByLeads=createAsyncThunk('createCompanyByLeads',async(data)=>{
+  const response=await postQuery(`/leadService/api/v1/company/createCompanyForm`,data)
+  return response.data
+})
+
+export const getAllLeadCompanyies=createAsyncThunk('getAllLeadCompanyies',async()=>{
+  const response=await getQuery(`/leadService/api/v1/company/getAllCompanyForm`)
+  return response.data
+})
+
 
 const CompnaySlice = createSlice({
   name: "company",
@@ -72,7 +82,8 @@ const CompnaySlice = createSlice({
     compLeadsError: false,
     allCompany: [],
     loading: "",
-    allParentCompany:[]
+    allParentCompany:[],
+    allLeadCompanyList:[]
   },
   extraReducers: (builder) => {
     builder.addCase(getCompanyAction.pending, (state, action) => {
@@ -137,6 +148,17 @@ const CompnaySlice = createSlice({
       state.loading = "success"
     })
     builder.addCase(getAllParentCompany.rejected, (state, action) => {
+      state.loading = "rejected"
+    })
+
+    builder.addCase(getAllLeadCompanyies.pending, (state, action) => {
+      state.loading = "pending"
+    })
+    builder.addCase(getAllLeadCompanyies.fulfilled, (state, action) => {
+      state.allLeadCompanyList = action.payload
+      state.loading = "success"
+    })
+    builder.addCase(getAllLeadCompanyies.rejected, (state, action) => {
       state.loading = "rejected"
     })
 

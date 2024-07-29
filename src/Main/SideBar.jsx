@@ -37,8 +37,6 @@ const SideBar = () => {
     }
   }, [currentUserId])
 
-
-
   return (
     <div className="sideTab">
       <ProfileDrawer />
@@ -466,6 +464,12 @@ const SideBar = () => {
                 <NavLink className="link-itemss" to={`/erp/${userid}/account`}>
                   Accounts list
                 </NavLink>
+                <NavLink
+                  className="link-itemss"
+                  to={`/erp/${userid}/account/companyForm`}
+                >
+                  Company form
+                </NavLink>
               </div>
             </div>
           </div>
@@ -492,6 +496,12 @@ const SideBar = () => {
               <div className="link-child">
                 <NavLink className="link-itemss" to={`/erp/${userid}/account`}>
                   Accounts List
+                </NavLink>
+                <NavLink
+                  className="link-itemss"
+                  to={`/erp/${userid}/account/companyForm`}
+                >
+                  Company form
                 </NavLink>
                 {/* <NavLink className="link-itemss" to="account/accounttwo">
                 Account Link 2

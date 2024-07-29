@@ -22,6 +22,7 @@ import { CSVLink } from "react-csv"
 import {
   craeteProjectByLeadId,
   getAllLeads,
+  getCompanyDetailsByLeadId,
   updateHelper,
 } from "../../../Toolkit/Slices/LeadSlice"
 import MainHeading from "../../../components/design/MainHeading"
@@ -29,6 +30,7 @@ import { Button, Select, Typography } from "antd"
 import { Icon } from "@iconify/react"
 import { getAllUsers } from "../../../Toolkit/Slices/UsersSlice"
 import CommonTable from "../../../components/CommonTable"
+import CompanyFormModal from "../../Accounts/CompanyFormModal"
 const { Text } = Typography
 
 const UserLeadComponent = React.lazy(() =>
@@ -148,7 +150,7 @@ const LeadsModule = () => {
   }, [])
 
   const allLeadData = useSelector((state) => state.leads.allLeads)
-  const allLeadsData=[...allLeadData]
+  const allLeadsData = [...allLeadData]
 
   const leadCount = allLeadsData.length
 
@@ -374,15 +376,9 @@ const LeadsModule = () => {
           {
             title: "Create project",
             dataIndex: "project",
-            render: (_, data) => (
-              <Button
-                type="text"
-                size="small"
-                onClick={() => dispatch(craeteProjectByLeadId(data?.id))}
-              >
-                <Icon icon="fluent:add-20-regular" />
-              </Button>
-            ),
+            render: (_, data) => {
+              return <CompanyFormModal edit={true} data={data} />
+            },
           },
           {
             dataIndex: "action",
@@ -599,7 +595,7 @@ const LeadsModule = () => {
           <CommonTable
             data={allLeadsData.reverse()}
             columns={columns}
-            scroll={{ y: 550, x: 2300 }}
+            scroll={{ y: 500, x: 2300 }}
             rowSelection={true}
           />
         </Suspense>
