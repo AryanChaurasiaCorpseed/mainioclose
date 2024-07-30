@@ -21,6 +21,7 @@ import { useCustomRoute } from "../../../Routes/GetCustomRoutes"
 import { CSVLink } from "react-csv"
 import {
   craeteProjectByLeadId,
+  getAllContactDetails,
   getAllLeads,
   getCompanyDetailsByLeadId,
   updateHelper,
@@ -128,7 +129,9 @@ const LeadsModule = () => {
   }, [])
   useEffect(() => {
     dispatch(getAllUsers())
+    dispatch(getAllContactDetails())
   }, [])
+
 
   useEffect(() => {
     dispatch(getAllLeads(allMultiFilterData))

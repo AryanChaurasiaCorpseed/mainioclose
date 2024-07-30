@@ -3,6 +3,7 @@ import {
   Divider,
   Form,
   Input,
+  InputNumber,
   Modal,
   notification,
   Select,
@@ -14,7 +15,6 @@ import { Icon } from "@iconify/react"
 import { useDispatch, useSelector } from "react-redux"
 import {
   createCompanyForm,
-  getAllContactDetails,
   getCompanyByUnitId,
   getCompanyDetailsByGst,
   getCompanyDetailsByLeadId,
@@ -57,10 +57,6 @@ const CompanyFormModal = ({ edit, data }) => {
     setOpenModal(true)
   }, [form, data, dispatch])
 
-  useEffect(() => {
-    dispatch(getAllContactDetails())
-  }, [])
-
   const validateGstNumber = (dispatch) => async (_, value) => {
     if (!value) {
       return Promise.reject(new Error("Please enter the email"))
@@ -69,7 +65,6 @@ const CompanyFormModal = ({ edit, data }) => {
       const resp = await dispatch(getCompanyDetailsByGst(value))
       if (resp.meta.requestStatus === "fulfilled") {
         const temp = resp?.payload
-        console.log("disbsdjvlsdjlasdkj", temp)
         if (temp?.length === 0) {
           return Promise.resolve()
         } else {
@@ -87,10 +82,8 @@ const CompanyFormModal = ({ edit, data }) => {
 
   const normFile = (e) => {
     if (Array.isArray(e)) {
-      console.log("myGST Doc  1", e)
       return e
     }
-    console.log("myGST Doc  2", e)
     return e?.fileList
   }
 
@@ -115,7 +108,6 @@ const CompanyFormModal = ({ edit, data }) => {
           !formFieldValue?.primaryContact &&
           formFieldValue?.secondaryContact
         ) {
-          console.log("dfkbndksfnbksdj amazing", formFieldValue, checked)
           form.setFieldsValue({
             getsContactName: contactDetail?.name,
             getsContactEmails: contactDetail?.emails,
@@ -239,6 +231,14 @@ const CompanyFormModal = ({ edit, data }) => {
           )}
 
           <Form.Item
+            label="Company age"
+            name="companyAge"
+            rules={[{ required: true, message: "please enter company age" }]}
+          >
+            <Input />
+          </Form.Item>
+
+          <Form.Item
             label="Gst type"
             name="gstType"
             rules={[{ required: true, message: "please select the gst type" }]}
@@ -299,9 +299,7 @@ const CompanyFormModal = ({ edit, data }) => {
                 name="isUnit"
                 rules={[{ required: true }]}
               >
-                <Switch
-                  size="small"
-                />
+                <Switch size="small" />
               </Form.Item>
 
               <Form.Item
@@ -428,6 +426,7 @@ const CompanyFormModal = ({ edit, data }) => {
                     >
                       <Input />
                     </Form.Item>
+
                     <Form.Item
                       label="Email"
                       name="contactEmails"
@@ -441,6 +440,7 @@ const CompanyFormModal = ({ edit, data }) => {
                     >
                       <Input />
                     </Form.Item>
+
                     <Form.Item
                       label="Contact number"
                       name="contactNo"
@@ -453,6 +453,7 @@ const CompanyFormModal = ({ edit, data }) => {
                     >
                       <Input />
                     </Form.Item>
+
                     <Form.Item
                       label="Whatsapp number"
                       name="contactWhatsappNo"
@@ -503,6 +504,7 @@ const CompanyFormModal = ({ edit, data }) => {
           >
             <Input.TextArea />
           </Form.Item>
+
           <Form.Item
             label="City"
             name="city"
@@ -510,6 +512,7 @@ const CompanyFormModal = ({ edit, data }) => {
           >
             <Input />
           </Form.Item>
+
           <Form.Item
             label="State"
             name="state"
@@ -517,6 +520,7 @@ const CompanyFormModal = ({ edit, data }) => {
           >
             <Input />
           </Form.Item>
+
           <Form.Item
             label="Country"
             name="country"
@@ -524,33 +528,43 @@ const CompanyFormModal = ({ edit, data }) => {
           >
             <Input />
           </Form.Item>
+
           <Divider style={{ color: "#cccccc" }} orientation="center">
             Secondary details
           </Divider>
+
           <Form.Item label="Same as primary details" name="secondaryContact">
             <Switch size="small" onChange={handleSetFields} />
           </Form.Item>
+
           <Form.Item label="Contact name" name="getsContactName">
             <Input />
           </Form.Item>
+
           <Form.Item label="Email" name="getsContactEmails">
             <Input />
           </Form.Item>
+
           <Form.Item label="Contact number" name="getsContactNo">
             <Input />
           </Form.Item>
+
           <Form.Item label="Whatsapp number" name="getsContactWhatsappNo">
             <Input />
           </Form.Item>
+
           <Form.Item label="Address" name="getsAddress">
             <Input.TextArea />
           </Form.Item>
+
           <Form.Item label="City" name="getsCity">
             <Input />
           </Form.Item>
+
           <Form.Item label="State" name="getsState">
             <Input />
           </Form.Item>
+
           <Form.Item label="Country" name="getsCountry">
             <Input />
           </Form.Item>
