@@ -7,6 +7,7 @@ import {
   notification,
   Select,
   Switch,
+  Upload,
 } from "antd"
 import React, { useCallback, useEffect, useState } from "react"
 import { Icon } from "@iconify/react"
@@ -21,6 +22,7 @@ import {
   getContactById,
 } from "../../Toolkit/Slices/LeadSlice"
 import { getAllUsers } from "../../Toolkit/Slices/UsersSlice"
+import { BTN_ICON_HEIGHT, BTN_ICON_WIDTH } from "../../components/Constants"
 
 const CompanyFormModal = ({ edit, data }) => {
   const [form] = Form.useForm()
@@ -41,10 +43,15 @@ const CompanyFormModal = ({ edit, data }) => {
   const handleButtonClick = useCallback(() => {
     dispatch(getCompanyDetailsByLeadId(data?.id)).then((resp) => {
       if (resp.meta.requestStatus === "fulfilled") {
-        form.setFieldsValue({
-          companyId: resp?.payload.name,
-        })
-        dispatch(getCompanyUnitsById(resp?.payload?.id))
+        if (Object.keys(resp.payload)?.length > 0) {
+          form.setFieldsValue({
+            companyId: resp?.payload.name,
+            isUnit: false,
+          })
+          dispatch(getCompanyUnitsById(resp?.payload?.id))
+        } else {
+          form.setFieldsValue({ isUnit: true })
+        }
       }
     })
     setOpenModal(true)
@@ -52,7 +59,7 @@ const CompanyFormModal = ({ edit, data }) => {
 
   useEffect(() => {
     dispatch(getAllContactDetails())
-  }, [dispatch])
+  }, [])
 
   const validateGstNumber = (dispatch) => async (_, value) => {
     if (!value) {
@@ -76,6 +83,15 @@ const CompanyFormModal = ({ edit, data }) => {
     } catch (error) {
       return Promise.reject(new Error("Error validating gst"))
     }
+  }
+
+  const normFile = (e) => {
+    if (Array.isArray(e)) {
+      console.log("myGST Doc  1", e)
+      return e
+    }
+    console.log("myGST Doc  2", e)
+    return e?.fileList
   }
 
   const handleSetFields = useCallback(
@@ -153,6 +169,7 @@ const CompanyFormModal = ({ edit, data }) => {
     const formData = form.getFieldsValue(["companyId", "companyName"])
     values.leadId = data?.id
     values.isPresent = true
+    values.gstDocuments = values.gstDocuments?.[0]?.response
     if (formData?.companyId) {
       values.companyId = companyDetails?.id
     }
@@ -220,6 +237,24 @@ const CompanyFormModal = ({ edit, data }) => {
               <Input />
             </Form.Item>
           )}
+
+          <Form.Item
+            label="Gst type"
+            name="gstType"
+            rules={[{ required: true, message: "please select the gst type" }]}
+          >
+            <Select
+              showSearch
+              allowClear
+              options={[
+                { label: "Register", value: "Register" },
+                { label: "Unregister", value: "Unregister" },
+                { label: "SE2", value: "SE2" },
+                { label: "International", value: "International" },
+              ]}
+            />
+          </Form.Item>
+
           <Form.Item
             label="Gst number"
             name="gstNo"
@@ -235,63 +270,98 @@ const CompanyFormModal = ({ edit, data }) => {
           >
             <Input />
           </Form.Item>
+
           <Form.Item
-            label="New units"
-            name="isUnit"
-            rules={[{ required: true }]}
+            label="Upload gst document"
+            name="gstDocuments"
+            getValueFromEvent={normFile}
+            valuePropName="fileList"
           >
-            <Switch size="small" />
+            <Upload
+              action="/leadService/api/v1/upload/uploadimageToFileSystem"
+              listType="text"
+            >
+              <Button>
+                <Icon
+                  icon="fluent:arrow-upload-20-filled"
+                  height={BTN_ICON_HEIGHT}
+                  width={BTN_ICON_WIDTH}
+                />{" "}
+                Upload
+              </Button>
+            </Upload>
           </Form.Item>
-          <Form.Item
-            shouldUpdate={(prevValues, currentValues) =>
-              prevValues.isUnit !== currentValues.isUnit
-            }
-            noStyle
-          >
-            {({ getFieldValue }) => (
-              <>
-                {getFieldValue("isUnit") ? (
-                  <Form.Item
-                    label="Enter new company unit"
-                    name="unitName"
-                    rules={[
-                      {
-                        required: true,
-                        message: "please enter the company unit",
-                      },
-                    ]}
-                  >
-                    <Input />
-                  </Form.Item>
-                ) : (
-                  <Form.Item
-                    label="Select company unit"
-                    name="unitId"
-                    rules={[
-                      { required: true, message: "please select company unit" },
-                    ]}
-                  >
-                    <Select
-                      showSearch
-                      allowClear
-                      onChange={(e) => dispatch(getCompanyByUnitId(e))}
-                      options={
-                        companyUnits?.length > 0
-                          ? companyUnits?.map((item) => ({
-                              label: item?.companyName,
-                              value: item?.id,
-                            }))
-                          : []
-                      }
-                      filterOption={(input, option) =>
-                        option.label.toLowerCase().includes(input.toLowerCase())
-                      }
-                    />
-                  </Form.Item>
+
+          {Object.keys(companyDetails)?.length > 0 && (
+            <>
+              <Form.Item
+                label="New units"
+                name="isUnit"
+                rules={[{ required: true }]}
+              >
+                <Switch
+                  size="small"
+                />
+              </Form.Item>
+
+              <Form.Item
+                shouldUpdate={(prevValues, currentValues) =>
+                  prevValues.isUnit !== currentValues.isUnit
+                }
+                noStyle
+              >
+                {({ getFieldValue }) => (
+                  <>
+                    {getFieldValue("isUnit") ? (
+                      <Form.Item
+                        label="Enter new company unit"
+                        name="unitName"
+                        rules={[
+                          {
+                            required: true,
+                            message: "please enter the company unit",
+                          },
+                        ]}
+                      >
+                        <Input />
+                      </Form.Item>
+                    ) : (
+                      <Form.Item
+                        label="Select company unit"
+                        name="unitId"
+                        rules={[
+                          {
+                            required: true,
+                            message: "please select company unit",
+                          },
+                        ]}
+                      >
+                        <Select
+                          showSearch
+                          allowClear
+                          onChange={(e) => dispatch(getCompanyByUnitId(e))}
+                          options={
+                            companyUnits?.length > 0
+                              ? companyUnits?.map((item) => ({
+                                  label: item?.companyName,
+                                  value: item?.id,
+                                }))
+                              : []
+                          }
+                          filterOption={(input, option) =>
+                            option.label
+                              .toLowerCase()
+                              .includes(input.toLowerCase())
+                          }
+                        />
+                      </Form.Item>
+                    )}
+                  </>
                 )}
-              </>
-            )}
-          </Form.Item>
+              </Form.Item>
+            </>
+          )}
+
           {Object.keys(companyDetails)?.length === 0 && (
             <Form.Item
               label="Select assignee"
@@ -315,6 +385,7 @@ const CompanyFormModal = ({ edit, data }) => {
               />
             </Form.Item>
           )}
+
           <Form.Item
             label="Pan number"
             name="panNo"
@@ -326,6 +397,7 @@ const CompanyFormModal = ({ edit, data }) => {
           <Divider style={{ color: "#cccccc" }} orientation="center">
             Primary details
           </Divider>
+
           <Form.Item
             label="New contact details"
             name="primaryContact"
