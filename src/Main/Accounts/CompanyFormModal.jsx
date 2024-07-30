@@ -109,39 +109,39 @@ const CompanyFormModal = ({ edit, data }) => {
           formFieldValue?.secondaryContact
         ) {
           form.setFieldsValue({
-            getsContactName: contactDetail?.name,
-            getsContactEmails: contactDetail?.emails,
-            getsContactNo: contactDetail?.contactNo,
-            getsContactWhatsappNo: contactDetail?.whatsappNo,
+            sContactName: contactDetail?.name,
+            sContactEmails: contactDetail?.emails,
+            sContactNo: contactDetail?.contactNo,
+            sContactWhatsappNo: contactDetail?.whatsappNo,
           })
         } else if (
           !formFieldValue?.primaryContact &&
           formFieldValue?.secondaryContact
         ) {
           form.setFieldsValue({
-            getsContactName: formFieldValue?.contactName,
-            getsContactEmails: formFieldValue?.contactEmails,
-            getsContactNo: formFieldValue?.contactNo,
-            getsContactWhatsappNo: formFieldValue?.contactWhatsappNo,
+            sContactName: formFieldValue?.contactName,
+            sContactEmails: formFieldValue?.contactEmails,
+            sContactNo: formFieldValue?.contactNo,
+            sContactWhatsappNo: formFieldValue?.contactWhatsappNo,
           })
         }
 
         if (formFieldValue?.isUnit && formFieldValue?.secondaryContact) {
           form.setFieldsValue({
-            getsAddress: companyDetailByUnitId?.address,
-            getsCity: companyDetailByUnitId?.city,
-            getsState: companyDetailByUnitId?.state,
-            getsCountry: companyDetailByUnitId?.country,
+            sAddress: companyDetailByUnitId?.address,
+            sCity: companyDetailByUnitId?.city,
+            sState: companyDetailByUnitId?.state,
+            sCountry: companyDetailByUnitId?.country,
           })
         } else if (
           !formFieldValue?.isUnit &&
           formFieldValue?.secondaryContact
         ) {
           form.setFieldsValue({
-            getsAddress: formFieldValue?.address,
-            getsCity: formFieldValue?.city,
-            getsState: formFieldValue?.state,
-            getsCountry: formFieldValue?.country,
+            sAddress: formFieldValue?.address,
+            sCity: formFieldValue?.city,
+            sState: formFieldValue?.state,
+            sCountry: formFieldValue?.country,
           })
         }
       } else {
@@ -537,35 +537,35 @@ const CompanyFormModal = ({ edit, data }) => {
             <Switch size="small" onChange={handleSetFields} />
           </Form.Item>
 
-          <Form.Item label="Contact name" name="getsContactName">
+          <Form.Item label="Contact name" name="sContactName">
             <Input />
           </Form.Item>
 
-          <Form.Item label="Email" name="getsContactEmails">
+          <Form.Item label="Email" name="sContactEmails">
             <Input />
           </Form.Item>
 
-          <Form.Item label="Contact number" name="getsContactNo">
+          <Form.Item label="Contact number" name="sContactNo">
             <Input />
           </Form.Item>
 
-          <Form.Item label="Whatsapp number" name="getsContactWhatsappNo">
+          <Form.Item label="Whatsapp number" name="sContactWhatsappNo">
             <Input />
           </Form.Item>
 
-          <Form.Item label="Address" name="getsAddress">
+          <Form.Item label="Address" name="sAddress">
             <Input.TextArea />
           </Form.Item>
 
-          <Form.Item label="City" name="getsCity">
+          <Form.Item label="City" name="sCity">
             <Input />
           </Form.Item>
 
-          <Form.Item label="State" name="getsState">
+          <Form.Item label="State" name="sState">
             <Input />
           </Form.Item>
 
-          <Form.Item label="Country" name="getsCountry">
+          <Form.Item label="Country" name="sCountry">
             <Input />
           </Form.Item>
         </Form>

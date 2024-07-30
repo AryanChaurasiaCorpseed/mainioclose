@@ -76,7 +76,7 @@ const HrUserList = () => {
           data={allMainUser}
           columns={columns}
           rowSelection={true}
-          scroll={{ y: 500, x: 5500 }}
+          scroll={{ y: 650, x: 5500 }}
         />
       )}
     </SideBox>

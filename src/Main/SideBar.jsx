@@ -209,6 +209,13 @@ const SideBar = () => {
                       <i className="fa-regular fa-building"></i>
                       <span>Project</span>
                     </NavLink>
+                    <NavLink
+                      className="link-itemss"
+                      to={`${userid}/sales/lead-form`}
+                    >
+                      <i className="fa-regular fa-building"></i>
+                      <span>Lead form</span>
+                    </NavLink>
                   </>
                 ) : currentUserDetail?.department == "Quality" &&
                   getHighestPriorityRole(currentRoles) !== "ADMIN" ? (
@@ -276,6 +283,13 @@ const SideBar = () => {
                 <NavLink className="link-itemss" to={`${userid}/sales/project`}>
                   <i className="fa-regular fa-building"></i>
                   <span>Project</span>
+                </NavLink>
+                <NavLink
+                  className="link-itemss"
+                  to={`${userid}/sales/lead-form`}
+                >
+                  <i className="fa-regular fa-building"></i>
+                  <span>Lead form</span>
                 </NavLink>
 
                 {/* <NavLink
