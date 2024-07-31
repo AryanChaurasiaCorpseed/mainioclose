@@ -14,12 +14,11 @@ import { Icon } from "@iconify/react"
 import { getDesiginationById } from "../Toolkit/Slices/CommonSlice"
 toast.configure()
 
-const CreateuserDashboard = ({ data, type, modalText, edit }) => {
+const CreateuserDashboard = ({ data, modalText, edit }) => {
   const dispatch = useDispatch()
   const [form] = Form.useForm()
   const [openModal, setOpenModal] = useState(false)
   const [loading, setLoading] = useState("")
-  const leadUsers = useSelector((state) => state.user.leadUserList)
   const departmentList = useSelector((state) => state?.setting?.allDepartment)
   const desiginationList = useSelector(
     (state) => state.common.desiginationListById
@@ -29,7 +28,9 @@ const CreateuserDashboard = ({ data, type, modalText, edit }) => {
 
   const editUserDetails = useCallback(() => {
     setOpenModal(true)
-    dispatch(getDesiginationById(data?.userDepartment?.id))
+    if (data?.userDepartment?.id) {
+      dispatch(getDesiginationById(data?.userDepartment?.id))
+    }
     form.setFieldsValue({
       userName: data?.fullName,
       email: data?.email,
@@ -37,7 +38,7 @@ const CreateuserDashboard = ({ data, type, modalText, edit }) => {
       departmentId: data?.userDepartment?.id,
       role: data?.role,
     })
-  }, [data, form])
+  }, [data, form,dispatch])
 
   const handleSubmitUser = useCallback(
     (values) => {
@@ -133,7 +134,7 @@ const CreateuserDashboard = ({ data, type, modalText, edit }) => {
           })
       }
     },
-    [dispatch, data, edit]
+    [dispatch, data, edit,form]
   )
 
   return (
@@ -221,7 +222,11 @@ const CreateuserDashboard = ({ data, type, modalText, edit }) => {
                     }))
                   : []
               }
-              onChange={(e) => dispatch(getDesiginationById(e))}
+              onChange={(e) => {
+                if (e !== undefined) {
+                  dispatch(getDesiginationById(e))
+                }
+              }}
               filterOption={(input, option) =>
                 option.label.toLowerCase().includes(input.toLowerCase())
               }

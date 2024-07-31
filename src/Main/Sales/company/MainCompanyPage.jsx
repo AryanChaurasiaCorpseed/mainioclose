@@ -8,6 +8,7 @@ import SomethingWrong from "../../../components/usefulThings/SomethingWrong"
 import ColComp from "../../../components/small/ColComp"
 import UserListComponent from "../../../Tables/UserListComponent"
 import { Link } from "react-router-dom"
+import CommonTable from "../../../components/CommonTable"
 
 const MainCompanyPage = () => {
   const dispatch = useDispatch()
@@ -22,69 +23,72 @@ const MainCompanyPage = () => {
     (prev) => prev?.company
   )
 
-
   const columns = [
     {
-      field: "companyId",
-      headerName: "ID",
-      width: 60,
+      dataIndex: "companyId",
+      title: "Id",
+      fixed:'left',
+      width:50
     },
     {
-      field: "companyName",
-      headerName: "Company Name",
-      width: 200,
-      renderCell: (props) => (
-        <Link to={`${props?.row?.companyId}/details`}>{props?.row?.companyName}</Link>
-      ) ,
+      dataIndex: "companyName",
+      title: "Company name",
+      fixed:'left',
+      render: (_,props) => (
+        <Link to={`${props?.companyId}/details`}>
+          {props?.companyName}
+        </Link>
+      ),
     },
     {
-      field: "gstNo",
-      headerName: "GST Number",
-      width: 150,
-      renderCell: (props) => <ColComp data={props?.row?.gstNo} />,
-    },
-
-    {
-      field: "country",
-      headerName: "Country",
-      width: 120,
-      renderCell: (props) => <ColComp data={props?.row?.country} />,
+      dataIndex: "gstNo",
+      title: "GST number",
+      renderCell: (_,props) => <ColComp data={props?.gstNo} />,
     },
 
     {
-      field: "state",
-      headerName: "State",
-      width: 120,
-      renderCell: (props) => <ColComp data={props?.row?.state} />,
+      dataIndex: "country",
+      title: "Country",
+      renderCell: (_,props) => <ColComp data={props?.country} />,
     },
 
     {
-      field: "city",
-      headerName: "City",
-      width: 120,
-      renderCell: (props) => <ColComp data={props?.row?.city} />,
+      dataIndex: "state",
+      title: "State",
+      renderCell: (_,props) => <ColComp data={props?.state} />,
     },
 
     {
-      field: "address",
-      headerName: "Address",
-      width: 150,
-      renderCell: (props) => <ColComp data={props?.row?.address} />,
+      dataIndex: "city",
+      title: "City",
+      render: (_,props) => <ColComp data={props?.city} />,
+    },
+
+    {
+      dataIndex: "address",
+      title: "Address",
+      render: (_,props) => <ColComp data={props?.address} />,
     },
   ]
 
   return (
     <TableOutlet>
-      <MainHeading data={`ALL Company`} />
+      <MainHeading data={`ALL company`} />
       <div className="mt-3">
         {loadingCompany && <TableScalaton />}
         {errorCompany && <SomethingWrong />}
         {allCompnay && !loadingCompany && !errorCompany && (
-          <UserListComponent
-            tableName={""}
+          // <UserListComponent
+          //   tableName={""}
+          //   columns={columns}
+          //   getRowId={(row) => row.companyId}
+          //   row={allCompnay}
+          // />
+          <CommonTable
+            data={allCompnay}
             columns={columns}
-            getRowId={(row) => row.companyId}
-            row={allCompnay}
+            scroll={{ x: 1200, y: 650 }}
+            rowSelection={true}
           />
         )}
       </div>

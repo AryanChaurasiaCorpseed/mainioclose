@@ -27,7 +27,7 @@ import {
   updateHelper,
 } from "../../../Toolkit/Slices/LeadSlice"
 import MainHeading from "../../../components/design/MainHeading"
-import { Button, Select, Typography } from "antd"
+import { Button, notification, Select, Typography } from "antd"
 import { Icon } from "@iconify/react"
 import { getAllUsers } from "../../../Toolkit/Slices/UsersSlice"
 import CommonTable from "../../../components/CommonTable"
@@ -132,7 +132,6 @@ const LeadsModule = () => {
     dispatch(getAllContactDetails())
   }, [])
 
-
   useEffect(() => {
     dispatch(getAllLeads(allMultiFilterData))
   }, [
@@ -208,11 +207,18 @@ const LeadsModule = () => {
         leadId: leadId,
         userId: id,
       }
-      dispatch(updateHelper(temp)).then((response) => {
-        if (response?.meta?.requestStatus === "fulfilled") {
-          window.location.reload()
-        }
-      })
+      dispatch(updateHelper(temp))
+        .then((response) => {
+          if (response?.meta?.requestStatus === "fulfilled") {
+            notification.success({ message: "Helper updated successfully" })
+            dispatch(getAllUsers())
+          } else {
+            notification.error({ message: "Something went wrong" })
+          }
+        })
+        .catch(() => {
+          notification.error({ message: "Something went wrong" })
+        })
     },
     [dispatch]
   )
@@ -493,7 +499,6 @@ const LeadsModule = () => {
     }
   }
 
-  // bell icon
 
   const bellCountUrl = `/leadService/api/v1/notification/getUnseenCount?userId=${userid}`
   const bellCountDep = []

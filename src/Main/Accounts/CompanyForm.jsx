@@ -43,6 +43,11 @@ const CompanyForm = () => {
       title: "Company age",
       dataIndex: "companyAge",
     },
+    // {
+    //   title:'Assignee',
+    //   dataIndex:'assignee',
+    //   render:(_,data)=><Text></Text>
+    // },
     {
       title: "Address",
       dataIndex: "address",
@@ -62,6 +67,18 @@ const CompanyForm = () => {
     },
     {
       title: "Status",
+      dataIndex: "status",
+      render: (_, data) =>
+        data.status === "approved" ? (
+          <Text>Approved</Text>
+        ) : data.status === "disapproved" ? (
+          <Text>Dispproved</Text>
+        ) : (
+          "Initiated"
+        ),
+    },
+    {
+      title: "Approved / Disapproved",
       dataIndex: "status",
       render: (_, value) => {
         return (
@@ -92,6 +109,7 @@ const CompanyForm = () => {
                   icon="fluent:thumb-like-20-regular"
                   height={BTN_ICON_HEIGHT}
                   width={BTN_ICON_WIDTH}
+                  color={value?.status === "approved" ? "green" : ""}
                 />
               </Button>
             </Tooltip>
@@ -121,6 +139,7 @@ const CompanyForm = () => {
                   icon="fluent:thumb-dislike-20-regular"
                   height={BTN_ICON_HEIGHT}
                   width={BTN_ICON_WIDTH}
+                  color={value?.status === "disapproved" ? "red" : ""}
                 />
               </Button>
             </Tooltip>

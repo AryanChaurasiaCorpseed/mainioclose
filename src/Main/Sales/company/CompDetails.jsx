@@ -11,6 +11,7 @@ import SomethingWrong from "../../../components/usefulThings/SomethingWrong"
 import TableScalaton from "../../../components/TableScalaton"
 import ColComp from "../../../components/small/ColComp"
 import { putQuery } from "../../../API/PutQuery"
+import CommonTable from "../../../components/CommonTable"
 
 const UserListComponent = React.lazy(() =>
   import(`../../../Tables/UserListComponent`)
@@ -54,92 +55,85 @@ const CompDetails = () => {
 
   const compColumns = [
     {
-      field: "projectId",
-      headerName: "ID",
+      dataIndex: "projectId",
+      title: "Id",
       width: 80,
+      fixed: "left",
     },
     {
-      field: "projectName",
-      headerName: "Project Name",
-      width: 150,
-      renderCell: (props) => <ColComp data={props?.row?.projectName} />,
+      dataIndex: "projectName",
+      title: "Project name",
+      fixed: "left",
+      render: (_, props) => <ColComp data={props?.projectName} />,
     },
     {
-      field: "product",
-      headerName: "Product",
-      width: 150,
-      renderCell: (props) => <ColComp data={props?.row?.product} />,
+      dataIndex: "product",
+      title: "Product",
+      render: (_, props) => <ColComp data={props?.product} />,
     },
     {
-      field: "assignee",
-      headerName: "Assignee",
-      width: 150,
-      renderCell: (props) => <ColComp data={props?.row?.assignee} />,
+      dataIndex: "assignee",
+      title: "Assignee",
+      render: (_, props) => <ColComp data={props?.assignee?.fullName} />,
     },
   ]
 
   const compLeadsCol = [
     {
-      field: "leadId",
-      headerName: "ID",
+      dataIndex: "leadId",
+      title: "Id",
       width: 60,
     },
     {
-      field: "leadName",
-      headerName: "Lead Name",
-      width: 150,
-      renderCell: (props) => (
+      dataIndex: "leadName",
+      title: "Lead name",
+      render: (_, props) => (
         <Link
-          to={`/erp/${userid}/sales/leads/${props.row.leadId}`}
-          onClick={() => viewHistory(props.row.leadId)}
-          className={`${props.row.view ? "" : "fw-600"}`}
+          to={`/erp/${userid}/sales/leads/${props.leadId}`}
+          onClick={() => viewHistory(props.leadId)}
+          className={`${props.view ? "" : "fw-600"}`}
         >
-          {props?.row?.leadName}
+          {props?.leadName}
         </Link>
       ),
     },
     {
-      field: "originalName",
-      headerName: "Original Name",
-      width: 150,
-      renderCell: (props) => <ColComp data={props?.row?.originalName} />,
+      dataIndex: "originalName",
+      title: "Original name",
+      render: (_, props) => <ColComp data={props?.originalName} />,
     },
     {
-      field: "client",
-      headerName: "Client Name",
-      width: 150,
-      renderCell: (props) => <ColComp data={props?.row?.client} />,
+      dataIndex: "client",
+      title: "Client name",
+      render: (_, props) => <ColComp data={props?.client} />,
     },
     {
-      field: "email",
-      headerName: "Email",
+      dataIndex: "email",
+      title: "Email",
       width: 250,
-      renderCell: (props) => <ColComp data={props?.row?.email} />,
+      render: (_, props) => <ColComp data={props?.email} />,
     },
 
     {
-      field: "assignee",
-      headerName: "Assignee Name",
+      dataIndex: "assignee",
+      title: "Assignee name",
       width: 150,
-      renderCell: (props) => <ColComp data={props?.row?.assignee?.fullName} />,
+      render: (_, props) => <ColComp data={props?.assignee?.fullName} />,
     },
     {
-      field: "status",
-      headerName: "Status",
-      width: 150,
-      renderCell: (props) => <ColComp data={props?.row?.status?.name} />,
+      dataIndex: "status",
+      title: "Status",
+      render: (_, props) => <ColComp data={props?.status?.name} />,
     },
     {
-      field: "city",
-      headerName: "City",
-      width: 150,
-      renderCell: (props) => <ColComp data={props?.row?.city} />,
+      dataIndex: "city",
+      title: "City",
+      render: (_, props) => <ColComp data={props?.city} />,
     },
     {
-      field: "ipAddress",
-      headerName: "IP Address",
-      width: 150,
-      renderCell: (props) => <ColComp data={props?.row?.ipAddress} />,
+      dataIndex: "ipAddress",
+      title: "IP address",
+      render: (_, props) => <ColComp data={props?.ipAddress} />,
     },
   ]
 
@@ -165,11 +159,17 @@ const CompDetails = () => {
           {compProjectError && <SomethingWrong />}
           {!compProjectError && (
             <Suspense fallback={<TableScalaton />}>
-              <UserListComponent
+              {/* <UserListComponent
                 tableName={""}
                 columns={compColumns}
                 getRowId={(row) => row.projectId}
                 row={compProject}
+              /> */}
+
+              <CommonTable
+                data={compProject}
+                columns={compColumns}
+                scroll={{ y: 650, x: 1000 }}
               />
             </Suspense>
           )}
@@ -185,11 +185,16 @@ const CompDetails = () => {
           {compLeadsError && <SomethingWrong />}
           {!compLeadsError && (
             <Suspense fallback={<TableScalaton />}>
-              <UserListComponent
+              {/* <UserListComponent
                 tableName={""}
                 columns={compLeadsCol}
                 getRowId={(row) => row.leadId}
                 row={compLeads}
+              /> */}
+              <CommonTable
+                data={compLeads}
+                columns={compLeadsCol}
+                scroll={{ y: 650, x: 1000 }}
               />
             </Suspense>
           )}

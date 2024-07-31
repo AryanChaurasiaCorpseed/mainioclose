@@ -3,14 +3,13 @@ import {
   Divider,
   Form,
   Input,
-  InputNumber,
   Modal,
   notification,
   Select,
   Switch,
   Upload,
 } from "antd"
-import React, { useCallback, useEffect, useState } from "react"
+import React, { useCallback, useState } from "react"
 import { Icon } from "@iconify/react"
 import { useDispatch, useSelector } from "react-redux"
 import {
@@ -115,7 +114,7 @@ const CompanyFormModal = ({ edit, data }) => {
             sContactWhatsappNo: contactDetail?.whatsappNo,
           })
         } else if (
-          !formFieldValue?.primaryContact &&
+          formFieldValue?.primaryContact &&
           formFieldValue?.secondaryContact
         ) {
           form.setFieldsValue({
@@ -123,6 +122,10 @@ const CompanyFormModal = ({ edit, data }) => {
             sContactEmails: formFieldValue?.contactEmails,
             sContactNo: formFieldValue?.contactNo,
             sContactWhatsappNo: formFieldValue?.contactWhatsappNo,
+            sAddress: formFieldValue?.address,
+            sCity: formFieldValue?.city,
+            sState: formFieldValue?.state,
+            sCountry: formFieldValue?.country,
           })
         }
 
@@ -156,11 +159,15 @@ const CompanyFormModal = ({ edit, data }) => {
     [form, contactDetail, companyDetailByUnitId]
   )
 
-  const handleFinish = (values) => {
+  const handleFinish = useCallback((values) => {
     setFormLoading("pending")
     const formData = form.getFieldsValue(["companyId", "companyName"])
     values.leadId = data?.id
-    values.isPresent = true
+    if (Object.keys(companyDetails)?.length > 0) {
+      values.isPresent = true
+    } else {
+      values.isPresent = false
+    }
     values.gstDocuments = values.gstDocuments?.[0]?.response
     if (formData?.companyId) {
       values.companyId = companyDetails?.id
@@ -181,7 +188,7 @@ const CompanyFormModal = ({ edit, data }) => {
         setFormLoading("rejected")
         notification.error({ message: "Something went wrong" })
       })
-  }
+  },[companyDetails,dispatch,form])
   return (
     <>
       <Button type="text" size="small" onClick={handleButtonClick}>

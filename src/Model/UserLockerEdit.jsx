@@ -15,7 +15,7 @@ const UserLockerEdit = ({data}) => {
     form.setFieldsValue({
      count:data?.lockerSize
     })
-  }, [data])
+  }, [data, form])
 
   const handleSubmit = useCallback(
     async (values) => {
@@ -23,7 +23,7 @@ const UserLockerEdit = ({data}) => {
         values.userId=data?.id
         try {
             const response = await dispatch(editUserLockerCount(values)).unwrap() 
-            message.success("Count edited successfully!")
+            message.success("Locker count edited successfully!")
             setOpenModal(false)
             dispatch(getAllUsers())
           } catch (error) {
@@ -31,10 +31,9 @@ const UserLockerEdit = ({data}) => {
             setOpenModal(false)
           }
     },
-    [data,currentUserId]
+    [data,currentUserId,dispatch]
   )
 
-  console.log("kdsjhjfghsj", data)
 
   return (
     <>
@@ -47,6 +46,7 @@ const UserLockerEdit = ({data}) => {
         onCancel={() => setOpenModal(false)}
         onClose={() => setOpenModal(false)}
         onOk={() => form.submit()}
+        okText='Submit'
       >
         <Form layout="vertical" form={form} onFinish={handleSubmit}>
           <Form.Item label="Locker count" name='count' >
