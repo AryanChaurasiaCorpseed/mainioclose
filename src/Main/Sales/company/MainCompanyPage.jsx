@@ -78,12 +78,6 @@ const MainCompanyPage = () => {
         {loadingCompany && <TableScalaton />}
         {errorCompany && <SomethingWrong />}
         {allCompnay && !loadingCompany && !errorCompany && (
-          // <UserListComponent
-          //   tableName={""}
-          //   columns={columns}
-          //   getRowId={(row) => row.companyId}
-          //   row={allCompnay}
-          // />
           <CommonTable
             data={allCompnay}
             columns={columns}

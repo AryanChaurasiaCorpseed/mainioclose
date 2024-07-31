@@ -822,61 +822,12 @@ const LeadDetailsPage = () => {
               onChange={(e) => changeLeadStatusFun(e)}
             />
             <Space>
-              <Button type="primary" onClick={sameAssigneePresonFun}>
+              <Button size="small" type="primary" onClick={sameAssigneePresonFun}>
                 Same
               </Button>
-              <Button onClick={notSameAssigneePresonFun}>Not same</Button>
+              <Button size="small" onClick={notSameAssigneePresonFun}>Not same</Button>
             </Space>
-            {/* <div className="lead-product">
-              <div className="card mt-2">
-                <div className="" id="headingThree">
-                  <div
-                    className="card-btn collapsed"
-                    data-toggle="collapse"
-                    data-target="#estimateCollapse"
-                    aria-expanded="false"
-                    aria-controls="estimateCollapse"
-                  >
-                    <h3 className="lead-heading lead-bold">Estimate</h3>
-                    <p className="lead-heading">
-                      <i className="fa-solid fa-plus"></i>
-                    </p>
-                  </div>
-                </div>
-                <div
-                  id="estimateCollapse"
-                  className="collapse"
-                  aria-labelledby="headingThree"
-                  data-parent="#accordion"
-                >
-                  <div className="my-card-content">
-                    <div className="all-center">
-                      <Link to={"estimate"} className="create-btn">
-                        Create New Estimate
-                      </Link>
-                     
-                    </div>
-                    
-                  </div>
-
-                  <div className="save-lead-data">
-                    <div>
-                      <p className="lead-heading">BIS Registration</p>
-                      <h6 className="lead-sm-heading">lead Estimate Create</h6>
-                    </div>
-                    <div className="lead-heading">
-                      <button
-                        onClick={() => openEstimateFun()}
-                        className="create-btn padding-two mr-2"
-                      >
-                        <i className="fa-solid fa-eye"></i>
-                      </button>
-                      {adminRole ? <i className="fa-solid fa-trash"></i> : ""}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div> */}
+            
             <Divider style={{ margin: "4px" }} />
             <Collapse
               accordion
@@ -889,15 +840,9 @@ const LeadDetailsPage = () => {
         <Col span={17}>
           <div className="lead-filter-above">
             <div className="filter-box">
-              {/* <FilterButton
-                name={"Notes"}
-                icon={<i className="fa-regular  fa-note-sticky"></i>}
-                data={notes}
-                setData={setNotes}
-              /> */}
               <Button onClick={() => setNotes((prev) => !prev)}>
                 <Icon
-                  icon="fluent:document-text-20-regular"
+                  icon="fluent:document-text-20-filled"
                   height={BTN_ICON_HEIGHT}
                   width={BTN_ICON_WIDTH}
                 />
@@ -907,7 +852,7 @@ const LeadDetailsPage = () => {
               <Link to={`history`}>
                 <Button>
                   <Icon
-                    icon="fluent:history-20-regular"
+                    icon="fluent:history-20-filled"
                     height={BTN_ICON_HEIGHT}
                     width={BTN_ICON_WIDTH}
                   />
@@ -917,7 +862,7 @@ const LeadDetailsPage = () => {
               <Link to={`/erp/${userid}/sales/leads`}>
                 <Button>
                   <Icon
-                    icon="fluent:chevron-left-20-regular"
+                    icon="fluent:chevron-left-20-filled"
                     height={BTN_ICON_HEIGHT}
                     width={BTN_ICON_WIDTH}
                   />

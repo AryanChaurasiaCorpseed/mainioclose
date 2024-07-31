@@ -28,15 +28,6 @@ const BulkFileUploader = () => {
     onChange(info) {
       console.log("infoModfakaklsls", info)
       setFiles(info?.fileList?.map((file) => file?.response))
-      //   const { status } = info.file
-      //   if (status !== "uploading") {
-      //     console.log(info.file, info.fileList)
-      //   }
-      //   if (status === "done") {
-      //     message.success(`${info.file.name} file uploaded successfully.`)
-      //   } else if (status === "error") {
-      //     message.error(`${info.file.name} file upload failed.`)
-      //   }
     },
     onDrop(e) {
       console.log("infoModfakaklsls dropped", e)
@@ -69,12 +60,6 @@ const BulkFileUploader = () => {
 
   return (
     <>
-      {/* <Input.TextArea
-        style={{ margin: "5px 0px" }}
-        autoSize={{ minRows: 2, maxRows: 6 }}
-        placeholder="Write captions for uploading files"
-        onChange={(e) => setText(e.target.value)}
-      /> */}
       <Select
         style={{ width: "100%", margin: "12px 0px" }}
         placeholder='select comment...'

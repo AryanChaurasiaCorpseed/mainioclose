@@ -159,13 +159,6 @@ const CompDetails = () => {
           {compProjectError && <SomethingWrong />}
           {!compProjectError && (
             <Suspense fallback={<TableScalaton />}>
-              {/* <UserListComponent
-                tableName={""}
-                columns={compColumns}
-                getRowId={(row) => row.projectId}
-                row={compProject}
-              /> */}
-
               <CommonTable
                 data={compProject}
                 columns={compColumns}
@@ -185,12 +178,6 @@ const CompDetails = () => {
           {compLeadsError && <SomethingWrong />}
           {!compLeadsError && (
             <Suspense fallback={<TableScalaton />}>
-              {/* <UserListComponent
-                tableName={""}
-                columns={compLeadsCol}
-                getRowId={(row) => row.leadId}
-                row={compLeads}
-              /> */}
               <CommonTable
                 data={compLeads}
                 columns={compLeadsCol}
