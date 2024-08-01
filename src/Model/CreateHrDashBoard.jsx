@@ -175,6 +175,7 @@ const CreateHrDashBoard = ({ data, edit, modalTitle }) => {
       manager: true,
       backupTeam: data?.backupTeam,
       master: data?.master,
+      maritalStatus: data?.maritalStatus,
     })
   }, [data, form])
 
@@ -497,6 +498,12 @@ const CreateHrDashBoard = ({ data, edit, modalTitle }) => {
           </Row>
           <Row>
             <Col span={11}>
+              <Form.Item label="Locker size" name="lockerSize">
+                <Input />
+              </Form.Item>
+            </Col>
+            <Col span={1} />
+            <Col span={11}>
               <Form.Item
                 label={`Experience (in year)`}
                 name="expInYear"
@@ -510,7 +517,8 @@ const CreateHrDashBoard = ({ data, edit, modalTitle }) => {
                 <Input />
               </Form.Item>
             </Col>
-            <Col span={1} />
+          </Row>
+          <Row>
             <Col span={11}>
               <Form.Item
                 label={`Experience (in months)`}
@@ -525,8 +533,7 @@ const CreateHrDashBoard = ({ data, edit, modalTitle }) => {
                 <Input />
               </Form.Item>
             </Col>
-          </Row>
-          <Row>
+            <Col span={1} />
             <Col span={11}>
               <Form.Item
                 label="Date of joining"
@@ -536,7 +543,8 @@ const CreateHrDashBoard = ({ data, edit, modalTitle }) => {
                 <DatePicker style={{ width: "100%" }} />
               </Form.Item>
             </Col>
-            <Col span={1} />
+          </Row>
+          <Row>
             <Col span={11}>
               <Form.Item
                 label="Gender"
@@ -554,7 +562,59 @@ const CreateHrDashBoard = ({ data, edit, modalTitle }) => {
                 />
               </Form.Item>
             </Col>
+            <Col span={1} />
+            <Col span={11}>
+              <Form.Item
+                label="Marital status"
+                name="maritalStatus"
+                rules={[
+                  { required: true, message: "please select marital status" },
+                ]}
+              >
+                <Select
+                  allowClear
+                  showSearch
+                  options={[
+                    { label: "Married", value: "Married" },
+                    { label: "Unmarried", value: "Unmarried" },
+                  ]}
+                />
+              </Form.Item>
+            </Col>
           </Row>
+
+          <Form.Item
+            shouldUpdate={(prevValues, currentValues) =>
+              prevValues.maritalStatus !== currentValues.maritalStatus
+            }
+            noStyle
+          >
+            {({ getFieldValue }) => (
+              <>
+                {getFieldValue("maritalStatus") === "Married" ? (
+                  <Row>
+                    <Col span={11}>
+                      <Form.Item label="Spouse name" name="spouseName">
+                        <Input />
+                      </Form.Item>
+                    </Col>
+                    <Col span={1} />
+                    <Col span={11}>
+                      <Form.Item
+                        label="Spouse contact number"
+                        name="spouseContactNo"
+                      >
+                        <Input />
+                      </Form.Item>
+                    </Col>
+                  </Row>
+                ) : (
+                  ""
+                )}
+              </>
+            )}
+          </Form.Item>
+
           <Row>
             <Col span={11}>
               <Form.Item
@@ -576,17 +636,7 @@ const CreateHrDashBoard = ({ data, edit, modalTitle }) => {
           </Row>
           <Row>
             <Col span={11}>
-              <Form.Item
-                label="Father's contact no."
-                name="fatherContactNo"
-                rules={[
-                  {
-                    required: true,
-                    message: "",
-                    validator: validateMobileNumber,
-                  },
-                ]}
-              >
+              <Form.Item label="Father's contact no." name="fatherContactNo">
                 <Input />
               </Form.Item>
             </Col>
@@ -605,82 +655,27 @@ const CreateHrDashBoard = ({ data, edit, modalTitle }) => {
           </Row>
           <Row>
             <Col span={11}>
-              <Form.Item label="Mother's occupation" name="motherOccupation">
+              <Form.Item label="Mother's contact no." name="motherContactNo">
                 <Input />
               </Form.Item>
             </Col>
             <Col span={1} />
-            <Col span={11}>
-              <Form.Item
-                label="Mother's contact no."
-                name="motherContactNo"
-                // rules={[
-                //   {
-                //     required: true,
-                //     message: "",
-                //     validator: validateMobileNumber,
-                //   },
-                // ]}
-              >
-                <Input />
-              </Form.Item>
-            </Col>
-          </Row>
-          {/* <Row>
-            <Col span={11}>
-              <Form.Item label="Spouse name" name="spouseName">
-                <Input />
-              </Form.Item>
-            </Col>
-            <Col span={1} />
-            <Col span={11}>
-              <Form.Item
-                label="Spouse contact number"
-                name="spouseContactNo"
-                rules={[
-                  {
-                    required: true,
-                    message: "",
-                    validator: validateMobileNumber,
-                  },
-                ]}
-              >
-                <Input />
-              </Form.Item>
-            </Col>
-          </Row> */}
-          <Row>
             <Col span={11}>
               <Form.Item label="Nationality" name="nationality">
                 <Input />
               </Form.Item>
             </Col>
-            <Col span={1} />
+          </Row>
+
+          <Row>
             <Col span={11}>
               <Form.Item label="Language" name="language">
                 <Input />
               </Form.Item>
             </Col>
-          </Row>
-          <Row>
-            <Col span={11}>
-              <Form.Item
-                label="Emergency contact no."
-                name="emergencyNumber"
-                rules={[
-                  {
-                    required: true,
-                    message: "",
-                    validator: validateMobileNumber,
-                  },
-                ]}
-              >
-                <Input />
-              </Form.Item>
-            </Col>
             <Col span={1} />
             <Col span={11}>
-              <Form.Item label="Locker size" name="lockerSize">
+              <Form.Item label="Emergency contact no." name="emergencyNumber">
                 <Input />
               </Form.Item>
             </Col>

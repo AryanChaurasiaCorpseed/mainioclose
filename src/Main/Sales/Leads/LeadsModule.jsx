@@ -21,9 +21,11 @@ import { useCustomRoute } from "../../../Routes/GetCustomRoutes"
 import { CSVLink } from "react-csv"
 import {
   craeteProjectByLeadId,
+  deleteMultipleLeads,
   getAllContactDetails,
   getAllLeads,
   getCompanyDetailsByLeadId,
+  multiAssignedLeads,
   updateHelper,
 } from "../../../Toolkit/Slices/LeadSlice"
 import MainHeading from "../../../components/design/MainHeading"
@@ -128,6 +130,11 @@ const LeadsModule = () => {
     updatedById: userid,
   })
 
+  const [assignedLeadInfo, setAssignedLeadInfo] = useState({
+    statusId: null,
+    assigneId: null,
+  })
+
   const [deleteMultiLead, setDeleteMultiLead] = useState({
     leadId: selectedRows,
     updatedById: userid,
@@ -207,6 +214,26 @@ const LeadsModule = () => {
       }
     }
   }
+
+  const handleDeleteMutipleLeads = useCallback(() => {
+    let obj = {
+      leadId: selectedRowKeys,
+      updatedById: userid,
+    }
+    dispatch(deleteMultipleLeads(obj))
+      .then((response) => {
+        if (response?.meta?.requestStatus === "fulfilled") {
+          notification.success({ message: "Leads deleted successfully" })
+          dispatch(getAllUsers())
+          setSelectedRowKeys([])
+        } else {
+          notification.error({ message: "Something went wrong" })
+        }
+      })
+      .catch(() => {
+        notification.error({ message: "Something went wrong" })
+      })
+  }, [selectedRowKeys, userid, dispatch])
 
   const currentUserRoles = useSelector((state) => state?.auth?.roles)
   const adminRole = currentUserRoles.includes("ADMIN")
@@ -512,6 +539,27 @@ const LeadsModule = () => {
     }
   }
 
+  const handleMultipleAssignedLeads = useCallback(() => {
+    let obj = {
+      leadIds: selectedRowKeys,
+      updatedById: userid,
+      ...assignedLeadInfo,
+    }
+    dispatch(multiAssignedLeads(obj))
+      .then((response) => {
+        if (response?.meta?.requestStatus === "fulfilled") {
+          notification.success({ message: "Leads assigned successfully" })
+          dispatch(getAllUsers())
+          setSelectedRowKeys([])
+        } else {
+          notification.error({ message: "Something went wrong" })
+        }
+      })
+      .catch(() => {
+        notification.error({ message: "Something went wrong" })
+      })
+  }, [dispatch, selectedRowKeys, userid, assignedLeadInfo])
+
   const bellCountUrl = `/leadService/api/v1/notification/getUnseenCount?userId=${userid}`
   const bellCountDep = []
 
@@ -617,124 +665,12 @@ const LeadsModule = () => {
           <CommonTable
             data={allLeadsData.reverse()}
             columns={columns}
-            scroll={{ y: 500, x: 2300 }}
+            scroll={{ y: 580, x: 2300 }}
             rowSelection={true}
             onRowSelection={onSelectChange}
             selectedRowKeys={selectedRowKeys}
           />
         </Suspense>
-
-        <FloatButton
-          description={
-            <div
-              className={`bottom-line ${
-                multiLeadData.leadIds.length > 0 ? "pos-fix" : ""
-              }`}
-            >
-              <div>
-                <Popconfirm
-                  title="Delete the task"
-                  description="Are you sure to delete this task?"
-                  okText="Yes"
-                  cancelText="No"
-                  onConfirm={deleteMultiLeadFun}
-                >
-                  <Button danger>
-                    {leadDelLoading ? "Please Wait..." : "Delete"}
-                  </Button>
-                </Popconfirm>
-                {/* <select
-                className="p-1 date-input"
-                name="status"
-                ref={multiStatusRef}
-                onChange={(e) =>
-                  setMultiLeadData((prev) => ({
-                    ...prev,
-                    statusId: e.target.value,
-                  }))
-                }
-                id="status"
-                form="statusChange"
-              >
-                <option>Select Status</option>
-                {getAllStatus.map((status, index) => (
-                  <option value={status.id} key={index}>
-                    {status.name}
-                  </option>
-                ))}
-              </select> */}
-                <Select
-                  allowClear
-                  showSearch
-                  options={
-                    getAllStatus?.length > 0
-                      ? getAllStatus?.map((item) => ({
-                          label: item?.name,
-                          value: item?.id,
-                        }))
-                      : []
-                  }
-                  onChange={(e) =>
-                    setMultiLeadData((prev) => ({
-                      ...prev,
-                      statusId: e,
-                    }))
-                  }
-                  filterOption={(input, option) =>
-                    option.label.toLowerCase().includes(input.toLowerCase())
-                  }
-                />
-              </div>
-              <div>
-                {/* <select
-                className="p-1 date-input"
-                ref={multiAssigneeRef}
-                onChange={(e) =>
-                  setMultiLeadData((prev) => ({
-                    ...prev,
-                    assigneId: e.target.value,
-                  }))
-                }
-                name="lead"
-                id="lead"
-              >
-                <option>Select User</option>
-                {leadUserNew.map((user, index) => (
-                  <option key={index} value={user.id}>
-                    {user?.fullName}
-                  </option>
-                ))}
-              </select> */}
-                <Select
-                  showSearch
-                  allowClear
-                  options={
-                    leadUserNew?.length > 0
-                      ? leadUserNew?.map((ele) => ({
-                          label: ele?.fullName,
-                          value: ele?.id,
-                        }))
-                      : []
-                  }
-                  onChange={(e) =>
-                    setMultiLeadData((prev) => ({
-                      ...prev,
-                      assigneId: e,
-                    }))
-                  }
-                  filterOption={(input, option) =>
-                    option.label.toLowerCase().includes(input.toLowerCase())
-                  }
-                />
-              </div>
-              <div>
-                <Button type="primary" onClick={() => multiAssignee()}>
-                  {multibtn ? "Loading..." : "Send"}
-                </Button>
-              </div>
-            </div>
-          }
-        />
 
         {adminRole ? (
           <div
@@ -742,41 +678,34 @@ const LeadsModule = () => {
               multiLeadData.leadIds.length > 0 ? "pos-fix" : ""
             }`}
           >
-            <div>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                gap: 12,
+                // padding: "18px 12px",
+              }}
+            >
               <Popconfirm
                 title="Delete the task"
                 description="Are you sure to delete this task?"
                 okText="Yes"
                 cancelText="No"
-                onConfirm={deleteMultiLeadFun}
+                onConfirm={handleDeleteMutipleLeads}
               >
-                <Button danger>
+                <Button
+                  danger
+                  disabled={selectedRowKeys?.length === 0 ? true : false}
+                >
                   {leadDelLoading ? "Please Wait..." : "Delete"}
                 </Button>
               </Popconfirm>
-              {/* <select
-                className="p-1 date-input"
-                name="status"
-                ref={multiStatusRef}
-                onChange={(e) =>
-                  setMultiLeadData((prev) => ({
-                    ...prev,
-                    statusId: e.target.value,
-                  }))
-                }
-                id="status"
-                form="statusChange"
-              >
-                <option>Select Status</option>
-                {getAllStatus.map((status, index) => (
-                  <option value={status.id} key={index}>
-                    {status.name}
-                  </option>
-                ))}
-              </select> */}
+
               <Select
                 allowClear
                 showSearch
+                style={{ width: 200 }}
+                placeholder="select user"
                 options={
                   getAllStatus?.length > 0
                     ? getAllStatus?.map((item) => ({
@@ -786,7 +715,7 @@ const LeadsModule = () => {
                     : []
                 }
                 onChange={(e) =>
-                  setMultiLeadData((prev) => ({
+                  setAssignedLeadInfo((prev) => ({
                     ...prev,
                     statusId: e,
                   }))
@@ -797,28 +726,11 @@ const LeadsModule = () => {
               />
             </div>
             <div>
-              {/* <select
-                className="p-1 date-input"
-                ref={multiAssigneeRef}
-                onChange={(e) =>
-                  setMultiLeadData((prev) => ({
-                    ...prev,
-                    assigneId: e.target.value,
-                  }))
-                }
-                name="lead"
-                id="lead"
-              >
-                <option>Select User</option>
-                {leadUserNew.map((user, index) => (
-                  <option key={index} value={user.id}>
-                    {user?.fullName}
-                  </option>
-                ))}
-              </select> */}
               <Select
                 showSearch
                 allowClear
+                style={{ width: 200 }}
+                placeholder="select user"
                 options={
                   leadUserNew?.length > 0
                     ? leadUserNew?.map((ele) => ({
@@ -828,7 +740,7 @@ const LeadsModule = () => {
                     : []
                 }
                 onChange={(e) =>
-                  setMultiLeadData((prev) => ({
+                  setAssignedLeadInfo((prev) => ({
                     ...prev,
                     assigneId: e,
                   }))
@@ -839,10 +751,20 @@ const LeadsModule = () => {
               />
             </div>
             <div>
-              <Button type="primary" onClick={() => multiAssignee()}>
+              <Button
+                type="primary"
+                disabled={
+                  assignedLeadInfo?.assigneId === null ||
+                  assignedLeadInfo?.statusId === null
+                    ? true
+                    : false
+                }
+                onClick={handleMultipleAssignedLeads}
+              >
                 {multibtn ? "Loading..." : "Send"}
               </Button>
             </div>
+            <Text>Selected rows: {selectedRowKeys?.length}</Text>
           </div>
         ) : (
           ""

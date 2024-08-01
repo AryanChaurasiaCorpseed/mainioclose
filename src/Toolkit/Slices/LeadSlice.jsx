@@ -279,6 +279,17 @@ export const updateStatusById=createAsyncThunk('updateStatebyid',async(data)=>{
   return response.data
 })
 
+
+export const deleteMultipleLeads=createAsyncThunk('deleteMultipleLeads',async(data)=>{
+  const response= await deleteQuery(`/leadService/api/v1/lead/deleteMultiLead`,data)
+  return response.data
+})
+
+export const multiAssignedLeads=createAsyncThunk('multiAssignedLeads',async(data)=>{
+  const response=await putQuery(`/leadService/api/v1/lead/updateMultiLeadAssigne`,data)
+  return response.data
+})
+
 export const LeadSlice = createSlice({
   name: "lead",
   initialState: {
