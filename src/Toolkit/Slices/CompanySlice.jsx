@@ -56,17 +56,36 @@ export const getAllParentCompany = createAsyncThunk(
   }
 )
 
+export const createCompanyByLeads = createAsyncThunk(
+  "createCompanyByLeads",
+  async (data) => {
+    const response = await postQuery(
+      `/leadService/api/v1/company/createCompanyForm`,
+      data
+    )
+    return response.data
+  }
+)
 
-export const createCompanyByLeads=createAsyncThunk('createCompanyByLeads',async(data)=>{
-  const response=await postQuery(`/leadService/api/v1/company/createCompanyForm`,data)
-  return response.data
-})
+export const getAllLeadCompanyies = createAsyncThunk(
+  "getAllLeadCompanyies",
+  async () => {
+    const response = await getQuery(
+      `/leadService/api/v1/company/getAllCompanyForm`
+    )
+    return response.data
+  }
+)
 
-export const getAllLeadCompanyies=createAsyncThunk('getAllLeadCompanyies',async()=>{
-  const response=await getQuery(`/leadService/api/v1/company/getAllCompanyForm`)
-  return response.data
-})
-
+export const getAllCompanyByStatus = createAsyncThunk(
+  "getCompaniesByStatus",
+  async (data) => {
+    const response = await getQuery(
+      `/leadService/api/v1/company/getAllCompanyFormByStatus?status=${data.status}&userId=${data?.id}`
+    )
+    return response.data
+  }
+)
 
 const CompnaySlice = createSlice({
   name: "company",
@@ -82,8 +101,8 @@ const CompnaySlice = createSlice({
     compLeadsError: false,
     allCompany: [],
     loading: "",
-    allParentCompany:[],
-    allLeadCompanyList:[]
+    allParentCompany: [],
+    allLeadCompanyList: [],
   },
   extraReducers: (builder) => {
     builder.addCase(getCompanyAction.pending, (state, action) => {
@@ -139,7 +158,6 @@ const CompnaySlice = createSlice({
       state.loading = "rejected"
     })
 
-
     builder.addCase(getAllParentCompany.pending, (state, action) => {
       state.loading = "pending"
     })
@@ -163,6 +181,16 @@ const CompnaySlice = createSlice({
     })
 
 
+    builder.addCase(getAllCompanyByStatus.pending, (state, action) => {
+      state.loading = "pending"
+    })
+    builder.addCase(getAllCompanyByStatus.fulfilled, (state, action) => {
+      state.allLeadCompanyList = action.payload
+      state.loading = "success"
+    })
+    builder.addCase(getAllCompanyByStatus.rejected, (state, action) => {
+      state.loading = "rejected"
+    })
   },
 })
 

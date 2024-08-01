@@ -1,31 +1,34 @@
-import React, { useEffect } from "react"
+import React, { useEffect, useState } from "react"
 import MainHeading from "../../components/design/MainHeading"
 import TableScalaton from "../../components/TableScalaton"
 import CommonTable from "../../components/CommonTable"
 import CompanyFormModal from "./CompanyFormModal"
 import TableOutlet from "../../components/design/TableOutlet"
 import { useDispatch, useSelector } from "react-redux"
-import { getAllLeadCompanyies } from "../../Toolkit/Slices/CompanySlice"
-import { Button, notification, Tooltip, Typography } from "antd"
+import { getAllCompanyByStatus, getAllLeadCompanyies } from "../../Toolkit/Slices/CompanySlice"
+import { Button, notification, Select, Tooltip, Typography } from "antd"
 import { updateStatusById } from "../../Toolkit/Slices/LeadSlice"
 import { Icon } from "@iconify/react"
 import { BTN_ICON_HEIGHT, BTN_ICON_WIDTH } from "../../components/Constants"
+import { useParams } from "react-router-dom"
 const { Text } = Typography
 
 const CompanyForm = () => {
   const dispatch = useDispatch()
+  const {userid}=useParams()
   const leadCompanyList = useSelector(
     (state) => state.company.allLeadCompanyList
   )
+  const [selectedFilter, setSelectedFilter] = useState("initiated")
   useEffect(() => {
-    dispatch(getAllLeadCompanyies())
-  }, [dispatch])
+    dispatch(getAllCompanyByStatus({id:userid,status:selectedFilter}))
+  }, [dispatch,selectedFilter])
   const columns = [
     {
       title: "Id",
       dataIndex: "id",
       fixed: "left",
-      width:50
+      width: 50,
     },
     {
       title: "Company name",
@@ -158,6 +161,19 @@ const CompanyForm = () => {
       <div className="mt-3">
         {/* {userHRLoading && <TableScalaton />}
         {userHRError && <SomethingWrong />} */}
+        <div>
+          <Select
+            style={{ width: "200px" }}
+            showSearch
+            value={selectedFilter}
+            options={[
+              { label: "Initiated", value: "initiated" },
+              { label: "Approved", value: "approved" },
+              { label: "Disapproved", value: "disapproved" },
+            ]}
+            onChange={(e)=>setSelectedFilter(e)}
+          />
+        </div>
         <CommonTable
           data={leadCompanyList}
           columns={columns}
