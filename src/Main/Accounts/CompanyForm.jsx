@@ -25,6 +25,7 @@ const CompanyForm = () => {
       title: "Id",
       dataIndex: "id",
       fixed: "left",
+      width:50
     },
     {
       title: "Company name",

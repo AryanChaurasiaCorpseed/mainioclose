@@ -27,7 +27,15 @@ import {
   updateHelper,
 } from "../../../Toolkit/Slices/LeadSlice"
 import MainHeading from "../../../components/design/MainHeading"
-import { Button, notification, Select, Typography } from "antd"
+import {
+  Button,
+  Card,
+  FloatButton,
+  notification,
+  Popconfirm,
+  Select,
+  Typography,
+} from "antd"
 import { Icon } from "@iconify/react"
 import { getAllUsers } from "../../../Toolkit/Slices/UsersSlice"
 import CommonTable from "../../../components/CommonTable"
@@ -60,6 +68,11 @@ const LeadsModule = () => {
 
   const [multiLeadError, setMultiLeadError] = useState(false)
   const [selectLeadError, setSelectLeadError] = useState(false)
+  const [selectedRowKeys, setSelectedRowKeys] = useState([])
+  const onSelectChange = (newSelectedRowKeys) => {
+    console.log("selectedRowKeys changed: ", newSelectedRowKeys)
+    setSelectedRowKeys(newSelectedRowKeys)
+  }
 
   const { userid, leadid } = useParams()
   const location = useLocation()
@@ -499,11 +512,12 @@ const LeadsModule = () => {
     }
   }
 
-
   const bellCountUrl = `/leadService/api/v1/notification/getUnseenCount?userId=${userid}`
   const bellCountDep = []
 
   const { productData: bellData } = useCustomRoute(bellCountUrl, bellCountDep)
+
+  console.log("selected row keys", selectedRowKeys)
 
   return (
     <div className="lead-module small-box-padding">
@@ -605,23 +619,31 @@ const LeadsModule = () => {
             columns={columns}
             scroll={{ y: 500, x: 2300 }}
             rowSelection={true}
+            onRowSelection={onSelectChange}
+            selectedRowKeys={selectedRowKeys}
           />
         </Suspense>
 
-        {adminRole ? (
-          <div
-            className={`bottom-line ${
-              multiLeadData.leadIds.length > 0 ? "pos-fix" : ""
-            }`}
-          >
-            <div>
-              <button
-                className="common-btn-one mr-2"
-                onClick={() => deleteMultiLeadFun()}
-              >
-                {leadDelLoading ? "Please Wait..." : "Delete"}
-              </button>
-              <select
+        <FloatButton
+          description={
+            <div
+              className={`bottom-line ${
+                multiLeadData.leadIds.length > 0 ? "pos-fix" : ""
+              }`}
+            >
+              <div>
+                <Popconfirm
+                  title="Delete the task"
+                  description="Are you sure to delete this task?"
+                  okText="Yes"
+                  cancelText="No"
+                  onConfirm={deleteMultiLeadFun}
+                >
+                  <Button danger>
+                    {leadDelLoading ? "Please Wait..." : "Delete"}
+                  </Button>
+                </Popconfirm>
+                {/* <select
                 className="p-1 date-input"
                 name="status"
                 ref={multiStatusRef}
@@ -640,10 +662,31 @@ const LeadsModule = () => {
                     {status.name}
                   </option>
                 ))}
-              </select>
-            </div>
-            <div>
-              <select
+              </select> */}
+                <Select
+                  allowClear
+                  showSearch
+                  options={
+                    getAllStatus?.length > 0
+                      ? getAllStatus?.map((item) => ({
+                          label: item?.name,
+                          value: item?.id,
+                        }))
+                      : []
+                  }
+                  onChange={(e) =>
+                    setMultiLeadData((prev) => ({
+                      ...prev,
+                      statusId: e,
+                    }))
+                  }
+                  filterOption={(input, option) =>
+                    option.label.toLowerCase().includes(input.toLowerCase())
+                  }
+                />
+              </div>
+              <div>
+                {/* <select
                 className="p-1 date-input"
                 ref={multiAssigneeRef}
                 onChange={(e) =>
@@ -661,15 +704,144 @@ const LeadsModule = () => {
                     {user?.fullName}
                   </option>
                 ))}
-              </select>
+              </select> */}
+                <Select
+                  showSearch
+                  allowClear
+                  options={
+                    leadUserNew?.length > 0
+                      ? leadUserNew?.map((ele) => ({
+                          label: ele?.fullName,
+                          value: ele?.id,
+                        }))
+                      : []
+                  }
+                  onChange={(e) =>
+                    setMultiLeadData((prev) => ({
+                      ...prev,
+                      assigneId: e,
+                    }))
+                  }
+                  filterOption={(input, option) =>
+                    option.label.toLowerCase().includes(input.toLowerCase())
+                  }
+                />
+              </div>
+              <div>
+                <Button type="primary" onClick={() => multiAssignee()}>
+                  {multibtn ? "Loading..." : "Send"}
+                </Button>
+              </div>
+            </div>
+          }
+        />
+
+        {adminRole ? (
+          <div
+            className={`bottom-line ${
+              multiLeadData.leadIds.length > 0 ? "pos-fix" : ""
+            }`}
+          >
+            <div>
+              <Popconfirm
+                title="Delete the task"
+                description="Are you sure to delete this task?"
+                okText="Yes"
+                cancelText="No"
+                onConfirm={deleteMultiLeadFun}
+              >
+                <Button danger>
+                  {leadDelLoading ? "Please Wait..." : "Delete"}
+                </Button>
+              </Popconfirm>
+              {/* <select
+                className="p-1 date-input"
+                name="status"
+                ref={multiStatusRef}
+                onChange={(e) =>
+                  setMultiLeadData((prev) => ({
+                    ...prev,
+                    statusId: e.target.value,
+                  }))
+                }
+                id="status"
+                form="statusChange"
+              >
+                <option>Select Status</option>
+                {getAllStatus.map((status, index) => (
+                  <option value={status.id} key={index}>
+                    {status.name}
+                  </option>
+                ))}
+              </select> */}
+              <Select
+                allowClear
+                showSearch
+                options={
+                  getAllStatus?.length > 0
+                    ? getAllStatus?.map((item) => ({
+                        label: item?.name,
+                        value: item?.id,
+                      }))
+                    : []
+                }
+                onChange={(e) =>
+                  setMultiLeadData((prev) => ({
+                    ...prev,
+                    statusId: e,
+                  }))
+                }
+                filterOption={(input, option) =>
+                  option.label.toLowerCase().includes(input.toLowerCase())
+                }
+              />
             </div>
             <div>
-              <button
-                onClick={() => multiAssignee()}
-                className="common-btn-one"
+              {/* <select
+                className="p-1 date-input"
+                ref={multiAssigneeRef}
+                onChange={(e) =>
+                  setMultiLeadData((prev) => ({
+                    ...prev,
+                    assigneId: e.target.value,
+                  }))
+                }
+                name="lead"
+                id="lead"
               >
+                <option>Select User</option>
+                {leadUserNew.map((user, index) => (
+                  <option key={index} value={user.id}>
+                    {user?.fullName}
+                  </option>
+                ))}
+              </select> */}
+              <Select
+                showSearch
+                allowClear
+                options={
+                  leadUserNew?.length > 0
+                    ? leadUserNew?.map((ele) => ({
+                        label: ele?.fullName,
+                        value: ele?.id,
+                      }))
+                    : []
+                }
+                onChange={(e) =>
+                  setMultiLeadData((prev) => ({
+                    ...prev,
+                    assigneId: e,
+                  }))
+                }
+                filterOption={(input, option) =>
+                  option.label.toLowerCase().includes(input.toLowerCase())
+                }
+              />
+            </div>
+            <div>
+              <Button type="primary" onClick={() => multiAssignee()}>
                 {multibtn ? "Loading..." : "Send"}
-              </button>
+              </Button>
             </div>
           </div>
         ) : (

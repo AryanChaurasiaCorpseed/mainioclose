@@ -95,8 +95,10 @@ const DisplayDashboardUser = () => {
       render: (_, props) => (
         <div className="flex-vert-hori-center">
           <Icon
-            icon="fluent:circle-20-filled"
-            color={props?.autoActive ? "green" : "red"}
+            icon="fluent:circle-12-filled"
+            height={12}
+            width={12}
+            color={props?.autoActive ? "#99ff99" : "#ff9999"}
           />
           <Text>{props?.fullName} </Text>
         </div>

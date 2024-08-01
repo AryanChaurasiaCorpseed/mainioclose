@@ -130,8 +130,8 @@ function App() {
               path="/erp"
               element={authStatus ? <MainPage /> : <Navigate to="/erp/login" />}
             >
-              <Route path=":userid/users" element={<DashBoard />}>
-                <Route path="" element={<DisplayDashboardUser />} />
+              <Route path=":userid/dashboard" element={<DashBoard />}>
+                <Route path="users" element={<DisplayDashboardUser />} />
                 <Route path=":userid/history" element={<SingleUserHistory />} />
                 <Route path="tickets" element={<AllTickets />} />
                 <Route path="manager" element={<AllManagerApprovals />} />
@@ -140,7 +140,7 @@ function App() {
               </Route>
               {/* hr module routes */}
               <Route path="/erp/:userid/hr" element={<HRMod />}>
-                <Route path="" element={<HrUserList />} />
+                <Route path="userlist" element={<HrUserList />} />
                 <Route path="approveUser" element={<HRApprovalList />} />
                 <Route path="userservice" element={<UserService />} />
                 <Route path="userservice/:serviceid" element={<UserRating />} />
@@ -150,9 +150,9 @@ function App() {
               </Route>
               {/* end */}
               <Route path="/erp/:userid/compliance" element={<Compliances />} />
-              {/* slaes module routes */}
+              {/* sales module routes */}
               <Route path="/erp/:userid/sales" element={<SalesMod />}>
-                <Route path="" element={<InboxPage />} />
+                <Route path="inbox" element={<InboxPage />} />
                 <Route path="scalaton" element={<TableScalaton />} />
                 {/* <Route path=":id" element={<LeadDetailsPage />} /> */}
 
@@ -184,7 +184,7 @@ function App() {
               {/* end */}
               {/* accounts module routes */}
               <Route path="/erp/:userid/account" element={<Accounts />}>
-                <Route path="" element={<AccountsList />} />
+                <Route path="accountlist" element={<AccountsList />} />
                 <Route path="companyForm" element={<CompanyForm />} />
                 <Route
                   path="accounttwo"
@@ -288,7 +288,7 @@ function App() {
               {/* end */}
               {/* quality module routes */}
               <Route path="/erp/:userid/quality" element={<QualityModule />}>
-                <Route path="" element={<IVR />} />
+                <Route path="ivr" element={<IVR />} />
                 <Route
                   path="qualitytwo"
                   element={<div>Quality Number Two</div>}

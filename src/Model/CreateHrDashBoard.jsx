@@ -335,6 +335,29 @@ const CreateHrDashBoard = ({ data, edit, modalTitle }) => {
               >
                 <Input />
               </Form.Item>
+            </Col>
+            <Col span={1} />
+            <Col span={11}>
+              <Form.Item
+                label="Email"
+                name="email"
+                rules={[
+                  {
+                    required: true,
+                    type: "email",
+                    message: "",
+                  },
+                  {
+                    validator: !edit && validateEmail(dispatch),
+                  },
+                ]}
+              >
+                <Input disabled={edit} />
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row>
+            <Col span={11}>
               <Form.Item
                 label="Role"
                 name="role"
@@ -362,148 +385,9 @@ const CreateHrDashBoard = ({ data, edit, modalTitle }) => {
                   }
                 />
               </Form.Item>
-              <Form.Item
-                label="Desigination"
-                name="designationId"
-                rules={[
-                  {
-                    required: true,
-                    message: "please select the designation",
-                  },
-                ]}
-              >
-                <Select
-                  showSearch
-                  allowClear
-                  options={
-                    allDesiginationListById?.length > 0
-                      ? allDesiginationListById?.map((ele) => ({
-                          label: ele?.name,
-                          value: ele?.id,
-                        }))
-                      : []
-                  }
-                  filterOption={(input, option) =>
-                    option.label.toLowerCase().includes(input.toLowerCase())
-                  }
-                />
-              </Form.Item>
-              <Form.Item
-                label="Aadhar card no."
-                name="aadharCard"
-                rules={[
-                  {
-                    required: true,
-                    message: "",
-                  },
-                  {
-                    validator: validateAadharNumber,
-                  },
-                ]}
-              >
-                <Input />
-              </Form.Item>
-              <Form.Item
-                label={`Experience (in year)`}
-                name="expInYear"
-                rules={[
-                  {
-                    required: true,
-                    message: "please enter experience in year",
-                  },
-                ]}
-              >
-                <Input />
-              </Form.Item>
-              <Form.Item
-                label="Date of joining"
-                name="dateOfJoining"
-                rules={[{ required: true, message: "please select the date" }]}
-              >
-                <DatePicker style={{ width: "100%" }} />
-              </Form.Item>
-              <Form.Item
-                label="Father's name"
-                name="fatherName"
-                rules={[
-                  { required: true, message: "please enter father's name " },
-                ]}
-              >
-                <Input />
-              </Form.Item>
-              <Form.Item
-                label="Father's contact no."
-                name="fatherContactNo"
-                rules={[
-                  {
-                    required: true,
-                    message: "",
-                    validator: validateMobileNumber,
-                  },
-                ]}
-              >
-                <Input />
-              </Form.Item>
-              <Form.Item label="Mother's occupation" name="motherOccupation">
-                <Input />
-              </Form.Item>
-              <Form.Item label="Spouse name" name="spouseName">
-                <Input />
-              </Form.Item>
-              <Form.Item label="Nationality" name="nationality">
-                <Input />
-              </Form.Item>
-              <Form.Item
-                label="Emergency contact no."
-                name="emergencyNumber"
-                rules={[
-                  {
-                    required: true,
-                    message: "",
-                    validator: validateMobileNumber,
-                  },
-                ]}
-              >
-                <Input />
-              </Form.Item>
-              {edit && (
-                <Form.Item
-                  label="Master"
-                  name="master"
-                  rules={[{ required: true, message: "please select master" }]}
-                >
-                  <Select
-                    options={[
-                      { label: "True", value: true },
-                      { label: "False", value: false },
-                    ]}
-                    showSearch
-                    allowClear
-                  />
-                </Form.Item>
-              )}
-              <Form.Item label="Residential address" name="residentialAddress">
-                <Input.TextArea />
-              </Form.Item>
             </Col>
             <Col span={1} />
             <Col span={11}>
-              <Form.Item
-                label="Email"
-                name="email"
-                rules={[
-                  {
-                    required: true,
-                    type: "email",
-                    message: "",
-                  },
-                  {
-                    validator: !edit && validateEmail(dispatch),
-                  },
-                ]}
-              >
-                <Input disabled={edit} />
-              </Form.Item>
               <Form.Item
                 label="Department"
                 name="departmentId"
@@ -534,9 +418,64 @@ const CreateHrDashBoard = ({ data, edit, modalTitle }) => {
                   }
                 />
               </Form.Item>
+            </Col>
+          </Row>
+          <Row>
+            <Col span={11}>
+              <Form.Item
+                label="Desigination"
+                name="designationId"
+                rules={[
+                  {
+                    required: true,
+                    message: "please select the designation",
+                  },
+                ]}
+              >
+                <Select
+                  showSearch
+                  allowClear
+                  options={
+                    allDesiginationListById?.length > 0
+                      ? allDesiginationListById?.map((ele) => ({
+                          label: ele?.name,
+                          value: ele?.id,
+                        }))
+                      : []
+                  }
+                  filterOption={(input, option) =>
+                    option.label.toLowerCase().includes(input.toLowerCase())
+                  }
+                />
+              </Form.Item>
+            </Col>
+            <Col span={1} />
+            <Col span={11}>
               <Form.Item label="EPFO number" name="epfNo">
                 <Input />
               </Form.Item>
+            </Col>
+          </Row>
+          <Row>
+            <Col span={11}>
+              <Form.Item
+                label="Aadhar card no."
+                name="aadharCard"
+                rules={[
+                  {
+                    required: true,
+                    message: "",
+                  },
+                  {
+                    validator: validateAadharNumber,
+                  },
+                ]}
+              >
+                <Input />
+              </Form.Item>
+            </Col>
+            <Col span={1} />
+            <Col span={11}>
               <Form.Item label="Manager name" name="managerId">
                 <Select
                   showSearch
@@ -554,6 +493,25 @@ const CreateHrDashBoard = ({ data, edit, modalTitle }) => {
                   }
                 />
               </Form.Item>
+            </Col>
+          </Row>
+          <Row>
+            <Col span={11}>
+              <Form.Item
+                label={`Experience (in year)`}
+                name="expInYear"
+                rules={[
+                  {
+                    required: true,
+                    message: "please enter experience in year",
+                  },
+                ]}
+              >
+                <Input />
+              </Form.Item>
+            </Col>
+            <Col span={1} />
+            <Col span={11}>
               <Form.Item
                 label={`Experience (in months)`}
                 name="expInMonth"
@@ -566,6 +524,20 @@ const CreateHrDashBoard = ({ data, edit, modalTitle }) => {
               >
                 <Input />
               </Form.Item>
+            </Col>
+          </Row>
+          <Row>
+            <Col span={11}>
+              <Form.Item
+                label="Date of joining"
+                name="dateOfJoining"
+                rules={[{ required: true, message: "please select the date" }]}
+              >
+                <DatePicker style={{ width: "100%" }} />
+              </Form.Item>
+            </Col>
+            <Col span={1} />
+            <Col span={11}>
               <Form.Item
                 label="Gender"
                 name="type"
@@ -581,21 +553,32 @@ const CreateHrDashBoard = ({ data, edit, modalTitle }) => {
                   ]}
                 />
               </Form.Item>
-              <Form.Item label="Father's occupation" name="fatherOccupation">
-                <Input />
-              </Form.Item>
+            </Col>
+          </Row>
+          <Row>
+            <Col span={11}>
               <Form.Item
-                label="Mother's name"
-                name="motherName"
+                label="Father's name"
+                name="fatherName"
                 rules={[
-                  { required: true, message: "please enter mother's name" },
+                  { required: true, message: "please enter father's name " },
                 ]}
               >
                 <Input />
               </Form.Item>
+            </Col>
+            <Col span={1} />
+            <Col span={11}>
+              <Form.Item label="Father's occupation" name="fatherOccupation">
+                <Input />
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row>
+            <Col span={11}>
               <Form.Item
-                label="Mother's contact no."
-                name="motherContactNo"
+                label="Father's contact no."
+                name="fatherContactNo"
                 rules={[
                   {
                     required: true,
@@ -606,6 +589,51 @@ const CreateHrDashBoard = ({ data, edit, modalTitle }) => {
               >
                 <Input />
               </Form.Item>
+            </Col>
+            <Col span={1} />
+            <Col span={11}>
+              <Form.Item
+                label="Mother's name"
+                name="motherName"
+                rules={[
+                  { required: true, message: "please enter mother's name" },
+                ]}
+              >
+                <Input />
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row>
+            <Col span={11}>
+              <Form.Item label="Mother's occupation" name="motherOccupation">
+                <Input />
+              </Form.Item>
+            </Col>
+            <Col span={1} />
+            <Col span={11}>
+              <Form.Item
+                label="Mother's contact no."
+                name="motherContactNo"
+                // rules={[
+                //   {
+                //     required: true,
+                //     message: "",
+                //     validator: validateMobileNumber,
+                //   },
+                // ]}
+              >
+                <Input />
+              </Form.Item>
+            </Col>
+          </Row>
+          {/* <Row>
+            <Col span={11}>
+              <Form.Item label="Spouse name" name="spouseName">
+                <Input />
+              </Form.Item>
+            </Col>
+            <Col span={1} />
+            <Col span={11}>
               <Form.Item
                 label="Spouse contact number"
                 name="spouseContactNo"
@@ -619,13 +647,64 @@ const CreateHrDashBoard = ({ data, edit, modalTitle }) => {
               >
                 <Input />
               </Form.Item>
+            </Col>
+          </Row> */}
+          <Row>
+            <Col span={11}>
+              <Form.Item label="Nationality" name="nationality">
+                <Input />
+              </Form.Item>
+            </Col>
+            <Col span={1} />
+            <Col span={11}>
               <Form.Item label="Language" name="language">
                 <Input />
               </Form.Item>
+            </Col>
+          </Row>
+          <Row>
+            <Col span={11}>
+              <Form.Item
+                label="Emergency contact no."
+                name="emergencyNumber"
+                rules={[
+                  {
+                    required: true,
+                    message: "",
+                    validator: validateMobileNumber,
+                  },
+                ]}
+              >
+                <Input />
+              </Form.Item>
+            </Col>
+            <Col span={1} />
+            <Col span={11}>
               <Form.Item label="Locker size" name="lockerSize">
                 <Input />
               </Form.Item>
-              {edit && (
+            </Col>
+          </Row>
+          {edit && (
+            <Row>
+              <Col span={11}>
+                <Form.Item
+                  label="Master"
+                  name="master"
+                  rules={[{ required: true, message: "please select master" }]}
+                >
+                  <Select
+                    options={[
+                      { label: "True", value: true },
+                      { label: "False", value: false },
+                    ]}
+                    showSearch
+                    allowClear
+                  />
+                </Form.Item>
+              </Col>
+              <Col span={1} />
+              <Col span={11}>
                 <Form.Item
                   label="Backup team"
                   name="backupTeam"
@@ -642,8 +721,27 @@ const CreateHrDashBoard = ({ data, edit, modalTitle }) => {
                     allowClear
                   />
                 </Form.Item>
-              )}
-              <Form.Item label="Permanenet address" name="permanentAddress">
+              </Col>
+            </Row>
+          )}
+          <Row>
+            <Col span={11}>
+              <Form.Item
+                label="Permanent address"
+                name="permanentAddress"
+                rules={[
+                  {
+                    required: true,
+                    message: "please enter your permanent address",
+                  },
+                ]}
+              >
+                <Input.TextArea />
+              </Form.Item>
+            </Col>
+            <Col span={1} />
+            <Col span={11}>
+              <Form.Item label="Residential address" name="residentialAddress">
                 <Input.TextArea />
               </Form.Item>
             </Col>

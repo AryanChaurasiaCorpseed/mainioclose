@@ -72,27 +72,25 @@ const ProfileDrawer = () => {
 
   return (
     <>
-      <div className="user-profile">
-        <div className="profile-info">
-          <h4>
-            {currentUserProfile?.username
-              ? currentUserProfile?.username
-              : "UserName"}
-          </h4>
-        </div>
-
-        <div className="profile-image" onClick={() => setOpenDrawer(true)}>
-          <Avatar size={32} src={profilePhoto} alt="profile_photo">
-            {profilePhoto
-              ? ""
-              : currentUserProfile?.username?.toUpperCase()?.[0]}
-          </Avatar>
-        </div>
+      <div className="user-profile-container">
+        <Text className="heading-text">
+          {currentUserProfile?.username
+            ? currentUserProfile?.username
+            : "UserName"}
+        </Text>
+        <Avatar
+          size={32}
+          src={profilePhoto}
+          alt="profile_photo"
+          onClick={() => setOpenDrawer(true)}
+        >
+          {profilePhoto ? "" : currentUserProfile?.username?.toUpperCase()?.[0]}
+        </Avatar>
       </div>
       <Drawer
         title="User profile"
         open={openDrawer}
-        placement="left"
+        placement="right"
         onClose={() => setOpenDrawer(false)}
         width={300}
         closeIcon={false}
