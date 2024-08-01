@@ -7,6 +7,7 @@ import UserListComponent from "../../../Tables/UserListComponent"
 import { useDispatch, useSelector } from "react-redux"
 import { getProjectAction } from "../../../Toolkit/Slices/ProjectSlice"
 import ColComp from "../../../components/small/ColComp"
+import CommonTable from "../../../components/CommonTable"
 
 const ProjectPage = () => {
   const dispatch = useDispatch()
@@ -23,21 +24,23 @@ const ProjectPage = () => {
 
   const columns = [
     {
-      field: "id",
-      headerName: "ID",
-      width: 60,
+      dataIndex: "id",
+      title: "Id",
+      width: 50,
     },
     {
-      field: "projectName",
-      headerName: "Project Name",
-      width: 220,
-      renderCell: (props) => <ColComp data={props?.row?.projectName} />,
+      dataIndex:'client',
+      title:'Client'
     },
     {
-      field: "assigneeName",
-      headerName: "Assignee Name",
-      width: 220,
-      renderCell: (props) => <ColComp data={props?.row?.assigneeName} />,
+      dataIndex: "projectName",
+      title: "Project name",
+      render: (_,props) => <ColComp data={props?.projectName} />,
+    },
+    {
+      dataIndex: "assigneeName",
+      title: "Assignee name",
+      render: (_,props) => <ColComp data={props?.assigneeName} />,
     },
   ]
 
@@ -48,12 +51,13 @@ const ProjectPage = () => {
         {loadingProject && <TableScalaton />}
         {errorProject && <SomethingWrong />}
         {allProject && !loadingProject && !errorProject && (
-          <UserListComponent
-            tableName={""}
-            columns={columns}
-            // getRowId={(row) => row.companyId}
-            row={allProject}
-          />
+          // <UserListComponent
+          //   tableName={""}
+          //   columns={columns}
+          //   // getRowId={(row) => row.companyId}
+          //   row={allProject}
+          // />
+          <CommonTable data={allProject} columns={columns} scroll={{y:600}}  />
         )}
       </div>
     </TableOutlet>

@@ -109,7 +109,7 @@ export const AccountsList = () => {
       <CommonTable
         columns={columns}
         data={allCompany}
-        scroll={{ x: 1500, y: 650 }}
+        scroll={{ x: 1500, y: 520 }}
       />
     </TableOutlet>
   )

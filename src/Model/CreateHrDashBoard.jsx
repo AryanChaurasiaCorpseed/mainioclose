@@ -176,6 +176,8 @@ const CreateHrDashBoard = ({ data, edit, modalTitle }) => {
       backupTeam: data?.backupTeam,
       master: data?.master,
       maritalStatus: data?.maritalStatus,
+      personalEmail:data?.personalEmail,
+      companyMobile:data?.companyMobile
     })
   }, [data, form])
 
@@ -354,6 +356,19 @@ const CreateHrDashBoard = ({ data, edit, modalTitle }) => {
                 ]}
               >
                 <Input disabled={edit} />
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row>
+            <Col span={11}>
+              <Form.Item label="Personal email" name="personalEmail">
+                <Input />
+              </Form.Item>
+            </Col>
+            <Col span={1} />
+            <Col span={11}>
+              <Form.Item label="Company mobile number" name="companyMobile">
+                <Input />
               </Form.Item>
             </Col>
           </Row>

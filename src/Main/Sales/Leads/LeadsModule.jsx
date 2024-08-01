@@ -309,13 +309,13 @@ const LeadsModule = () => {
         const minutes = new Date(data?.missedTaskDate).getMinutes()
         const taskCreated = data?.missedTaskCretedBy
         return taskName !== null ? (
-          <p className={`mb-0 ${taskName !== null ? "text-danger" : ""}`}>
+          <Text type={taskName !== null ? "danger" : ""}>
             {taskStatus} - {taskCreated} - {taskName}
             <br />
             {taskDate} {hours}:{minutes}
-          </p>
+          </Text>
         ) : (
-          <p className="mb-0">NA</p>
+          <Text>NA</Text>
         )
       },
     },
@@ -665,10 +665,11 @@ const LeadsModule = () => {
           <CommonTable
             data={allLeadsData.reverse()}
             columns={columns}
-            scroll={{ y: 580, x: 2300 }}
+            scroll={{ y: 510, x: 2300 }}
             rowSelection={true}
             onRowSelection={onSelectChange}
             selectedRowKeys={selectedRowKeys}
+            rowClassName={(record) => (!record.view ? "light-gray-row" : "")}
           />
         </Suspense>
 

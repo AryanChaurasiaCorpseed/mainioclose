@@ -27,48 +27,75 @@ const MainCompanyPage = () => {
     {
       dataIndex: "companyId",
       title: "Id",
-      fixed:'left',
-      width:50
+      fixed: "left",
+      width: 50,
     },
     {
       dataIndex: "companyName",
       title: "Company name",
-      fixed:'left',
-      render: (_,props) => (
-        <Link to={`${props?.companyId}/details`}>
-          {props?.companyName}
-        </Link>
+      fixed: "left",
+      render: (_, props) => (
+        <Link className="link-heading" to={`${props?.companyId}/details`}>{props?.companyName}</Link>
+      ),
+    },
+    {
+      dataIndex: "assignee",
+      title: "Assignee",
+      render: (_, props) => (
+        <ColComp data={props?.assignee?.fullName} />
       ),
     },
     {
       dataIndex: "gstNo",
       title: "GST number",
-      renderCell: (_,props) => <ColComp data={props?.gstNo} />,
+      render: (_, props) => <ColComp data={props?.gstNo} />,
+    },
+    {
+      dataIndex: "gstType",
+      title: "GST type",
+      render: (_, props) => <ColComp data={props?.gstType} />,
+    },
+    {
+      dataIndex: "address",
+      title: "Address",
+      render: (_, props) => <ColComp data={props?.address} />,
+    },
+    {
+      dataIndex: "city",
+      title: "City",
+      render: (_, props) => <ColComp data={props?.city} />,
+    },
+    {
+      dataIndex: "state",
+      title: "State",
+      render: (_, props) => <ColComp data={props?.state} />,
     },
 
     {
       dataIndex: "country",
       title: "Country",
-      renderCell: (_,props) => <ColComp data={props?.country} />,
+      render: (_, props) => <ColComp data={props?.country} />,
     },
-
     {
-      dataIndex: "state",
-      title: "State",
-      renderCell: (_,props) => <ColComp data={props?.state} />,
+      dataIndex: "secAddress",
+      title: "Secondary address",
+      render: (_, props) => <ColComp data={props?.secAddress} />,
     },
-
     {
-      dataIndex: "city",
-      title: "City",
-      render: (_,props) => <ColComp data={props?.city} />,
+      dataIndex: "secCity",
+      title: "Secondary city",
+      render: (_, props) => <ColComp data={props?.secCity} />,
     },
-
     {
-      dataIndex: "address",
-      title: "Address",
-      render: (_,props) => <ColComp data={props?.address} />,
+      dataIndex: "secState",
+      title: "Secondary state",
+      render: (_, props) => <ColComp data={props?.secState} />,
     },
+    {
+      dataIndex: "seCountry",
+      title: "Secondary country",
+      render: (_, props) => <ColComp data={props?.seCountry} />,
+    }
   ]
 
   return (
@@ -81,7 +108,7 @@ const MainCompanyPage = () => {
           <CommonTable
             data={allCompnay}
             columns={columns}
-            scroll={{ x: 1200, y: 650 }}
+            scroll={{ x: 2200, y: 520 }}
             rowSelection={true}
           />
         )}

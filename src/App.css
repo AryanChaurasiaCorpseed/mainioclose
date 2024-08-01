@@ -988,3 +988,11 @@ select.form-control:not([size]):not([multiple]) {
   font-size: 13px;
   font-weight: 400;
 }
+
+.light-gray-row td{
+  background-color: rgb(224, 224, 224) !important;
+}
+
+.ant-table-tbody > tr.ant-table-row-selected > td {
+  background-color: #e6f7ff !important; /* Ant Design's default selected row color */
+}

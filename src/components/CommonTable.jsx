@@ -16,6 +16,7 @@ const CommonTable = ({
   rowSelection,
   onRowSelection,
   selectedRowKeys,
+  rowClassName
 }) => {
   const dispatch = useDispatch()
   return (
@@ -26,6 +27,7 @@ const CommonTable = ({
         pagination={false}
         scroll={scroll}
         rowKey={(record) => record?.id}
+        rowClassName={rowClassName}
         rowSelection={
           rowSelection && {
             type: "checkbox",

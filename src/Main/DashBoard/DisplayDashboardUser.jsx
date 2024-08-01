@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-import { Link } from "react-router-dom"
+import { Link, useParams } from "react-router-dom"
 import CreateuserDashboard from "../../Model/CreateuserDashboard"
 import { deleteQuery } from "../../API/DeleteQuery"
 import {
@@ -27,6 +27,7 @@ const DisplayDashboardUser = () => {
   const [userToggle, setUserToggle] = useState(false)
   const [editType, setEditType] = useState(false)
   const dispatch = useDispatch()
+  const { userid } = useParams()
 
   const {
     allUsers: allMainUser,
@@ -111,7 +112,7 @@ const DisplayDashboardUser = () => {
       render: (_, props) => {
         return (
           <>
-            <Link to={`${props?.id}/history`}>
+            <Link to={`${props.id}/history`}>
               <Button>
                 <Icon icon="fluent:history-20-regular" /> History
               </Button>

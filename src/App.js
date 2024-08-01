@@ -97,6 +97,9 @@ function App() {
             colorSplit: "gray",
             margin: 4,
           },
+          Table: {
+            fontSize: 13,
+          },
         },
       }}
     >
@@ -132,7 +135,10 @@ function App() {
             >
               <Route path=":userid/dashboard" element={<DashBoard />}>
                 <Route path="users" element={<DisplayDashboardUser />} />
-                <Route path=":userid/history" element={<SingleUserHistory />} />
+                <Route
+                  path="users/:leadid/history"
+                  element={<SingleUserHistory />}
+                />
                 <Route path="tickets" element={<AllTickets />} />
                 <Route path="manager" element={<AllManagerApprovals />} />
                 <Route path="muiuser" element={<DisplayUserTwo />} />
@@ -179,7 +185,6 @@ function App() {
                   path="leads/notification"
                   element={<AllNotificationPage />}
                 />
-                
               </Route>
               {/* end */}
               {/* accounts module routes */}

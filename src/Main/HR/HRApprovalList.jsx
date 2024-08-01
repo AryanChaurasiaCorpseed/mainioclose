@@ -220,7 +220,7 @@ const HRApprovalList = () => {
           <CommonTable
             data={hrApprovalUser}
             columns={columns}
-            scroll={{ x: 5000, y: 550 }}
+            scroll={{ x: 5000, y: 530 }}
             rowSelection={true}
           />
         )}

@@ -10,10 +10,10 @@ import UserListComponent from "../../Tables/UserListComponent"
 const SingleUserHistory = () => {
   const dispatch = useDispatch()
 
-  const { userid } = useParams()
+  const { leadid } = useParams()
 
   useEffect(() => {
-    dispatch(getAllHistory({ id: userid }))
+    dispatch(getAllHistory({ id: leadid }))
   }, [])
 
   const { allHistory, historyLoading, historyError } = useSelector(
