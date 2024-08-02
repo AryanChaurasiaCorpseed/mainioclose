@@ -12,6 +12,7 @@ import TableScalaton from "../../../components/TableScalaton"
 import ColComp from "../../../components/small/ColComp"
 import { putQuery } from "../../../API/PutQuery"
 import CommonTable from "../../../components/CommonTable"
+import LeadCreateModel from "../../../Model/LeadCreateModel"
 
 const UserListComponent = React.lazy(() =>
   import(`../../../Tables/UserListComponent`)
@@ -67,6 +68,14 @@ const CompDetails = () => {
       render: (_, props) => <ColComp data={props?.projectName} />,
     },
     {
+      dataIndex: "client",
+      title: "Client",
+    },
+    {
+      dataIndex: "companyName",
+      title: "Company name",
+    },
+    {
       dataIndex: "product",
       title: "Product",
       render: (_, props) => <ColComp data={props?.product} />,
@@ -75,6 +84,10 @@ const CompDetails = () => {
       dataIndex: "assignee",
       title: "Assignee",
       render: (_, props) => <ColComp data={props?.assignee?.fullName} />,
+    },
+    {
+      dataIndex: "status",
+      title: "Status",
     },
   ]
 
@@ -91,7 +104,7 @@ const CompDetails = () => {
         <Link
           to={`/erp/${userid}/sales/leads/${props.leadId}`}
           onClick={() => viewHistory(props.leadId)}
-          className={`${props.view ? "" : "fw-600"}`}
+          className="link-heading"
         >
           {props?.leadName}
         </Link>
@@ -153,7 +166,15 @@ const CompDetails = () => {
           Leads
         </button>
       </div>
-      <MainHeading data={`${projectdep ? "All Projects" : "All Leads"}`} />
+      <div className="create-user-box">
+        <MainHeading data={`${projectdep ? "All Projects" : "All Leads"}`} />
+        <div className="all-center">
+          {!projectdep && (
+            <LeadCreateModel leadByCompany={true} companyId={companyId} />
+          )}
+        </div>
+      </div>
+
       {projectdep ? (
         <>
           {compProjectError && <SomethingWrong />}

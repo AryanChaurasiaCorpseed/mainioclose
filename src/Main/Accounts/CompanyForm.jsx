@@ -5,7 +5,10 @@ import CommonTable from "../../components/CommonTable"
 import CompanyFormModal from "./CompanyFormModal"
 import TableOutlet from "../../components/design/TableOutlet"
 import { useDispatch, useSelector } from "react-redux"
-import { getAllCompanyByStatus, getAllLeadCompanyies } from "../../Toolkit/Slices/CompanySlice"
+import {
+  getAllCompanyByStatus,
+  getAllLeadCompanyies,
+} from "../../Toolkit/Slices/CompanySlice"
 import { Button, notification, Select, Tooltip, Typography } from "antd"
 import { updateStatusById } from "../../Toolkit/Slices/LeadSlice"
 import { Icon } from "@iconify/react"
@@ -15,14 +18,14 @@ const { Text } = Typography
 
 const CompanyForm = () => {
   const dispatch = useDispatch()
-  const {userid}=useParams()
+  const { userid } = useParams()
   const leadCompanyList = useSelector(
     (state) => state.company.allLeadCompanyList
   )
   const [selectedFilter, setSelectedFilter] = useState("initiated")
   useEffect(() => {
-    dispatch(getAllCompanyByStatus({id:userid,status:selectedFilter}))
-  }, [dispatch,selectedFilter])
+    dispatch(getAllCompanyByStatus({ id: userid, status: selectedFilter }))
+  }, [dispatch, selectedFilter])
   const columns = [
     {
       title: "Id",
@@ -50,7 +53,7 @@ const CompanyForm = () => {
     // {
     //   title:'Assignee',
     //   dataIndex:'assignee',
-    //   render:(_,data)=><Text></Text>
+    //   render:(_,data)=><Text>{data?.assignee?.fullName}</Text>
     // },
     {
       title: "Address",
@@ -68,6 +71,10 @@ const CompanyForm = () => {
     {
       title: "Country",
       dataIndex: "country",
+    },
+    {
+      title: "Updated by",
+      dataIndex: "updatedBy",
     },
     {
       title: "Status",
@@ -91,9 +98,14 @@ const CompanyForm = () => {
               <Button
                 size="small"
                 type="text"
+                disabled={value?.status === "approved"}
                 onClick={() => {
                   dispatch(
-                    updateStatusById({ status: "approved", id: value?.id })
+                    updateStatusById({
+                      status: "approved",
+                      id: value?.id,
+                      userid: userid,
+                    })
                   )
                     .then((resp) => {
                       if (resp.meta.requestStatus === "fulfilled") {
@@ -121,9 +133,14 @@ const CompanyForm = () => {
               <Button
                 size="small"
                 type="text"
+                disabled={value?.status === "disapproved"}
                 onClick={() => {
                   dispatch(
-                    updateStatusById({ status: "disapproved", id: value?.id })
+                    updateStatusById({
+                      status: "disapproved",
+                      id: value?.id,
+                      userid: userid,
+                    })
                   )
                     .then((resp) => {
                       if (resp.meta.requestStatus === "fulfilled") {
@@ -171,7 +188,7 @@ const CompanyForm = () => {
               { label: "Approved", value: "approved" },
               { label: "Disapproved", value: "disapproved" },
             ]}
-            onChange={(e)=>setSelectedFilter(e)}
+            onChange={(e) => setSelectedFilter(e)}
           />
         </div>
         <CommonTable

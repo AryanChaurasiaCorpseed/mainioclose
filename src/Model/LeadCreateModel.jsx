@@ -5,7 +5,7 @@ import InputErrorComponent from "../components/InputErrorComponent"
 import { useCustomRoute } from "../Routes/GetCustomRoutes"
 import { leadSource } from "../data/FakeData"
 import { useLocation, useParams } from "react-router"
-import { Button, Form, Input, message, Modal, Select } from "antd"
+import { Button, Form, Input, message, Modal, notification, Select } from "antd"
 import { useDispatch, useSelector } from "react-redux"
 import {
   createLeads,
@@ -13,7 +13,7 @@ import {
   handleLoadingState,
 } from "../Toolkit/Slices/LeadSlice"
 
-const LeadCreateModel = () => {
+const LeadCreateModel = ({ leadByCompany, companyId }) => {
   const [form] = Form.useForm()
   const dispatch = useDispatch()
   const { userid } = useParams()
@@ -58,13 +58,20 @@ const LeadCreateModel = () => {
       values.createdById = userid
       values.serviceId = "1"
       values.industryId = "1"
-      dispatch(createLeads(values)).then(() => {
-        setOpenModal(false)
-        window.location.reload()
+      if (leadByCompany) {
+        values.companyId = companyId
+      }
+      dispatch(createLeads(values)).then((resp) => {
+        if (resp.meta.requestStatus === "fulfilled") {
+          setOpenModal(false)
+          window.location.reload()
+        } else {
+          notification.error({ message: "Something went wrong" })
+        }
       })
     },
 
-    [userid, dispatch]
+    [userid, dispatch, companyId, leadByCompany]
   )
 
   return (

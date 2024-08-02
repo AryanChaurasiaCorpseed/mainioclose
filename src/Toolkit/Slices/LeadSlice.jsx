@@ -245,52 +245,92 @@ export const getCompanyDetailsByLeadId = createAsyncThunk(
   }
 )
 
-export const getCompanyUnitsById=createAsyncThunk('getCompanyUnits',async(id)=>{
-  const response=await getQuery(`/leadService/api/v1/company/getAllCompanyUnit?id=${id}`)
+export const getCompanyUnitsById = createAsyncThunk(
+  "getCompanyUnits",
+  async (id) => {
+    const response = await getQuery(
+      `/leadService/api/v1/company/getAllCompanyUnit?id=${id}`
+    )
+    return response.data
+  }
+)
+
+export const getCompanyDetailsByGst = createAsyncThunk(
+  "getCompanyDetailsByGst",
+  async (gst) => {
+    const response = await getQuery(
+      `/leadService/api/v1/company/getCompanyByGst?gst=${gst}`
+    )
+    return response.data
+  }
+)
+export const getCompanyByUnitId = createAsyncThunk(
+  "getCompanyByUnitId",
+  async (id) => {
+    const response = await getQuery(
+      `/leadService/api/v1/company/getCompanyById?id=${id}`
+    )
+    return response.data
+  }
+)
+
+export const getAllContactDetails = createAsyncThunk(
+  "getAllContactDetail",
+  async () => {
+    const response = await getQuery(`/leadService/api/v1/contact/getAllContact`)
+    return response.data
+  }
+)
+
+export const getContactById = createAsyncThunk(`contactById`, async (id) => {
+  const response = await getQuery(
+    `/leadService/api/v1/contact/getContactById?id=${id}`
+  )
   return response.data
 })
 
-export const getCompanyDetailsByGst=createAsyncThunk('getCompanyDetailsByGst',async(gst)=>{
-  const response=await getQuery(`/leadService/api/v1/company/getCompanyByGst?gst=${gst}`)
-  return response.data
-})
-export const getCompanyByUnitId=createAsyncThunk('getCompanyByUnitId',async(id)=>{
-  const response = await getQuery(`/leadService/api/v1/company/getCompanyById?id=${id}`)
-  return response.data
-})
+export const createCompanyForm = createAsyncThunk(
+  "createCompanyForm",
+  async (data) => {
+    const response = await postQuery(
+      `/leadService/api/v1/company/createCompanyForm`,
+      data
+    )
+    return response.data
+  }
+)
 
-export const getAllContactDetails=createAsyncThunk('getAllContactDetail',async()=>{
-  const response=await getQuery(`/leadService/api/v1/contact/getAllContact`)
-  return response.data
-})
+export const updateStatusById = createAsyncThunk(
+  "updateStatebyid",
+  async (data) => {
+    const response = await putQuery(
+      `/leadService/api/v1/company/updateCompanyStatus?status=${data?.status}&id=${data?.id}&currentUserId=${data?.userid}`
+    )
+    return response.data
+  }
+)
 
-export const getContactById=createAsyncThunk(`contactById`,async(id)=>{
-  const response=await getQuery(`/leadService/api/v1/contact/getContactById?id=${id}`)
-  return response.data
-})
+export const deleteMultipleLeads = createAsyncThunk(
+  "deleteMultipleLeads",
+  async (data) => {
+    const response = await deleteQuery(
+      `/leadService/api/v1/lead/deleteMultiLead`,
+      data
+    )
+    return response.data
+  }
+)
 
-export const createCompanyForm=createAsyncThunk('createCompanyForm',async(data)=>{
-  const response=await postQuery(`/leadService/api/v1/company/createCompanyForm`,data)
-  return response.data
-})
-
-export const updateStatusById=createAsyncThunk('updateStatebyid',async(data)=>{
-  const response=await putQuery(`/leadService/api/v1/company/updateCompanyStatus?status=${data?.status}&id=${data?.id}`)
-  return response.data
-})
-
-
-export const deleteMultipleLeads=createAsyncThunk('deleteMultipleLeads',async(data)=>{
-  const response= await deleteQuery(`/leadService/api/v1/lead/deleteMultiLead`,data)
-  return response.data
-})
-
-export const multiAssignedLeads=createAsyncThunk('multiAssignedLeads',async(data)=>{
-  const response=await putQuery(`/leadService/api/v1/lead/updateMultiLeadAssigne`,data)
-  return response.data
-})
-
-
+export const multiAssignedLeads = createAsyncThunk(
+  "multiAssignedLeads",
+  async (data) => {
+    const response = await putQuery(
+      `/leadService/api/v1/lead/updateMultiLeadAssigne`,
+      data
+    )
+    return response.data
+  }
+)
 
 export const LeadSlice = createSlice({
   name: "lead",
@@ -311,12 +351,12 @@ export const LeadSlice = createSlice({
     getAllLeadUserData: [],
     categoryData: [],
     getAllStatus: [],
-    companyDetailsById:{},
-    companyUnits:[],
-    companyDetailsByGst:[],
-    companyDetailByUnitId:{},
-    allContactList:[],
-    contactDetail:{}
+    companyDetailsById: {},
+    companyUnits: [],
+    companyDetailsByGst: [],
+    companyDetailByUnitId: {},
+    allContactList: [],
+    contactDetail: {},
   },
   reducers: {
     handleLoadingState: (state, action) => {
@@ -461,7 +501,6 @@ export const LeadSlice = createSlice({
       state.loading = "rejected"
     })
 
-
     builder.addCase(getCompanyDetailsByGst.pending, (state, action) => {
       state.loading = "pending"
     })
@@ -473,7 +512,6 @@ export const LeadSlice = createSlice({
       state.loading = "rejected"
     })
 
-    
     builder.addCase(getCompanyByUnitId.pending, (state, action) => {
       state.loading = "pending"
     })
@@ -484,7 +522,6 @@ export const LeadSlice = createSlice({
     builder.addCase(getCompanyByUnitId.rejected, (state, action) => {
       state.loading = "rejected"
     })
-
 
     builder.addCase(getAllContactDetails.pending, (state, action) => {
       state.loading = "pending"
@@ -507,8 +544,6 @@ export const LeadSlice = createSlice({
     builder.addCase(getContactById.rejected, (state, action) => {
       state.loading = "rejected"
     })
-
-
   },
 })
 export const { handleLoadingState } = LeadSlice.actions
