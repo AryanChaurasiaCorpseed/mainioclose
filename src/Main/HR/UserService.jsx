@@ -51,7 +51,7 @@ const UserService = () => {
           <CommonTable
             data={allLeadUrl}
             columns={columns}
-            scroll={{ y: 550 }}
+            scroll={{ y: 470 }}
             rowSelection={true}
           />
         )}

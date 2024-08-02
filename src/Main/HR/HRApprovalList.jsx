@@ -12,6 +12,7 @@ import CommonTable from "../../components/CommonTable"
 import { Button, Typography } from "antd"
 import { Icon } from "@iconify/react"
 import CreateHrDashBoard from "../../Model/CreateHrDashBoard"
+import OverFlowText from "../../components/OverFlowText"
 const { Text } = Typography
 
 const HRApprovalList = () => {
@@ -45,7 +46,7 @@ const HRApprovalList = () => {
     {
       dataIndex: "email",
       title: "Email",
-      render: (_, props) => <ColComp data={props?.email} />,
+      render: (_, props) => <OverFlowText>{props?.email}</OverFlowText>,
     },
     {
       dataIndex: "designation",
@@ -93,10 +94,10 @@ const HRApprovalList = () => {
       dataIndex: "experience",
       title: "Experience",
       render: (_, props) => (
-        <Text>
-          {props?.expInYear ? props?.row?.expInYear + " years" : "NA"} and{" "}
-          {props?.expInMonth ? props?.row?.expInMonth + " months" : "NA"}
-        </Text>
+        <OverFlowText>
+          {props?.expInYear ? props?.expInYear + " years" : "NA"} and{" "}
+          {props?.expInMonth ? props?.expInMonth + " months" : "NA"}
+        </OverFlowText>
       ),
     },
     {
@@ -117,12 +118,16 @@ const HRApprovalList = () => {
     {
       dataIndex: "permanentAddress",
       title: "Permanent address",
-      render: (_, props) => <ColComp data={props?.permanentAddress} />,
+      render: (_, props) => (
+        <OverFlowText>{props?.permanentAddress}</OverFlowText>
+      ),
     },
     {
       dataIndex: "residentialAddress",
       title: "Residential address",
-      render: (_, props) => <ColComp data={props?.residentialAddress} />,
+      render: (_, props) => (
+        <OverFlowText>{props?.residentialAddress}</OverFlowText>
+      ),
     },
     {
       dataIndex: "fatherName",
@@ -220,7 +225,7 @@ const HRApprovalList = () => {
           <CommonTable
             data={hrApprovalUser}
             columns={columns}
-            scroll={{ x: 5000, y: 530 }}
+            scroll={{ x: 5000, y: 540 }}
             rowSelection={true}
           />
         )}

@@ -36,12 +36,14 @@ import {
   notification,
   Popconfirm,
   Select,
+  Tooltip,
   Typography,
 } from "antd"
 import { Icon } from "@iconify/react"
 import { getAllUsers } from "../../../Toolkit/Slices/UsersSlice"
 import CommonTable from "../../../components/CommonTable"
 import CompanyFormModal from "../../Accounts/CompanyFormModal"
+import OverFlowText from "../../../components/OverFlowText"
 const { Text } = Typography
 
 const UserLeadComponent = React.lazy(() =>
@@ -289,13 +291,13 @@ const LeadsModule = () => {
       title: "Lead name",
       fixed: "left",
       render: (_, data) => (
-        <Link
+        <OverFlowText
+          linkText={true}
           to={`/erp/${userid}/sales/leads/${data?.id}`}
           onClick={() => viewHistory(data?.id)}
-          className="link-heading"
         >
           {data?.leadName}
-        </Link>
+        </OverFlowText>
       ),
     },
     {
@@ -332,7 +334,9 @@ const LeadsModule = () => {
       title: "Client name",
       dataIndex: "name",
       render: (_, data) => (
-        <Text>{data?.clients[0]?.name ? data?.clients[0]?.name : "NA"}</Text>
+        <OverFlowText>
+          {data?.clients[0]?.name ? data?.clients[0]?.name : "NA"}
+        </OverFlowText>
       ),
     },
     {
@@ -439,7 +443,7 @@ const LeadsModule = () => {
                 danger
                 onClick={() => leadDeleteResponse(data?.id)}
               >
-                <Icon icon="fluent:delete-20-regular" />
+                <Icon icon="fluent:delete-20-regular" height={18} width={18} />
               </Button>
             ),
           },
@@ -504,7 +508,7 @@ const LeadsModule = () => {
       const allStatus = await getQuery(
         `/leadService/api/v1/status/getAllStatus`
       )
-      setGetAllStatus(allStatus.data)
+      setGetAllStatus(allStatus?.data)
     } catch (err) {
       if (err.response.status === 500) {
         console.log("Something Went Wrong")
@@ -663,7 +667,7 @@ const LeadsModule = () => {
       <div className="table-arrow">
         <Suspense fallback={<TableScalaton />}>
           <CommonTable
-            data={allLeadsData.reverse()}
+            data={allLeadsData?.reverse()}
             columns={columns}
             scroll={{ y: 510, x: 2300 }}
             rowSelection={true}

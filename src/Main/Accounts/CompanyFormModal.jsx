@@ -159,40 +159,44 @@ const CompanyFormModal = ({ edit, data }) => {
     [form, contactDetail, companyDetailByUnitId]
   )
 
-  const handleFinish = useCallback((values) => {
-    setFormLoading("pending")
-    const formData = form.getFieldsValue(["companyId", "companyName"])
-    values.leadId = data?.id
-    if (Object.keys(companyDetails)?.length > 0) {
-      values.isPresent = true
-    } else {
-      values.isPresent = false
-    }
-    values.gstDocuments = values.gstDocuments?.[0]?.response
-    if (formData?.companyId) {
-      values.companyId = companyDetails?.id
-    }
-    dispatch(createCompanyForm(values))
-      .then((response) => {
-        if (response.meta.requestStatus === "fulfilled") {
-          setFormLoading("success")
-          dispatch(getAllUsers())
-          notification.success({ message: "Company created successfully" })
-          setOpenModal(false)
-        } else {
+  const handleFinish = useCallback(
+    (values) => {
+      setFormLoading("pending")
+      const formData = form.getFieldsValue(["companyId", "companyName"])
+      values.leadId = data?.id
+      if (Object.keys(companyDetails)?.length > 0) {
+        values.isPresent = true
+      } else {
+        values.isPresent = false
+      }
+      values.gstDocuments = values.gstDocuments?.[0]?.response
+      if (formData?.companyId) {
+        values.companyId = companyDetails?.id
+      }
+      dispatch(createCompanyForm(values))
+        .then((response) => {
+          if (response.meta.requestStatus === "fulfilled") {
+            setFormLoading("success")
+            dispatch(getAllUsers())
+            notification.success({ message: "Company created successfully" })
+            setOpenModal(false)
+          } else {
+            setFormLoading("rejected")
+            notification.error({ message: "Something went wrong" })
+          }
+        })
+        .catch(() => {
           setFormLoading("rejected")
           notification.error({ message: "Something went wrong" })
-        }
-      })
-      .catch(() => {
-        setFormLoading("rejected")
-        notification.error({ message: "Something went wrong" })
-      })
-  },[companyDetails,dispatch,form])
+        })
+    },
+    [companyDetails, dispatch, form]
+  )
   return (
     <>
       <Button type="text" size="small" onClick={handleButtonClick}>
-        <Icon icon="fluent:edit-20-regular" />
+        {/* <Icon icon="fluent:edit-20-regular" /> */}
+        <Icon icon="fluent:add-24-filled" height={18} width={18} color="#1677ff" />
       </Button>
 
       <Modal
@@ -539,27 +543,111 @@ const CompanyFormModal = ({ edit, data }) => {
           <Divider style={{ color: "#cccccc" }} orientation="center">
             Secondary details
           </Divider>
-
+{/* 
           <Form.Item label="Same as primary details" name="secondaryContact">
             <Switch size="small" onChange={handleSetFields} />
+          </Form.Item> */}
+
+          <Form.Item
+            label="New Secondary details"
+            name="secondaryContact"
+            rules={[{ required: true }]}
+          >
+            <Switch size="small" />
           </Form.Item>
 
-          <Form.Item label="Contact name" name="sContactName">
-            <Input />
-          </Form.Item>
+          <Form.Item
+            shouldUpdate={(prevValues, currentValues) =>
+              prevValues.secondaryContact !== currentValues.secondaryContact
+            }
+            noStyle
+          >
+            {({ getFieldValue }) => (
+              <>
+                {getFieldValue("secondaryContact") ? (
+                  <>
+                    <Form.Item
+                      label="Contact name"
+                      name="sContactName"
+                      rules={[
+                        {
+                          required: true,
+                          message: "please enter contact person name",
+                        },
+                      ]}
+                    >
+                      <Input />
+                    </Form.Item>
 
-          <Form.Item label="Email" name="sContactEmails">
-            <Input />
-          </Form.Item>
+                    <Form.Item
+                      label="Email"
+                      name="sContactEmails"
+                      rules={[
+                        {
+                          required: true,
+                          type: "email",
+                          message: "please enter the email id",
+                        },
+                      ]}
+                    >
+                      <Input />
+                    </Form.Item>
 
-          <Form.Item label="Contact number" name="sContactNo">
-            <Input />
-          </Form.Item>
+                    <Form.Item
+                      label="Contact number"
+                      name="sContactNo"
+                      rules={[
+                        {
+                          required: true,
+                          message: "please enter contact number",
+                        },
+                      ]}
+                    >
+                      <Input />
+                    </Form.Item>
 
-          <Form.Item label="Whatsapp number" name="sContactWhatsappNo">
-            <Input />
+                    <Form.Item
+                      label="Whatsapp number"
+                      name="sContactWhatsappNo"
+                      rules={[
+                        {
+                          required: true,
+                          message: "please enter whatsapp number",
+                        },
+                      ]}
+                    >
+                      <Input />
+                    </Form.Item>
+                  </>
+                ) : (
+                  <Form.Item
+                    label="Select contact"
+                    name="scontactId"
+                    rules={[
+                      { required: true, message: "please select contact" },
+                    ]}
+                  >
+                    <Select
+                      showSearch
+                      allowClear
+                      onChange={(e) => dispatch(getContactById(e))}
+                      options={
+                        contactList?.length > 0
+                          ? contactList?.map((item) => ({
+                              label: `${item?.emails} || ${item?.contactNo} `,
+                              value: item?.id,
+                            }))
+                          : []
+                      }
+                      filterOption={(input, option) =>
+                        option.label.toLowerCase().includes(input.toLowerCase())
+                      }
+                    />
+                  </Form.Item>
+                )}
+              </>
+            )}
           </Form.Item>
-
           <Form.Item label="Address" name="sAddress">
             <Input.TextArea />
           </Form.Item>

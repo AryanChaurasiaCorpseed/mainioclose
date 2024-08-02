@@ -1,6 +1,7 @@
 import { Typography } from "antd"
 import ColComp from "../components/small/ColComp"
 import { Icon } from "@iconify/react"
+import OverFlowText from "../components/OverFlowText"
 const { Text } = Typography
 
 export const hrUserData = [
@@ -18,7 +19,7 @@ export const hrUserData = [
     dataIndex: "email",
     title: "Email",
     width: 300,
-    render: (_, props) => <Text>{props?.email} </Text>,
+    render: (_, props) => <OverFlowText>{props?.email}</OverFlowText>,
   },
   {
     dataIndex: "designation",
@@ -34,7 +35,7 @@ export const hrUserData = [
   {
     dataIndex: "role",
     title: "Role",
-    render:(_,data)=><Text>{data?.role?.[0]}</Text>
+    render: (_, data) => <Text>{data?.role?.[0]}</Text>,
   },
   {
     dataIndex: "aadharCard",
@@ -87,10 +88,14 @@ export const hrUserData = [
   {
     dataIndex: "permanentAddress",
     title: "Permanent address",
+    render: (_, data) => <OverFlowText>{data?.permanentAddress}</OverFlowText>,
   },
   {
     dataIndex: "residentialAddress",
     title: "Residential address",
+    render: (_, data) => (
+      <OverFlowText>{data?.residentialAddress}</OverFlowText>
+    ),
   },
   {
     dataIndex: "fatherName",

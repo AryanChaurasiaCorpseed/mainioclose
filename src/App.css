@@ -989,10 +989,18 @@ select.form-control:not([size]):not([multiple]) {
   font-weight: 400;
 }
 
-.light-gray-row td{
+.light-gray-row td {
   background-color: rgb(224, 224, 224) !important;
 }
 
 .ant-table-tbody > tr.ant-table-row-selected > td {
   background-color: #e6f7ff !important; /* Ant Design's default selected row color */
+}
+
+.tooltip-text-overflow {
+  width: "100%";
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
 }

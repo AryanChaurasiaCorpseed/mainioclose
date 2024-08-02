@@ -13,6 +13,7 @@ import {
 } from "../../Toolkit/Slices/CompanySlice"
 import TableOutlet from "../../components/design/TableOutlet"
 import MainHeading from "../../components/design/MainHeading"
+import OverFlowText from "../../components/OverFlowText"
 const { Text } = Typography
 
 export const AccountsList = () => {
@@ -36,6 +37,7 @@ export const AccountsList = () => {
       key: "1",
       fixed: "left",
       width: 300,
+      render:(_,data)=><OverFlowText>{data?.companyName}</OverFlowText>
     },
     {
       title: "Pan",

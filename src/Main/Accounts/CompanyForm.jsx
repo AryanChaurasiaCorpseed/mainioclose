@@ -14,6 +14,7 @@ import { updateStatusById } from "../../Toolkit/Slices/LeadSlice"
 import { Icon } from "@iconify/react"
 import { BTN_ICON_HEIGHT, BTN_ICON_WIDTH } from "../../components/Constants"
 import { useParams } from "react-router-dom"
+import OverFlowText from "../../components/OverFlowText"
 const { Text } = Typography
 
 const CompanyForm = () => {
@@ -58,7 +59,9 @@ const CompanyForm = () => {
     {
       title: "Address",
       dataIndex: "address",
-      render: (_, value) => <Text>{value?.lead?.primaryAddress}</Text>,
+      render: (_, value) => (
+        <OverFlowText>{value?.lead?.primaryAddress}</OverFlowText>
+      ),
     },
     {
       title: "City",
@@ -194,7 +197,7 @@ const CompanyForm = () => {
         <CommonTable
           data={leadCompanyList}
           columns={columns}
-          scroll={{ x: 1500, y: 550 }}
+          scroll={{ x: 1800, y: 550 }}
           rowSelection={true}
         />
       </div>
