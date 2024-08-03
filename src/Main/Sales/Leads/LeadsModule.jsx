@@ -80,11 +80,11 @@ const LeadsModule = () => {
 
   useEffect(() => {
     dispatch(getAllLeadUser(userid))
-  }, [userid,dispatch])
+  }, [userid, dispatch])
 
   useEffect(() => {
     dispatch(getAllLeads(allMultiFilterData))
-  }, [ filterBtnNew, allMultiFilterData, dispatch])
+  }, [filterBtnNew, allMultiFilterData, dispatch])
 
   const allLeadData = useSelector((state) => state.leads.allLeads)
   const allLeadsData = [...allLeadData]
@@ -387,8 +387,6 @@ const LeadsModule = () => {
       : []),
   ]
 
-
-
   const handleMultipleAssignedLeads = useCallback(() => {
     let obj = {
       leadIds: selectedRowKeys,
@@ -528,11 +526,7 @@ const LeadsModule = () => {
         </Suspense>
 
         {adminRole ? (
-          <div
-            className={`bottom-line ${
-              selectedRowKeys.length > 0 ? "pos-fix" : ""
-            }`}
-          >
+          <div className={`bottom-line`}>
             <div
               style={{
                 display: "flex",
