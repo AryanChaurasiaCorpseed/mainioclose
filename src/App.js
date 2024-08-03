@@ -165,7 +165,7 @@ function App() {
                 <Route path="oppurtities" element={<Opportunities />} />
                 <Route path="company" element={<MainCompanyPage />} />
                 <Route path="project" element={<ProjectPage />} />
-                <Route path="lead-form" element={<CompanyForm />} />
+                <Route path="lead-form" element={<CompanyForm role={'sales'} />} />
                 <Route
                   path="company/:companyId/details"
                   element={<CompDetails />}

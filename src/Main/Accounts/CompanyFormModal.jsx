@@ -38,6 +38,14 @@ const CompanyFormModal = ({ edit, data }) => {
   const contactDetail = useSelector((state) => state?.leads?.contactDetail)
   const [openModal, setOpenModal] = useState(false)
   const [formLoading, setFormLoading] = useState("")
+  const [gstMand, setGstMand] = useState("")
+
+  const handlePanNumberChange = (e) => {
+    const value = e.target.value
+    const upperCaseValue = value.toUpperCase()
+    const isValid = /^[A-Z0-9]+$/.test(upperCaseValue)
+    form.setFieldsValue({ panNo: isValid ? upperCaseValue : value })
+  }
 
   const handleButtonClick = useCallback(() => {
     dispatch(getCompanyDetailsByLeadId(data?.id)).then((resp) => {
@@ -58,8 +66,16 @@ const CompanyFormModal = ({ edit, data }) => {
 
   const validateGstNumber = (dispatch) => async (_, value) => {
     if (!value) {
-      return Promise.reject(new Error("Please enter the email"))
+      return Promise.reject(new Error("please enter the GST number"))
     }
+
+    const pattern = /^[a-zA-Z0-9]{16}$/
+    if (!pattern.test(value)) {
+      return Promise.reject(
+        new Error("please enter 16 digit alphanumeric characters")
+      )
+    }
+
     try {
       const resp = await dispatch(getCompanyDetailsByGst(value))
       if (resp.meta.requestStatus === "fulfilled") {
@@ -68,14 +84,14 @@ const CompanyFormModal = ({ edit, data }) => {
           return Promise.resolve()
         } else {
           return Promise.reject(
-            new Error("company already exist with this gst")
+            new Error("company already exists with this GST number")
           )
         }
       } else {
-        return Promise.reject(new Error("Error validating gst"))
+        return Promise.reject(new Error("error validating GST"))
       }
     } catch (error) {
-      return Promise.reject(new Error("Error validating gst"))
+      return Promise.reject(new Error("error validating GST"))
     }
   }
 
@@ -190,13 +206,18 @@ const CompanyFormModal = ({ edit, data }) => {
           notification.error({ message: "Something went wrong" })
         })
     },
-    [companyDetails, dispatch, form]
+    [companyDetails, dispatch, form, data]
   )
+
   return (
     <>
       <Button type="text" size="small" onClick={handleButtonClick}>
-        {/* <Icon icon="fluent:edit-20-regular" /> */}
-        <Icon icon="fluent:add-24-filled" height={18} width={18} color="#1677ff" />
+        <Icon
+          icon="fluent:add-24-filled"
+          height={18}
+          width={18}
+          color="#1677ff"
+        />
       </Button>
 
       <Modal
@@ -258,28 +279,33 @@ const CompanyFormModal = ({ edit, data }) => {
               showSearch
               allowClear
               options={[
-                { label: "Register", value: "Register" },
-                { label: "Unregister", value: "Unregister" },
+                { label: "Registered", value: "Registered" },
+                { label: "Unregisterded", value: "Unregistered" },
                 { label: "SE2", value: "SE2" },
                 { label: "International", value: "International" },
               ]}
+              onChange={(e) => setGstMand(e)}
             />
           </Form.Item>
 
           <Form.Item
             label="Gst number"
             name="gstNo"
-            rules={[
-              {
-                required: true,
-                message: "",
-              },
-              {
-                validator: validateGstNumber(dispatch),
-              },
-            ]}
+            rules={
+              gstMand === "Registered" || gstMand === ""
+                ? [
+                    {
+                      required: true,
+                      message: "",
+                    },
+                    {
+                      validator: validateGstNumber(dispatch),
+                    },
+                  ]
+                : []
+            }
           >
-            <Input />
+            <Input maxLength={16} />
           </Form.Item>
 
           <Form.Item
@@ -398,9 +424,19 @@ const CompanyFormModal = ({ edit, data }) => {
           <Form.Item
             label="Pan number"
             name="panNo"
-            rules={[{ required: true, message: "please enter the pan number" }]}
+            rules={[
+              {
+                required: true,
+                message: "Please enter your PAN card number",
+              },
+              {
+                pattern: /^[A-Z0-9]{10}$/,
+                message:
+                  "Invalid PAN card number, should not accept any special charcter ",
+              },
+            ]}
           >
-            <Input />
+            <Input maxLength={10} onChange={handlePanNumberChange} />
           </Form.Item>
 
           <Divider style={{ color: "#cccccc" }} orientation="center">
@@ -540,10 +576,18 @@ const CompanyFormModal = ({ edit, data }) => {
             <Input />
           </Form.Item>
 
+          <Form.Item
+            label="PinCode"
+            name="primaryPinCode"
+            rules={[{ required: true, message: "please enter pincode" }]}
+          >
+            <Input />
+          </Form.Item>
+
           <Divider style={{ color: "#cccccc" }} orientation="center">
             Secondary details
           </Divider>
-{/* 
+          {/* 
           <Form.Item label="Same as primary details" name="secondaryContact">
             <Switch size="small" onChange={handleSetFields} />
           </Form.Item> */}
@@ -651,16 +695,17 @@ const CompanyFormModal = ({ edit, data }) => {
           <Form.Item label="Address" name="sAddress">
             <Input.TextArea />
           </Form.Item>
-
           <Form.Item label="City" name="sCity">
             <Input />
           </Form.Item>
-
           <Form.Item label="State" name="sState">
             <Input />
           </Form.Item>
 
           <Form.Item label="Country" name="sCountry">
+            <Input />
+          </Form.Item>
+          <Form.Item label="PinCode" name="secondaryPinCode">
             <Input />
           </Form.Item>
         </Form>

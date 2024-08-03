@@ -332,6 +332,31 @@ export const multiAssignedLeads = createAsyncThunk(
   }
 )
 
+export const handleViewHistory = createAsyncThunk(
+  "viewHistory",
+  async (data) => {
+    const response = await putQuery(
+      `/leadService/api/v1/lead/viewHistoryCreate?userId=${data?.userid}&leadId=${data?.leadId}`
+    )
+    return response.data
+  }
+)
+
+export const updateAssigneeInLeadModule = createAsyncThunk(
+  "updateAssigneeInLeadModule",
+  async (data) => {
+    const response = await putQuery(
+      `/leadService/api/v1/lead/updateAssignee?leadId=${data?.leadId}&userId=${data?.id}&updatedById=${data?.userid}`
+    )
+    return response.data
+  }
+)
+
+export const handleDeleteSingleLead=createAsyncThunk('handleDeleteSingleLead',async(data)=>{
+  const response = await deleteQuery(`/leadService/api/v1/lead/deleteLead?leadId=${data?.id}&userId=${data?.userid}`)
+  return response.data
+})
+
 export const LeadSlice = createSlice({
   name: "lead",
   initialState: {
