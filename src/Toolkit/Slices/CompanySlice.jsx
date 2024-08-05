@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 import { getQuery } from "../../API/GetQuery"
 import { postQuery } from "../../API/PostQuery"
+import { putQuery } from "../../API/PutQuery"
 
 export const getCompanyAction = createAsyncThunk(
   "getallCompanyData",
@@ -89,6 +90,11 @@ export const getAllCompanyByStatus = createAsyncThunk(
 
 export const getAllCompanyUnits=createAsyncThunk('getAllCompanyUnits',async(id)=>{
   const response = await getQuery(`/leadService/api/v1/company/getAllCompanyUnit?id=${id}`)
+  return response.data
+})
+
+export const updateCompanyAssignee=createAsyncThunk('updateCompanyAssignee',async(data)=>{
+  const response=await putQuery(`/leadService/api/v1/company/updateCompanyAssignee?companyId=${data?.companyId}&assigneeId=${data?.assigneeId}`)
   return response.data
 })
 

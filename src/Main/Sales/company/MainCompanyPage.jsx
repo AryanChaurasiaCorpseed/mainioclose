@@ -1,26 +1,58 @@
-import React, { useEffect } from "react"
+import React, { useCallback, useEffect } from "react"
 import TableOutlet from "../../../components/design/TableOutlet"
 import MainHeading from "../../../components/design/MainHeading"
 import { useDispatch, useSelector } from "react-redux"
-import { getCompanyAction } from "../../../Toolkit/Slices/CompanySlice"
+import { getCompanyAction, updateCompanyAssignee } from "../../../Toolkit/Slices/CompanySlice"
 import TableScalaton from "../../../components/TableScalaton"
 import SomethingWrong from "../../../components/usefulThings/SomethingWrong"
 import ColComp from "../../../components/small/ColComp"
 import UserListComponent from "../../../Tables/UserListComponent"
-import { Link } from "react-router-dom"
+import { Link, useParams } from "react-router-dom"
 import CommonTable from "../../../components/CommonTable"
+import { getAllLeadUser } from "../../../Toolkit/Slices/LeadSlice"
+import { notification, Select } from "antd"
 
 const MainCompanyPage = () => {
   const dispatch = useDispatch()
+  const { userid } = useParams()
 
   const currUserId = useSelector((prev) => prev?.auth?.currentUser?.id)
+  const leadUserNew = useSelector((state) => state.leads.getAllLeadUserData)
 
   useEffect(() => {
     dispatch(getCompanyAction({ id: currUserId }))
   }, [])
 
+  useEffect(() => {
+    dispatch(getAllLeadUser(userid))
+  }, [userid, dispatch])
+
   const { allCompnay, loadingCompany, errorCompany } = useSelector(
     (prev) => prev?.company
+  )
+
+  const handleUpdateAssignee = useCallback(
+    (assigneeId, companyId) => {
+      let data = {
+        companyId: companyId,
+        assigneeId: assigneeId,
+      }
+      dispatch(updateCompanyAssignee(data))
+        .then((response) => {
+          if (response.meta.requestStatus === "fulfilled") {
+            notification.success({
+              message: "Assignee is updated successfully",
+            })
+            dispatch(getCompanyAction({ id: currUserId }))
+          } else {
+            notification.error({ message: "Something went wrong" })
+          }
+        })
+        .catch(() => {
+          notification.error({ message: "Something went wrong" })
+        })
+    },
+    [dispatch,currUserId]
   )
 
   const columns = [
@@ -42,7 +74,22 @@ const MainCompanyPage = () => {
       dataIndex: "assignee",
       title: "Assignee",
       render: (_, props) => (
-        <ColComp data={props?.assignee?.fullName} />
+        <Select
+          showSearch
+          style={{ width: "100%" }}
+          value={props?.assignee?.id}
+          placeholder="select assignee"
+          options={
+            leadUserNew?.map((ele) => ({
+              label: ele?.fullName,
+              value: ele?.id,
+            })) || []
+          }
+          filterOption={(input, option) =>
+            option.label.toLowerCase().includes(input.toLowerCase())
+          }
+          onChange={(e) => handleUpdateAssignee(e, props?.companyId)}
+        />
       ),
     },
     {
