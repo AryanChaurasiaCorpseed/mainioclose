@@ -532,12 +532,11 @@ const LeadsModule = () => {
                 display: "flex",
                 justifyContent: "center",
                 gap: 12,
-                // padding: "18px 12px",
               }}
             >
               <Popconfirm
-                title="Delete the task"
-                description="Are you sure to delete this task?"
+                title="Delete the leads"
+                description="Are you sure to delete these leads?"
                 okText="Yes"
                 cancelText="No"
                 onConfirm={handleDeleteMutipleLeads}
@@ -554,7 +553,7 @@ const LeadsModule = () => {
                 allowClear
                 showSearch
                 style={{ width: 200 }}
-                placeholder="select user"
+                placeholder="select status"
                 options={
                   getAllStatus?.length > 0
                     ? getAllStatus?.map((item) => ({
@@ -602,12 +601,7 @@ const LeadsModule = () => {
             <div>
               <Button
                 type="primary"
-                disabled={
-                  assignedLeadInfo?.assigneId === null ||
-                  assignedLeadInfo?.statusId === null
-                    ? true
-                    : false
-                }
+                disabled={selectedRowKeys?.length === 0 ? true : false}
                 onClick={handleMultipleAssignedLeads}
               >
                 {multibtn === "pending" ? "Loading..." : "Send"}

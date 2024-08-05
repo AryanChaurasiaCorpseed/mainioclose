@@ -61,6 +61,7 @@ import { lazy, Suspense } from "react"
 import Desigination from "./Main/Setting/Desigination/Desigination"
 import Department from "./Main/Setting/Department/Department"
 import CompanyForm from "./Main/Accounts/CompanyForm"
+import CompanyPageLayout from "./Main/Sales/company/CompanyPageLayout"
 const SpinLoading = lazy(() => import("./components/SpinLoading"))
 
 function App() {
@@ -100,6 +101,9 @@ function App() {
           Table: {
             fontSize: 13,
           },
+          Tabs:{
+            // cardBg:'#cccccc',
+          }
         },
       }}
     >
@@ -168,7 +172,7 @@ function App() {
                 <Route path="lead-form" element={<CompanyForm role={'sales'} />} />
                 <Route
                   path="company/:companyId/details"
-                  element={<CompDetails />}
+                  element={<CompanyPageLayout />}
                 />
                 <Route path="estimate" element={<Estimate />} />
                 <Route path="orders" element={<OrdersModule />} />

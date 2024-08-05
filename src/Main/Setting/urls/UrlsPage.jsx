@@ -132,10 +132,14 @@ const UrlsPage = () => {
               allowClear
               mode="multiple"
               showSearch
-              options={allLeadSlug?.map((item) => ({
-                label: item?.name,
-                value: item?.id,
-              }))}
+              options={
+                allLeadSlug?.length
+                  ? allLeadSlug?.map((item) => ({
+                      label: item?.name,
+                      value: item?.id,
+                    }))
+                  : []
+              }
               filterOption={(input, option) =>
                 option.label.toLowerCase().includes(input.toLowerCase())
               }

@@ -20,29 +20,10 @@ const UserListComponent = React.lazy(() =>
 
 const CompDetails = () => {
   const dispatch = useDispatch()
-
-  const [projectdep, setProjectDep] = useState(true)
-
   const { companyId, userid } = useParams()
 
-  useEffect(() => {
-    dispatch(getCompanyProjectAction({ id: companyId }))
-  }, [companyId, dispatch])
-
-  useEffect(() => {
-    dispatch(getCompanyLeadsAction({ id: companyId }))
-  }, [companyId, dispatch])
-
-  const { compProject, compProjectError } = useSelector((prev) => prev?.company)
 
   const { compLeads, compLeadsError } = useSelector((prev) => prev?.company)
-
-  const toggleProjecttrue = () => {
-    setProjectDep(true)
-  }
-  const toggleProjectfalse = () => {
-    setProjectDep(false)
-  }
 
   const viewHistory = async (leadId) => {
     try {
@@ -53,43 +34,6 @@ const CompDetails = () => {
       console.log(err)
     }
   }
-
-  const compColumns = [
-    {
-      dataIndex: "projectId",
-      title: "Id",
-      width: 80,
-      fixed: "left",
-    },
-    {
-      dataIndex: "projectName",
-      title: "Project name",
-      fixed: "left",
-      render: (_, props) => <ColComp data={props?.projectName} />,
-    },
-    {
-      dataIndex: "client",
-      title: "Client",
-    },
-    {
-      dataIndex: "companyName",
-      title: "Company name",
-    },
-    {
-      dataIndex: "product",
-      title: "Product",
-      render: (_, props) => <ColComp data={props?.product} />,
-    },
-    {
-      dataIndex: "assignee",
-      title: "Assignee",
-      render: (_, props) => <ColComp data={props?.assignee?.fullName} />,
-    },
-    {
-      dataIndex: "status",
-      title: "Status",
-    },
-  ]
 
   const compLeadsCol = [
     {
@@ -152,62 +96,24 @@ const CompDetails = () => {
 
   return (
     <TableOutlet>
-      <div className="all-center">
-        <button
-          onClick={toggleProjecttrue}
-          className={`normal-btn ${projectdep ? "active" : ""}`}
-        >
-          Projects
-        </button>
-        <button
-          onClick={toggleProjectfalse}
-          className={`normal-btn ${projectdep ? "" : "active"}`}
-        >
-          Leads
-        </button>
-      </div>
       <div className="create-user-box">
-        <MainHeading data={`${projectdep ? "All Projects" : "All Leads"}`} />
+        <MainHeading data={"All Leads"} />
         <div className="all-center">
-          {!projectdep && (
-            <LeadCreateModel leadByCompany={true} companyId={companyId} />
-          )}
+          <LeadCreateModel leadByCompany={true} companyId={companyId} />
         </div>
       </div>
-
-      {projectdep ? (
-        <>
-          {compProjectError && <SomethingWrong />}
-          {!compProjectError && (
-            <Suspense fallback={<TableScalaton />}>
-              <CommonTable
-                data={compProject}
-                columns={compColumns}
-                scroll={{ y: 650, x: 1000 }}
-              />
-            </Suspense>
-          )}
-        </>
-      ) : (
-        ""
-      )}
-
-      {projectdep ? (
-        ""
-      ) : (
-        <>
-          {compLeadsError && <SomethingWrong />}
-          {!compLeadsError && (
-            <Suspense fallback={<TableScalaton />}>
-              <CommonTable
-                data={compLeads}
-                columns={compLeadsCol}
-                scroll={{ y: 650, x: 1000 }}
-              />
-            </Suspense>
-          )}
-        </>
-      )}
+      <>
+        {compLeadsError && <SomethingWrong />}
+        {!compLeadsError && (
+          <Suspense fallback={<TableScalaton />}>
+            <CommonTable
+              data={compLeads}
+              columns={compLeadsCol}
+              scroll={{ y: 650, x: 1000 }}
+            />
+          </Suspense>
+        )}
+      </>
     </TableOutlet>
   )
 }

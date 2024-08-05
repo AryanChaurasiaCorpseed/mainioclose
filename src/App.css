@@ -1004,3 +1004,7 @@ select.form-control:not([size]):not([multiple]) {
   text-overflow: ellipsis;
   display: block;
 }
+
+.ant-tabs-card.ant-tabs-top >.ant-tabs-nav .ant-tabs-tab-active{
+  background-color: #c9dce4;
+}

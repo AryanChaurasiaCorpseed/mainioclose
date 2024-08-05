@@ -87,6 +87,11 @@ export const getAllCompanyByStatus = createAsyncThunk(
   }
 )
 
+export const getAllCompanyUnits=createAsyncThunk('getAllCompanyUnits',async(id)=>{
+  const response = await getQuery(`/leadService/api/v1/company/getAllCompanyUnit?id=${id}`)
+  return response.data
+})
+
 const CompnaySlice = createSlice({
   name: "company",
   initialState: {
@@ -103,6 +108,7 @@ const CompnaySlice = createSlice({
     loading: "",
     allParentCompany: [],
     allLeadCompanyList: [],
+    allCompanyUnits:[]
   },
   extraReducers: (builder) => {
     builder.addCase(getCompanyAction.pending, (state, action) => {
@@ -191,6 +197,20 @@ const CompnaySlice = createSlice({
     builder.addCase(getAllCompanyByStatus.rejected, (state, action) => {
       state.loading = "rejected"
     })
+
+
+    builder.addCase(getAllCompanyUnits.pending, (state, action) => {
+      state.loading = "pending"
+    })
+    builder.addCase(getAllCompanyUnits.fulfilled, (state, action) => {
+      state.allCompanyUnits = action.payload
+      state.loading = "success"
+    })
+    builder.addCase(getAllCompanyUnits.rejected, (state, action) => {
+      state.loading = "rejected"
+    })
+
+
   },
 })
 

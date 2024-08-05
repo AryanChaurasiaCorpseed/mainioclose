@@ -2,26 +2,33 @@ import { Space, Typography } from "antd"
 import ColComp from "../components/small/ColComp"
 import UserLockerEdit from "../Model/UserLockerEdit"
 import { Icon } from "@iconify/react"
+import OverFlowText from "../components/OverFlowText"
 const { Text } = Typography
 
 export const allUserdataCol = [
-  { dataIndex: "email", title: "Email", width: 350 },
+  { dataIndex: "email", title: "Email", width: 300 },
   {
     dataIndex: "designation",
     title: "Designation",
-    render: (_, data) => <Text>{data?.userDesignation?.name}</Text>,
+    render: (_, data) => (
+      <OverFlowText>
+        {data?.userDesignation?.name ? data?.userDesignation?.name : "NA"}
+      </OverFlowText>
+    ),
   },
   {
     dataIndex: "department",
     title: "Department",
-    render: (_, data) => <Text>{data?.userDepartment?.name}</Text>,
+    render: (_, data) => (
+      <OverFlowText>{data?.userDepartment?.name}</OverFlowText>
+    ),
   },
   { dataIndex: "role", title: "Role" },
   {
     dataIndex: "managers",
     title: "Manager",
     render: (_, props) =>
-      props?.manager ? <Text>{props?.managers?.fullName}</Text> : "NA",
+      props?.manager ? <OverFlowText>{props?.managers?.fullName}</OverFlowText> : "NA",
   },
   {
     dataIndex: "lockerSize",
@@ -85,7 +92,11 @@ export const allManagerCol = [
     field: "designation",
     headerName: "Designation",
     width: 150,
-    renderCell: (props) => <ColComp data={props?.row?.designation} />,
+    renderCell: (props) => (
+      <OverFlowText>
+        {props?.row?.designation ? props?.row?.designation : "NA"}
+      </OverFlowText>
+    ),
   },
   {
     field: "department",
