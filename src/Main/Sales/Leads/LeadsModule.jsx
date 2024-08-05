@@ -218,7 +218,7 @@ const LeadsModule = () => {
           to={`/erp/${userid}/sales/leads/${data?.id}`}
           onClick={() =>
             dispatch(
-              handleViewHistory({ leadId: data?.leadId, userid: userid })
+              handleViewHistory({ leadId: data?.id, userid: userid })
             ).then((resp) => {
               if (resp.meta.requestStatus === "fulfilled") {
                 dispatch(getAllLeads(allMultiFilterData))
