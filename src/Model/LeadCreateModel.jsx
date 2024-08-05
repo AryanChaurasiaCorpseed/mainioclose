@@ -1,10 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from "react"
 import "./Model.css"
-import { postQuery } from "../API/PostQuery"
-import InputErrorComponent from "../components/InputErrorComponent"
-import { useCustomRoute } from "../Routes/GetCustomRoutes"
 import { leadSource } from "../data/FakeData"
-import { useLocation, useParams } from "react-router"
+import { useParams } from "react-router"
 import { Button, Form, Input, message, Modal, notification, Select } from "antd"
 import { useDispatch, useSelector } from "react-redux"
 import {

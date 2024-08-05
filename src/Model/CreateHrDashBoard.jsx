@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState } from "react"
+import React, { useCallback, useState } from "react"
 import { toast } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
 import { useDispatch, useSelector } from "react-redux"
@@ -104,15 +104,7 @@ const CreateHrDashBoard = ({ data, edit, modalTitle }) => {
     return Promise.resolve()
   }
 
-  const validateMobileNumber = (_, value) => {
-    const aadharPattern = /^[0-9]+$/
-    if (!value) {
-      return Promise.reject(new Error("please enter mobile number"))
-    } else if (!aadharPattern.test(value)) {
-      return Promise.reject(new Error("Number should contain only numbers"))
-    }
-    return Promise.resolve()
-  }
+
 
   const validateEmail = (dispatch) => async (_, value) => {
     if (!value) {

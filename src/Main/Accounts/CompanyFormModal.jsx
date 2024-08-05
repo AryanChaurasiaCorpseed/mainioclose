@@ -612,7 +612,7 @@ const CompanyFormModal = ({ edit, data }) => {
                   <>
                     <Form.Item
                       label="Contact name"
-                      name="sContactName"
+                      name="scontactName"
                       rules={[
                         {
                           required: true,
@@ -625,7 +625,7 @@ const CompanyFormModal = ({ edit, data }) => {
 
                     <Form.Item
                       label="Email"
-                      name="sContactEmails"
+                      name="scontactEmails"
                       rules={[
                         {
                           required: true,
@@ -639,7 +639,7 @@ const CompanyFormModal = ({ edit, data }) => {
 
                     <Form.Item
                       label="Contact number"
-                      name="sContactNo"
+                      name="scontactNo"
                       rules={[
                         {
                           required: true,
@@ -652,7 +652,7 @@ const CompanyFormModal = ({ edit, data }) => {
 
                     <Form.Item
                       label="Whatsapp number"
-                      name="sContactWhatsappNo"
+                      name="scontactWhatsappNo"
                       rules={[
                         {
                           required: true,
@@ -692,17 +692,17 @@ const CompanyFormModal = ({ edit, data }) => {
               </>
             )}
           </Form.Item>
-          <Form.Item label="Address" name="sAddress">
+          <Form.Item label="Address" name="saddress">
             <Input.TextArea />
           </Form.Item>
-          <Form.Item label="City" name="sCity">
+          <Form.Item label="City" name="scity">
             <Input />
           </Form.Item>
-          <Form.Item label="State" name="sState">
+          <Form.Item label="State" name="sstate">
             <Input />
           </Form.Item>
 
-          <Form.Item label="Country" name="sCountry">
+          <Form.Item label="Country" name="scountry">
             <Input />
           </Form.Item>
           <Form.Item label="PinCode" name="secondaryPinCode">
