@@ -149,7 +149,7 @@ const CompanyForm = ({ role }) => {
     {
       title: "Updated by",
       dataIndex: "updatedBy",
-      render: (_, data) => <ColComp data={data?.updatedBy} />,
+      render: (_, data) => <ColComp data={data?.updatedBy?.fullName} />,
     },
     {
       title: "Status",
