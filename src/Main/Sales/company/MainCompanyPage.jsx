@@ -1,27 +1,29 @@
-import React, { useCallback, useEffect } from "react"
+import React, { lazy, Suspense, useCallback, useEffect } from "react"
 import TableOutlet from "../../../components/design/TableOutlet"
 import MainHeading from "../../../components/design/MainHeading"
 import { useDispatch, useSelector } from "react-redux"
-import { getCompanyAction, updateCompanyAssignee } from "../../../Toolkit/Slices/CompanySlice"
+import {
+  getCompanyAction,
+  updateCompanyAssignee,
+} from "../../../Toolkit/Slices/CompanySlice"
 import TableScalaton from "../../../components/TableScalaton"
 import SomethingWrong from "../../../components/usefulThings/SomethingWrong"
 import ColComp from "../../../components/small/ColComp"
-import UserListComponent from "../../../Tables/UserListComponent"
-import { Link, useParams } from "react-router-dom"
-import CommonTable from "../../../components/CommonTable"
+import { useParams } from "react-router-dom"
 import { getAllLeadUser } from "../../../Toolkit/Slices/LeadSlice"
 import { notification, Select } from "antd"
+import OverFlowText from "../../../components/OverFlowText"
+const CommonTable = lazy(() => import("../../../components/CommonTable"))
 
 const MainCompanyPage = () => {
   const dispatch = useDispatch()
   const { userid } = useParams()
-
   const currUserId = useSelector((prev) => prev?.auth?.currentUser?.id)
   const leadUserNew = useSelector((state) => state.leads.getAllLeadUserData)
 
   useEffect(() => {
     dispatch(getCompanyAction({ id: currUserId }))
-  }, [])
+  }, [dispatch, currUserId])
 
   useEffect(() => {
     dispatch(getAllLeadUser(userid))
@@ -52,7 +54,7 @@ const MainCompanyPage = () => {
           notification.error({ message: "Something went wrong" })
         })
     },
-    [dispatch,currUserId]
+    [dispatch, currUserId]
   )
 
   const columns = [
@@ -67,7 +69,9 @@ const MainCompanyPage = () => {
       title: "Company name",
       fixed: "left",
       render: (_, props) => (
-        <Link className="link-heading" to={`${props?.companyId}/details`}>{props?.companyName}</Link>
+        <OverFlowText linkText={true} to={`${props?.companyId}/details`}>
+          {props?.companyName}
+        </OverFlowText>
       ),
     },
     {
@@ -142,22 +146,24 @@ const MainCompanyPage = () => {
       dataIndex: "seCountry",
       title: "Secondary country",
       render: (_, props) => <ColComp data={props?.seCountry} />,
-    }
+    },
   ]
 
   return (
     <TableOutlet>
-      <MainHeading data={`ALL company`} />
+      <MainHeading data={`All company`} />
       <div className="mt-3">
         {loadingCompany && <TableScalaton />}
         {errorCompany && <SomethingWrong />}
         {allCompnay && !loadingCompany && !errorCompany && (
-          <CommonTable
-            data={allCompnay}
-            columns={columns}
-            scroll={{ x: 2200, y: 520 }}
-            rowSelection={true}
-          />
+          <Suspense fallback={<TableScalaton />}>
+            <CommonTable
+              data={allCompnay}
+              columns={columns}
+              scroll={{ x: 2200, y: 520 }}
+              rowSelection={true}
+            />
+          </Suspense>
         )}
       </div>
     </TableOutlet>

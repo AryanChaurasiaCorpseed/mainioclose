@@ -5,7 +5,7 @@ import CompDetails from "./CompDetails"
 import { useDispatch } from "react-redux"
 import { useParams } from "react-router-dom"
 import {
-    getAllCompanyUnits,
+  getAllCompanyUnits,
   getCompanyLeadsAction,
   getCompanyProjectAction,
 } from "../../../Toolkit/Slices/CompanySlice"
@@ -13,7 +13,7 @@ import CompanyUnits from "./CompanyUnits"
 
 const CompanyPageLayout = () => {
   const dispatch = useDispatch()
-  const { companyId, userid } = useParams()
+  const { companyId } = useParams()
   useEffect(() => {
     dispatch(getCompanyLeadsAction({ id: companyId }))
     dispatch(getCompanyProjectAction({ id: companyId }))
@@ -33,10 +33,10 @@ const CompanyPageLayout = () => {
     {
       label: "Company units",
       key: "companyUnits",
-      children:<CompanyUnits/>
+      children: <CompanyUnits />,
     },
   ]
-  return <Tabs defaultActiveKey="1" type="card" size={"large"} items={items} />
+  return <Tabs defaultActiveKey="projects" type="card"  centered items={items} />
 }
 
 export default CompanyPageLayout

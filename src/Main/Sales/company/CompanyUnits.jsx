@@ -1,5 +1,4 @@
 import React, { lazy, Suspense } from "react"
-import SomethingWrong from "../../../components/usefulThings/SomethingWrong"
 import TableOutlet from "../../../components/design/TableOutlet"
 import MainHeading from "../../../components/design/MainHeading"
 import { useSelector } from "react-redux"

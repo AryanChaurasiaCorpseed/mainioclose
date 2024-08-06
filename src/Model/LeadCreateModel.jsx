@@ -24,30 +24,7 @@ const LeadCreateModel = ({ leadByCompany, companyId }) => {
     dispatch(handleLoadingState(""))
   }, [dispatch])
 
-  const success = (type) => {
-    messageApi.open({
-      type: type,
-      content:
-        type == "success"
-          ? "Lead created successfull"
-          : type == "pending"
-          ? "Loading..."
-          : "something went wrong",
-      className: "custom-class",
-      style: {
-        marginTop: "10vh",
-      },
-    })
-  }
-  useEffect(() => {
-    if (loading === "success") {
-      success("success")
-    } else if (loading === "rejected") {
-      success("error")
-    } else if (loading === "pending") {
-      success("loading")
-    }
-  }, [loading])
+
 
   const handleFinish = useCallback(
     (values) => {
