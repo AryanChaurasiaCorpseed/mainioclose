@@ -88,15 +88,46 @@ export const getAllCompanyByStatus = createAsyncThunk(
   }
 )
 
-export const getAllCompanyUnits=createAsyncThunk('getAllCompanyUnits',async(id)=>{
-  const response = await getQuery(`/leadService/api/v1/company/getAllCompanyUnit?id=${id}`)
-  return response.data
-})
+export const getAllCompanyUnits = createAsyncThunk(
+  "getAllCompanyUnits",
+  async (id) => {
+    const response = await getQuery(
+      `/leadService/api/v1/company/getAllCompanyUnit?id=${id}`
+    )
+    return response.data
+  }
+)
 
-export const updateCompanyAssignee=createAsyncThunk('updateCompanyAssignee',async(data)=>{
-  const response=await putQuery(`/leadService/api/v1/company/updateCompanyAssignee?companyId=${data?.companyId}&assigneeId=${data?.assigneeId}`)
-  return response.data
-})
+export const updateCompanyAssignee = createAsyncThunk(
+  "updateCompanyAssignee",
+  async (data) => {
+    const response = await putQuery(
+      `/leadService/api/v1/company/updateCompanyAssignee?companyId=${data?.companyId}&assigneeId=${data?.assigneeId}`
+    )
+    return response.data
+  }
+)
+
+export const getCompanyDetailsById = createAsyncThunk(
+  "getCompanyDetailsById",
+  async (id) => {
+    const response = await getQuery(
+      `/leadService/api/v1/company/getSingleCompanyForm?id=${id}`
+    )
+    return response.data
+  }
+)
+
+export const updateCompanyForm = createAsyncThunk(
+  "updateCompanyForm",
+  async (data) => {
+    const response = await putQuery(
+      `/leadService/api/v1/company/updateCompanyForm`,
+      data
+    )
+    return response.data
+  }
+)
 
 const CompnaySlice = createSlice({
   name: "company",
@@ -114,7 +145,8 @@ const CompnaySlice = createSlice({
     loading: "",
     allParentCompany: [],
     allLeadCompanyList: [],
-    allCompanyUnits:[]
+    allCompanyUnits: [],
+    companyDetail: {},
   },
   extraReducers: (builder) => {
     builder.addCase(getCompanyAction.pending, (state, action) => {
@@ -192,7 +224,6 @@ const CompnaySlice = createSlice({
       state.loading = "rejected"
     })
 
-
     builder.addCase(getAllCompanyByStatus.pending, (state, action) => {
       state.loading = "pending"
     })
@@ -203,7 +234,6 @@ const CompnaySlice = createSlice({
     builder.addCase(getAllCompanyByStatus.rejected, (state, action) => {
       state.loading = "rejected"
     })
-
 
     builder.addCase(getAllCompanyUnits.pending, (state, action) => {
       state.loading = "pending"
@@ -216,7 +246,16 @@ const CompnaySlice = createSlice({
       state.loading = "rejected"
     })
 
-
+    builder.addCase(getCompanyDetailsById.pending, (state, action) => {
+      state.loading = "pending"
+    })
+    builder.addCase(getCompanyDetailsById.fulfilled, (state, action) => {
+      state.companyDetail = action.payload
+      state.loading = "success"
+    })
+    builder.addCase(getCompanyDetailsById.rejected, (state, action) => {
+      state.loading = "rejected"
+    })
   },
 })
 

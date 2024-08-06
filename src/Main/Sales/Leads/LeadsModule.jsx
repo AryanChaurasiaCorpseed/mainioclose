@@ -359,7 +359,7 @@ const LeadsModule = () => {
             title: "Create project",
             dataIndex: "project",
             render: (_, data) => {
-              return <CompanyFormModal edit={true} data={data} />
+              return <CompanyFormModal  data={data} />
             },
           },
           {

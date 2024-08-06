@@ -5,12 +5,17 @@ import TableOutlet from "../../components/design/TableOutlet"
 import { useDispatch, useSelector } from "react-redux"
 import { getAllCompanyByStatus } from "../../Toolkit/Slices/CompanySlice"
 import { Button, notification, Select, Tooltip, Typography } from "antd"
-import { updateStatusById } from "../../Toolkit/Slices/LeadSlice"
+import {
+  getAllContactDetails,
+  updateStatusById,
+} from "../../Toolkit/Slices/LeadSlice"
 import { Icon } from "@iconify/react"
 import { BTN_ICON_HEIGHT, BTN_ICON_WIDTH } from "../../components/Constants"
 import { useParams } from "react-router-dom"
 import OverFlowText from "../../components/OverFlowText"
 import ColComp from "../../components/small/ColComp"
+import CompanyFormModal from "./CompanyFormModal"
+import { getAllUsers } from "../../Toolkit/Slices/UsersSlice"
 const { Text } = Typography
 
 const CompanyForm = ({ role }) => {
@@ -19,10 +24,26 @@ const CompanyForm = ({ role }) => {
   const leadCompanyList = useSelector(
     (state) => state.company.allLeadCompanyList
   )
+  const currentRoles = useSelector((state) => state?.auth?.roles)
+  const currentUserDetail = useSelector(
+    (state) => state.auth.getDepartmentDetail
+  )
   const [selectedFilter, setSelectedFilter] = useState("initiated")
   useEffect(() => {
     dispatch(getAllCompanyByStatus({ id: userid, status: selectedFilter }))
-  }, [dispatch, selectedFilter,userid])
+  }, [dispatch, selectedFilter, userid])
+
+  function getHighestPriorityRole(roles) {
+    if (roles.includes("ADMIN")) {
+      return "ADMIN"
+    }
+  }
+
+  useEffect(() => {
+    dispatch(getAllUsers())
+    dispatch(getAllContactDetails())
+  }, [dispatch])
+
   const columns = [
     {
       title: "Id",
@@ -61,6 +82,11 @@ const CompanyForm = ({ role }) => {
     //   render:(_,data)=><Text>{data?.assignee?.fullName}</Text>
     // },
     {
+      title: "Contact name",
+      dataIndex: "contactName",
+      render: (_, data) => <ColComp data={data?.contactName} />,
+    },
+    {
       title: "Contact number",
       dataIndex: "contactNo",
       render: (_, data) => <ColComp data={data?.contactNo} />,
@@ -79,7 +105,7 @@ const CompanyForm = ({ role }) => {
       title: "Address",
       dataIndex: "address",
       render: (_, value) => (
-        <OverFlowText>{value?.lead?.primaryAddress}</OverFlowText>
+        <OverFlowText>{value?.address ? value?.address : "NA"}</OverFlowText>
       ),
     },
     {
@@ -103,6 +129,11 @@ const CompanyForm = ({ role }) => {
       render: (_, data) => <ColComp data={data?.primaryPinCode} />,
     },
     {
+      title: "SContact name",
+      dataIndex: "secondaryContactName",
+      render: (_, data) => <ColComp data={data?.secondaryContactName} />,
+    },
+    {
       title: "SContact number",
       dataIndex: "secondaryContactNo",
       render: (_, data) => <ColComp data={data?.secondaryContactNo} />,
@@ -121,9 +152,7 @@ const CompanyForm = ({ role }) => {
       title: "Secondary address",
       dataIndex: "sAddress",
       render: (_, value) => (
-        <OverFlowText>
-          {value?.lead?.primaryAddress ? value?.lead?.primaryAddress : "NA"}
-        </OverFlowText>
+        <OverFlowText>{value?.sAddress ? value?.sAddress : "NA"}</OverFlowText>
       ),
     },
     {
@@ -163,6 +192,37 @@ const CompanyForm = ({ role }) => {
           "Initiated"
         ),
     },
+    ...(getHighestPriorityRole(currentRoles) !== "ADMIN" &&
+    currentUserDetail?.department === "Sales" &&
+    selectedFilter === "initiated"
+      ? [
+          {
+            title: "Edit company",
+            dataIndex: "editCompanyDetails",
+            render: (_, records) => (
+              <CompanyFormModal
+                editInfo={records}
+                edit={true}
+                selectedFilter={selectedFilter}
+              />
+            ),
+          },
+        ]
+      : getHighestPriorityRole(currentRoles) === "ADMIN"
+      ? [
+          {
+            title: "Edit company",
+            dataIndex: "editCompanyDetails",
+            render: (_, records) => (
+              <CompanyFormModal
+                editInfo={records}
+                edit={true}
+                selectedFilter={selectedFilter}
+              />
+            ),
+          },
+        ]
+      : []),
     ...(role !== "sales"
       ? [
           {
@@ -171,7 +231,7 @@ const CompanyForm = ({ role }) => {
             render: (_, value) => {
               return (
                 <>
-                  <Tooltip title={<Text>Approved</Text>} color="#fff">
+                  <Tooltip title="Approved" arrow={false}>
                     <Button
                       size="small"
                       type="text"
@@ -210,7 +270,7 @@ const CompanyForm = ({ role }) => {
                       />
                     </Button>
                   </Tooltip>
-                  <Tooltip title={<Text>Disapproved</Text>} color="#fff">
+                  <Tooltip title="Disapproved" arrow={false}>
                     <Button
                       size="small"
                       type="text"
@@ -278,7 +338,7 @@ const CompanyForm = ({ role }) => {
         <CommonTable
           data={leadCompanyList}
           columns={columns}
-          scroll={{ x: 4000, y: 550 }}
+          scroll={{ x: 5000, y: 550 }}
           rowSelection={true}
         />
       </div>

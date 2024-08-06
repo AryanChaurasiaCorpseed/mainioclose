@@ -22,10 +22,17 @@ import {
 } from "../../Toolkit/Slices/LeadSlice"
 import { getAllUsers } from "../../Toolkit/Slices/UsersSlice"
 import { BTN_ICON_HEIGHT, BTN_ICON_WIDTH } from "../../components/Constants"
+import {
+  getAllCompanyByStatus,
+  getCompanyDetailsById,
+  updateCompanyForm,
+} from "../../Toolkit/Slices/CompanySlice"
+import { useParams } from "react-router-dom"
 
-const CompanyFormModal = ({ edit, data }) => {
+const CompanyFormModal = ({ edit, data, editInfo, selectedFilter }) => {
   const [form] = Form.useForm()
   const dispatch = useDispatch()
+  const { userid } = useParams()
   const companyDetails = useSelector(
     (state) => state?.leads?.companyDetailsById
   )
@@ -36,6 +43,7 @@ const CompanyFormModal = ({ edit, data }) => {
   )
   const contactList = useSelector((state) => state?.leads?.allContactList)
   const contactDetail = useSelector((state) => state?.leads?.contactDetail)
+  const companyDetail = useSelector((state) => state?.company?.companyDetail)
   const [openModal, setOpenModal] = useState(false)
   const [formLoading, setFormLoading] = useState("")
   const [gstMand, setGstMand] = useState("")
@@ -63,6 +71,64 @@ const CompanyFormModal = ({ edit, data }) => {
     })
     setOpenModal(true)
   }, [form, data, dispatch])
+
+  function getFileName(file) {
+    let temp = file?.split("/")
+    return temp[temp?.length - 1]
+  }
+
+  const handleEditBtnClick = useCallback(() => {
+    dispatch(getCompanyDetailsById(editInfo?.id)).then((resp) => {
+      if (resp.meta.requestStatus === "fulfilled") {
+        let editData = resp?.payload
+        form.setFieldsValue({
+          isPresent: editData?.isPresent,
+          companyName: editData?.companyName,
+          companyId: editData?.companyId,
+          isUnit: editData?.isUnit,
+          unitName: editData?.unitName,
+          unitId: editData?.unitId,
+          panNo: editData?.panNo,
+          gstNo: editData?.gstNo,
+          gstType: editData?.gstType,
+          gstDocuments: [
+            {
+              uid: "-1",
+              name: getFileName(editData?.gstDocuments),
+              status: "done",
+              response: editData?.gstDocuments,
+            },
+          ],
+          companyAge: editData?.companyAge,
+          primaryPinCode: editData?.primaryPinCode,
+          secondaryPinCode: editData?.secondaryPinCode,
+          assigneeId: editData?.assigneeId,
+          contactId: editData?.contactId,
+          contactName: editData?.contactName,
+          contactEmails: editData?.contactEmails,
+          contactNo: editData?.contactNo,
+          contactWhatsappNo: editData?.contactWhatsappNo,
+          updatedBy: editData?.updatedBy?.id,
+          state: editData?.state,
+          address: editData?.address,
+          country: editData?.country,
+          primaryContact: editData?.primaryContact,
+          city: editData?.city,
+          secondaryContact: editData?.secondaryContact,
+          scountry: editData?.scountry,
+          saddress: editData?.saddress,
+          sstate: editData?.sstate,
+          scontactEmails: editData?.scontactEmails,
+          scontactNo: editData?.scontactNo,
+          scontactName: editData?.scontactName,
+          scity: editData?.scity,
+          scontactId: editData?.scontactId,
+          scontactWhatsappNo: editData?.scontactWhatsappNo,
+        })
+      }
+    })
+    setOpenModal(true)
+  }, [dispatch, editInfo, form])
 
   const validateGstNumber = (dispatch) => async (_, value) => {
     if (!value) {
@@ -177,51 +243,91 @@ const CompanyFormModal = ({ edit, data }) => {
 
   const handleFinish = useCallback(
     (values) => {
-      setFormLoading("pending")
-      const formData = form.getFieldsValue(["companyId", "companyName"])
-      values.leadId = data?.id
-      if (Object.keys(companyDetails)?.length > 0) {
-        values.isPresent = true
-      } else {
-        values.isPresent = false
-      }
+      console.log("skdjhlksdsaljkdlj", values)
       values.gstDocuments = values.gstDocuments?.[0]?.response
-      if (formData?.companyId) {
-        values.companyId = companyDetails?.id
-      }
-      dispatch(createCompanyForm(values))
-        .then((response) => {
-          if (response.meta.requestStatus === "fulfilled") {
-            setFormLoading("success")
-            dispatch(getAllUsers())
-            notification.success({ message: "Company created successfully" })
-            setOpenModal(false)
-          } else {
+      setFormLoading("pending")
+      if (edit) {
+        values.companyFormId = companyDetail?.id
+        values.isPresent = companyDetail?.isPresent
+        values.leadId = companyDetail?.lead?.id
+        values.companyId = companyDetail?.companyId
+        dispatch(updateCompanyForm(values))
+          .then((response) => {
+            if (response.meta.requestStatus === "fulfilled") {
+              setFormLoading("success")
+              dispatch(
+                getAllCompanyByStatus({ id: userid, status: selectedFilter })
+              )
+              notification.success({ message: "Company created successfully" })
+              setOpenModal(false)
+            } else {
+              setFormLoading("rejected")
+              notification.error({ message: "Something went wrong" })
+            }
+          })
+          .catch(() => {
             setFormLoading("rejected")
             notification.error({ message: "Something went wrong" })
-          }
-        })
-        .catch(() => {
-          setFormLoading("rejected")
-          notification.error({ message: "Something went wrong" })
-        })
+          })
+      } else {
+        const formData = form.getFieldsValue(["companyId", "companyName"])
+        values.leadId = data?.id
+        if (Object.keys(companyDetails)?.length > 0) {
+          values.isPresent = true
+        } else {
+          values.isPresent = false
+        }
+        if (formData?.companyId) {
+          values.companyId = companyDetails?.id
+        }
+        dispatch(createCompanyForm(values))
+          .then((response) => {
+            if (response.meta.requestStatus === "fulfilled") {
+              setFormLoading("success")
+              dispatch(getAllUsers())
+              notification.success({ message: "Company created successfully" })
+              setOpenModal(false)
+            } else {
+              setFormLoading("rejected")
+              notification.error({ message: "Something went wrong" })
+            }
+          })
+          .catch(() => {
+            setFormLoading("rejected")
+            notification.error({ message: "Something went wrong" })
+          })
+      }
     },
-    [companyDetails, dispatch, form, data]
+    [
+      companyDetails,
+      dispatch,
+      form,
+      data,
+      companyDetail,
+      userid,
+      selectedFilter,
+    ]
   )
 
   return (
     <>
-      <Button type="text" size="small" onClick={handleButtonClick}>
-        <Icon
-          icon="fluent:add-24-filled"
-          height={18}
-          width={18}
-          color="#1677ff"
-        />
-      </Button>
+      {edit ? (
+        <Button type="text" size="small" onClick={handleEditBtnClick}>
+          <Icon icon="fluent:edit-24-regular" />
+        </Button>
+      ) : (
+        <Button type="text" size="small" onClick={handleButtonClick}>
+          <Icon
+            icon="fluent:add-24-filled"
+            height={18}
+            width={18}
+            color="#1677ff"
+          />
+        </Button>
+      )}
 
       <Modal
-        title={"Create company"}
+        title={edit ? "Edit company details" : "Create company"}
         centered
         open={openModal}
         onCancel={() => setOpenModal(false)}
