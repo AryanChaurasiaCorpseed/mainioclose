@@ -56,12 +56,17 @@ const CompanyForm = ({ role }) => {
       title: "Id",
       dataIndex: "id",
       fixed: "left",
-      width: 50,
+      width: 100,
     },
     {
       title: "Company name",
       dataIndex: "companyName",
       fixed: "left",
+      render: (_, value) => (
+        <OverFlowText>
+          {value?.companyName ? value?.companyName : "NA"}
+        </OverFlowText>
+      ),
     },
     {
       title: "Pan number",
