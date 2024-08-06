@@ -82,7 +82,9 @@ export const getAllCompanyByStatus = createAsyncThunk(
   "getCompaniesByStatus",
   async (data) => {
     const response = await getQuery(
-      `/leadService/api/v1/company/getAllCompanyFormByStatus?status=${data.status}&userId=${data?.id}`
+      `/leadService/api/v1/company/getAllCompanyFormByStatus?status=${
+        data.status
+      }&userId=${data?.id}&page=${data?.page}&size=${50}`
     )
     return response.data
   }
@@ -147,6 +149,15 @@ const CompnaySlice = createSlice({
     allLeadCompanyList: [],
     allCompanyUnits: [],
     companyDetail: {},
+    page: 0,
+  },
+  reducers: {
+    handleNextPagination: (state, action) => {
+      state.page = state.page + 1
+    },
+    handlePrevPagination: (state, action) => {
+      state.page = state.page >= 0 ? state.page - 1 : 0
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(getCompanyAction.pending, (state, action) => {
@@ -258,5 +269,8 @@ const CompnaySlice = createSlice({
     })
   },
 })
+
+export const { handleNextPagination, handlePrevPagination } =
+  CompnaySlice.actions
 
 export default CompnaySlice.reducer

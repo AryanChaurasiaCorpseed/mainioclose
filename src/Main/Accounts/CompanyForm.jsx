@@ -3,7 +3,11 @@ import MainHeading from "../../components/design/MainHeading"
 import CommonTable from "../../components/CommonTable"
 import TableOutlet from "../../components/design/TableOutlet"
 import { useDispatch, useSelector } from "react-redux"
-import { getAllCompanyByStatus } from "../../Toolkit/Slices/CompanySlice"
+import {
+  getAllCompanyByStatus,
+  handleNextPagination,
+  handlePrevPagination,
+} from "../../Toolkit/Slices/CompanySlice"
 import { Button, notification, Select, Tooltip, Typography } from "antd"
 import {
   getAllContactDetails,
@@ -24,14 +28,17 @@ const CompanyForm = ({ role }) => {
   const leadCompanyList = useSelector(
     (state) => state.company.allLeadCompanyList
   )
+  const page = useSelector((state) => state.company.page)
   const currentRoles = useSelector((state) => state?.auth?.roles)
   const currentUserDetail = useSelector(
     (state) => state.auth.getDepartmentDetail
   )
   const [selectedFilter, setSelectedFilter] = useState("initiated")
   useEffect(() => {
-    dispatch(getAllCompanyByStatus({ id: userid, status: selectedFilter }))
-  }, [dispatch, selectedFilter, userid])
+    dispatch(
+      getAllCompanyByStatus({ id: userid, status: selectedFilter, page: page })
+    )
+  }, [dispatch, selectedFilter, userid, page])
 
   function getHighestPriorityRole(roles) {
     if (roles.includes("ADMIN")) {
@@ -340,6 +347,11 @@ const CompanyForm = ({ role }) => {
           columns={columns}
           scroll={{ x: 5000, y: 550 }}
           rowSelection={true}
+          pagination={true}
+          nextPage={handleNextPagination}
+          prevPage={handlePrevPagination}
+          prevDisable={page === 0 && true}
+          nextDisable={leadCompanyList?.length < 50 && true}
         />
       </div>
     </TableOutlet>
