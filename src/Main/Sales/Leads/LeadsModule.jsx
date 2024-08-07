@@ -293,11 +293,11 @@ const LeadsModule = () => {
         const minutes = new Date(data?.missedTaskDate).getMinutes()
         const taskCreated = data?.missedTaskCretedBy
         return taskName !== null ? (
-          <Text type={taskName !== null ? "danger" : ""}>
+          <OverFlowText type={taskName !== null ? "danger" : ""}>
             {taskStatus} - {taskCreated} - {taskName}
             <br />
             {taskDate} {hours}:{minutes}
-          </Text>
+          </OverFlowText>
         ) : (
           <Text>NA</Text>
         )
@@ -707,7 +707,7 @@ const LeadsModule = () => {
                   danger
                   disabled={selectedRowKeys?.length === 0 ? true : false}
                 >
-                  {leadDelLoading === "pending" ? "Please Wait..." : "Delete"}
+                  {leadDelLoading === "pending" ? "Please wait..." : "Delete"}
                 </Button>
               </Popconfirm>
 
@@ -715,7 +715,7 @@ const LeadsModule = () => {
                 allowClear
                 showSearch
                 style={{ width: 200 }}
-                placeholder="select status"
+                placeholder="Select status"
                 options={
                   getAllStatus?.length > 0
                     ? getAllStatus?.map((item) => ({

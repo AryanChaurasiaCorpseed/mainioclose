@@ -8,6 +8,7 @@ import {
   getAllDesiginations,
 } from "../../../Toolkit/Slices/SettingSlice"
 import { createAuthDesigination } from "../../../Toolkit/Slices/AuthSlice"
+import { playErrorSound, playSuccessSound } from "../../Common/Commons"
 
 const Desigination = () => {
   const [form] = Form.useForm()
@@ -21,19 +22,20 @@ const Desigination = () => {
     (values) => {
       dispatch(createAuthDesigination(values)).then((resp) => {
         if (resp.meta.requestStatus === "fulfilled") {
-          const temp = resp?.payload?.data
           dispatch(createDesigination(values))
             .then((info) => {
               if (info.meta.requestStatus === "fulfilled") {
                 notification.success({
                   message: "Desigination created successfully",
                 })
+                playSuccessSound()
                 setOpenModal(false)
                 dispatch(getAllDesiginations())
               } else if (info.meta.requestStatus === "rejected") {
                 notification.success({
                   message: "Something went wrong",
                 })
+                playErrorSound()
                 setOpenModal(false)
               }
             })
@@ -41,6 +43,7 @@ const Desigination = () => {
               notification.success({
                 message: "Something went wrong",
               })
+              playErrorSound()
               setOpenModal(false)
             })
         }

@@ -41,7 +41,7 @@ export const createAuthDesigination = createAsyncThunk(
   "createAuthDesignibnation",
   async (data) => {
     const response = await postQuery(
-      `/securityService/api/designation/createDesignation?name=${data?.name}`
+      `/securityService/api/designation/createDesignation?name=${data?.name}&weight=${data?.weight}`
     )
     return response
   }
