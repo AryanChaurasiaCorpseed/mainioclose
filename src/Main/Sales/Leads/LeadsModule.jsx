@@ -14,17 +14,29 @@ import {
   getAllLeadUser,
   getAllStatusData,
   handleDeleteSingleLead,
+  handleLeadassignedToSamePerson,
   handleViewHistory,
   multiAssignedLeads,
   updateAssigneeInLeadModule,
   updateHelper,
 } from "../../../Toolkit/Slices/LeadSlice"
 import MainHeading from "../../../components/design/MainHeading"
-import { Button, notification, Popconfirm, Select, Typography } from "antd"
+import {
+  Button,
+  Checkbox,
+  Divider,
+  Dropdown,
+  notification,
+  Popconfirm,
+  Select,
+  Space,
+  Typography,
+} from "antd"
 import { Icon } from "@iconify/react"
 import { getAllUsers } from "../../../Toolkit/Slices/UsersSlice"
 import CompanyFormModal from "../../Accounts/CompanyFormModal"
 import OverFlowText from "../../../components/OverFlowText"
+import { BTN_ICON_HEIGHT, BTN_ICON_WIDTH } from "../../../components/Constants"
 const { Text } = Typography
 
 const CommonTable = React.lazy(() => import(`../../../components/CommonTable`))
@@ -40,14 +52,18 @@ const LeadsModule = () => {
   const [allStatusMulti, setAllStatusMulti] = useState([])
   const [allUserMulti, setAllUserMulti] = useState([])
   const [filterBtnNew, setFilterBtnNew] = useState(false)
+  const [openDropdown, setOpenDropdown] = useState(false)
   const [selectedRowKeys, setSelectedRowKeys] = useState([])
-  const onSelectChange = (newSelectedRowKeys) => {
+  const [selectedRow, setSelectedRow] = useState([])
+  const [dropdownData, setDropdownData] = useState([])
+  const [headerData, setHeaderData] = useState([])
+  const onSelectChange = (newSelectedRowKeys, rowsData) => {
     setSelectedRowKeys(newSelectedRowKeys)
+    setSelectedRow(rowsData)
   }
 
   const { userid } = useParams()
   const dispatch = useDispatch()
-
   const [allMultiFilterData, setAllMultiFilterData] = useState({
     userId: userid,
     userIdFilter: allUserMulti,
@@ -118,17 +134,17 @@ const LeadsModule = () => {
   const adminRole = currentUserRoles.includes("ADMIN")
   const allUsers = useSelector((state) => state.user.allUsers)
 
-  const exportData = allLeadsData.map((row) => ({
-    "S.No": row?.id,
-    "Lead Name": row?.leadName,
-    "Missed Task": row?.missedTaskName,
+  const exportData = selectedRow.map((row) => ({
+    Id: row?.id,
+    "Lead name": row?.leadName,
+    "Missed task": row?.missedTaskName,
     Status: row?.status?.name,
-    "Client Name": row?.clients[0]?.name,
-    "Assignee Person": row?.assignee?.fullName,
-    "Created By": row?.createdBy?.fullName,
-    Date: row?.createDate,
-    "Mobile No": row?.mobileNo,
+    "Client name": row?.clients[0]?.name,
     Email: row?.email,
+    "Mobile no.": row?.mobileNo,
+    "Assignee person": row?.assignee?.fullName,
+    "Created by": row?.createdBy?.fullName,
+    Date: row?.createDate,
     Source: row?.source,
   }))
 
@@ -201,17 +217,36 @@ const LeadsModule = () => {
     [userid, dispatch, allMultiFilterData]
   )
 
+  const leadAssignedToSame = (id) => {
+    dispatch(handleLeadassignedToSamePerson(id))
+      .then((response) => {
+        if (response.meta.requestStatus === "fulfilled") {
+          notification.success({
+            message: "Lead assigned to same person successfully",
+          })
+          dispatch(getAllLeads(allMultiFilterData))
+        } else {
+          notification.error({ message: "Something went wrong" })
+        }
+      })
+      .catch(() => {
+        notification.error({ message: "Something went wrong" })
+      })
+  }
+
   const columns = [
     {
       dataIndex: "id",
       title: "Id",
       fixed: "left",
-      width: 50,
+      width: 80,
+      checked: true,
     },
     {
       dataIndex: "leadName",
       title: "Lead name",
       fixed: "left",
+      checked: true,
       render: (_, data) => (
         <OverFlowText
           linkText={true}
@@ -233,6 +268,7 @@ const LeadsModule = () => {
     {
       title: "Missed task",
       dataIndex: "missedTaskDate",
+      checked: true,
       render: (_, data) => {
         const taskStatus = data?.missedTaskStatus
         const taskName = data?.missedTaskName
@@ -254,6 +290,7 @@ const LeadsModule = () => {
     {
       title: "Status",
       dataIndex: "status",
+      checked: true,
       render: (_, data) => (
         <Text type={data?.status?.name ? "success" : ""}>
           {data?.status?.name ? data?.status?.name : "NA"}
@@ -263,6 +300,7 @@ const LeadsModule = () => {
     {
       title: "Client name",
       dataIndex: "name",
+      checked: true,
       render: (_, data) => (
         <OverFlowText>
           {data?.clients[0]?.name ? data?.clients[0]?.name : "NA"}
@@ -272,21 +310,25 @@ const LeadsModule = () => {
     {
       title: "Mobile no.",
       dataIndex: "mobileNo",
+      checked: true,
     },
     {
       title: "Email",
       dataIndex: "email",
       width: 300,
+      checked: true,
     },
     {
       title: "Assignee person",
       dataIndex: "assigneeName",
+      checked: true,
       render: (_, data) => <Text>{data?.assignee?.fullName}</Text>,
     },
 
     {
       title: "Date",
       dataIndex: "createDate",
+      checked: true,
       render: (_, data) => (
         <Text>{new Date(data?.createDate).toLocaleDateString()}</Text>
       ),
@@ -294,6 +336,7 @@ const LeadsModule = () => {
     {
       title: "Change assignee",
       dataIndex: "assignee",
+      checked: true,
       render: (_, data) => (
         <Select
           showSearch
@@ -318,6 +361,7 @@ const LeadsModule = () => {
           {
             title: "Helper",
             dataIndex: "helper",
+            checked: true,
             render: (_, data) => (
               <Select
                 showSearch
@@ -342,6 +386,7 @@ const LeadsModule = () => {
           {
             title: "Created by",
             dataIndex: "createdBy",
+            checked: true,
             render: (_, data) => (
               <Text>
                 {data?.createdBy?.fullName ? data?.createdBy?.fullName : "NA"}
@@ -351,6 +396,7 @@ const LeadsModule = () => {
           {
             title: "Source",
             dataIndex: "source",
+            checked: true,
             render: (_, data) => (
               <Text>{data?.source ? data?.source : "NA"}</Text>
             ),
@@ -358,13 +404,24 @@ const LeadsModule = () => {
           {
             title: "Create project",
             dataIndex: "project",
+            checked: true,
             render: (_, data) => {
-              return <CompanyFormModal  data={data} />
+              return <CompanyFormModal data={data} />
             },
+          },
+          {
+            title: "Lead Assigned",
+            dataIndex: "assignedSame",
+            render: (_, data) => (
+              <Button onClick={() => leadAssignedToSame(data?.id)}>
+                To same{" "}
+              </Button>
+            ),
           },
           {
             dataIndex: "action",
             title: "Action",
+            checked: true,
             render: (_, data) => (
               <Popconfirm
                 title="Delete the lead"
@@ -417,7 +474,44 @@ const LeadsModule = () => {
 
   const { productData: bellData } = useCustomRoute(bellCountUrl, bellCountDep)
 
-  console.log("selected row keys", selectedRowKeys)
+  const menuStyle = {
+    boxShadow: "none",
+  }
+
+  const handleOpenDropdown = useCallback(() => {
+    const res = [...columns]
+    setDropdownData(res)
+    setOpenDropdown(true)
+  }, [columns])
+
+  const handleSelectColumns = useCallback((e, key) => {
+    setDropdownData((prev) => {
+      let temp = [...prev]
+      let res = temp.map((ele) =>
+        ele.title === key ? { ...ele, checked: e } : ele
+      )
+      let result = res?.filter((col) => col.checked === true)
+      setHeaderData(result)
+      return res
+    })
+  }, [])
+
+  const columnDropDown = useCallback(
+    (handleSelectColumns) => {
+      const result = dropdownData?.map((item) => ({
+        label: (
+          <Checkbox
+            checked={item?.checked}
+            onChange={(e) => handleSelectColumns(!item?.checked, item?.title)}
+          >
+            {item?.title}
+          </Checkbox>
+        ),
+      }))
+      return result
+    },
+    [dropdownData]
+  )
 
   return (
     <div className="lead-module small-box-padding">
@@ -425,28 +519,76 @@ const LeadsModule = () => {
         <MainHeading data={`Leads (${leadCount})`} />
         <div className="all-center">
           <Link to={`allTask`}>
-            <div className="common-btn-one mr-2">All Tasks</div>
+            <Button className="mr-2" type="primary">
+              All tasks
+            </Button>
           </Link>
           {adminRole && (
             <div className="d-end mr-2">
-              <button className="common-btn-one">
-                <CSVLink
-                  className="text-white"
-                  data={exportData}
-                  // headers={columns.map((column) => column.headerName)}
-                  filename={"exported_data.csv"}
-                >
-                  Export
-                </CSVLink>
-              </button>
+              <Dropdown
+                // destroyPopupOnHide={true}
+                disabled={selectedRow?.length === 0 ? true : false}
+                open={openDropdown}
+                // onOpenChange={(e) => setOpenDropdown(e)}
+                trigger={["click"]}
+                overlayClassName="global-drop-down"
+                menu={{ items: columnDropDown(handleSelectColumns) }}
+                dropdownRender={(menu) => (
+                  <div className="dropdown-content">
+                    <div style={{ height: "100%", overflowY: "auto" }}>
+                      {React.cloneElement(menu, {
+                        style: menuStyle,
+                      })}
+                    </div>
+                    <Divider
+                      style={{
+                        margin: 6,
+                        color: "lightgray",
+                      }}
+                    />
+                    <div className="flex-justify-end">
+                      <Space>
+                        <Button
+                          size="small"
+                          onClick={() => setOpenDropdown(false)}
+                        >
+                          Cancel
+                        </Button>
+                        <Button type="primary" size="small">
+                          <CSVLink
+                            className="text-white"
+                            data={exportData}
+                            headers={
+                              headerData?.length > 0
+                                ? headerData?.map((column) => column.title)
+                                : []
+                            }
+                            filename={"exported_data.csv"}
+                          >
+                            Export
+                          </CSVLink>
+                        </Button>
+                      </Space>
+                    </div>
+                  </div>
+                )}
+              >
+                <Button type="primary" onClick={handleOpenDropdown}>
+                  <Icon
+                    icon="fluent:arrow-upload-16-filled"
+                    height={BTN_ICON_HEIGHT}
+                    width={BTN_ICON_WIDTH}
+                  />
+                </Button>
+              </Dropdown>
             </div>
           )}
-          <button
+          <Button
             onClick={() => setHideMUltiFilter((prev) => !prev)}
-            className="common-btn-one mr-2"
+            className="mr-2"
           >
-            Filter Data
-          </button>
+            Filter data
+          </Button>
           {adminRole ? <LeadCreateModel /> : ""}
           <Link to={`notification`}>
             <div className="bell-box">

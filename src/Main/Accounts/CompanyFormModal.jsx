@@ -59,18 +59,27 @@ const CompanyFormModal = ({ edit, data, editInfo, selectedFilter }) => {
     dispatch(getCompanyDetailsByLeadId(data?.id)).then((resp) => {
       if (resp.meta.requestStatus === "fulfilled") {
         if (Object.keys(resp.payload)?.length > 0) {
-          form.setFieldsValue({
-            companyId: resp?.payload.name,
-            isUnit: false,
-          })
-          dispatch(getCompanyUnitsById(resp?.payload?.id))
+          if (resp.payload.assignee?.id != userid) {
+            notification.warning({
+              message: `This lead is already assigned to "${resp?.payload?.assignee?.fullName}" for company id "${resp?.payload?.id}" company name " ${resp?.payload?.name}"`,
+            })
+          } else {
+            form.setFieldsValue({
+              companyId: resp?.payload.name,
+              isUnit: false,
+            })
+            dispatch(getCompanyUnitsById(resp?.payload?.id))
+            setOpenModal(true)
+          }
         } else {
           form.setFieldsValue({ isUnit: true })
+          setOpenModal(true)
         }
+      } else {
+        setOpenModal(true)
       }
     })
-    setOpenModal(true)
-  }, [form, data, dispatch])
+  }, [form, data, dispatch, userid])
 
   function getFileName(file) {
     let temp = file?.split("/")

@@ -4,7 +4,7 @@ import { Link } from "react-router-dom"
 
 const { Text } = Typography
 
-const OverFlowText = ({ children, linkText, to ,onClick }) => {
+const OverFlowText = ({ children, linkText, to, onClick }) => {
   const textRef = useRef(null)
   const [isOverflowed, setIsOverflowed] = useState(false)
 
@@ -23,13 +23,13 @@ const OverFlowText = ({ children, linkText, to ,onClick }) => {
         onClick={onClick}
         className="link-heading tooltip-text-overflow"
       >
-        {children}
+        {children ? children : "NA"}
       </Link>
     </Tooltip>
   ) : (
     <Tooltip title={isOverflowed ? children : ""} arrow={false}>
       <Text ref={textRef} className="tooltip-text-overflow">
-        {children}
+        {children ? children : "NA"}
       </Text>
     </Tooltip>
   )

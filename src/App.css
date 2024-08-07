@@ -1005,6 +1005,26 @@ select.form-control:not([size]):not([multiple]) {
   display: block;
 }
 
-.ant-tabs-card.ant-tabs-top >.ant-tabs-nav .ant-tabs-tab-active{
+.ant-tabs-card.ant-tabs-top > .ant-tabs-nav .ant-tabs-tab-active {
   background-color: #c9dce4;
+}
+
+
+.dropdown-content{
+  background-color:#ebe9e9 ;
+  width: 200px;
+  padding: 4px;
+  box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+}
+
+.flex-justify-end {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+ .ant-divider-horizontal {
+  min-width: auto;
+  width: auto;
 }

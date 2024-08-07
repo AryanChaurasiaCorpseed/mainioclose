@@ -357,6 +357,11 @@ export const handleDeleteSingleLead=createAsyncThunk('handleDeleteSingleLead',as
   return response.data
 })
 
+export const handleLeadassignedToSamePerson=createAsyncThunk('leadAssigndToSamePerson',async(id)=>{
+  const response=await putQuery(`/leadService/api/v1/lead/leadAssignSamePerson?leadId=${id}`)
+  return response.data
+})
+
 export const LeadSlice = createSlice({
   name: "lead",
   initialState: {
