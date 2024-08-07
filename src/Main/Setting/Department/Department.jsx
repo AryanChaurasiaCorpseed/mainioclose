@@ -8,6 +8,7 @@ import {
   getAllDepartment,
 } from "../../../Toolkit/Slices/SettingSlice"
 import { createAuthDepartment } from "../../../Toolkit/Slices/AuthSlice"
+import { playErrorSound, playSuccessSound } from "../../Common/Commons"
 
 const Department = () => {
   const [form] = Form.useForm()
@@ -21,20 +22,28 @@ const Department = () => {
     dispatch(createAuthDepartment(values)).then((resp) => {
       if (resp.meta.requestStatus === "fulfilled") {
         const temp = resp?.payload?.data
-        dispatch(createDepartment({ name: temp?.name })).then((info) => {
-          if (info.meta.requestStatus === "fulfilled") {
-            notification.success({
-              message: "Department created successfully",
-            })
-            setOpenModal(false)
-            dispatch(getAllDepartment())
-          } else if (info.meta.requestStatus === "rejected") {
+        dispatch(createDepartment({ name: temp?.name }))
+          .then((info) => {
+            if (info.meta.requestStatus === "fulfilled") {
+              notification.success({
+                message: "Department created successfully",
+              })
+              playSuccessSound()
+              setOpenModal(false)
+              dispatch(getAllDepartment())
+            } else if (info.meta.requestStatus === "rejected") {
+              notification.error({
+                message: "Something went wrong",
+              })
+              playErrorSound()
+            }
+          })
+          .catch(() => {
             notification.error({
               message: "Something went wrong",
             })
-            setOpenModal(false)
-          }
-        })
+            playErrorSound()
+          })
       }
     })
   }

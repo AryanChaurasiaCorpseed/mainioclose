@@ -28,7 +28,11 @@ import {
   updateCompanyForm,
 } from "../../Toolkit/Slices/CompanySlice"
 import { useParams } from "react-router-dom"
-import { playErrorSound, playSuccessSound, playWarningSound } from "../Common/Commons"
+import {
+  playErrorSound,
+  playSuccessSound,
+  playWarningSound,
+} from "../Common/Commons"
 
 const CompanyFormModal = ({ edit, data, editInfo, selectedFilter }) => {
   const [form] = Form.useForm()
@@ -84,61 +88,65 @@ const CompanyFormModal = ({ edit, data, editInfo, selectedFilter }) => {
   }, [form, data, dispatch, userid])
 
   function getFileName(file) {
-    let temp = file?.split("/")
-    return temp[temp?.length - 1]
+    if (file) {
+      let temp = file?.split("/")
+      return temp[temp?.length - 1]
+    }
   }
 
   const handleEditBtnClick = useCallback(() => {
-    dispatch(getCompanyDetailsById(editInfo?.id)).then((resp) => {
-      if (resp.meta.requestStatus === "fulfilled") {
-        let editData = resp?.payload
-        form.setFieldsValue({
-          isPresent: editData?.isPresent,
-          companyName: editData?.companyName,
-          companyId: editData?.companyId,
-          isUnit: editData?.isUnit,
-          unitName: editData?.unitName,
-          unitId: editData?.unitId,
-          panNo: editData?.panNo,
-          gstNo: editData?.gstNo,
-          gstType: editData?.gstType,
-          gstDocuments: [
-            {
-              uid: "-1",
-              name: getFileName(editData?.gstDocuments),
-              status: "done",
-              response: editData?.gstDocuments,
-            },
-          ],
-          companyAge: editData?.companyAge,
-          primaryPinCode: editData?.primaryPinCode,
-          secondaryPinCode: editData?.secondaryPinCode,
-          assigneeId: editData?.assigneeId,
-          contactId: editData?.contactId,
-          contactName: editData?.contactName,
-          contactEmails: editData?.contactEmails,
-          contactNo: editData?.contactNo,
-          contactWhatsappNo: editData?.contactWhatsappNo,
-          updatedBy: editData?.updatedBy?.id,
-          state: editData?.state,
-          address: editData?.address,
-          country: editData?.country,
-          primaryContact: editData?.primaryContact,
-          city: editData?.city,
-          secondaryContact: editData?.secondaryContact,
-          scountry: editData?.scountry,
-          saddress: editData?.saddress,
-          sstate: editData?.sstate,
-          scontactEmails: editData?.scontactEmails,
-          scontactNo: editData?.scontactNo,
-          scontactName: editData?.scontactName,
-          scity: editData?.scity,
-          scontactId: editData?.scontactId,
-          scontactWhatsappNo: editData?.scontactWhatsappNo,
-        })
-      }
-    })
-    setOpenModal(true)
+    if (editInfo?.id !== undefined) {
+      dispatch(getCompanyDetailsById(editInfo?.id)).then((resp) => {
+        if (resp.meta.requestStatus === "fulfilled") {
+          let editData = resp?.payload
+          form.setFieldsValue({
+            isPresent: editData?.isPresent,
+            companyName: editData?.companyName,
+            companyId: editData?.companyId,
+            isUnit: editData?.isUnit,
+            unitName: editData?.unitName,
+            unitId: editData?.unitId,
+            panNo: editData?.panNo,
+            gstNo: editData?.gstNo,
+            gstType: editData?.gstType,
+            gstDocuments: [
+              {
+                uid: "-1",
+                name: getFileName(editData?.gstDocuments),
+                status: "done",
+                response: editData?.gstDocuments,
+              },
+            ],
+            companyAge: editData?.companyAge,
+            primaryPinCode: editData?.primaryPinCode,
+            secondaryPinCode: editData?.secondaryPinCode,
+            assigneeId: editData?.assigneeId,
+            contactId: editData?.contactId,
+            contactName: editData?.contactName,
+            contactEmails: editData?.contactEmails,
+            contactNo: editData?.contactNo,
+            contactWhatsappNo: editData?.contactWhatsappNo,
+            updatedBy: editData?.updatedBy?.id,
+            state: editData?.state,
+            address: editData?.address,
+            country: editData?.country,
+            primaryContact: editData?.primaryContact,
+            city: editData?.city,
+            secondaryContact: editData?.secondaryContact,
+            scountry: editData?.scountry,
+            saddress: editData?.saddress,
+            sstate: editData?.sstate,
+            scontactEmails: editData?.scontactEmails,
+            scontactNo: editData?.scontactNo,
+            scontactName: editData?.scontactName,
+            scity: editData?.scity,
+            scontactId: editData?.scontactId,
+            scontactWhatsappNo: editData?.scontactWhatsappNo,
+          })
+        }
+      })
+      setOpenModal(true)
+    }
   }, [dispatch, editInfo, form])
 
   const validateGstNumber = (dispatch) => async (_, value) => {
