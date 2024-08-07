@@ -96,7 +96,7 @@ const CompanyForm = ({ role }) => {
     {
       title: "Contact name",
       dataIndex: "contactName",
-      render: (_, data) => <ColComp data={data?.contactName} />,
+      render: (_, data) => <OverFlowText>{data?.contactName}</OverFlowText>,
     },
     {
       title: "Contact number",
@@ -111,7 +111,7 @@ const CompanyForm = ({ role }) => {
     {
       title: "Contact email",
       dataIndex: "contactEmails",
-      render: (_, data) => <ColComp data={data?.contactEmails} />,
+      render: (_, data) => <OverFlowText>{data?.contactEmails}</OverFlowText>,
     },
     {
       title: "Address",

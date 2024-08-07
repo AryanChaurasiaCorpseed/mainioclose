@@ -333,12 +333,13 @@ const LeadsModule = () => {
       dataIndex: "email",
       width: 300,
       checked: true,
+      render:(_,record)=><OverFlowText>{record?.email}</OverFlowText>
     },
     {
       title: "Assignee person",
       dataIndex: "assigneeName",
       checked: true,
-      render: (_, data) => <Text>{data?.assignee?.fullName}</Text>,
+      render: (_, data) => <OverFlowText>{data?.assignee?.fullName}</OverFlowText>,
     },
 
     {
@@ -404,9 +405,9 @@ const LeadsModule = () => {
             dataIndex: "createdBy",
             checked: true,
             render: (_, data) => (
-              <Text>
+              <OverFlowText>
                 {data?.createdBy?.fullName ? data?.createdBy?.fullName : "NA"}
-              </Text>
+              </OverFlowText>
             ),
           },
           {
@@ -414,7 +415,7 @@ const LeadsModule = () => {
             dataIndex: "source",
             checked: true,
             render: (_, data) => (
-              <Text>{data?.source ? data?.source : "NA"}</Text>
+              <OverFlowText>{data?.source ? data?.source : "NA"}</OverFlowText>
             ),
           },
           {
