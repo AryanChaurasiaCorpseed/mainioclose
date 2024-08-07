@@ -37,6 +37,7 @@ import { getAllUsers } from "../../../Toolkit/Slices/UsersSlice"
 import CompanyFormModal from "../../Accounts/CompanyFormModal"
 import OverFlowText from "../../../components/OverFlowText"
 import { BTN_ICON_HEIGHT, BTN_ICON_WIDTH } from "../../../components/Constants"
+import { playErrorSound, playSuccessSound } from "../../Common/Commons"
 const { Text } = Typography
 
 const CommonTable = React.lazy(() => import(`../../../components/CommonTable`))
@@ -116,17 +117,20 @@ const LeadsModule = () => {
       .then((response) => {
         if (response?.meta?.requestStatus === "fulfilled") {
           notification.success({ message: "Leads deleted successfully" })
+          playSuccessSound()
           dispatch(getAllLeads(allMultiFilterData))
           setLeadDelLoading("success")
           setSelectedRowKeys([])
         } else {
           setLeadDelLoading("rejected")
           notification.error({ message: "Something went wrong" })
+          playErrorSound()
         }
       })
       .catch(() => {
         setLeadDelLoading("rejected")
         notification.error({ message: "Something went wrong" })
+        playErrorSound()
       })
   }, [selectedRowKeys, userid, dispatch, allMultiFilterData])
 
@@ -158,13 +162,16 @@ const LeadsModule = () => {
         .then((response) => {
           if (response?.meta?.requestStatus === "fulfilled") {
             notification.success({ message: "Helper updated successfully" })
+            playSuccessSound()
             dispatch(getAllLeads(allMultiFilterData))
           } else {
             notification.error({ message: "Something went wrong" })
+            playErrorSound()
           }
         })
         .catch(() => {
           notification.error({ message: "Something went wrong" })
+          playErrorSound()
         })
     },
     [dispatch, allMultiFilterData]
@@ -183,13 +190,16 @@ const LeadsModule = () => {
             notification.success({
               message: "Assignee is updated successfully",
             })
+            playSuccessSound()
             dispatch(getAllLeads(allMultiFilterData))
           } else {
             notification.error({ message: "Something went wrong" })
+            playErrorSound()
           }
         })
         .catch(() => {
           notification.error({ message: "Something went wrong" })
+          playErrorSound()
         })
     },
     [userid, allMultiFilterData, dispatch]
@@ -205,13 +215,16 @@ const LeadsModule = () => {
         .then((response) => {
           if (response.meta.requestStatus === "fulfilled") {
             notification.success({ message: "Lead deleted successfully" })
+            playSuccessSound()
             dispatch(getAllLeads(allMultiFilterData))
           } else {
             notification.error({ message: "Something went wrong" })
+            playErrorSound()
           }
         })
         .catch(() => {
           notification.error({ message: "Something went wrong" })
+          playErrorSound()
         })
     },
     [userid, dispatch, allMultiFilterData]
@@ -224,13 +237,16 @@ const LeadsModule = () => {
           notification.success({
             message: "Lead assigned to same person successfully",
           })
+          playSuccessSound()
           dispatch(getAllLeads(allMultiFilterData))
         } else {
           notification.error({ message: "Something went wrong" })
+          playErrorSound()
         }
       })
       .catch(() => {
         notification.error({ message: "Something went wrong" })
+        playErrorSound()
       })
   }
 
@@ -455,16 +471,19 @@ const LeadsModule = () => {
       .then((response) => {
         if (response?.meta?.requestStatus === "fulfilled") {
           notification.success({ message: "Leads assigned successfully" })
+          playSuccessSound()
           dispatch(getAllLeads(allMultiFilterData))
           setMultibtn("success")
           setSelectedRowKeys([])
         } else {
           notification.error({ message: "Something went wrong" })
+          playErrorSound()
           setMultibtn("rejected")
         }
       })
       .catch(() => {
         notification.error({ message: "Something went wrong" })
+        playErrorSound()
         setMultibtn("rejected")
       })
   }, [dispatch, selectedRowKeys, userid, assignedLeadInfo, allMultiFilterData])
@@ -659,7 +678,7 @@ const LeadsModule = () => {
           <CommonTable
             data={allLeadsData?.reverse()}
             columns={columns}
-            scroll={{ y: 510, x: 2300 }}
+            scroll={{ y: 510, x: 2500 }}
             rowSelection={true}
             onRowSelection={onSelectChange}
             selectedRowKeys={selectedRowKeys}

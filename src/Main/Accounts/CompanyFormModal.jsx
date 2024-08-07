@@ -28,6 +28,7 @@ import {
   updateCompanyForm,
 } from "../../Toolkit/Slices/CompanySlice"
 import { useParams } from "react-router-dom"
+import { playErrorSound, playSuccessSound, playWarningSound } from "../Common/Commons"
 
 const CompanyFormModal = ({ edit, data, editInfo, selectedFilter }) => {
   const [form] = Form.useForm()
@@ -60,6 +61,7 @@ const CompanyFormModal = ({ edit, data, editInfo, selectedFilter }) => {
       if (resp.meta.requestStatus === "fulfilled") {
         if (Object.keys(resp.payload)?.length > 0) {
           if (resp.payload.assignee?.id != userid) {
+            playWarningSound()
             notification.warning({
               message: `This lead is already assigned to "${resp?.payload?.assignee?.fullName}" for company id "${resp?.payload?.id}" company name " ${resp?.payload?.name}"`,
             })
@@ -264,6 +266,7 @@ const CompanyFormModal = ({ edit, data, editInfo, selectedFilter }) => {
           .then((response) => {
             if (response.meta.requestStatus === "fulfilled") {
               setFormLoading("success")
+              playSuccessSound()
               dispatch(
                 getAllCompanyByStatus({ id: userid, status: selectedFilter })
               )
@@ -271,11 +274,13 @@ const CompanyFormModal = ({ edit, data, editInfo, selectedFilter }) => {
               setOpenModal(false)
             } else {
               setFormLoading("rejected")
+              playErrorSound()
               notification.error({ message: "Something went wrong" })
             }
           })
           .catch(() => {
             setFormLoading("rejected")
+            playErrorSound()
             notification.error({ message: "Something went wrong" })
           })
       } else {
@@ -295,14 +300,17 @@ const CompanyFormModal = ({ edit, data, editInfo, selectedFilter }) => {
               setFormLoading("success")
               dispatch(getAllUsers())
               notification.success({ message: "Company created successfully" })
+              playSuccessSound()
               setOpenModal(false)
             } else {
               setFormLoading("rejected")
+              playErrorSound()
               notification.error({ message: "Something went wrong" })
             }
           })
           .catch(() => {
             setFormLoading("rejected")
+            playErrorSound()
             notification.error({ message: "Something went wrong" })
           })
       }
