@@ -352,15 +352,83 @@ export const updateAssigneeInLeadModule = createAsyncThunk(
   }
 )
 
-export const handleDeleteSingleLead=createAsyncThunk('handleDeleteSingleLead',async(data)=>{
-  const response = await deleteQuery(`/leadService/api/v1/lead/deleteLead?leadId=${data?.id}&userId=${data?.userid}`)
+export const handleDeleteSingleLead = createAsyncThunk(
+  "handleDeleteSingleLead",
+  async (data) => {
+    const response = await deleteQuery(
+      `/leadService/api/v1/lead/deleteLead?leadId=${data?.id}&userId=${data?.userid}`
+    )
+    return response.data
+  }
+)
+
+export const handleLeadassignedToSamePerson = createAsyncThunk(
+  "leadAssigndToSamePerson",
+  async (id) => {
+    const response = await putQuery(
+      `/leadService/api/v1/lead/leadAssignSamePerson?leadId=${id}`
+    )
+    return response.data
+  }
+)
+
+export const changeLeadStatus = createAsyncThunk(
+  "changeLeadStatus",
+  async (data) => {
+    const response = await putQuery(
+      `/leadService/api/v1/status/updateLeadStatus?leadId=${data?.leadid}&statusId=${data?.statusId}&currentUserId=${data?.userid}`
+    )
+    return response.data
+  }
+)
+
+export const updateOriginalNameInLeads = createAsyncThunk(
+  "updateOriginalName",
+  async (data) => {
+    const response = await putQuery(
+      `/leadService/api/v1/lead/updateLeadOriginalName`,
+      data
+    )
+    return response.data
+  }
+)
+
+export const changeLeadAssigneeLeads = createAsyncThunk(
+  "changeLeadAssignee",
+  async (data) => {
+    const response = await putQuery(
+      `/leadService/api/v1/lead/updateAssignee?leadId=${data?.leadid}&userId=${data?.id}&updatedById=${data?.userid}`
+    )
+    return response.data
+  }
+)
+
+export const updateSingleLeadName = createAsyncThunk(
+  "updateSingleLeadName",
+  async (data) => {
+    const response = await putQuery(
+      `/leadService/api/v1/lead/updateLeadName?leadName=${data?.updatedLeadName}&leadId=${data?.leadid}&userId=${data?.userid}`
+    )
+    return response.data
+  }
+)
+
+export const getAllTaskData = createAsyncThunk("getAllTaskData", async (id) => {
+  const response = await getQuery(
+    `/leadService/api/v1/task/getAllTaskByLead?leadId=${id}`
+  )
   return response.data
 })
 
-export const handleLeadassignedToSamePerson=createAsyncThunk('leadAssigndToSamePerson',async(id)=>{
-  const response=await putQuery(`/leadService/api/v1/lead/leadAssignSamePerson?leadId=${id}`)
-  return response.data
-})
+export const getSingleLeadDataByLeadID = createAsyncThunk(
+  "getSingleLeadData",
+  async (leadid) => {
+    const response = await getQuery(
+      `/leadService/api/v1/lead/getSingleLeadData?leadId=${leadid}`
+    )
+    return response.data
+  }
+)
 
 export const LeadSlice = createSlice({
   name: "lead",
@@ -387,6 +455,10 @@ export const LeadSlice = createSlice({
     companyDetailByUnitId: {},
     allContactList: [],
     contactDetail: {},
+    getSingleLeadTask: [],
+    singleLeadResponseData: {},
+    allProductsList: [],
+    clientsContact: [],
   },
   reducers: {
     handleLoadingState: (state, action) => {
@@ -572,6 +644,29 @@ export const LeadSlice = createSlice({
       state.contactDetail = action.payload
     })
     builder.addCase(getContactById.rejected, (state, action) => {
+      state.loading = "rejected"
+    })
+
+    builder.addCase(getAllTaskData.pending, (state, action) => {
+      state.loading = "pending"
+    })
+    builder.addCase(getAllTaskData.fulfilled, (state, action) => {
+      state.loading = "success"
+      state.getSingleLeadTask = action.payload
+    })
+    builder.addCase(getAllTaskData.rejected, (state, action) => {
+      state.loading = "rejected"
+    })
+    builder.addCase(getSingleLeadDataByLeadID.pending, (state, action) => {
+      state.loading = "pending"
+    })
+    builder.addCase(getSingleLeadDataByLeadID.fulfilled, (state, action) => {
+      state.loading = "success"
+      state.singleLeadResponseData = action.payload
+      state.allProductsList = action.payload?.serviceDetails
+      state.clientsContact = action.payload?.clients.reverse()
+    })
+    builder.addCase(getSingleLeadDataByLeadID.rejected, (state, action) => {
       state.loading = "rejected"
     })
   },

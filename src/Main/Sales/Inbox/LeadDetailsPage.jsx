@@ -1,23 +1,17 @@
 import React, { useCallback, useEffect, useState } from "react"
 import "./LeadDetailsPage.scss"
-import FilterButton from "../../../components/FilterButton"
-import { Link, useLocation, useParams } from "react-router-dom"
-import axios from "axios"
+import { Link, useParams } from "react-router-dom"
 import { getQuery } from "../../../API/GetQuery"
 import { postQuery } from "../../../API/PostQuery"
 import { useRef } from "react"
-import Skeleton from "@mui/material/Skeleton"
 import { toast } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
-import DataShowScalaton from "../../../components/Scalaton/DataShowScalaton"
 import EstimateDesignPage from "../Leads/EstimateDesignPage"
-import { useCustomRoute } from "../../../Routes/GetCustomRoutes"
 import { useDispatch, useSelector } from "react-redux"
-import { putQuery } from "../../../API/PutQuery"
-import { deleteQuery } from "../../../API/DeleteQuery"
-import InputErrorComponent from "../../../components/InputErrorComponent"
 import AllTasksPage from "./AllTasksPage"
 import {
+  changeLeadAssigneeLeads,
+  changeLeadStatus,
   createLeadContacts,
   createNewLeadTask,
   deleteLeadContact,
@@ -28,17 +22,22 @@ import {
   getAllOppurtunities,
   getAllProductData,
   getAllProductWithCattegory,
+  getAllStatusData,
+  getAllTaskData,
   getAllTaskStatus,
+  getSingleLeadDataByLeadID,
+  handleLeadassignedToSamePerson,
   updateAutoAssignnee,
   updateLeadProducts,
   updateLeadsContact,
   updateLeadTask,
+  updateOriginalNameInLeads,
+  updateSingleLeadName,
 } from "../../../Toolkit/Slices/LeadSlice"
 import { getAllUrlAction } from "../../../Toolkit/Slices/LeadUrlSlice"
 import BulkFileUploader from "../Leads/BulkFileUploader"
 import {
   Button,
-  Card,
   Col,
   Collapse,
   DatePicker,
@@ -48,6 +47,7 @@ import {
   Input,
   List,
   Modal,
+  notification,
   Popconfirm,
   Row,
   Select,
@@ -59,7 +59,9 @@ import { getAllSlugList } from "../../../Toolkit/Slices/LeadSlugSlice"
 import { Icon } from "@iconify/react"
 import dayjs from "dayjs"
 import { BTN_ICON_HEIGHT, BTN_ICON_WIDTH } from "../../../components/Constants"
-const { Text, Title } = Typography
+import { playErrorSound, playSuccessSound } from "../../Common/Commons"
+import CompanyFormModal from "../../Accounts/CompanyFormModal"
+const { Text } = Typography
 
 toast.configure()
 
@@ -72,54 +74,36 @@ const LeadDetailsPage = () => {
   )
   const allOportunities = useSelector((state) => state.leads.allOportunities)
   const allProductData = useSelector((state) => state.leads.allProductData)
+  const getSingleLeadTask = useSelector(
+    (state) => state.leads.getSingleLeadTask
+  )
   const userDataResponse = useSelector(
     (state) => state.leads.getAllLeadUserData
   )
   const categoryData = useSelector((state) => state.leads.categoryData)
   const getAllStatus = useSelector((state) => state.leads.getAllStatus)
+  const singleLeadResponseData = useSelector(
+    (state) => state.leads.singleLeadResponseData
+  )
+  const allProductsList = useSelector((state) => state.leads.allProductsList)
+  const clientsContact = useSelector((state) => state.leads.clientsContact)
   const [openModal, setOpenModal] = useState(false)
-  const [contactData, setContactData] = useState(false)
+  const [contactData, setContactData] = useState(null)
   const [openTaskModal, setOpenTaskModal] = useState(false)
   const [openProductModal, setOpenProductModal] = useState(false)
   const [taskData, setTaskData] = useState("")
   const slugList = useSelector((state) => state.leadslug.slugList)
   const [notes, setNotes] = useState(false)
-  const [email, setEmail] = useState(true)
-  const [sms, setSms] = useState(true)
   const [notesApiData, setNotesApiData] = useState([])
-  const [messageData, setMessageData] = useState("")
-  const [singleLeadResponseData, setSingleLeadResponseData] = useState({})
   const [allFilterProducts, setAllFilterProducts] = useState([])
   const [notesUpdateToggle, setNotesUpdateToggle] = useState(false)
-  const [changeStatusToggle, setChangeStatusToggle] = useState(false)
   const [updateLeadNameToggle, setUpdateLeadNameToggle] = useState(true)
-  const [taskUpdateToggle, setTaskUpdateToggle] = useState(false)
-  const [updateLeadName, setUpdateLeadName] = useState("")
-  const [notesLoading, setNotesLoading] = useState(false)
-  const [contactDelDep, setContactDelDep] = useState(false)
   const [openAllTask, setOpenAllTask] = useState(false)
-  const [productDataScaleaton, setProductDataScaleaton] = useState(true)
-  const [leadNameReload, setLeadNameReload] = useState(false)
-  const [productDisplayToggle, setProductDisplayToggle] = useState(false)
-  const [clientsContact, setClientsContact] = useState([])
-  const [clientContactToggle, setClientContactToggle] = useState(false)
-  const [allProductsList, setAllProductsList] = useState([])
-  const [getSingleLeadTask, setGetSingleLeadTask] = useState([])
   const [estimateOpenBtn, setEstimateOpenBtn] = useState(false)
-  const [taskReferesh, setTaskReferesh] = useState(false)
-  const [productDepandence, setProductDepandence] = useState(false)
-  const [editTaskDep, setEditTaskDep] = useState(false)
-  const [editContactDep, setEditContactDep] = useState(false)
   const [updateAssignee, setUpdateAssignee] = useState(false)
-  const [fileValue, setFileValue] = useState(null)
-  const [imageResponse, setImageResponse] = useState("")
-  const [uploadSucess, setUploadSucess] = useState(false)
   const [updateOriginalName, setUpdateOriginalName] = useState(false)
-
-  const [origNameData, setOrigNameData] = useState("")
-
+  const [updatedLeadName, setUpdatedLeadName] = useState("")
   const dispatch = useDispatch()
-
   const fileRef = useRef()
 
   useEffect(() => {
@@ -140,79 +124,37 @@ const LeadDetailsPage = () => {
 
   const [originalData, setOriginalData] = useState({
     leadId: leadid,
-    originalName: origNameData,
+    originalName: "",
     currentUserId: userid,
   })
-  console.warn(originalData)
 
-  const updateOriginalNameFun = async (e) => {
-    try {
-      const originalNameRes = await putQuery(
-        "/leadService/api/v1/lead/updateLeadOriginalName",
-        originalData
-      )
-      setUpdateOriginalName((prev) => !prev)
-      toast.success("original name update succesfully")
-    } catch (err) {
-      console.log(err)
-    }
-  }
+  
+  const getSingleLeadData = useCallback(() => {
+    dispatch(getSingleLeadDataByLeadID(leadid))
+  }, [leadid,dispatch])
 
-  useEffect(() => {
-    getSingleLeadData()
-  }, [
-    changeStatusToggle,
-    leadNameReload,
-    productDisplayToggle,
-    clientContactToggle,
-    productDepandence,
-    editContactDep,
-    contactDelDep,
-    updateAssignee,
-    updateOriginalName,
-  ])
+  const updateOriginalNameFun = useCallback(() => {
+    dispatch(updateOriginalNameInLeads(originalData))
+      .then((resp) => {
+        if (resp.meta.requestStatus === "fulfilled") {
+          notification.success({
+            message: "Name updated successfully",
+          })
+          getSingleLeadData()
+          setUpdateOriginalName((prev) => !prev)
+        } else {
+          notification.error({
+            message: "Something went wrong",
+          })
+        }
+      })
+      .catch(() => {
+        notification.error({
+          message: "Something went wrong",
+        })
+      })
+  }, [originalData,dispatch,getSingleLeadData])
 
-  useEffect(() => {
-    leadNotesData()
-  }, [notesUpdateToggle])
-
-  useEffect(() => {
-    dispatch(getAllProductData())
-    dispatch(getAllLeadUser(userid))
-    dispatch(getAllTaskStatus())
-    dispatch(getAllOppurtunities())
-    dispatch(getAllProductWithCattegory())
-    dispatch(editViewData(leadid))
-  }, [dispatch])
-
-  useEffect(() => {
-    getAllTaskData()
-  }, [taskUpdateToggle, taskReferesh, editTaskDep])
-  const currentUserRoles = useSelector((state) => state?.auth?.roles)
-  const adminRole = currentUserRoles.includes("ADMIN")
-  const NotesRef = useRef()
-  const categorySelectRef = useRef()
-
-  const [remarkMessage, setRemarkMessage] = useState({
-    leadId: leadid,
-    userId: userid,
-    message: messageData,
-    file: imageResponse,
-  })
-
-  const remarkMessageFunction = (e) => {
-    setRemarkMessage((prev) => ({ ...prev, [e.target.name]: e.target.value }))
-  }
-  const getAllTaskData = async () => {
-    try {
-      const allTaskData = await getQuery(
-        `/leadService/api/v1/task/getAllTaskByLead?leadId=${leadid}`
-      )
-      setGetSingleLeadTask(allTaskData.data.reverse())
-    } catch (err) {
-      console.log("err", err)
-    }
-  }
 
   const leadNotesData = async (id) => {
     try {
@@ -228,45 +170,58 @@ const LeadDetailsPage = () => {
     }
   }
 
-  const getSingleLeadData = async () => {
-    try {
-      const singleLeadApiData = await getQuery(
-        `/leadService/api/v1/lead/getSingleLeadData?leadId=${leadid}`
-      )
-      setSingleLeadResponseData(singleLeadApiData.data)
-      setAllProductsList(singleLeadApiData.data.serviceDetails)
-      setUpdateLeadName(singleLeadApiData.data.leadName)
-      setClientsContact(singleLeadApiData.data.clients.reverse())
-      setProductDataScaleaton(false)
-    } catch (err) {
-      if (err.response.status === 500) {
-        console.log("Something Went Wrong")
-      }
-      setProductDataScaleaton(false)
-      // productDataScaleaton(false)
-    }
+  useEffect(() => {
+    leadNotesData()
+  }, [notesUpdateToggle])
+
+  useEffect(() => {
+    dispatch(getAllProductData())
+    dispatch(getAllLeadUser(userid))
+    dispatch(getAllTaskStatus())
+    dispatch(getAllOppurtunities())
+    dispatch(getAllProductWithCattegory())
+    dispatch(editViewData(leadid))
+    dispatch(getAllStatusData())
+    dispatch(getAllTaskData(leadid))
+  }, [dispatch, leadid,userid])
+
+  const currentUserRoles = useSelector((state) => state?.auth?.roles)
+  const adminRole = currentUserRoles.includes("ADMIN")
+  const NotesRef = useRef()
+
+  const [remarkMessage, setRemarkMessage] = useState({
+    leadId: leadid,
+    userId: userid,
+    message: "",
+    file: "",
+  })
+
+  const remarkMessageFunction = (e) => {
+    setRemarkMessage((prev) => ({ ...prev, [e.target.name]: e.target.value }))
   }
 
-  const changeLeadStatusFun = (catId) => {
-    const statusChange = async () => {
-      try {
-        const statusData = await axios.put(
-          `/leadService/api/v1/status/updateLeadStatus?leadId=${leadid}&statusId=${catId}&currentUserId=${userid}`,
-          {
-            headers: {
-              "Access-Control-Allow-Origin": "*",
-              "Content-Type": "application/json",
-            },
-          }
-        )
-        setChangeStatusToggle((prev) => !prev)
-      } catch (err) {
-        if (err.response.status === 500) {
-          toast.error("Something Went Wrong")
+ 
+
+
+  const changeLeadStatusFun = (statusId) => {
+    dispatch(changeLeadStatus({ leadid, userid, statusId }))
+      .then((resp) => {
+        if (resp.meta.requestStatus === "fulfilled") {
+          notification.success({
+            message: "Status updated successfully",
+          })
+          getSingleLeadData()
+        } else {
+          notification.error({
+            message: "Something went wrong",
+          })
         }
-      }
-    }
-    statusChange()
+      })
+      .catch(() => {
+        notification.error({
+          message: "Something went wrong",
+        })
+      })
   }
 
   // Create New Notes or Remarks
@@ -277,7 +232,6 @@ const LeadDetailsPage = () => {
       return
     }
     const createNewRemark = async () => {
-      setNotesLoading(true)
       try {
         const remarkData = await postQuery(
           `/leadService/api/v1/createRemarks`,
@@ -286,57 +240,67 @@ const LeadDetailsPage = () => {
         setNotesUpdateToggle((prev) => !prev)
         NotesRef.current.value = ""
         fileRef.current.value = ""
-        setUploadSucess(false)
-        setNotesLoading(false)
         window.location.reload()
       } catch (err) {
         console.log(err)
         if (err.response.status === 500) {
           toast.error("Something Went Wrong")
-          setNotesLoading(false)
         }
-        setNotesLoading(false)
       }
     }
     createNewRemark()
   }
 
-  const updateLeadNameSinglePage = async (e) => {
-    try {
-      const leadNameUpdate = await axios.put(
-        `/leadService/api/v1/lead/updateLeadName?leadName=${updateLeadName}&leadId=${leadid}&userId=${userid}`,
-        {
-          headers: {
-            "Access-Control-Allow-Origin": "*",
-            "Content-Type": "application/json",
-          },
-        }
-      )
-      setUpdateLeadNameToggle(true)
-      setLeadNameReload((prev) => !prev)
-    } catch (err) {
-      console.log(err)
-      if (err.response.status === 500) {
-        toast.error("Something Went Wrong")
-      }
-    }
-  }
+
+  useEffect(() => {
+    getSingleLeadData()
+  }, [updateAssignee, updateOriginalName,getSingleLeadData])
+
+  const updateLeadNameSinglePage = useCallback(
+    (e) => {
+      dispatch(updateSingleLeadName({ updatedLeadName, leadid, userid }))
+        .then((resp) => {
+          if (resp.meta.requestStatus === "fulfilled") {
+            notification.success({
+              message: "Assignee updated successfully",
+            })
+            getSingleLeadData()
+            setUpdateLeadNameToggle(true)
+          } else {
+            notification.error({
+              message: "Something went wrong",
+            })
+          }
+        })
+        .catch(() => {
+          notification.error({
+            message: "Something went wrong",
+          })
+        })
+    },
+    [updatedLeadName, leadid, userid, dispatch,getSingleLeadData]
+  )
 
   const changeLeadAssignee = async (id) => {
-    try {
-      const updatePerson = await axios.put(
-        `/leadService/api/v1/lead/updateAssignee?leadId=${leadid}&userId=${id}&updatedById=${userid}`,
-        {
-          headers: {
-            "Access-Control-Allow-Origin": "*",
-            "Content-Type": "application/json",
-          },
+    dispatch(changeLeadAssigneeLeads({ leadid, id, userid }))
+      .then((resp) => {
+        if (resp.meta.requestStatus === "fulfilled") {
+          notification.success({
+            message: "Assignee updated successfully",
+          })
+          getSingleLeadData()
+          setUpdateAssignee((prev) => !prev)
+        } else {
+          notification.error({
+            message: "Something went wrong",
+          })
         }
-      )
-      setUpdateAssignee((prev) => !prev)
-    } catch (err) {
-      console.log("err", err)
-    }
+      })
+      .catch(() => {
+        notification.error({
+          message: "Something went wrong",
+        })
+      })
   }
 
   const deleteContactFun = useCallback(
@@ -346,9 +310,26 @@ const LeadDetailsPage = () => {
         id: id,
         userid: userid,
       }
-      dispatch(deleteLeadContact(data)).then(() => window.location.reload())
+      dispatch(deleteLeadContact(data))
+        .then((resp) => {
+          if (resp.meta.requestStatus === "fulfilled") {
+            notification.success({
+              message: "Contact deleted successfully",
+            })
+            getSingleLeadData()
+          } else {
+            notification.error({
+              message: "Something went wrong",
+            })
+          }
+        })
+        .catch(() => {
+          notification.error({
+            message: "Something went wrong",
+          })
+        })
     },
-    [leadid, userid, dispatch]
+    [leadid, userid, dispatch,getSingleLeadData]
   )
 
   const openImageInNewTab = (imageUrl) => {
@@ -397,27 +378,61 @@ const LeadDetailsPage = () => {
       email: value?.email,
       contactNo: value?.contactNo,
     })
-    setContactData(true)
+    setContactData(value)
     setOpenModal(true)
   }
 
   const handleSubmitContact = useCallback(
     (values) => {
-      values.currentUserId = userid
       values.leadId = leadid
       if (contactData) {
-        dispatch(updateLeadsContact(values)).then(() =>
-          window.location.reload()
-        )
-        setContactData(false)
+        values.id = contactData?.clientId
+        values.userId = userid
+        dispatch(updateLeadsContact(values))
+          .then((resp) => {
+            if (resp.meta.requestStatus === "fulfilled") {
+              notification.success({
+                message: "Contact details updated successfully",
+              })
+              getSingleLeadData()
+              setOpenModal(false)
+            } else {
+              notification.error({
+                message: "Something went wrong",
+              })
+            }
+          })
+          .catch(() => {
+            notification.error({
+              message: "Something went wrong",
+            })
+          })
+        setContactData(null)
       } else {
-        dispatch(createLeadContacts(values)).then(() =>
-          window.location.reload()
-        )
-        setContactData(false)
+        values.currentUserId = userid
+        dispatch(createLeadContacts(values))
+          .then((resp) => {
+            if (resp.meta.requestStatus === "fulfilled") {
+              notification.success({
+                message: "Contact details created successfully",
+              })
+              getSingleLeadData()
+              setOpenModal(false)
+            } else {
+              notification.error({
+                message: "Something went wrong",
+              })
+            }
+          })
+          .catch(() => {
+            notification.error({
+              message: "Something went wrong",
+            })
+          })
+        setContactData(null)
       }
     },
-    [userid, leadid, contactData, dispatch]
+    [userid, leadid, contactData, dispatch,getSingleLeadData]
   )
 
   const updateTaskData = (task) => {
@@ -443,8 +458,44 @@ const LeadDetailsPage = () => {
       if (taskData) {
         values.taskId = taskData?.id
         dispatch(updateLeadTask(values))
+          .then((resp) => {
+            if (resp.meta.requestStatus === "fulfilled") {
+              notification.success({
+                message: "Task updated successfully",
+              })
+              dispatch(getAllTaskData(leadid))
+              setOpenTaskModal(false)
+            } else {
+              notification.error({
+                message: "Something went wrong",
+              })
+            }
+          })
+          .catch(() => {
+            notification.error({
+              message: "Something went wrong",
+            })
+          })
       } else {
         dispatch(createNewLeadTask(values))
+          .then((resp) => {
+            if (resp.meta.requestStatus === "fulfilled") {
+              notification.success({
+                message: "Task created successfully",
+              })
+              dispatch(getAllTaskData(leadid))
+              setOpenTaskModal(false)
+            } else {
+              notification.error({
+                message: "Something went wrong",
+              })
+            }
+          })
+          .catch(() => {
+            notification.error({
+              message: "Something went wrong",
+            })
+          })
       }
     },
     [userid, leadid, taskData, dispatch]
@@ -453,10 +504,48 @@ const LeadDetailsPage = () => {
   const handleProductSubmit = useCallback(
     (values) => {
       values.leadId = leadid
-      dispatch(updateLeadProducts(values)).then(() => window.location.reload())
+      dispatch(updateLeadProducts(values))
+        .then((resp) => {
+          if (resp.meta.requestStatus === "fulfilled") {
+            notification.success({
+              message: "Product updated successfully",
+            })
+            getSingleLeadData()
+            setOpenProductModal(false)
+          } else {
+            notification.error({
+              message: "Something went wrong",
+            })
+          }
+        })
+        .catch(() => {
+          notification.error({
+            message: "Something went wrong",
+          })
+        })
     },
-    [leadid, dispatch]
+    [leadid, dispatch,getSingleLeadData]
   )
+
+  const leadAssignedToSame = (id) => {
+    dispatch(handleLeadassignedToSamePerson(id))
+      .then((response) => {
+        if (response.meta.requestStatus === "fulfilled") {
+          notification.success({
+            message: "Lead assigned to same person successfully",
+          })
+          playSuccessSound()
+          getSingleLeadData()
+        } else {
+          notification.error({ message: "Something went wrong" })
+          playErrorSound()
+        }
+      })
+      .catch(() => {
+        notification.error({ message: "Something went wrong" })
+        playErrorSound()
+      })
+  }
 
   const items = [
     {
@@ -774,7 +863,7 @@ const LeadDetailsPage = () => {
                     label: item?.name,
                     value: item?.id,
                   }))}
-                  onChange={(e) => setUpdateLeadName(e)}
+                  onChange={(e) => setUpdatedLeadName(e)}
                   filterOption={(input, option) =>
                     option.label.toLowerCase().includes(input.toLowerCase())
                   }
@@ -810,6 +899,7 @@ const LeadDetailsPage = () => {
               showSearch
               allowClear
               placeholder="change status"
+              value={singleLeadResponseData?.status?.id}
               options={
                 getAllStatus?.map((item) => ({
                   label: item?.name,
@@ -822,13 +912,29 @@ const LeadDetailsPage = () => {
               onChange={(e) => changeLeadStatusFun(e)}
             />
             <Space>
-              <Button size="small" type="primary" onClick={sameAssigneePresonFun}>
+              <Button
+                size="small"
+                type="primary"
+                onClick={sameAssigneePresonFun}
+              >
                 Same
               </Button>
-              <Button size="small" onClick={notSameAssigneePresonFun}>Not same</Button>
+              <Button size="small" onClick={notSameAssigneePresonFun}>
+                Not same
+              </Button>
             </Space>
-            
-            <Divider style={{ margin: "4px" }} />
+            <Divider style={{ margin: "6px" }} />
+            <Space>
+              <CompanyFormModal
+                detailView={true}
+                data={singleLeadResponseData}
+              />
+              <Button onClick={() => leadAssignedToSame(leadid)}>
+                Assign to same person{" "}
+              </Button>
+            </Space>
+
+            <Divider style={{ margin: "6px" }} />
             <Collapse
               accordion
               defaultActiveKey={["1"]}
@@ -842,7 +948,7 @@ const LeadDetailsPage = () => {
             <div className="filter-box">
               <Button onClick={() => setNotes((prev) => !prev)}>
                 <Icon
-                  icon="fluent:document-text-20-filled"
+                  icon="fluent:document-text-24-regular"
                   height={BTN_ICON_HEIGHT}
                   width={BTN_ICON_WIDTH}
                 />
@@ -852,7 +958,7 @@ const LeadDetailsPage = () => {
               <Link to={`history`}>
                 <Button>
                   <Icon
-                    icon="fluent:history-20-filled"
+                    icon="fluent:history-24-regular"
                     height={BTN_ICON_HEIGHT}
                     width={BTN_ICON_WIDTH}
                   />
@@ -862,18 +968,20 @@ const LeadDetailsPage = () => {
               <Link to={`/erp/${userid}/sales/leads`}>
                 <Button>
                   <Icon
-                    icon="fluent:chevron-left-20-filled"
+                    icon="fluent:chevron-left-24-filled"
                     height={BTN_ICON_HEIGHT}
                     width={BTN_ICON_WIDTH}
                   />
                   Back
                 </Button>
               </Link>
-              <Button onClick={() => openTasksFun()}>All Tasks</Button>
+              <Button onClick={() => openTasksFun()}>All tasks</Button>
             </div>
-            <div className="filter-box mt-3">
+            <div className="lead-assignee-container mt-3">
+              <Text className="heading-text">Update assignee</Text>
               <Select
                 placeholder="Change assignee"
+                size="large"
                 options={
                   userDataResponse?.map((ele) => ({
                     label: ele?.fullName,
@@ -901,7 +1009,7 @@ const LeadDetailsPage = () => {
                 <BulkFileUploader />
               </div>
             </div>
-            <div className={`notes-box mt-4 ${email === true ? "d-none" : ""}`}>
+            <div className={`notes-box mt-4 ${"d-none"}`}>
               <div className="comment-icon">
                 <div className="icon-box email-cl">
                   <i className="fa-regular fa-envelope"></i>
@@ -932,7 +1040,7 @@ const LeadDetailsPage = () => {
                 </div>
               </div>
             </div>
-            <div className={`notes-box mt-4 ${sms === true ? "d-none" : ""}`}>
+            <div className={`notes-box mt-4 ${"d-none"}`}>
               <div className="comment-icon">
                 <div className="icon-box sms-cl">
                   <i className="fa-regular cm-icon fa-comment"></i>
@@ -966,9 +1074,8 @@ const LeadDetailsPage = () => {
           </div>
           <div className="lead-set-data">
             {notesApiData.map((note, index) => {
-              console.log("renderChatImages", note)
               return (
-                <div className="lead-filter-above" key={index}>
+                <div className="lead-filter-above" key={`${index}yug`}>
                   <div className={`notes-box mt-2`}>
                     <div className="comment-icon">
                       <div className="icon-box h-70">

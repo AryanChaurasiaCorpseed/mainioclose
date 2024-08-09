@@ -75,23 +75,34 @@
 }
 
 .comp-container {
+  width: 100%;
   display: flex;
   align-items: center;
   gap: 8px;
   .comp-component-1 {
-    flex: 1;
+    // flex: 1;
+    width: 60%;
   }
   .comp-component-2 {
-    flex-shrink: 0;
+    // flex-shrink: 0;
+    width: 40%;
   }
 }
 
 .lead-set-data {
   padding: auto;
+  max-height: 290px;
+  overflow: auto;
 }
 
 .lead-set-data::-webkit-scrollbar {
   display: none;
+}
+
+.lead-assignee-container{
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
 }
 
 .lead-filter-above {

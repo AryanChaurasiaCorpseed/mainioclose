@@ -10,7 +10,7 @@ import MainHeading from "../../../components/design/MainHeading"
 import { getAllSlugAction } from "../../../Toolkit/Slices/LeadSlugSlice"
 import { toast } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
-import { Button, Form, Input, Modal, Select, Tooltip, Typography } from "antd"
+import { Button, Form, Input, Modal, notification, Select, Tooltip, Typography } from "antd"
 import EditUrls from "./EditUrls"
 import CommonTable from "../../../components/CommonTable"
 const { Text } = Typography
@@ -41,13 +41,13 @@ const UrlsPage = () => {
   const handleSubmit = async (values) => {
     const createNewUrl = await dispatch(createAllUrlAction(values))
     if (createNewUrl.type === "createLeadUrlData/fulfilled") {
-      toast.success("Url Created Succesfully")
+      notification.success({message:'Url created successfully'})
       setUrlDep((prev) => !prev)
       setOpenModal(false)
       form.resetFields()
     }
     if (createNewUrl.type === "createLeadUrlData/rejected") {
-      toast.success("Something Went Wrong")
+      notification.error("Something Went Wrong")
     }
   }
 

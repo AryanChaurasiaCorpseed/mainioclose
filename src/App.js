@@ -76,6 +76,8 @@ function App() {
         token: {
           borderRadius: 4,
           colorBorder: "#cccccc",
+          colorText:'#2e2e2e',
+          colorTextHeading:'#2e2e2e',
         },
         components: {
           Card: {
@@ -87,6 +89,9 @@ function App() {
           Button: {
             contentFontSize: 13,
             contentFontSizeSM: 12,
+            borderRadius:50,
+            borderRadiusLG:50,
+            borderRadiusSM:50
           },
           Popconfirm: {
             fontSize: 13,
@@ -95,11 +100,14 @@ function App() {
             fontSize: 13,
           },
           Divider: {
-            colorSplit: "gray",
+            colorSplit: "#D3D3D3",
             margin: 4,
           },
           Table: {
             fontSize: 13,
+            colorText:'#2e2e2e',
+            headerColor:'#222222',
+            fontWeightStrong:600
           },
           Tabs:{
             // cardBg:'#cccccc',

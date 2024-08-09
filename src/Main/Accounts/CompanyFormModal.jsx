@@ -34,7 +34,13 @@ import {
   playWarningSound,
 } from "../Common/Commons"
 
-const CompanyFormModal = ({ edit, data, editInfo, selectedFilter }) => {
+const CompanyFormModal = ({
+  edit,
+  data,
+  editInfo,
+  selectedFilter,
+  detailView,
+}) => {
   const [form] = Form.useForm()
   const dispatch = useDispatch()
   const { userid } = useParams()
@@ -262,7 +268,6 @@ const CompanyFormModal = ({ edit, data, editInfo, selectedFilter }) => {
 
   const handleFinish = useCallback(
     (values) => {
-      console.log("skdjhlksdsaljkdlj", values)
       values.gstDocuments = values.gstDocuments?.[0]?.response
       setFormLoading("pending")
       if (edit) {
@@ -331,6 +336,7 @@ const CompanyFormModal = ({ edit, data, editInfo, selectedFilter }) => {
       companyDetail,
       userid,
       selectedFilter,
+      edit,
     ]
   )
 
@@ -339,6 +345,16 @@ const CompanyFormModal = ({ edit, data, editInfo, selectedFilter }) => {
       {edit ? (
         <Button type="text" size="small" onClick={handleEditBtnClick}>
           <Icon icon="fluent:edit-24-regular" />
+        </Button>
+      ) : detailView ? (
+        <Button onClick={handleButtonClick}>
+          <Icon
+            icon="fluent:add-24-filled"
+            height={18}
+            width={18}
+            color="#1677ff"
+          />
+          Add company
         </Button>
       ) : (
         <Button type="text" size="small" onClick={handleButtonClick}>
@@ -480,19 +496,6 @@ const CompanyFormModal = ({ edit, data, editInfo, selectedFilter }) => {
                   <>
                     {getFieldValue("isUnit") ? (
                       <Form.Item
-                        label="Enter new company unit"
-                        name="unitName"
-                        rules={[
-                          {
-                            required: true,
-                            message: "please enter the company unit",
-                          },
-                        ]}
-                      >
-                        <Input />
-                      </Form.Item>
-                    ) : (
-                      <Form.Item
                         label="Select company unit"
                         name="unitId"
                         rules={[
@@ -520,6 +523,19 @@ const CompanyFormModal = ({ edit, data, editInfo, selectedFilter }) => {
                               .includes(input.toLowerCase())
                           }
                         />
+                      </Form.Item>
+                    ) : (
+                      <Form.Item
+                        label="Enter new company unit"
+                        name="unitName"
+                        rules={[
+                          {
+                            required: true,
+                            message: "please enter the company unit",
+                          },
+                        ]}
+                      >
+                        <Input />
                       </Form.Item>
                     )}
                   </>

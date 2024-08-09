@@ -1,6 +1,15 @@
 import React, { useCallback, useEffect, useState } from "react"
 import { Icon } from "@iconify/react"
-import { Button, Input, Select, Typography, Upload, message } from "antd"
+import {
+  Button,
+  Input,
+  Select,
+  Space,
+  Switch,
+  Typography,
+  Upload,
+  notification,
+} from "antd"
 import "./BulkFileUpload.scss"
 import { useDispatch, useSelector } from "react-redux"
 import { createRemakWithFile } from "../../../Toolkit/Slices/LeadSlice"
@@ -17,6 +26,8 @@ const BulkFileUploader = () => {
   const [files, setFiles] = useState([])
   const [text, setText] = useState("")
   const [flag, setFlag] = useState(null)
+  const [commentType, setCommentType] = useState("selected")
+  const [inputCommentText, setInputCommentText] = useState("")
   useEffect(() => {
     dispatch(getAllComments())
   }, [dispatch])
@@ -26,11 +37,9 @@ const BulkFileUploader = () => {
     action: "/leadService/api/v1/upload/uploadimageToFileSystem",
     defaultFileList: files,
     onChange(info) {
-      console.log("infoModfakaklsls", info)
       setFiles(info?.fileList?.map((file) => file?.response))
     },
     onDrop(e) {
-      console.log("infoModfakaklsls dropped", e)
     },
   }
 
@@ -38,45 +47,86 @@ const BulkFileUploader = () => {
     let data = {
       leadId: leadid,
       userId: userid,
-      message: text,
+      type: commentType,
+      message: commentType === "input" ? inputCommentText : text,
       file: files,
     }
     if (text !== "" && files?.length > 0) {
-      dispatch(createRemakWithFile(data)).then(() => {
-        setFlag(true)
-        setFiles([])
-        window.location.reload()
-      })
+      dispatch(createRemakWithFile(data))
+        .then((resp) => {
+          if (resp.meta.requestStatus === "fulfilled") {
+            notification.success({ message: "Remark added successfully" })
+            setFlag(true)
+            setFiles([])
+            dispatch(getAllComments())
+          } else {
+            notification.error({ message: "Something went wrong" })
+          }
+        })
+        .catch(() => {
+          notification.error({ message: "Something went wrong" })
+        })
     } else if (text !== "") {
-      dispatch(createRemakWithFile(data)).then(() => {
-        setFlag(true)
-        setFiles([])
-        window.location.reload()
-      })
+      dispatch(createRemakWithFile(data))
+        .then((resp) => {
+          if (resp.meta.requestStatus === "fulfilled") {
+            notification.success({ message: "Remark added successfully" })
+            setFlag(true)
+            setFiles([])
+            dispatch(getAllComments())
+          } else {
+            notification.error({ message: "Something went wrong" })
+          }
+        })
+        .catch(() => {
+          notification.error({ message: "Something went wrong" })
+        })
     } else {
       setFlag(false)
     }
-  }, [leadid, userid, text, files, dispatch])
+  }, [leadid, userid, text, files, dispatch, inputCommentText, commentType])
 
   return (
     <>
-      <Select
-        style={{ width: "100%", margin: "12px 0px" }}
-        placeholder='select comment...'
-        size="large"
-        showSearch
-        allowClear
-        options={
-          allComments?.map((item) => ({
-            label: item?.name,
-            value: item?.name,
-          })) || []
-        }
-        filterOption={(input, option) =>
-          option.label.toLowerCase().includes(input.toLowerCase())
-        }
-        onChange={(e) => setText(e)}
-      />
+      <Space>
+        <Switch
+          size="small"
+          onChange={(e) =>
+            e ? setCommentType("input") : setCommentType("selected")
+          }
+        />
+        <Text>
+          {commentType === "input" ? "Select the comment" : "Write comment"}
+        </Text>
+      </Space>
+      {commentType === "input" ? (
+        <Input.TextArea
+          style={{ width: "100%", margin: "12px 0px" }}
+          size="large"
+          placeholder="write comment here ..."
+          autoSize={{ minRows: 1, maxRows: 2 }}
+          onChange={(e) => setInputCommentText(e.target.value)}
+        />
+      ) : (
+        <Select
+          style={{ width: "100%", margin: "12px 0px" }}
+          placeholder="select comment..."
+          size="large"
+          showSearch
+          allowClear
+          options={
+            allComments?.map((item) => ({
+              label: item?.name,
+              value: item?.name,
+            })) || []
+          }
+          filterOption={(input, option) =>
+            option.label.toLowerCase().includes(input.toLowerCase())
+          }
+          onChange={(e) => setText(e)}
+        />
+      )}
+
       {flag === false && (
         <Text type="danger">Please give the caption then submit</Text>
       )}

@@ -593,7 +593,7 @@ const LeadsModule = () => {
                   </div>
                 )}
               >
-                <Button type="primary" onClick={handleOpenDropdown}>
+                <Button  onClick={handleOpenDropdown}>
                   <Icon
                     icon="fluent:arrow-upload-16-filled"
                     height={BTN_ICON_HEIGHT}

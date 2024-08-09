@@ -967,6 +967,7 @@ select.form-control:not([size]):not([multiple]) {
 
 .heading-text {
   font-size: 18px;
+  line-height: 20px;
   font-weight: 550;
   color: #0f0f0f;
 }

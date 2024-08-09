@@ -17,7 +17,7 @@ const Department = () => {
   const [openModal, setOpenModal] = useState(false)
   useEffect(() => {
     dispatch(getAllDepartment())
-  }, [])
+  }, [dispatch])
   const handleFinish = (values) => {
     dispatch(createAuthDepartment(values)).then((resp) => {
       if (resp.meta.requestStatus === "fulfilled") {
