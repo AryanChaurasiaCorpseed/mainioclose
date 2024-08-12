@@ -75,9 +75,11 @@ function App() {
       theme={{
         token: {
           borderRadius: 4,
-          colorBorder: "#cccccc",
-          colorText:'#2e2e2e',
-          colorTextHeading:'#2e2e2e',
+          colorBorder: "#999999",
+          colorText: "#2e2e2e",
+          colorTextHeading: "#2e2e2e",
+          colorTextDisabled: "#8c8c8c",
+          colorTextPlaceholder: "#8c8c8c",
         },
         components: {
           Card: {
@@ -89,9 +91,9 @@ function App() {
           Button: {
             contentFontSize: 13,
             contentFontSizeSM: 12,
-            borderRadius:50,
-            borderRadiusLG:50,
-            borderRadiusSM:50
+            borderRadius: 50,
+            borderRadiusLG: 50,
+            borderRadiusSM: 50,
           },
           Popconfirm: {
             fontSize: 13,
@@ -105,13 +107,13 @@ function App() {
           },
           Table: {
             fontSize: 13,
-            colorText:'#2e2e2e',
-            headerColor:'#222222',
-            fontWeightStrong:600
+            colorText: "#2e2e2e",
+            headerColor: "#222222",
+            fontWeightStrong: 600,
           },
-          Tabs:{
+          Tabs: {
             // cardBg:'#cccccc',
-          }
+          },
         },
       }}
     >
@@ -177,7 +179,10 @@ function App() {
                 <Route path="oppurtities" element={<Opportunities />} />
                 <Route path="company" element={<MainCompanyPage />} />
                 <Route path="project" element={<ProjectPage />} />
-                <Route path="lead-form" element={<CompanyForm role={'sales'} />} />
+                <Route
+                  path="lead-form"
+                  element={<CompanyForm role={"sales"} />}
+                />
                 <Route
                   path="company/:companyId/details"
                   element={<CompanyPageLayout />}

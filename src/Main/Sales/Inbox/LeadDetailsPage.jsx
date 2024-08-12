@@ -69,30 +69,27 @@ const LeadDetailsPage = () => {
   const [form1] = Form.useForm()
   const [form2] = Form.useForm()
   const [form3] = Form.useForm()
-  const allTaskStatusData = useSelector(
-    (state) => state.leads.allTaskStatusData
-  )
+  const { userid, leadid } = useParams()
+  const dispatch = useDispatch()
+  const fileRef = useRef()
+  const currentUserRoles = useSelector((state) => state?.auth?.roles)
+  const { allLeadUrl } = useSelector((prev) => prev?.leadurls)
+  const allTaskStatusData = useSelector((state) => state.leads.allTaskStatusData)
   const allOportunities = useSelector((state) => state.leads.allOportunities)
   const allProductData = useSelector((state) => state.leads.allProductData)
-  const getSingleLeadTask = useSelector(
-    (state) => state.leads.getSingleLeadTask
-  )
-  const userDataResponse = useSelector(
-    (state) => state.leads.getAllLeadUserData
-  )
+  const getSingleLeadTask = useSelector((state) => state.leads.getSingleLeadTask)
+  const userDataResponse = useSelector((state) => state.leads.getAllLeadUserData)
   const categoryData = useSelector((state) => state.leads.categoryData)
   const getAllStatus = useSelector((state) => state.leads.getAllStatus)
-  const singleLeadResponseData = useSelector(
-    (state) => state.leads.singleLeadResponseData
-  )
+  const singleLeadResponseData = useSelector((state) => state.leads.singleLeadResponseData)
   const allProductsList = useSelector((state) => state.leads.allProductsList)
   const clientsContact = useSelector((state) => state.leads.clientsContact)
+  const slugList = useSelector((state) => state.leadslug.slugList)
   const [openModal, setOpenModal] = useState(false)
   const [contactData, setContactData] = useState(null)
   const [openTaskModal, setOpenTaskModal] = useState(false)
   const [openProductModal, setOpenProductModal] = useState(false)
   const [taskData, setTaskData] = useState("")
-  const slugList = useSelector((state) => state.leadslug.slugList)
   const [notes, setNotes] = useState(false)
   const [notesApiData, setNotesApiData] = useState([])
   const [allFilterProducts, setAllFilterProducts] = useState([])
@@ -103,8 +100,7 @@ const LeadDetailsPage = () => {
   const [updateAssignee, setUpdateAssignee] = useState(false)
   const [updateOriginalName, setUpdateOriginalName] = useState(false)
   const [updatedLeadName, setUpdatedLeadName] = useState("")
-  const dispatch = useDispatch()
-  const fileRef = useRef()
+
 
   useEffect(() => {
     dispatch(getAllSlugList())
@@ -117,10 +113,6 @@ const LeadDetailsPage = () => {
   useEffect(() => {
     dispatch(getAllUrlAction(0))
   }, [dispatch])
-
-  const { allLeadUrl } = useSelector((prev) => prev?.leadurls)
-  console.log("all lead url", allLeadUrl)
-  const { userid, leadid } = useParams()
 
   const [originalData, setOriginalData] = useState({
     leadId: leadid,
@@ -185,7 +177,7 @@ const LeadDetailsPage = () => {
     dispatch(getAllTaskData(leadid))
   }, [dispatch, leadid,userid])
 
-  const currentUserRoles = useSelector((state) => state?.auth?.roles)
+
   const adminRole = currentUserRoles.includes("ADMIN")
   const NotesRef = useRef()
 
@@ -201,8 +193,6 @@ const LeadDetailsPage = () => {
   }
 
  
-
-
   const changeLeadStatusFun = (statusId) => {
     dispatch(changeLeadStatus({ leadid, userid, statusId }))
       .then((resp) => {
@@ -380,7 +370,7 @@ const LeadDetailsPage = () => {
     })
     setContactData(value)
     setOpenModal(true)
-  }
+  } 
 
   const handleSubmitContact = useCallback(
     (values) => {

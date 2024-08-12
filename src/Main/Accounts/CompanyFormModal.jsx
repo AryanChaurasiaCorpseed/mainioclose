@@ -58,6 +58,12 @@ const CompanyFormModal = ({
   const [openModal, setOpenModal] = useState(false)
   const [formLoading, setFormLoading] = useState("")
   const [gstMand, setGstMand] = useState("")
+  const [newPrimaryAddress, setNewPrimaryAddress] = useState(
+    Object.keys(companyDetails)?.length === 0 ? true : false
+  )
+  const [newSecondaryAddress, setNewSecondaryAddress] = useState(
+    Object.keys(companyDetails)?.length === 0 ? true : false
+  )
 
   const handlePanNumberChange = (e) => {
     const value = e.target.value
@@ -591,7 +597,7 @@ const CompanyFormModal = ({
           </Divider>
 
           <Form.Item
-            label="New contact details"
+            label="New primary contact details"
             name="primaryContact"
             rules={[{ required: true }]}
           >
@@ -691,56 +697,75 @@ const CompanyFormModal = ({
             )}
           </Form.Item>
 
-          <Form.Item
-            label="Primary address"
-            name="address"
-            rules={[{ required: true, message: "please enter the address" }]}
-          >
-            <Input.TextArea />
+          <Form.Item label="Add new primary address">
+            <Switch
+              size="small"
+              value={newPrimaryAddress}
+              checked={newPrimaryAddress}
+              disabled={Object.keys(companyDetails)?.length > 0 ? false : true}
+              onChange={(e) => setNewPrimaryAddress(e)}
+            />
           </Form.Item>
 
-          <Form.Item
-            label="City"
-            name="city"
-            rules={[{ required: true, message: "please enter the city" }]}
-          >
-            <Input />
-          </Form.Item>
+          {newPrimaryAddress && (
+            <>
+              <Form.Item
+                label="Primary address"
+                name="address"
+                rules={[
+                  { required: true, message: "please enter the address" },
+                ]}
+              >
+                <Input.TextArea />
+              </Form.Item>
 
-          <Form.Item
-            label="State"
-            name="state"
-            rules={[{ required: true, message: "please enter the state" }]}
-          >
-            <Input />
-          </Form.Item>
+              <Form.Item
+                label="City"
+                name="city"
+                rules={[{ required: true, message: "please enter the city" }]}
+              >
+                <Input />
+              </Form.Item>
 
-          <Form.Item
-            label="Country"
-            name="country"
-            rules={[{ required: true, message: "please enter the country" }]}
-          >
-            <Input />
-          </Form.Item>
+              <Form.Item
+                label="State"
+                name="state"
+                rules={[{ required: true, message: "please enter the state" }]}
+              >
+                <Input />
+              </Form.Item>
 
-          <Form.Item
-            label="PinCode"
-            name="primaryPinCode"
-            rules={[{ required: true, message: "please enter pincode" }]}
-          >
-            <Input />
-          </Form.Item>
+              <Form.Item
+                label="Country"
+                name="country"
+                rules={[
+                  { required: true, message: "please enter the country" },
+                ]}
+              >
+                <Input />
+              </Form.Item>
+
+              <Form.Item
+                label="PinCode"
+                name="primaryPinCode"
+                rules={[{ required: true, message: "please enter pincode" }]}
+              >
+                <Input />
+              </Form.Item>
+            </>
+          )}
 
           <Divider style={{ color: "#cccccc" }} orientation="center">
             Secondary details
           </Divider>
+
           {/* 
           <Form.Item label="Same as primary details" name="secondaryContact">
             <Switch size="small" onChange={handleSetFields} />
           </Form.Item> */}
 
           <Form.Item
-            label="New Secondary details"
+            label="New secondary contact details"
             name="secondaryContact"
             rules={[{ required: true }]}
           >
@@ -839,22 +864,36 @@ const CompanyFormModal = ({
               </>
             )}
           </Form.Item>
-          <Form.Item label="Address" name="saddress">
-            <Input.TextArea />
-          </Form.Item>
-          <Form.Item label="City" name="scity">
-            <Input />
-          </Form.Item>
-          <Form.Item label="State" name="sstate">
-            <Input />
-          </Form.Item>
 
-          <Form.Item label="Country" name="scountry">
-            <Input />
+          <Form.Item label="Add new secondary address">
+            <Switch
+              size="small"
+              value={newSecondaryAddress}
+              checked={newSecondaryAddress}
+              disabled={Object.keys(companyDetails)?.length > 0 ? false : true}
+              onChange={(e) => setNewSecondaryAddress(e)}
+            />
           </Form.Item>
-          <Form.Item label="PinCode" name="secondaryPinCode">
-            <Input />
-          </Form.Item>
+          {newSecondaryAddress && (
+            <>
+              <Form.Item label="Address" name="saddress">
+                <Input.TextArea />
+              </Form.Item>
+              <Form.Item label="City" name="scity">
+                <Input />
+              </Form.Item>
+              <Form.Item label="State" name="sstate">
+                <Input />
+              </Form.Item>
+
+              <Form.Item label="Country" name="scountry">
+                <Input />
+              </Form.Item>
+              <Form.Item label="PinCode" name="secondaryPinCode">
+                <Input />
+              </Form.Item>
+            </>
+          )}
         </Form>
       </Modal>
     </>

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect } from "react"
 import TableOutlet from "../../components/design/TableOutlet"
 import MainHeading from "../../components/design/MainHeading"
 import { useDispatch, useSelector } from "react-redux"
@@ -6,10 +6,12 @@ import TableScalaton from "../../components/TableScalaton"
 import SomethingWrong from "../../components/usefulThings/SomethingWrong"
 import CreateRatingModel from "../../Model/CreateRatingModel"
 import { getAllSlugAction } from "../../Toolkit/Slices/LeadSlugSlice"
-import { Link } from "react-router-dom"
 import CommonTable from "../../components/CommonTable"
 import { getAllUsers } from "../../Toolkit/Slices/UsersSlice"
 import { getAllUrlAction } from "../../Toolkit/Slices/LeadUrlSlice"
+import OverFlowText from "../../components/OverFlowText"
+import { Typography } from "antd"
+const { Text } = Typography
 
 const UserService = () => {
   const dispatch = useDispatch()
@@ -29,12 +31,20 @@ const UserService = () => {
     },
     {
       dataIndex: "urlsName",
-      title: "Url's name",
-      renderCell: (props) => {
-        return <Link to={`${props?.row?.id}`}>{props?.row?.urlsName}</Link>
+      title: "Url's name regerg",
+      render: (_, props) => {
+        return (
+          <OverFlowText linkText={true} to={`${props?.id}`}>
+            {props?.urlsName}
+          </OverFlowText>
+        )
       },
     },
-    { dataIndex: "quality", title: "Quality" },
+    {
+      dataIndex: "quality",
+      title: "Quality",
+      render: (_, data) => <Text>{data?.quality ? "True" : "False"}</Text>,
+    },
   ]
 
   return (
