@@ -3,10 +3,9 @@ import TableOutlet from "../../../components/design/TableOutlet"
 import MainHeading from "../../../components/design/MainHeading"
 import SomethingWrong from "../../../components/usefulThings/SomethingWrong"
 import TableScalaton from "../../../components/TableScalaton"
-import { useDispatch, useSelector } from "react-redux"
-import { getCompanyProjectAction } from "../../../Toolkit/Slices/CompanySlice"
+import { useSelector } from "react-redux"
 import ColComp from "../../../components/small/ColComp"
-import { useParams } from "react-router-dom"
+import OverFlowText from "../../../components/OverFlowText"
 const CommonTable = lazy(() => import("../../../components/CommonTable"))
 
 const ProjectsComp = () => {
@@ -48,11 +47,59 @@ const ProjectsComp = () => {
       dataIndex: "status",
       title: "Status",
     },
+    {
+      dataIndex: "pAddress",
+      title: "Primary address",
+      render:(_,record)=><OverFlowText>{record?.pAddress}</OverFlowText>
+    },
+    {
+      dataIndex: "pCity",
+      title: "Primary city",
+      render:(_,record)=><OverFlowText>{record?.pCity}</OverFlowText>
+    },
+    {
+      dataIndex: "pState",
+      title: "Primary state",
+      render:(_,record)=><OverFlowText>{record?.pState}</OverFlowText>
+    },
+    {
+      dataIndex: "pCountry",
+      title: "Primary country",
+      render:(_,record)=><OverFlowText>{record?.pCountry}</OverFlowText>
+    },
+    {
+      dataIndex: "pPinCode",
+      title: "Primary pincode",
+    },
+    {
+      dataIndex: "sAddress",
+      title: "Secondary address",
+      render:(_,record)=><OverFlowText>{record?.sAddress}</OverFlowText>
+    },
+    {
+      dataIndex: "sCity",
+      title: "Secondary city",
+      render:(_,record)=><OverFlowText>{record?.sCity}</OverFlowText>
+    },
+    {
+      dataIndex: "sState",
+      title: "Secondary state",
+      render:(_,record)=><OverFlowText>{record?.sState}</OverFlowText>
+    },
+    {
+      dataIndex: "sCountry",
+      title: "Secondary country",
+      render:(_,record)=><OverFlowText>{record?.sCountry}</OverFlowText>
+    },
+    {
+      dataIndex: "sPinCode",
+      title: "Secondary pincode",
+    },
   ]
   return (
     <TableOutlet>
       <div className="create-user-box">
-        <MainHeading data={"All Projects"} />
+        <MainHeading data={"All projects"} />
       </div>
       <>
         {compProjectError && <SomethingWrong />}
@@ -61,7 +108,7 @@ const ProjectsComp = () => {
             <CommonTable
               data={compProject}
               columns={compColumns}
-              scroll={{ y: 650, x: 1000 }}
+              scroll={{ y: 650, x: 3000 }}
             />
           </Suspense>
         )}

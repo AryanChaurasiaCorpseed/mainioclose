@@ -32,13 +32,11 @@ const UserService = () => {
     {
       dataIndex: "urlsName",
       title: "Url's name",
-      render: (_, props) => {
-        return (
-          <OverFlowText linkText={true} to={`${props?.id}`}>
-            {props?.urlsName}
-          </OverFlowText>
-        )
-      },
+      render: (_, props) => (
+        <OverFlowText linkText={true} to={`${props?.id}`}>
+          {props?.urlsName}
+        </OverFlowText>
+      ),
     },
     {
       dataIndex: "quality",
