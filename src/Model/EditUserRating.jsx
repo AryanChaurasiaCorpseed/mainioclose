@@ -29,21 +29,26 @@ export const EditUserRating = ({ data }) => {
       values.ratingId = data.id
       values.urlsManagmentId = serviceid
       values.rating = data?.rating
-      dispatch(editUserRatingAssignee(values)).then(() =>
-        dispatch(allRatingUsers({ id: serviceid }))
-      )
+      dispatch(editUserRatingAssignee(values))
+        .then((resp) => {
+          if (resp.meta.requestStatus === "fulfilled") {
+            notification.success({
+              message: "Assignee is updated successfully",
+            })
+            dispatch(allRatingUsers({ id: serviceid }))
+            setOpenModal(false)
+          } else {
+            notification.error({ message: "Something went wrong !" })
+          }
+        })
+        .catch(() => {
+          notification.error({ message: "Something went wrong !" })
+        })
     },
     [data, serviceid, dispatch]
   )
 
-  useEffect(() => {
-    if (assigneeLoading === "success") {
-      notification.success({ message: "Assignee is updated successfully" })
-      setOpenModal(false)
-    } else if (assigneeLoading === "rejected") {
-      notification.error({ message: "Something went wrong !" })
-    }
-  }, [assigneeLoading, dispatch, serviceid])
+ 
 
   return (
     <>
