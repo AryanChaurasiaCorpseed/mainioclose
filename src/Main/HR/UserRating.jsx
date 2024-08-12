@@ -9,6 +9,7 @@ import { allRatingUsers } from "../../Toolkit/Slices/RatingSlice"
 import { EditUserRating } from "../../Model/EditUserRating"
 import { Typography } from "antd"
 import CommonTable from "../../components/CommonTable"
+import CreateRatingModel from "../../Model/CreateRatingModel"
 const { Text } = Typography
 
 const UserRating = () => {
@@ -33,9 +34,10 @@ const UserRating = () => {
     {
       dataIndex: "user",
       title: "Assignee",
-      render: (_, props) => (
-        props?.user?.map((item) => <Text style={{margin:'0px 2px'}}>{item?.name},</Text>)
-      )
+      render: (_, props) =>
+        props?.user?.map((item) => (
+          <Text style={{ margin: "0px 2px" }}>{item?.name},</Text>
+        )),
     },
     {
       dataIndex: "rating",
@@ -52,7 +54,7 @@ const UserRating = () => {
     {
       dataIndex: "edit",
       title: "Edit",
-      render: (_,props) => <EditUserRating data={props} />,
+      render: (_, props) => <EditUserRating data={props} />,
     },
   ]
 
@@ -60,6 +62,7 @@ const UserRating = () => {
     <TableOutlet>
       <div className="create-user-box">
         <MainHeading data={"Rating list"} />
+        <CreateRatingModel urlRating={true} urlId={serviceid} />
       </div>
       <div>
         {allUsersLoading && <TableScalaton />}

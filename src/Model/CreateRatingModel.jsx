@@ -9,7 +9,7 @@ import { Button, Form, Modal, notification, Select } from "antd"
 import { getAllSlugAction } from "../Toolkit/Slices/LeadSlugSlice"
 toast.configure()
 
-const CreateRatingModel = ({ edit }) => {
+const CreateRatingModel = ({ edit, urlRating,urlId }) => {
   const dispatch = useDispatch()
   const [form] = Form.useForm()
   const [openModal, setOpenModal] = useState(false)
@@ -33,6 +33,9 @@ const CreateRatingModel = ({ edit }) => {
   ]
 
   const handleFinish = (values) => {
+    if(urlRating){
+      values.urlsManagmentId=urlId
+    }
     dispatch(addNewRating(values))
       .then((response) => {
         if (response.meta.requestStatus === "fulfilled") {
@@ -105,27 +108,32 @@ const CreateRatingModel = ({ edit }) => {
               }
             />
           </Form.Item>
-          <Form.Item
-            label="Select url"
-            name="urlsManagmentId"
-            rules={[{ required: true, message: "please select urls" }]}
-          >
-            <Select
-              showSearch
-              allowClear
-              options={
-                allLeadUrl?.length > 0
-                  ? allLeadUrl?.map((item) => ({
-                      label: item?.urlsName,
-                      value: item?.id,
-                    }))
-                  : []
-              }
-              filterOption={(input, option) =>
-                option.label.toLowerCase().includes(input.toLowerCase())
-              }
-            />
-          </Form.Item>
+
+          {urlRating ? (
+            ""
+          ) : (
+            <Form.Item
+              label="Select url"
+              name="urlsManagmentId"
+              rules={[{ required: true, message: "please select urls" }]}
+            >
+              <Select
+                showSearch
+                allowClear
+                options={
+                  allLeadUrl?.length > 0
+                    ? allLeadUrl?.map((item) => ({
+                        label: item?.urlsName,
+                        value: item?.id,
+                      }))
+                    : []
+                }
+                filterOption={(input, option) =>
+                  option.label.toLowerCase().includes(input.toLowerCase())
+                }
+              />
+            </Form.Item>
+          )}
         </Form>
       </Modal>
     </>
