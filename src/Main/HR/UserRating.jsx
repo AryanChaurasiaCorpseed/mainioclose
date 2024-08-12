@@ -1,7 +1,6 @@
 import React, { useEffect } from "react"
 import TableOutlet from "../../components/design/TableOutlet"
 import MainHeading from "../../components/design/MainHeading"
-import UserListComponent from "../../Tables/UserListComponent"
 import { useDispatch, useSelector } from "react-redux"
 import TableScalaton from "../../components/TableScalaton"
 import SomethingWrong from "../../components/usefulThings/SomethingWrong"
@@ -9,54 +8,40 @@ import { useParams } from "react-router-dom"
 import { allRatingUsers } from "../../Toolkit/Slices/RatingSlice"
 import { EditUserRating } from "../../Model/EditUserRating"
 import { Typography } from "antd"
+import CommonTable from "../../components/CommonTable"
 const { Text } = Typography
 
 const UserRating = () => {
-  // const [hidebox, setHidebox] = useState(true)
-  // const [myobjData, setmyObjData] = useState({})
-  // const [editRatingDep, setEditRatingDep] = useState(false)
-
   const dispatch = useDispatch()
   const { serviceid } = useParams()
 
   useEffect(() => {
     dispatch(allRatingUsers({ id: serviceid }))
-  }, [dispatch,serviceid])
-
-  // useEffect(() => {
-  //   dispatch(getAllRating())
-  // }, [ratingDep])
+  }, [dispatch, serviceid])
 
   const { allUsersList, allUsersLoading, allUsersError } = useSelector(
     (prev) => prev?.ratingn
   )
 
-  // const editRatingUser = (data) => {
-  //   setmyObjData((prev) => ({ ...prev, data }))
-  //   setEditRatingDep(true)
-  //   setHidebox((prev) => !prev)
-  // }
-
   const columns = [
     {
-      field: "id",
-      headerName: "ID",
+      dataIndex: "id",
+      title: "Id",
       width: 80,
     },
-    { field: "urlsName", headerName: "Service Name", width: 250 },
+    { dataIndex: "urlsName", title: "Service name", width: 250 },
     {
-      field: "user",
-      headerName: "Assignee",
-      width: 250,
-      renderCell: (props) =>
-        props.row?.user?.map((item) => <Text style={{margin:'0px 2px'}}>{item?.name},</Text>),
+      dataIndex: "user",
+      title: "Assignee",
+      render: (_, props) => (
+        props?.user?.map((item) => <Text style={{margin:'0px 2px'}}>{item?.name},</Text>)
+      )
     },
     {
-      field: "rating",
-      headerName: "Rating",
-      width: 150,
-      renderCell: (props) => {
-        const arrayOfZeros = Array.from({ length: props?.row?.rating }, () => 0)
+      dataIndex: "rating",
+      title: "Rating",
+      render: (_, props) => {
+        const arrayOfZeros = Array.from({ length: props?.rating }, () => 0)
         return arrayOfZeros.map((star) => (
           <span className="text-warning ml-1">
             <i className="fa-solid fa-star"></i>
@@ -65,26 +50,25 @@ const UserRating = () => {
       },
     },
     {
-      field: "edit",
-      headerName: "Edit",
-      width: 250,
-      renderCell: (props) => <EditUserRating data={props.row} />,
+      dataIndex: "edit",
+      title: "Edit",
+      render: (_,props) => <EditUserRating data={props} />,
     },
   ]
 
   return (
     <TableOutlet>
       <div className="create-user-box">
-        <MainHeading data={"Rating List"} />
+        <MainHeading data={"Rating list"} />
       </div>
       <div>
         {allUsersLoading && <TableScalaton />}
         {allUsersError && <SomethingWrong />}
         {allUsersList && !allUsersLoading && !allUsersError && (
-          <UserListComponent
-            tableName={""}
+          <CommonTable
+            data={allUsersList}
             columns={columns}
-            row={allUsersList}
+            scroll={{ y: 510 }}
           />
         )}
       </div>

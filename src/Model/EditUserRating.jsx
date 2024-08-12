@@ -14,16 +14,17 @@ export const EditUserRating = ({ data }) => {
   const dispatch = useDispatch()
   const { serviceid } = useParams()
   const allUsers = useSelector((state) => state.user.allUsers)
-  const assigneeLoading = useSelector((state) => state.user.assigneeLoading)
   const [openModal, setOpenModal] = useState(false)
 
   useEffect(() => {
     dispatch(getAllUsers())
   }, [dispatch])
+
   const handleEdit = useCallback(() => {
     setOpenModal(true)
     form.setFieldsValue({ ratingsUser: data?.user?.map((itm) => itm?.id) })
   }, [data, form])
+
   const handleFinish = useCallback(
     (values) => {
       values.ratingId = data.id
@@ -52,7 +53,7 @@ export const EditUserRating = ({ data }) => {
 
   return (
     <>
-      <Button size="small" onClick={handleEdit}>
+      <Button size="small" type="text" onClick={handleEdit}>
         <Icon icon="fluent:edit-20-regular" />
       </Button>
       <Modal

@@ -741,6 +741,7 @@ button:focus {
   justify-content: space-between;
   align-items: center;
   gap: 5px;
+  padding: 4px 2px;
 }
 
 .table-heading {

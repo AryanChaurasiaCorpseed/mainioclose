@@ -31,7 +31,7 @@ const UserService = () => {
     },
     {
       dataIndex: "urlsName",
-      title: "Url's name regerg",
+      title: "Url's name",
       render: (_, props) => {
         return (
           <OverFlowText linkText={true} to={`${props?.id}`}>
@@ -61,7 +61,7 @@ const UserService = () => {
           <CommonTable
             data={allLeadUrl}
             columns={columns}
-            scroll={{ y: 470 }}
+            scroll={{ y: 520 }}
             rowSelection={true}
           />
         )}
