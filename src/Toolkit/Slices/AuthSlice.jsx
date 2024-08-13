@@ -47,6 +47,11 @@ export const createAuthDesigination = createAsyncThunk(
   }
 )
 
+export const createDesiginationByDepartment=createAsyncThunk('createDesiginationByDepartment',async(data)=>{
+  const response=await postQuery(`/securityService/api/department/createDepartmentInDesignation`,data)
+  return response.data
+})
+
 export const AuthSlice = createSlice({
   name: "auth",
   initialState: {

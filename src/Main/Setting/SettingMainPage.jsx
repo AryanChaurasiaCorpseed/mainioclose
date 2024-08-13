@@ -3,25 +3,26 @@ import "./SettingMainPage.scss"
 import { Link, Outlet } from "react-router-dom"
 import { useSelector } from "react-redux"
 import { Layout, Menu, theme } from "antd"
-const { Sider, Content, Header } = Layout
+const { Sider, Content } = Layout
 
 const SettingMainPage = () => {
-  // const currentUserId = useSelector((auth) => auth.AuthReducer.currentUser.id)
+  const {
+    token: { colorBgContainer },
+  } = theme.useToken()
   const currentUserId = useSelector((state) => state?.auth?.currentUser?.id)
-
   const pathname = window.location.pathname
 
   const getPathKey = () => {
-    const parts = pathname.split("/")
-    const lastWord = parts[parts.length - 1]
+    const parts = pathname?.split("/")
+    const lastWord = parts[parts?.length - 1]
     return lastWord
   }
 
   const items = [
     {
-      key: "setting",
+      key: "leadStatus",
       label: (
-        <Link className="link-four" to={`/erp/${currentUserId}/setting`}>
+        <Link className="link-four" to={`/erp/${currentUserId}/setting/leadStatus`}>
           Lead status
         </Link>
       ),
@@ -98,9 +99,7 @@ const SettingMainPage = () => {
       ),
     },
   ]
-  const {
-    token: { colorBgContainer, borderRadiusLG },
-  } = theme.useToken()
+
   return (
     <>
       <Layout>
@@ -113,12 +112,6 @@ const SettingMainPage = () => {
           <Menu mode="inline" items={items} defaultSelectedKeys={[getPathKey()]} />
         </Sider>
         <Layout>
-          {/* <Header
-            style={{
-              padding: 0,
-              background: colorBgContainer,
-            }}
-          /> */}
           <Content
             style={{
               margin: "24px 16px 0",

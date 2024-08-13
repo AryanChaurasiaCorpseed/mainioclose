@@ -28,9 +28,10 @@ const Desigination = () => {
                 notification.success({
                   message: "Desigination created successfully",
                 })
+                dispatch(getAllDesiginations())
                 playSuccessSound()
                 setOpenModal(false)
-                dispatch(getAllDesiginations())
+                form.resetFields()
               } else if (info.meta.requestStatus === "rejected") {
                 notification.success({
                   message: "Something went wrong",
@@ -49,7 +50,7 @@ const Desigination = () => {
         }
       })
     },
-    [dispatch]
+    [dispatch, form]
   )
 
   useEffect(() => {

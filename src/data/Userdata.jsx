@@ -1,4 +1,4 @@
-import { Space, Typography } from "antd"
+import { Typography } from "antd"
 import ColComp from "../components/small/ColComp"
 import UserLockerEdit from "../Model/UserLockerEdit"
 import { Icon } from "@iconify/react"
@@ -28,7 +28,11 @@ export const allUserdataCol = [
     dataIndex: "managers",
     title: "Manager",
     render: (_, props) =>
-      props?.manager ? <OverFlowText>{props?.managers?.fullName}</OverFlowText> : "NA",
+      props?.manager ? (
+        <OverFlowText>{props?.managers?.fullName}</OverFlowText>
+      ) : (
+        "NA"
+      ),
   },
   {
     dataIndex: "lockerSize",
@@ -74,173 +78,161 @@ export const deactivateUserListCol = [
 
 export const allManagerCol = [
   {
-    field: "id",
-    headerName: "ID",
+    dataIndex: "id",
+    title: "Id",
     width: 150,
-    renderCell: (props) => {
-      return <p className="mb-0">CORP00{props?.row?.id}</p>
+    fixed: "left",
+    render: (_, props) => {
+      return <p className="mb-0">CORP00{props?.id}</p>
     },
   },
-  { field: "fullName", headerName: "Full name", width: 150 },
   {
-    field: "email",
-    headerName: "Email",
-    width: 200,
-    renderCell: (props) => <ColComp data={props?.row?.email} />,
+    dataIndex: "fullName",
+    title: "Full name",
+    fixed: "left",
+    render: (_, props) => <OverFlowText>{props?.fullName}</OverFlowText>,
   },
   {
-    field: "designation",
-    headerName: "Designation",
+    dataIndex: "email",
+    title: "Email",
+    render: (_, props) => <OverFlowText>{props?.email}</OverFlowText>,
+  },
+  {
+    dataIndex: "designation",
+    title: "Designation",
     width: 150,
-    renderCell: (props) => (
+    render: (_, props) => (
       <OverFlowText>
-        {props?.row?.designation ? props?.row?.designation : "NA"}
+        {props?.designation ? props?.designation : "NA"}
       </OverFlowText>
     ),
   },
   {
-    field: "department",
-    headerName: "Department",
-    width: 150,
-    renderCell: (props) => <ColComp data={props?.row?.department} />,
+    dataIndex: "department",
+    title: "Department",
+    render: (_, props) => <ColComp data={props?.department} />,
   },
 
   {
-    field: "role",
-    headerName: "Role",
-    width: 150,
-    renderCell: (props) => <ColComp data={props?.row?.role} />,
+    dataIndex: "role",
+    title: "Role",
+    render: (_, props) => <OverFlowText>{props?.role}</OverFlowText>,
   },
   {
-    field: "aadharCard",
-    headerName: "Aadhar card",
-    width: 150,
-    renderCell: (props) => <ColComp data={props?.row?.aadharCard} />,
+    dataIndex: "aadharCard",
+    title: "Aadhar card",
+    render: (_, props) => <ColComp data={props?.aadharCard} />,
   },
   {
-    field: "dateOfJoining",
-    headerName: "Joining date",
-    width: 150,
-    renderCell: (props) => (
+    dataIndex: "dateOfJoining",
+    title: "Joining date",
+    render: (_, props) => (
       <p className="m-0">
-        {props?.row?.dateOfJoining
-          ? new Date(props?.row?.dateOfJoining)?.toLocaleDateString()
+        {props?.dateOfJoining
+          ? new Date(props?.dateOfJoining)?.toLocaleDateString()
           : "NA"}
       </p>
     ),
   },
   {
-    field: "employeeId",
-    headerName: "Employee id",
-    width: 150,
-    renderCell: (props) => <ColComp data={props?.row?.employeeId} />,
+    dataIndex: "employeeId",
+    title: "Employee id",
+    render: (_, props) => <ColComp data={props?.employeeId} />,
   },
   {
-    field: "epfNo",
-    headerName: "Employee ID",
-    width: 150,
-
-    renderCell: (props) => <ColComp data={props?.row?.epfNo} />,
+    dataIndex: "epfNo",
+    title: "Employee ID",
+    render: (_, props) => <ColComp data={props?.epfNo} />,
   },
   {
-    field: "experience",
-    headerName: "Experience",
-    width: 180,
-    renderCell: (props) => (
+    dataIndex: "experience",
+    title: "Experience",
+    render: (_, props) => (
       <p className="m-0">
-        {props?.row?.expInYear ? props?.row?.expInYear + " years" : "NA"} and{" "}
-        {props?.row?.expInMonth ? props?.row?.expInMonth + " months" : "NA"}
+        {props?.expInYear ? props?.expInYear + " years" : "NA"} and{" "}
+        {props?.expInMonth ? props?.expInMonth + " months" : "NA"}
       </p>
     ),
   },
   {
-    field: "managers",
-    headerName: "Manager",
-    width: 150,
-    renderCell: (props) => <ColComp data={props?.row?.managers?.fullName} />,
+    dataIndex: "managers",
+    title: "Manager",
+    render: (_, props) => (
+      <OverFlowText>{props?.managers?.fullName}</OverFlowText>
+    ),
   },
   {
-    field: "panNumber",
-    headerName: "Pan number",
-    width: 150,
-    renderCell: (props) => <ColComp data={props?.row?.panNumber} />,
+    dataIndex: "panNumber",
+    title: "Pan number",
+    render: (_, props) => <ColComp data={props?.panNumber} />,
   },
   {
-    field: "nationality",
-    headerName: "Nationality",
-    width: 150,
-    renderCell: (props) => <ColComp data={props?.row?.nationality} />,
+    dataIndex: "nationality",
+    title: "Nationality",
+    render: (_, props) => <ColComp data={props?.nationality} />,
   },
   {
-    field: "permanentAddress",
-    headerName: "Permanent address",
-    width: 250,
-    renderCell: (props) => <ColComp data={props?.row?.permanentAddress} />,
+    dataIndex: "permanentAddress",
+    title: "Permanent address",
+    render: (_, props) => (
+      <OverFlowText>{props?.permanentAddress}</OverFlowText>
+    ),
   },
   {
-    field: "residentialAddress",
-    headerName: "Residential address",
-    width: 250,
-    renderCell: (props) => <ColComp data={props?.row?.residentialAddress} />,
+    dataIndex: "residentialAddress",
+    title: "Residential address",
+    render: (_, props) => (
+      <OverFlowText>{props?.residentialAddress}</OverFlowText>
+    ),
   },
   {
-    field: "fatherName",
-    headerName: "Father name",
-    width: 150,
-    renderCell: (props) => <ColComp data={props?.row?.fatherName} />,
+    dataIndex: "fatherName",
+    title: "Father name",
+    render: (_, props) => <ColComp data={props?.fatherName} />,
   },
   {
-    field: "fatherContactNo",
-    headerName: "Father contact no.",
-    width: 150,
-    renderCell: (props) => <ColComp data={props?.row?.fatherContactNo} />,
+    dataIndex: "fatherContactNo",
+    title: "Father contact no.",
+    render: (_, props) => <ColComp data={props?.fatherContactNo} />,
   },
   {
-    field: "fatherOccupation",
-    headerName: "Father occupation",
-    width: 150,
-    renderCell: (props) => <ColComp data={props?.row?.fatherOccupation} />,
+    dataIndex: "fatherOccupation",
+    title: "Father occupation",
+    render: (_, props) => <ColComp data={props?.fatherOccupation} />,
   },
   {
-    field: "motherName",
-    headerName: "Mother name",
-    width: 150,
-    renderCell: (props) => <ColComp data={props?.row?.motherName} />,
+    dataIndex: "motherName",
+    title: "Mother name",
+    render: (_, props) => <ColComp data={props?.motherName} />,
   },
   {
-    field: "motherContactNo",
-    headerName: "Mother contact no.",
-    width: 150,
-    renderCell: (props) => <ColComp data={props?.row?.motherContactNo} />,
+    dataIndex: "motherContactNo",
+    title: "Mother contact no.",
+    render: (_, props) => <ColComp data={props?.motherContactNo} />,
   },
   {
-    field: "motherOccupation",
-    headerName: "Mother occupation",
-    width: 150,
-    renderCell: (props) => <ColComp data={props?.row?.motherOccupation} />,
+    dataIndex: "motherOccupation",
+    title: "Mother occupation",
+    render: (_, props) => <ColComp data={props?.motherOccupation} />,
   },
   {
-    field: "spouseName",
-    headerName: "Spouse name",
-    width: 150,
-    renderCell: (props) => <ColComp data={props?.row?.spouseName} />,
+    dataIndex: "spouseName",
+    title: "Spouse name",
+    render: (_, props) => <ColComp data={props?.spouseName} />,
   },
   {
-    field: "spouseContactNo",
-    headerName: "Spouse contact no",
-    width: 150,
-    renderCell: (props) => <ColComp data={props?.row?.spouseContactNo} />,
+    dataIndex: "spouseContactNo",
+    title: "Spouse contact no",
+    render: (_, props) => <ColComp data={props?.spouseContactNo} />,
   },
   {
-    field: "language",
-    headerName: "Language",
-    width: 150,
-    renderCell: (props) => <ColComp data={props?.row?.language} />,
+    dataIndex: "language",
+    title: "Language",
+    render: (_, props) => <ColComp data={props?.language} />,
   },
   {
-    field: "emergencyNumber",
-    headerName: "Emergency number",
-    width: 150,
-    renderCell: (props) => <ColComp data={props?.row?.emergencyNumber} />,
+    dataIndex: "emergencyNumber",
+    title: "Emergency number",
+    render: (_, props) => <ColComp data={props?.emergencyNumber} />,
   },
 ]

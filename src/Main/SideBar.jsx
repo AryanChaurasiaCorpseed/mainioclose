@@ -29,7 +29,7 @@ const SideBar = () => {
     if (currentUserId !== undefined) {
       dispatch(getUserProfilePhoto(currentUserId))
     }
-  }, [currentUserId])
+  }, [dispatch,currentUserId])
 
   const items = [
     {
@@ -164,7 +164,6 @@ const SideBar = () => {
                 label: <Link to={`${userid}/sales/lead-form`}>Lead form</Link>,
                 key: "lead-form",
               },
-              ,
             ],
           },
         ]
@@ -330,6 +329,7 @@ const SideBar = () => {
             children: [
               {
                 label: <Link to={`${userid}/quality/ivr`}>Ivr</Link>,
+                key:'ivr'
               },
             ],
           },
@@ -339,7 +339,7 @@ const SideBar = () => {
     ...(getHighestPriorityRole(currentRoles) === "ADMIN"
       ? [
           {
-            label: <Link to={`/erp/${userid}/setting`}>Setting</Link>,
+            label: <Link to={`/erp/${userid}/setting/leadStatus`}>Setting</Link>,
             key: "setting",
             icon:<Icon icon="fluent:settings-24-regular" height={SIDE_BAR_ICON_HEIGHT} width={SIDE_BAR_ICON_WIDTH} />
           },

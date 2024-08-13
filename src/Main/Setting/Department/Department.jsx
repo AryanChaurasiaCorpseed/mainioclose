@@ -1,23 +1,48 @@
-import React, { useEffect, useState } from "react"
+import React, { useCallback, useEffect, useState } from "react"
+import "./Department.scss"
 import MainHeading from "../../../components/design/MainHeading"
-import { Button, Form, Input, Modal, notification } from "antd"
+import {
+  Button,
+  Form,
+  Input,
+  Modal,
+  notification,
+  Select,
+  Tag,
+  Tooltip,
+} from "antd"
 import CommonTable from "../../../components/CommonTable"
 import { useDispatch, useSelector } from "react-redux"
 import {
   createDepartment,
+  createDesiginationByDepartmentId,
   getAllDepartment,
+  getAllDesiginations,
 } from "../../../Toolkit/Slices/SettingSlice"
-import { createAuthDepartment } from "../../../Toolkit/Slices/AuthSlice"
+import {
+  createAuthDepartment,
+  createDesiginationByDepartment,
+} from "../../../Toolkit/Slices/AuthSlice"
 import { playErrorSound, playSuccessSound } from "../../Common/Commons"
+import { Icon } from "@iconify/react"
 
 const Department = () => {
   const [form] = Form.useForm()
+  const [form1] = Form.useForm()
   const dispatch = useDispatch()
   const departmentList = useSelector((state) => state.setting.allDepartment)
+  const desiginationList = useSelector(
+    (state) => state.setting.desiginationList
+  )
   const [openModal, setOpenModal] = useState(false)
+  const [openDesiginationModal, setOpenDesiginationModal] = useState(false)
+  const [departmentData, setDepartmentData] = useState(null)
+
   useEffect(() => {
     dispatch(getAllDepartment())
+    dispatch(getAllDesiginations())
   }, [dispatch])
+
   const handleFinish = (values) => {
     dispatch(createAuthDepartment(values)).then((resp) => {
       if (resp.meta.requestStatus === "fulfilled") {
@@ -47,6 +72,47 @@ const Department = () => {
       }
     })
   }
+
+  const addDesigination = (data) => {
+    setOpenDesiginationModal(true)
+    form1.setFieldsValue({
+      designation: data?.designations?.map((item) => item?.id),
+    })
+    setDepartmentData(data)
+  }
+
+  const handleDesiginations = useCallback(
+    (values) => {
+      values.id = departmentData?.id
+      dispatch(createDesiginationByDepartment(values))
+        .then((resp) => {
+          if (resp.meta.requestStatus === "fulfilled") {
+            dispatch(createDesiginationByDepartmentId(values))
+              .then((response) => {
+                if (response.meta.requestStatus === "fulfilled") {
+                  notification.success({
+                    message: "Desigination added successfully",
+                  })
+                  setOpenDesiginationModal(false)
+                  dispatch(getAllDepartment())
+                } else {
+                  notification.error({ message: "Something went wrong !." })
+                }
+              })
+              .catch(() => {
+                notification.error({ message: "Something went wrong !." })
+              })
+          } else {
+            notification.error({ message: "Something went wrong !." })
+          }
+        })
+        .catch(() => {
+          notification.error({ message: "Something went wrong !." })
+        })
+    },
+    [departmentData, dispatch]
+  )
+
   const columns = [
     {
       title: "Id",
@@ -55,6 +121,42 @@ const Department = () => {
     {
       title: "Department",
       dataIndex: "name",
+    },
+    {
+      title: "Desiginations",
+      dataIndex: "designations",
+      render: (_, records) => {
+        const tags = records?.designations?.map((item) => (
+          <Tag className="tags">{item?.name}</Tag>
+        ))
+        return (
+          <div className="tagContainer">
+            {tags?.[0]}
+            {tags?.length > 0 && (
+              <Tooltip title={tags}  placement="topRight">
+                <Icon
+                  icon="fluent:more-circle-24-regular"
+                  height={24}
+                  width={24}
+                />
+              </Tooltip>
+            )}
+          </div>
+        )
+      },
+    },
+    {
+      title: "Add desigination",
+      dataIndex: "addDesigination",
+      render: (_, records) => (
+        <Button
+          size="small"
+          type="text"
+          onClick={() => addDesigination(records)}
+        >
+          <Icon icon="fluent:add-16-filled" />
+        </Button>
+      ),
     },
   ]
   return (
@@ -94,6 +196,40 @@ const Department = () => {
             ]}
           >
             <Input />
+          </Form.Item>
+        </Form>
+      </Modal>
+
+      <Modal
+        title="Add desiginations"
+        open={openDesiginationModal}
+        onCancel={() => setOpenDesiginationModal(false)}
+        onClose={() => setOpenDesiginationModal(false)}
+        okText="Submit"
+        onOk={() => form1.submit()}
+      >
+        <Form layout="vertical" form={form1} onFinish={handleDesiginations}>
+          <Form.Item
+            label="Desiginations"
+            name="designation"
+            rules={[{ required: true, message: "please select department" }]}
+          >
+            <Select
+              showSearch
+              allowClear
+              mode="multiple"
+              options={
+                desiginationList?.length > 0
+                  ? desiginationList?.map((item) => ({
+                      label: item?.name,
+                      value: item?.id,
+                    }))
+                  : []
+              }
+              filterOption={(input, option) =>
+                option.label.toLowerCase().includes(input.toLowerCase())
+              }
+            />
           </Form.Item>
         </Form>
       </Modal>

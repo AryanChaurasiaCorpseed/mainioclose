@@ -4,7 +4,6 @@ import TableOutlet from "../../components/design/TableOutlet"
 import MainHeading from "../../components/design/MainHeading"
 import TableScalaton from "../../components/TableScalaton"
 import SomethingWrong from "../../components/usefulThings/SomethingWrong"
-import UserListComponent from "../../Tables/UserListComponent"
 import { getAllIvr } from "../../Toolkit/Slices/IvrSlice"
 import CreateNEditIVR from "../../Model/CreateNEditIVR"
 import CommonTable from "../../components/CommonTable"
@@ -59,12 +58,12 @@ const IVR = () => {
         </audio>
       ),
     },
-   
   ]
+   
   return (
     <TableOutlet>
       <div className="create-user-box">
-        <MainHeading data={"All IVR "} />
+        <MainHeading data={"All Ivr"} />
         <CreateNEditIVR />
       </div>
       <div>

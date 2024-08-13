@@ -47,7 +47,6 @@ import SlugCreate from "./Main/Setting/slug/SlugCreate"
 import UrlsPage from "./Main/Setting/urls/UrlsPage"
 import SingleUserHistory from "./Main/DashBoard/SingleUserHistory"
 import MainCompanyPage from "./Main/Sales/company/MainCompanyPage"
-import CompDetails from "./Main/Sales/company/CompDetails"
 import ProjectPage from "./Main/Sales/Project/ProjectPage"
 import UserService from "./Main/HR/UserService"
 import Compliances from "./Main/Compliance/Compliances"
@@ -66,16 +65,12 @@ const SpinLoading = lazy(() => import("./components/SpinLoading"))
 
 function App() {
   const authStatus = useSelector((state) => state.auth.isAuth)
-  const authRoles = useSelector((state) => state.auth.roles)
-
-  console.log("ckjvhjdhgich", authRoles)
 
   return (
     <ConfigProvider
       theme={{
         token: {
-          borderRadius: 4,
-          colorBorder: "#999999",
+          borderRadius: 6,
           colorText: "#2e2e2e",
           colorTextHeading: "#2e2e2e",
           colorTextDisabled: "#8c8c8c",
@@ -91,9 +86,6 @@ function App() {
           Button: {
             contentFontSize: 13,
             contentFontSizeSM: 12,
-            borderRadius: 50,
-            borderRadiusLG: 50,
-            borderRadiusSM: 50,
           },
           Popconfirm: {
             fontSize: 13,
@@ -334,7 +326,7 @@ function App() {
               </Route>
               {/* end */}
               <Route path="/erp/:userid/setting" element={<SettingMainPage />}>
-                <Route path="" element={<LeadStatusPage />} />
+                <Route path="leadStatus" element={<LeadStatusPage />} />
                 <Route path="products" element={<ProductsChange />} />
                 <Route path="category" element={<LeadCategory />} />
                 <Route path="slug" element={<SlugCreate />} />

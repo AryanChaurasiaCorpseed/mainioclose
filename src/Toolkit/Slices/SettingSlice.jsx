@@ -40,6 +40,11 @@ export const createDepartment = createAsyncThunk(
   }
 )
 
+export const createDesiginationByDepartmentId=createAsyncThunk('createDesiginationByDepartmentId',async(data)=>{
+  const response=await postQuery(`/leadService/api/v1/designation/createDepartmentInDesignation`,data)
+  return response.data
+})
+
 const settingSlice = createSlice({
   name: "setting",
   initialState: {

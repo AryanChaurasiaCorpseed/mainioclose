@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react"
 import TableOutlet from "../../components/design/TableOutlet"
 import MainHeading from "../../components/design/MainHeading"
-import UserListComponent from "../../Tables/UserListComponent"
 import { useDispatch, useSelector } from "react-redux"
 import { headHrUser } from "../../Toolkit/Slices/UsersSlice"
 import ColComp from "../../components/small/ColComp"
@@ -18,7 +17,6 @@ const { Text } = Typography
 const HRApprovalList = () => {
   const dispatch = useDispatch()
   const currentUserId = useSelector((state) => state?.auth?.currentUser?.id)
-  const [flagDataT, setFlagDataT] = useState(true)
   const [approvedUserDep, setApprovedUserDep] = useState(true)
 
   const {
@@ -27,7 +25,7 @@ const HRApprovalList = () => {
     userHRError,
   } = useSelector((state) => state?.user)
 
-  const { Hrflag, hrLoading, hrError } = useSelector((data) => data?.approved)
+  const { hrLoading } = useSelector((data) => data?.approved)
 
   useEffect(() => {
     dispatch(headHrUser(currentUserId))
@@ -209,9 +207,7 @@ const HRApprovalList = () => {
 
   const approvedUserFun = (id) => {
     const userId = { ids: id }
-    const getApproval = dispatch(
-      ApproveduserByHr({ currid: currentUserId, userid: userId.ids })
-    )
+    dispatch(ApproveduserByHr({ currid: currentUserId, userid: userId.ids }))
     setApprovedUserDep((prev) => !prev)
   }
 

@@ -8,9 +8,7 @@ import SomethingWrong from "../../components/usefulThings/SomethingWrong"
 import { ApproveduserByManager } from "../../Toolkit/Slices/ApprovedStatus"
 import { allManagerCol } from "../../data/Userdata"
 
-const UserListComponent = React.lazy(() =>
-  import(`../../Tables/UserListComponent`)
-)
+const CommonTable = React.lazy(() => import(`../../components/CommonTable`))
 
 const AllManagerApprovals = () => {
   const dispatch = useDispatch()
@@ -23,27 +21,27 @@ const AllManagerApprovals = () => {
 
   useEffect(() => {
     dispatch(allManagerUser(currentUserId))
-  }, [dispatch, approverdUserDep])
+  }, [dispatch, approverdUserDep, currentUserId])
 
   const columns = [
     ...allManagerCol,
     {
-      field: "Action",
-      headerName: "Action",
+      dataIndex: "Action",
+      title: "Action",
       width: 260,
-      renderCell: (props) => {
+      render: (_, props) => {
         return (
           <>
             <button
               className="common-btn-one mr-2"
-              onClick={() => approvedUserManagerFun(props.row.id)}
+              onClick={() => approvedUserManagerFun(props.id)}
             >
               Approved
               <i className="fa-solid ml-2 fa-check"></i>
             </button>
             <button
               className="common-btn-one mr-2"
-              onClick={() => rejectedUserManagerFun(props.row.id)}
+              onClick={() => rejectedUserManagerFun(props.id)}
             >
               Rejected
               <i className="fa-solid ml-2 fa-check"></i>
@@ -57,7 +55,7 @@ const AllManagerApprovals = () => {
   const approvedUserManagerFun = (id) => {
     const userId = { ids: id }
     if (window.confirm("Are you sure you want to Approved This User")) {
-      const getApprovalManager = dispatch(
+      dispatch(
         ApproveduserByManager({ currid: currentUserId, userid: userId.ids })
       )
       setApproverdUserDep((prev) => !prev)
@@ -67,7 +65,7 @@ const AllManagerApprovals = () => {
   const rejectedUserManagerFun = (id) => {
     const userId = { ids: id }
     if (window.confirm("Are you sure you want to Rejected This User")) {
-      const rejectedUsers = dispatch(
+      dispatch(
         ApproveduserByManager({ currid: currentUserId, userid: userId.ids })
       )
       setApproverdUserDep((prev) => !prev)
@@ -81,10 +79,15 @@ const AllManagerApprovals = () => {
         {userManagerError && <SomethingWrong />}
         {!userManagerError && (
           <Suspense fallback={<TableScalaton />}>
-            <UserListComponent
+            {/* <UserListComponent
               tableName={""}
               columns={columns}
               row={hrApprovalUser}
+            /> */}
+            <CommonTable
+              data={hrApprovalUser}
+              columns={columns}
+              scroll={{ y: 520, x: 1800 }}
             />
           </Suspense>
         )}

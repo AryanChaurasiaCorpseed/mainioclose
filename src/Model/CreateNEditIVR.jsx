@@ -1,7 +1,7 @@
 import { Button, Form, Input, Modal, TimePicker } from "antd"
 import React, { useCallback, useState } from "react"
 import { useDispatch } from "react-redux"
-import { createIvr } from "../Toolkit/Slices/IvrSlice"
+import { createIvr, getAllIvr } from "../Toolkit/Slices/IvrSlice"
 import dayjs from "dayjs"
 
 const CreateNEditIVR = () => {
@@ -28,7 +28,7 @@ const CreateNEditIVR = () => {
       )
       dispatch(createIvr(values))
       setOpenModal(false)
-      window.location.reload()
+      dispatch(getAllIvr())
     },
     [dispatch]
   )
