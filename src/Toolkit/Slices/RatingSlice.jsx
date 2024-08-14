@@ -15,14 +15,13 @@ export const addNewRating = createAsyncThunk(
 
 export const allRatingUsers = createAsyncThunk(
   "all-rating-users-list",
-  async ({id}) => {
+  async ({ id }) => {
     const allUserRating = await getQuery(
       `/leadService/api/v1/rating/getRetingByUrls?urlsId=${id}`
     )
     return allUserRating?.data
   }
 )
-
 
 const RatingSlice = createSlice({
   name: "ratingn",
@@ -33,6 +32,15 @@ const RatingSlice = createSlice({
     allUsersList: [],
     allUsersLoading: false,
     allUsersError: false,
+    page: 0,
+  },
+  reducers: {
+    handleNextPagination: (state, action) => {
+      state.page = state.page + 1
+    },
+    handlePrevPagination: (state, action) => {
+      state.page = state.page >= 0 ? state.page - 1 : 0
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(addNewRating.pending, (state, action) => {
@@ -64,5 +72,8 @@ const RatingSlice = createSlice({
     })
   },
 })
+
+export const { handleNextPagination, handlePrevPagination } =
+  RatingSlice.actions
 
 export default RatingSlice.reducer

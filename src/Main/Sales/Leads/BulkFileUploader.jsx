@@ -39,8 +39,7 @@ const BulkFileUploader = () => {
     onChange(info) {
       setFiles(info?.fileList?.map((file) => file?.response))
     },
-    onDrop(e) {
-    },
+    onDrop(e) {},
   }
 
   const onSubmit = useCallback(() => {
@@ -52,12 +51,14 @@ const BulkFileUploader = () => {
       file: files,
     }
     if (text !== "" && files?.length > 0) {
+      console.log('inside function')
       dispatch(createRemakWithFile(data))
         .then((resp) => {
           if (resp.meta.requestStatus === "fulfilled") {
             notification.success({ message: "Remark added successfully" })
             setFlag(true)
             setFiles([])
+            setText('')
             dispatch(getAllComments())
           } else {
             notification.error({ message: "Something went wrong" })
@@ -67,12 +68,14 @@ const BulkFileUploader = () => {
           notification.error({ message: "Something went wrong" })
         })
     } else if (text !== "") {
+      console.log('inside else')
       dispatch(createRemakWithFile(data))
         .then((resp) => {
           if (resp.meta.requestStatus === "fulfilled") {
             notification.success({ message: "Remark added successfully" })
             setFlag(true)
             setFiles([])
+            setText('')
             dispatch(getAllComments())
           } else {
             notification.error({ message: "Something went wrong" })
@@ -112,6 +115,7 @@ const BulkFileUploader = () => {
           style={{ width: "100%", margin: "12px 0px" }}
           placeholder="select comment..."
           size="large"
+          value={text}
           showSearch
           allowClear
           options={
@@ -123,7 +127,10 @@ const BulkFileUploader = () => {
           filterOption={(input, option) =>
             option.label.toLowerCase().includes(input.toLowerCase())
           }
-          onChange={(e) => setText(e)}
+          onChange={(e) => {
+            setText(e)
+            setFlag(null)
+          }}
         />
       )}
 

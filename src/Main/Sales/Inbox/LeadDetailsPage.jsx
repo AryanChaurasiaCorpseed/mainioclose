@@ -769,8 +769,8 @@ const LeadDetailsPage = () => {
       )}
 
       {openAllTask ? <AllTasksPage setOpenAllTask={setOpenAllTask} /> : ""}
-      <Row gutter={8}>
-        <Col span={7}>
+      <Row gutter={12}>
+        <Col span={9}>
           <div className="left-lead-section">
             {updateOriginalName ? (
               <div className="comp-container">
@@ -933,7 +933,7 @@ const LeadDetailsPage = () => {
             />
           </div>
         </Col>
-        <Col span={17}>
+        <Col span={15}>
           <div className="lead-filter-above">
             <div className="filter-box">
               <Button onClick={() => setNotes((prev) => !prev)}>

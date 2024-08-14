@@ -5,7 +5,9 @@ import { useDispatch, useSelector } from "react-redux"
 import TableScalaton from "../../components/TableScalaton"
 import SomethingWrong from "../../components/usefulThings/SomethingWrong"
 import { useParams } from "react-router-dom"
-import { allRatingUsers } from "../../Toolkit/Slices/RatingSlice"
+import {
+  allRatingUsers,
+} from "../../Toolkit/Slices/RatingSlice"
 import { EditUserRating } from "../../Model/EditUserRating"
 import { Typography } from "antd"
 import CommonTable from "../../components/CommonTable"
@@ -20,7 +22,7 @@ const UserRating = () => {
     dispatch(allRatingUsers({ id: serviceid }))
   }, [dispatch, serviceid])
 
-  const { allUsersList, allUsersLoading, allUsersError } = useSelector(
+  const { allUsersList, allUsersLoading, allUsersError, } = useSelector(
     (prev) => prev?.ratingn
   )
 
@@ -48,7 +50,7 @@ const UserRating = () => {
           <span className="text-warning ml-1">
             <i className="fa-solid fa-star"></i>
           </span>
-        ))
+        ))  
       },
     },
     {

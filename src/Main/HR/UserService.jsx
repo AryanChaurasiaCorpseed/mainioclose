@@ -1,28 +1,55 @@
-import React, { useEffect } from "react"
+import React, { useEffect, useState } from "react"
 import TableOutlet from "../../components/design/TableOutlet"
 import MainHeading from "../../components/design/MainHeading"
 import { useDispatch, useSelector } from "react-redux"
 import TableScalaton from "../../components/TableScalaton"
 import SomethingWrong from "../../components/usefulThings/SomethingWrong"
 import CreateRatingModel from "../../Model/CreateRatingModel"
-import { getAllSlugAction } from "../../Toolkit/Slices/LeadSlugSlice"
+import { getAllSlugAction, getAllSlugList } from "../../Toolkit/Slices/LeadSlugSlice"
 import CommonTable from "../../components/CommonTable"
 import { getAllUsers } from "../../Toolkit/Slices/UsersSlice"
-import { getAllUrlAction } from "../../Toolkit/Slices/LeadUrlSlice"
+import {
+  getAllUrlAction,
+  getAllUrlList,
+  handleNextPagination,
+  handlePrevPagination,
+} from "../../Toolkit/Slices/LeadUrlSlice"
 import OverFlowText from "../../components/OverFlowText"
-import { Typography } from "antd"
+import { Input, Typography } from "antd"
 const { Text } = Typography
 
 const UserService = () => {
   const dispatch = useDispatch()
-  const { allLeadUrl, allLeadUrlLoading, allLeadUrlError } = useSelector(
+  const { allLeadUrl, allLeadUrlLoading, allLeadUrlError,allUrlList, page } = useSelector(
     (prev) => prev?.leadurls
   )
+  const [searchText, setSearchText] = useState("")
+  const [filteredData, setFilteredData] = useState([])
+
+  useEffect(() => {
+    setFilteredData(allUrlList)
+  }, [allUrlList])
+
   useEffect(() => {
     dispatch(getAllUsers())
     dispatch(getAllUrlAction(0))
     dispatch(getAllSlugAction(0))
   }, [dispatch])
+
+  useEffect(() => {
+    dispatch(getAllUrlList())
+  }, [dispatch])
+
+  const handleSearch = (e) => {
+    const value = e.target.value
+    setSearchText(value)
+    const filtered = allUrlList?.filter((item) =>
+      Object.values(item)?.some((val) =>
+        String(val)?.toLowerCase()?.includes(value?.toLowerCase())
+      )
+    )
+    setFilteredData(filtered)
+  }
 
   const columns = [
     {
@@ -53,13 +80,19 @@ const UserService = () => {
       </div>
 
       <div>
+        <Input
+          placeholder="search"
+          value={searchText}
+          onChange={handleSearch}
+          style={{ width: "250px" }}
+        />
         {allLeadUrlLoading && <TableScalaton />}
         {allLeadUrlError && <SomethingWrong />}
-        {allLeadUrl && !allLeadUrlLoading && !allLeadUrlError && (
+        {allUrlList && !allLeadUrlLoading && !allLeadUrlError && (
           <CommonTable
-            data={allLeadUrl}
+            data={filteredData}
             columns={columns}
-            scroll={{ y: 520 }}
+            scroll={{ y: 450 }}
             rowSelection={true}
           />
         )}

@@ -1,26 +1,23 @@
-import React, { useEffect, useState } from "react"
+import React, { useCallback, useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { getAllUsers } from "../Toolkit/Slices/UsersSlice"
-import { getAllUrlList } from "../Toolkit/Slices/LeadUrlSlice"
-import { addNewRating } from "../Toolkit/Slices/RatingSlice"
+import { getAllUrlAction, getAllUrlList } from "../Toolkit/Slices/LeadUrlSlice"
+import { addNewRating, allRatingUsers } from "../Toolkit/Slices/RatingSlice"
 import { toast } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
 import { Button, Form, Modal, notification, Select } from "antd"
 import { getAllSlugAction } from "../Toolkit/Slices/LeadSlugSlice"
+import { useParams } from "react-router-dom"
 toast.configure()
 
-const CreateRatingModel = ({ edit, urlRating,urlId }) => {
+const CreateRatingModel = ({ edit, urlRating, urlId }) => {
   const dispatch = useDispatch()
   const [form] = Form.useForm()
   const [openModal, setOpenModal] = useState(false)
   const allLeadUrl = useSelector((state) => state.leadurls.allUrlList)
+  const page = useSelector((state) => state.leadurls.page)
   useEffect(() => {
     dispatch(getAllUrlList())
-    dispatch(getAllUsers())
-  }, [dispatch])
-
-  useEffect(() => {
-    dispatch(getAllSlugAction(0))
   }, [dispatch])
 
   const { allUsers } = useSelector((prev) => prev?.user)
@@ -32,27 +29,32 @@ const CreateRatingModel = ({ edit, urlRating,urlId }) => {
     { value: 5, label: "5" },
   ]
 
-  const handleFinish = (values) => {
-    if(urlRating){
-      values.urlsManagmentId=urlId
-    }
-    dispatch(addNewRating(values))
-      .then((response) => {
-        if (response.meta.requestStatus === "fulfilled") {
-          notification.success({
-            message: "Rating updated successfully",
-          })
-          setOpenModal(false)
-        } else if (response.meta.requestStatus === "rejected") {
+  const handleFinish = useCallback(
+    (values) => {
+      if (urlRating) {
+        values.urlsManagmentId = urlId
+      }
+      dispatch(addNewRating(values))
+        .then((response) => {
+          if (response.meta.requestStatus === "fulfilled") {
+            notification.success({
+              message: "Rating updated successfully",
+            })
+            dispatch(getAllUrlAction(page))
+            form.resetFields()
+            setOpenModal(false)
+          } else if (response.meta.requestStatus === "rejected") {
+            notification.error({ message: "Either user is already persent or empt" })
+            setOpenModal(false)
+          }
+        })
+        .catch((err) => {
           notification.error({ message: "Something went wrong" })
           setOpenModal(false)
-        }
-      })
-      .catch(() => {
-        notification.error({ message: "Something went wrong" })
-        setOpenModal(false)
-      })
-  }
+        })
+    },
+    [urlId,dispatch]
+  )
 
   return (
     <>
