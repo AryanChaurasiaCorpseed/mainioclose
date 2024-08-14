@@ -4,7 +4,6 @@ import { Link, useParams } from "react-router-dom"
 import LeadCreateModel from "../../../Model/LeadCreateModel"
 import { useDispatch, useSelector } from "react-redux"
 import TableScalaton from "../../../components/TableScalaton"
-import { MultiSelect } from "primereact/multiselect"
 import { useCustomRoute } from "../../../Routes/GetCustomRoutes"
 import { CSVLink } from "react-csv"
 import {
@@ -333,13 +332,15 @@ const LeadsModule = () => {
       dataIndex: "email",
       width: 300,
       checked: true,
-      render:(_,record)=><OverFlowText>{record?.email}</OverFlowText>
+      render: (_, record) => <OverFlowText>{record?.email}</OverFlowText>,
     },
     {
       title: "Assignee person",
       dataIndex: "assigneeName",
       checked: true,
-      render: (_, data) => <OverFlowText>{data?.assignee?.fullName}</OverFlowText>,
+      render: (_, data) => (
+        <OverFlowText>{data?.assignee?.fullName}</OverFlowText>
+      ),
     },
 
     {
@@ -593,7 +594,7 @@ const LeadsModule = () => {
                   </div>
                 )}
               >
-                <Button  onClick={handleOpenDropdown}>
+                <Button onClick={handleOpenDropdown}>
                   <Icon
                     icon="fluent:arrow-upload-16-filled"
                     height={BTN_ICON_HEIGHT}
@@ -622,8 +623,48 @@ const LeadsModule = () => {
       </div>
 
       <div className={`${hideMUltiFilter ? "" : "d-none"} all-between py-2`}>
-        <div className="one">
-          <MultiSelect
+        <div className="filter-container">
+          <Select
+            mode="multiple"
+            allowClear
+            showSearch
+            style={{ width: "45%" }}
+            value={allUserMulti}
+            placeholder="Select users"
+            onChange={(e) => setAllUserMulti(e)}
+            options={
+              leadUserNew?.length > 0
+                ? leadUserNew?.map((item) => ({
+                    label: item?.fullName,
+                    value: item?.id,
+                  }))
+                : []
+            }
+            filterOption={(input, option) =>
+              option.label.toLowerCase().includes(input.toLowerCase())
+            }
+          />
+          <Select
+            mode="multiple"
+            style={{ width: "45%" }}
+            allowClear
+            showSearch
+            placeholder="Select Status"
+            options={
+              getAllStatus?.length > 0
+                ? getAllStatus?.map((item) => ({
+                    label: item?.name,
+                    value: item?.id,
+                  }))
+                : []
+            }
+            onChange={(e) => setAllStatusMulti(e)}
+            filterOption={(input, option) =>
+              option.label.toLowerCase().includes(input.toLowerCase())
+            }
+          />
+        </div>
+        {/* <MultiSelect
             style={{ dropdown: { backgroundColor: "#000" } }}
             value={allUserMulti}
             onChange={(e) => setAllUserMulti(e.value)}
@@ -633,10 +674,9 @@ const LeadsModule = () => {
             optionValue="id"
             maxSelectedLabels={3}
             className="multi-select-boxx"
-          />
-        </div>
-        <div className="two">
-          <MultiSelect
+          /> */}
+
+        {/* <MultiSelect
             style={{ dropdown: { backgroundColor: "#000" } }}
             value={allStatusMulti}
             onChange={(e) => setAllStatusMulti(e.value)}
@@ -646,9 +686,9 @@ const LeadsModule = () => {
             placeholder="Select Status"
             maxSelectedLabels={3}
             className="multi-select-boxx"
-          />
-        </div>
-        <div className="three">
+          /> */}
+
+        <div className="filter-right-container">
           <input
             className="mr-2 date-input"
             onChange={(e) => setToDate(e.target.value)}

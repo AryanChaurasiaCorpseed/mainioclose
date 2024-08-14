@@ -7,6 +7,7 @@ import TableScalaton from "../../components/TableScalaton"
 import SomethingWrong from "../../components/usefulThings/SomethingWrong"
 import { ApproveduserByManager } from "../../Toolkit/Slices/ApprovedStatus"
 import { allManagerCol } from "../../data/Userdata"
+import { Button } from "antd"
 
 const CommonTable = React.lazy(() => import(`../../components/CommonTable`))
 
@@ -31,22 +32,19 @@ const AllManagerApprovals = () => {
       width: 260,
       render: (_, props) => {
         return (
-          <>
-            <button
-              className="common-btn-one mr-2"
+          <div style={{ display: "flex", gap: "8px" }}>
+            <Button
+              type="primary"
               onClick={() => approvedUserManagerFun(props.id)}
             >
               Approved
               <i className="fa-solid ml-2 fa-check"></i>
-            </button>
-            <button
-              className="common-btn-one mr-2"
-              onClick={() => rejectedUserManagerFun(props.id)}
-            >
+            </Button>
+            <Button danger onClick={() => rejectedUserManagerFun(props.id)}>
               Rejected
               <i className="fa-solid ml-2 fa-check"></i>
-            </button>
-          </>
+            </Button>
+          </div>
         )
       },
     },
@@ -74,7 +72,7 @@ const AllManagerApprovals = () => {
 
   return (
     <>
-      <MainHeading data={`All users for Approvals`} />
+      <MainHeading data={`All users for approvals`} />
       <TableCMPadding>
         {userManagerError && <SomethingWrong />}
         {!userManagerError && (
@@ -87,7 +85,7 @@ const AllManagerApprovals = () => {
             <CommonTable
               data={hrApprovalUser}
               columns={columns}
-              scroll={{ y: 520, x: 1800 }}
+              scroll={{ y: 520, x: 4500 }}
             />
           </Suspense>
         )}

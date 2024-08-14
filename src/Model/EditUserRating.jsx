@@ -22,14 +22,16 @@ export const EditUserRating = ({ data }) => {
 
   const handleEdit = useCallback(() => {
     setOpenModal(true)
-    form.setFieldsValue({ ratingsUser: data?.user?.map((itm) => itm?.id) })
+    form.setFieldsValue({
+      ratingsUser: data?.user?.map((itm) => itm?.id),
+      rating: data?.rating,
+    })
   }, [data, form])
 
   const handleFinish = useCallback(
     (values) => {
       values.ratingId = data.id
       values.urlsManagmentId = serviceid
-      values.rating = data?.rating
       dispatch(editUserRatingAssignee(values))
         .then((resp) => {
           if (resp.meta.requestStatus === "fulfilled") {
@@ -49,8 +51,6 @@ export const EditUserRating = ({ data }) => {
     [data, serviceid, dispatch]
   )
 
- 
-
   return (
     <>
       <Button size="small" type="text" onClick={handleEdit}>
@@ -69,7 +69,7 @@ export const EditUserRating = ({ data }) => {
             label="Assignee Name"
             name="ratingsUser"
             rules={[
-              { required: true, message: "please enter the assignee name" },
+              { required: true, message: "please select the assignee name" },
             ]}
           >
             <Select
@@ -81,6 +81,44 @@ export const EditUserRating = ({ data }) => {
                   value: item.id,
                   label: item?.fullName,
                 })) || []
+              }
+              filterOption={(input, option) =>
+                option.label.toLowerCase().includes(input.toLowerCase())
+              }
+            />
+          </Form.Item>
+          <Form.Item
+            label="Rating"
+            name="rating"
+            rules={[{ required: true, message: "please select rating" }]}
+          >
+            <Select
+              showSearch
+              allowClear
+              options={[
+                {
+                  label: "1",
+                  value: 1,
+                },
+                {
+                  label: "2",
+                  value: 2,
+                },
+                {
+                  label: "3",
+                  value: 3,
+                },
+                {
+                  label: "4",
+                  value: 4,
+                },
+                {
+                  label: "5",
+                  value: 5,
+                },
+              ]}
+              filterOption={(input, option) =>
+                option.label.toLowerCase().includes(input.toLowerCase())
               }
             />
           </Form.Item>

@@ -196,6 +196,22 @@ button:focus {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  width: 100%;
+}
+
+.filter-container{
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  width: 50%;
+  gap: 12px;
+}
+.filter-right-container{
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  width: 50%;
+  gap: 8px;
 }
 
 .nav-heading {
@@ -484,7 +500,7 @@ button:focus {
   outline: none;
   position: relative;
   z-index: 1000;
-  width: 250px;
+  width: 200px;
   padding: 3px;
 }
 

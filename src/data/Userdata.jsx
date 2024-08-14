@@ -147,6 +147,7 @@ export const allManagerCol = [
   {
     dataIndex: "experience",
     title: "Experience",
+    width:200,
     render: (_, props) => (
       <p className="m-0">
         {props?.expInYear ? props?.expInYear + " years" : "NA"} and{" "}

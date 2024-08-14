@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from "react-redux"
 import { getProjectAction } from "../../../Toolkit/Slices/ProjectSlice"
 import ColComp from "../../../components/small/ColComp"
 import CommonTable from "../../../components/CommonTable"
+import OverFlowText from "../../../components/OverFlowText"
 
 const ProjectPage = () => {
   const dispatch = useDispatch()
@@ -26,29 +27,82 @@ const ProjectPage = () => {
       dataIndex: "id",
       title: "Id",
       width: 50,
+      fixed: "left",
     },
     {
       dataIndex: "client",
       title: "Client",
+      fixed: "left",
     },
     {
       dataIndex: "leadNane",
       title: "Lead name",
+      fixed: "left",
     },
     {
       dataIndex: "projectName",
       title: "Project name",
-      render: (_, props) => <ColComp data={props?.projectName} />,
+      render: (_, props) => <OverFlowText>{props?.projectName}</OverFlowText>,
     },
     {
       dataIndex: "assigneeName",
       title: "Assignee name",
-      render: (_, props) => <ColComp data={props?.assigneeName} />,
+      render: (_, props) => <OverFlowText>{props?.assigneeName}</OverFlowText>,
     },
     {
       dataIndex: "status",
       title: "Status",
       render: (_, data) => <ColComp data={data?.status} />,
+    },
+    {
+      dataIndex: "pAddress",
+      title: "Primary address",
+      render: (_, record) => <OverFlowText>{record?.pAddress}</OverFlowText>,
+    },
+    {
+      dataIndex: "pCity",
+      title: "Primary city",
+      render: (_, record) => <OverFlowText>{record?.pCity}</OverFlowText>,
+    },
+    {
+      dataIndex: "pState",
+      title: "Primary state",
+      render: (_, record) => <OverFlowText>{record?.pState}</OverFlowText>,
+    },
+    {
+      dataIndex: "pCountry",
+      title: "Primary country",
+      render: (_, record) => <OverFlowText>{record?.pCountry}</OverFlowText>,
+    },
+    {
+      dataIndex: "pPinCode",
+      title: "Primary pincode",
+      render: (_, record) => <OverFlowText>{record?.pPinCode}</OverFlowText>,
+    },
+    {
+      dataIndex: "sAddress",
+      title: "Secondary address",
+      render: (_, record) => <OverFlowText>{record?.sAddress}</OverFlowText>,
+    },
+    {
+      dataIndex: "sCity",
+      title: "Secondary city",
+      render: (_, record) => <OverFlowText>{record?.sCity}</OverFlowText>,
+    },
+    {
+      dataIndex: "sState",
+      title: "Secondary state",
+      render: (_, record) => <OverFlowText>{record?.sState}</OverFlowText>,
+    },
+    {
+      dataIndex: "sCountry",
+      title: "Secondary country",
+      render: (_, record) => <OverFlowText>{record?.sCountry}</OverFlowText>,
+    },
+    {
+      dataIndex: "sPinCode",
+      title: "Secondary pincode",
+      render: (_, record) => <OverFlowText>{record?.sPinCode}</OverFlowText>,
     },
   ]
 
@@ -62,7 +116,7 @@ const ProjectPage = () => {
           <CommonTable
             data={allProject}
             columns={columns}
-            scroll={{ y: 600 }}
+            scroll={{ y: 600, x: 2500 }}
           />
         )}
       </div>
