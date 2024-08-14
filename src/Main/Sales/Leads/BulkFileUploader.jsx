@@ -28,6 +28,7 @@ const BulkFileUploader = () => {
   const [flag, setFlag] = useState(null)
   const [commentType, setCommentType] = useState("selected")
   const [inputCommentText, setInputCommentText] = useState("")
+  const [apiLoading, setApiLoading] = useState("")
   useEffect(() => {
     dispatch(getAllComments())
   }, [dispatch])
@@ -50,39 +51,47 @@ const BulkFileUploader = () => {
       message: commentType === "input" ? inputCommentText : text,
       file: files,
     }
-    if (text !== "" && files?.length > 0) {
-      console.log('inside function')
+    if ((text !== "" || inputCommentText !== "") && files?.length > 0) {
+      setApiLoading("pending")
+      dispatch(createRemakWithFile(data))
+        .then((resp) => {
+          if (resp.meta.requestStatus === "fulfilled") {
+            notification.success({ message: "Remark added successfully" })
+            setFlag(true)
+            setApiLoading("success")
+            setFiles([])
+            setText("")
+            setInputCommentText("")
+            dispatch(getAllComments())
+          } else {
+            notification.error({ message: "Something went wrong" })
+            setApiLoading("error")
+          }
+        })
+        .catch(() => {
+          notification.error({ message: "Something went wrong" })
+          setApiLoading("error")
+        })
+    } else if (text !== "" || inputCommentText !== "") {
+      setApiLoading("pending")
       dispatch(createRemakWithFile(data))
         .then((resp) => {
           if (resp.meta.requestStatus === "fulfilled") {
             notification.success({ message: "Remark added successfully" })
             setFlag(true)
             setFiles([])
-            setText('')
+            setText("")
+            setInputCommentText("")
+            setApiLoading("success")
             dispatch(getAllComments())
           } else {
             notification.error({ message: "Something went wrong" })
+            setApiLoading("error")
           }
         })
         .catch(() => {
           notification.error({ message: "Something went wrong" })
-        })
-    } else if (text !== "") {
-      console.log('inside else')
-      dispatch(createRemakWithFile(data))
-        .then((resp) => {
-          if (resp.meta.requestStatus === "fulfilled") {
-            notification.success({ message: "Remark added successfully" })
-            setFlag(true)
-            setFiles([])
-            setText('')
-            dispatch(getAllComments())
-          } else {
-            notification.error({ message: "Something went wrong" })
-          }
-        })
-        .catch(() => {
-          notification.error({ message: "Something went wrong" })
+          setApiLoading("error")
         })
     } else {
       setFlag(false)
@@ -106,6 +115,7 @@ const BulkFileUploader = () => {
         <Input.TextArea
           style={{ width: "100%", margin: "12px 0px" }}
           size="large"
+          value={inputCommentText}
           placeholder="write comment here ..."
           autoSize={{ minRows: 1, maxRows: 2 }}
           onChange={(e) => setInputCommentText(e.target.value)}
@@ -152,7 +162,7 @@ const BulkFileUploader = () => {
       <div className="dragger-submit-btn">
         <Button
           type="primary"
-          loading={loading === "pending" ? true : false}
+          loading={apiLoading === "pending" ? true : false}
           onClick={onSubmit}
         >
           {" "}
