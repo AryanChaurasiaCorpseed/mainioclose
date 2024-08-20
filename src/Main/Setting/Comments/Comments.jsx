@@ -84,7 +84,7 @@ const Comments = () => {
       </div>
       <div className="mt-4 setting-table">
         <div className="table-responsive">
-          <CommonTable data={allComments} columns={columns} />
+          <CommonTable data={allComments} columns={columns} scroll={{y:500}} />
         </div>
       </div>
       <Modal
