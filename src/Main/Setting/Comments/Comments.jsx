@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react"
 import MainHeading from "../../../components/design/MainHeading"
-import { Button, Form, Input, Modal, Popconfirm } from "antd"
+import { Button, Form, Input, Modal, notification, Popconfirm } from "antd"
 import { useDispatch, useSelector } from "react-redux"
 import {
   createComments,
@@ -23,9 +23,35 @@ const Comments = () => {
   const handleFinish = (values) => {
     if (commentData !== "") {
       values.id = commentData?.id
-      dispatch(updateComments(values)).then(() => window.location.reload())
+      dispatch(updateComments(values))
+        .then((resp) => {
+          if (resp.meta.requestStatus === "fulfilled") {
+            notification.success({
+              message: "Comment updated successfully",
+            })
+            dispatch(getAllComments())
+          } else {
+            notification.error({ message: "Something went wrong !." })
+          }
+        })
+        .catch((err) => {
+          notification.error({ message: "Something went wrong !." })
+        })
     } else {
-      dispatch(createComments(values)).then(() => window.location.reload())
+      dispatch(createComments(values))
+        .then((resp) => {
+          if (resp.meta.requestStatus === "fulfilled") {
+            notification.success({
+              message: "Comment added successfully",
+            })
+            dispatch(getAllComments())
+          } else {
+            notification.error({ message: "Something went wrong !." })
+          }
+        })
+        .catch((err) => {
+          notification.error({ message: "Something went wrong !." })
+        })
     }
   }
   const editComments = (value) => {
@@ -62,9 +88,20 @@ const Comments = () => {
           okText="Yes"
           cancelText="No"
           onConfirm={() =>
-            dispatch(deleteComments(data?.id)).then(() =>
-              window.location.reload()
-            )
+            dispatch(deleteComments(data?.id))
+              .then((resp) => {
+                if (resp.meta.requestStatus === "fulfilled") {
+                  notification.success({
+                    message: "Comment deleted successfully",
+                  })
+                  dispatch(getAllComments())
+                } else {
+                  notification.error({ message: "Something went wrong !." })
+                }
+              })
+              .catch((err) => {
+                notification.error({ message: "Something went wrong !." })
+              })
           }
         >
           <Button size="small" type="text" danger>
@@ -84,7 +121,11 @@ const Comments = () => {
       </div>
       <div className="mt-4 setting-table">
         <div className="table-responsive">
-          <CommonTable data={allComments} columns={columns} scroll={{y:500}} />
+          <CommonTable
+            data={allComments}
+            columns={columns}
+            scroll={{ y: 500 }}
+          />
         </div>
       </div>
       <Modal
