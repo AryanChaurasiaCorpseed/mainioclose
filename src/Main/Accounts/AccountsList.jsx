@@ -1,5 +1,5 @@
 import { Tag, Tooltip, Typography } from "antd"
-import React, { useEffect, useState } from "react"
+import React, { useEffect } from "react"
 import CommonTable from "../../components/CommonTable"
 import "./Accounts.scss"
 import { useDispatch, useSelector } from "react-redux"
@@ -66,14 +66,12 @@ export const AccountsList = () => {
       render: (_, data) => (
         <Tooltip
           title={data?.lead?.map((item, idx) => (
-            <Tag>{item?.leadNameame}</Tag>
+            <Tag color="gray" key={`${idx}leads`}>{item?.leadNameame}</Tag>
           ))}
-          color="#fff"
         >
           <Tag className="lead-tag">{data?.lead?.[0]?.leadNameame}</Tag>
         </Tooltip>
       ),
-      // <Text>{data?.lead?.leadNameame}</Text>
     },
     {
       title: "Country",

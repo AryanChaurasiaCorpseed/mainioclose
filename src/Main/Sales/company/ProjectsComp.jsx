@@ -1,4 +1,4 @@
-import React, { lazy, Suspense, useEffect } from "react"
+import React, { lazy, Suspense } from "react"
 import TableOutlet from "../../../components/design/TableOutlet"
 import MainHeading from "../../../components/design/MainHeading"
 import SomethingWrong from "../../../components/usefulThings/SomethingWrong"
@@ -28,10 +28,12 @@ const ProjectsComp = () => {
     {
       dataIndex: "client",
       title: "Client",
+      render:(_,record)=><OverFlowText>{record?.client}</OverFlowText>
     },
     {
       dataIndex: "companyName",
       title: "Company name",
+      render:(_,record)=><OverFlowText>{record?.companyName}</OverFlowText>
     },
     {
       dataIndex: "product",

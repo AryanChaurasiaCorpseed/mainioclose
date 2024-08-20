@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-import { Link, useParams } from "react-router-dom"
+import { Link } from "react-router-dom"
 import CreateuserDashboard from "../../Model/CreateuserDashboard"
 import { deleteQuery } from "../../API/DeleteQuery"
 import {
@@ -23,11 +23,8 @@ const { Text } = Typography
 
 const DisplayDashboardUser = () => {
   const [userSuspand, setUserSuspand] = useState(false)
-  const [getId, setGetId] = useState("")
   const [userToggle, setUserToggle] = useState(false)
-  const [editType, setEditType] = useState(false)
   const dispatch = useDispatch()
-  const { userid } = useParams()
 
   const {
     allUsers: allMainUser,
@@ -48,24 +45,15 @@ const DisplayDashboardUser = () => {
   }, [dispatch])
 
   const deleteUser = async (id) => {
-    if (window.confirm("Are you sure to deActivate this User?") == true) {
+    if (window.confirm("Are you sure to deActivate this User?") === true) {
       try {
-        const suspandUser = await deleteQuery(
-          `/securityService/api/auth/deleteUser?userId=${id}`
-        )
-        const deleteUser = await deleteQuery(
-          `/leadService/api/v1/users/deleteUser?id=${id}`
-        )
+        await deleteQuery(`/securityService/api/auth/deleteUser?userId=${id}`)
+        await deleteQuery(`/leadService/api/v1/users/deleteUser?id=${id}`)
         setUserSuspand((prev) => !prev)
       } catch (err) {
         console.log(err)
       }
     }
-  }
-
-  const myNewId = (id) => {
-    setGetId(id)
-    setEditType(true)
   }
 
   const presentUserFun = async (id) => {
@@ -74,7 +62,7 @@ const DisplayDashboardUser = () => {
       currentUserId: 2,
     }
     if (window.confirm("Do you really want to Not Assign Any Lead To User?")) {
-      const toggleData = await dispatch(allActiveUserFun(activeRowData))
+      await dispatch(allActiveUserFun(activeRowData))
       setUserToggle((prev) => !prev)
     }
   }
@@ -114,14 +102,13 @@ const DisplayDashboardUser = () => {
           <>
             <Link to={`${props.id}/history`}>
               <Button>
-                <Icon icon="fluent:history-20-regular" /> History
+                <Icon icon="fluent:history-24-regular" /> History
               </Button>
             </Link>
           </>
         )
       },
     },
-
     {
       dataIndex: "autoActive",
       title: "Present",
@@ -139,7 +126,6 @@ const DisplayDashboardUser = () => {
         )
       },
     },
-
     {
       dataIndex: "Action",
       title: "Action",
@@ -148,7 +134,6 @@ const DisplayDashboardUser = () => {
           <>
             <CreateuserDashboard
               data={props}
-              type={editType}
               edit={true}
               modalText={"Edit user"}
             />
@@ -158,7 +143,7 @@ const DisplayDashboardUser = () => {
               danger
               onClick={() => deleteUser(props?.id)}
             >
-              <Icon icon="fluent:delete-20-regular" />
+              <Icon icon="fluent:delete-24-regular" />
             </Button>
           </>
         )
@@ -172,14 +157,10 @@ const DisplayDashboardUser = () => {
         <MainHeading data={`User list (${userCount})`} />
         <div className="all-center">
           <Space>
-            <Link to={`deactivateuser`}>
-              <Button type="primary">Deactivate Users</Button>
+            <Link to={`deactivateUser`}>
+              <Button type="primary">Deactivate users</Button>
             </Link>
-            <CreateuserDashboard
-              data={getId}
-              type={editType}
-              modalText={"Create user"}
-            />
+            <CreateuserDashboard modalText={"Create user"} />
           </Space>
         </div>
       </div>

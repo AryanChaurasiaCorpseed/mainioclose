@@ -33,11 +33,13 @@ const ProjectPage = () => {
       dataIndex: "client",
       title: "Client",
       fixed: "left",
+      render: (_, props) => <OverFlowText>{props?.client}</OverFlowText>,
     },
     {
       dataIndex: "leadNane",
       title: "Lead name",
       fixed: "left",
+      render: (_, props) => <OverFlowText>{props?.leadNane}</OverFlowText>,
     },
     {
       dataIndex: "projectName",

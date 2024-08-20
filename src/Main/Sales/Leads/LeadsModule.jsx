@@ -719,7 +719,7 @@ const LeadsModule = () => {
           <CommonTable
             data={allLeadsData?.reverse()}
             columns={columns}
-            scroll={{ y: 510, x: 2500 }}
+            scroll={{ y: 505, x: 2500 }}
             rowSelection={true}
             onRowSelection={onSelectChange}
             selectedRowKeys={selectedRowKeys}

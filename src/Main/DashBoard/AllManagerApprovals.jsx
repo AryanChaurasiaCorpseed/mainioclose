@@ -77,11 +77,6 @@ const AllManagerApprovals = () => {
         {userManagerError && <SomethingWrong />}
         {!userManagerError && (
           <Suspense fallback={<TableScalaton />}>
-            {/* <UserListComponent
-              tableName={""}
-              columns={columns}
-              row={hrApprovalUser}
-            /> */}
             <CommonTable
               data={hrApprovalUser}
               columns={columns}

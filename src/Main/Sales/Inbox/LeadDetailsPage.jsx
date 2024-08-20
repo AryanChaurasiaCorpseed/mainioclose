@@ -386,6 +386,7 @@ const LeadDetailsPage = () => {
               })
               getSingleLeadData()
               setOpenModal(false)
+              window.location.reload()
             } else {
               notification.error({
                 message: "Something went wrong",
@@ -408,6 +409,7 @@ const LeadDetailsPage = () => {
               })
               getSingleLeadData()
               setOpenModal(false)
+              window.location.reload()
             } else {
               notification.error({
                 message: "Something went wrong",
@@ -455,6 +457,7 @@ const LeadDetailsPage = () => {
               })
               dispatch(getAllTaskData(leadid))
               setOpenTaskModal(false)
+              window.location.reload()
             } else {
               notification.error({
                 message: "Something went wrong",
@@ -475,6 +478,7 @@ const LeadDetailsPage = () => {
               })
               dispatch(getAllTaskData(leadid))
               setOpenTaskModal(false)
+              window.location.reload()
             } else {
               notification.error({
                 message: "Something went wrong",
@@ -502,6 +506,7 @@ const LeadDetailsPage = () => {
             })
             getSingleLeadData()
             setOpenProductModal(false)
+            window.location.reload()
           } else {
             notification.error({
               message: "Something went wrong",
@@ -526,6 +531,7 @@ const LeadDetailsPage = () => {
           })
           playSuccessSound()
           getSingleLeadData()
+          window.location.reload()
         } else {
           notification.error({ message: "Something went wrong" })
           playErrorSound()
@@ -672,92 +678,92 @@ const LeadDetailsPage = () => {
         />
       ),
     },
-    {
-      key: "3",
-      label: "Product",
-      extra: (
-        <Button
-          size="small"
-          type="text"
-          onClick={(e) => {
-            e.stopPropagation()
-            setOpenProductModal(true)
-          }}
-        >
-          <Icon icon="fluent:add-20-regular" />
-        </Button>
-      ),
-      children: (
-        <List
-          dataSource={allProductsList}
-          renderItem={(item) => (
-            <List.Item key={item.email}>
-              <List.Item.Meta
-                title={item?.serviceName}
-                description={item?.name}
-              />
-              <Space>
-                <Popconfirm
-                  title="Delete the product"
-                  description="Are you sure to delete this product?"
-                  onConfirm={() =>
-                    dispatch(
-                      deleteProduct({
-                        serviceId: item.id,
-                        leadid: leadid,
-                        userid: userid,
-                      })
-                    )
-                  }
-                  okButtonProps={{ disabled: adminRole ? true : false }}
-                >
-                  <Button size="small" type="text" danger>
-                    <Icon icon="fluent:delete-20-regular" />
-                  </Button>
-                </Popconfirm>
-              </Space>
-            </List.Item>
-          )}
-        />
-      ),
-    },
-    {
-      key: "4",
-      label: "Estimate",
-      children: "",
-    },
-    {
-      key: "5",
-      label: "Opportunities",
-      children: (
-        <List
-          dataSource={allOportunities}
-          renderItem={(item) => (
-            <List.Item key={item.email}>
-              <List.Item.Meta
-                title={"BIS Registration"}
-                description={
-                  <Space direction="vertical">
-                    <Text type="secondary">{item?.description}</Text>
-                    <Text>{item?.estimateClose}</Text>
-                  </Space>
-                }
-              />
-              <Space>
-                <Popconfirm
-                  title="Delete the product"
-                  description="Are you sure to delete this product?"
-                >
-                  <Button size="small" type="text" danger>
-                    <Icon icon="fluent:delete-20-regular" />
-                  </Button>
-                </Popconfirm>
-              </Space>
-            </List.Item>
-          )}
-        />
-      ),
-    },
+    // {
+    //   key: "3",
+    //   label: "Product",
+    //   extra: (
+    //     <Button
+    //       size="small"
+    //       type="text"
+    //       onClick={(e) => {
+    //         e.stopPropagation()
+    //         setOpenProductModal(true)
+    //       }}
+    //     >
+    //       <Icon icon="fluent:add-20-regular" />
+    //     </Button>
+    //   ),
+    //   children: (
+    //     <List
+    //       dataSource={allProductsList}
+    //       renderItem={(item) => (
+    //         <List.Item key={item.email}>
+    //           <List.Item.Meta
+    //             title={item?.serviceName}
+    //             description={item?.name}
+    //           />
+    //           <Space>
+    //             <Popconfirm
+    //               title="Delete the product"
+    //               description="Are you sure to delete this product?"
+    //               onConfirm={() =>
+    //                 dispatch(
+    //                   deleteProduct({
+    //                     serviceId: item.id,
+    //                     leadid: leadid,
+    //                     userid: userid,
+    //                   })
+    //                 )
+    //               }
+    //               okButtonProps={{ disabled: adminRole ? true : false }}
+    //             >
+    //               <Button size="small" type="text" danger>
+    //                 <Icon icon="fluent:delete-20-regular" />
+    //               </Button>
+    //             </Popconfirm>
+    //           </Space>
+    //         </List.Item>
+    //       )}
+    //     />
+    //   ),
+    // },
+    // {
+    //   key: "4",
+    //   label: "Estimate",
+    //   children: "",
+    // },
+    // {
+    //   key: "5",
+    //   label: "Opportunities",
+    //   children: (
+    //     <List
+    //       dataSource={allOportunities}
+    //       renderItem={(item) => (
+    //         <List.Item key={item.email}>
+    //           <List.Item.Meta
+    //             title={"BIS Registration"}
+    //             description={
+    //               <Space direction="vertical">
+    //                 <Text type="secondary">{item?.description}</Text>
+    //                 <Text>{item?.estimateClose}</Text>
+    //               </Space>
+    //             }
+    //           />
+    //           <Space>
+    //             <Popconfirm
+    //               title="Delete the product"
+    //               description="Are you sure to delete this product?"
+    //             >
+    //               <Button size="small" type="text" danger>
+    //                 <Icon icon="fluent:delete-20-regular" />
+    //               </Button>
+    //             </Popconfirm>
+    //           </Space>
+    //         </List.Item>
+    //       )}
+    //     />
+    //   ),
+    // },
   ]
 
   return (
@@ -851,7 +857,7 @@ const LeadDetailsPage = () => {
                   placeholder="select the slug"
                   options={slugList?.map((item) => ({
                     label: item?.name,
-                    value: item?.id,
+                    value: item?.name,
                   }))}
                   onChange={(e) => setUpdatedLeadName(e)}
                   filterOption={(input, option) =>

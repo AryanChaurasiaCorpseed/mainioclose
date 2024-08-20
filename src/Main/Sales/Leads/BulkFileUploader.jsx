@@ -20,7 +20,6 @@ const { Text } = Typography
 
 const BulkFileUploader = () => {
   const dispatch = useDispatch()
-  const loading = useSelector((state) => state.leads.remarkLoading)
   const allComments = useSelector((state) => state.rating.allComments)
   const { userid, leadid } = useParams()
   const [files, setFiles] = useState([])
@@ -63,6 +62,7 @@ const BulkFileUploader = () => {
             setText("")
             setInputCommentText("")
             dispatch(getAllComments())
+            window.location.reload()
           } else {
             notification.error({ message: "Something went wrong" })
             setApiLoading("error")
@@ -84,6 +84,7 @@ const BulkFileUploader = () => {
             setInputCommentText("")
             setApiLoading("success")
             dispatch(getAllComments())
+            window.location.reload()
           } else {
             notification.error({ message: "Something went wrong" })
             setApiLoading("error")
