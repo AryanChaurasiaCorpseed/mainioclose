@@ -386,6 +386,7 @@ const LeadDetailsPage = () => {
               })
               getSingleLeadData()
               setOpenModal(false)
+              form1.resetFields()
               window.location.reload()
             } else {
               notification.error({
@@ -409,6 +410,7 @@ const LeadDetailsPage = () => {
               })
               getSingleLeadData()
               setOpenModal(false)
+              form1.resetFields()
               window.location.reload()
             } else {
               notification.error({
@@ -457,6 +459,7 @@ const LeadDetailsPage = () => {
               })
               dispatch(getAllTaskData(leadid))
               setOpenTaskModal(false)
+              form2.resetFields()
               window.location.reload()
             } else {
               notification.error({
@@ -478,6 +481,7 @@ const LeadDetailsPage = () => {
               })
               dispatch(getAllTaskData(leadid))
               setOpenTaskModal(false)
+              form2.resetFields()
               window.location.reload()
             } else {
               notification.error({
