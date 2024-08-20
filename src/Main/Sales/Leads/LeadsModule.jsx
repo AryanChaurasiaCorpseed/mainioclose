@@ -717,7 +717,7 @@ const LeadsModule = () => {
       <div className="table-arrow">
         <Suspense fallback={<TableScalaton />}>
           <CommonTable
-            data={allLeadsData?.reverse()}
+            data={allLeadsData}
             columns={columns}
             scroll={{ y: 505, x: 2500 }}
             rowSelection={true}
