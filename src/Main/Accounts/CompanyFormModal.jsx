@@ -296,13 +296,13 @@ const CompanyFormModal = ({
             } else {
               setFormLoading("rejected")
               playErrorSound()
-              notification.error({ message: "Something went wrong" })
+              notification.error({ message: "Something went wrong !." })
             }
           })
           .catch(() => {
             setFormLoading("rejected")
             playErrorSound()
-            notification.error({ message: "Something went wrong" })
+            notification.error({ message: "Something went wrong !." })
           })
       } else {
         const formData = form.getFieldsValue(["companyId", "companyName"])
@@ -326,13 +326,13 @@ const CompanyFormModal = ({
             } else {
               setFormLoading("rejected")
               playErrorSound()
-              notification.error({ message: "Something went wrong" })
+              notification.error({ message: "Something went wrong !." })
             }
           })
           .catch(() => {
             setFormLoading("rejected")
             playErrorSound()
-            notification.error({ message: "Something went wrong" })
+            notification.error({ message: "Something went wrong !." })
           })
       }
     },
@@ -355,7 +355,7 @@ const CompanyFormModal = ({
           <Icon icon="fluent:edit-24-regular" />
         </Button>
       ) : detailView ? (
-        <Button onClick={handleButtonClick}>
+        <Button size="small" onClick={handleButtonClick}>
           <Icon
             icon="fluent:add-24-filled"
             height={18}

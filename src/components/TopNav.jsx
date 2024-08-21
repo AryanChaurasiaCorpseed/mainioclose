@@ -15,9 +15,7 @@ const TopNav = () => {
     <div className="top-navbar">
       <div className="top-search-box"></div>
       <div className="top-nav-right-container">
-        <div className="notes-box">
-          <EnquirySend />
-        </div>
+        <EnquirySend />
         <ProfileDrawer />
       </div>
     </div>

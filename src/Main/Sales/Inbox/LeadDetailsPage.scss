@@ -105,6 +105,14 @@
   gap: 5px;
 }
 
+.btn-view-container{
+  width: 100%;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
 .lead-filter-above {
   padding: 5px;
   .filter-box {

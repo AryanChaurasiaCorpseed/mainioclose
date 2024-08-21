@@ -1,117 +1,77 @@
-import React, { useRef } from "react"
-import "./EnquirySend.scss"
+import React, { useCallback } from "react"
 import { useState } from "react"
-import { postQuery } from "../API/PostQuery"
-import { toast } from "react-toastify"
-import "react-toastify/dist/ReactToastify.css"
-import FirstInput from "./Inputs/FirstInput"
-import InputErrorComponent from "./InputErrorComponent"
 import { useDispatch, useSelector } from "react-redux"
 import { getAllTickets } from "../Toolkit/Slices/TicketSlice"
-toast.configure()
+import { Button, Form, Input, notification, Popover } from "antd"
+import { Icon } from "@iconify/react"
+import { createTicket } from "../Toolkit/Slices/LeadSlice"
+import { BTN_ICON_HEIGHT, BTN_ICON_WIDTH } from "./Constants"
 
 const EnquirySend = () => {
-  const dispatch=useDispatch()
-  const [openTab, setOpenTab] = useState(false)
-  const [loading, setLoading] = useState(false)
+  const dispatch = useDispatch()
+  const [openModal, setOpenModal] = useState(false)
+  const currentUserId = useSelector((state) => state?.auth?.currentUser?.id)
 
-  const currentUserId = useSelector(
-    (state) => state?.auth?.currentUser?.id
+  const handleSubmit = useCallback(
+    (values) => {
+      values.userId = currentUserId
+      dispatch(createTicket(values))
+        .then((resp) => {
+          if (resp.meta.requestStatus === "fulfilled") {
+            notification.success({ message: "Ticket submitted successfully" })
+            setOpenModal(false)
+            dispatch(getAllTickets(currentUserId))
+          } else {
+            notification.error({ message: "Something went wrong !." })
+          }
+        })
+        .catch(() => {
+          notification.error({ message: "Something went wrong !." })
+        })
+    },
+    [currentUserId, dispatch]
   )
 
-  const [EnquiryTicketData, setEnquiryTicketData] = useState({
-    userId: currentUserId,
-    description: "",
-    subject: "",
-  })
-
-  const [subError, setSubError] = useState(false)
-
-  const subjectRef = useRef()
-  const descriptionRef = useRef()
-
-  const ticketInfo = (e) => {
-    setEnquiryTicketData((prev) => ({
-      ...prev,
-      [e.target.name]: e.target.value,
-    }))
-  }
-
-  const submitTicketFun = (e) => {
-    e.preventDefault()
-    if (subjectRef.current.value === "") {
-      setSubError(true)
-      return
-    }
-
-    const submitTicketData = async () => {
-      setLoading(true)
-      try {
-        const ticket = await postQuery(
-          `/leadService/api/v1/createTicket`,
-          EnquiryTicketData
-        )
-        toast.success("Message Submit Sucessfully...")
-        subjectRef.current.value = ""
-        descriptionRef.current.value = ""
-        setLoading(false)
-        setOpenTab(false)
-        dispatch(getAllTickets(currentUserId))
-      } catch (err) {
-        if (err.response.status === 500) {
-          toast.error("Something Went Wrong...")
-        }
-        setLoading(false)
-      }
-    }
-    submitTicketData()
-  }
-
   return (
-    <div>
-      <div className="enquiry">
-        <p className="m-0" onClick={() => setOpenTab((prev) => !prev)}>
-          <i className="fa-regular fa-circle-question"></i>
-        </p>
-        {openTab ? (
-          <form>
-            <div className="enq-tab">
-              <p className="my-2 lead-heading enq-title">
-                Get in touch by filling out the form below
-              </p>
-              <FirstInput
-                className="enq-subject hide-design-box font-changer my-2"
-                type="text"
-                placeholder="Write subject Here..."
-                name="subject"
-                ref={subjectRef}
-                onChange={(e) => ticketInfo(e)}
-              />
-              <textarea
-                className="enq-message  hide-design-box font-changer "
-                placeholder="Write Message here..."
-                name="description"
-                ref={descriptionRef}
-                onChange={(e) => ticketInfo(e)}
-              ></textarea>
-              {subError ? (
-                <InputErrorComponent value="Subject Can't be Blank" />
-              ) : (
-                ""
-              )}
-              <button
-                className="action-btn"
-                onClick={(e) => submitTicketFun(e)}
-              >
-                {loading ? "Loading" : "Send"}
-              </button>
-            </div>
-          </form>
-        ) : (
-          ""
-        )}
-      </div>
-    </div>
+    <Popover
+      title="Raise ticket"
+      trigger={["click"]}
+      placement="topLeft"
+      overlayStyle={{ width: "400px" }}
+      open={openModal}
+      onOpenChange={(e) => setOpenModal(e)}
+      content={
+        <Form layout="vertical" onFinish={handleSubmit}>
+          <Form.Item
+            label="Subject for"
+            name="subject"
+            rules={[{ required: true, message: "please write subject" }]}
+          >
+            <Input placeholder="Write subject Here..." />
+          </Form.Item>
+          <Form.Item
+            label="Message"
+            name="description"
+            rules={[{ required: true, message: "please write message" }]}
+          >
+            <Input.TextArea placeholder="Write Message here..." />
+          </Form.Item>
+          <Form.Item>
+            <Button type="primary" htmlType="submit">
+              Submit
+            </Button>
+          </Form.Item>
+        </Form>
+      }
+    >
+      <Button size="small" type="text" onClick={() => setOpenModal(true)}>
+        <Icon
+          icon="fluent:question-circle-24-regular"
+          height={BTN_ICON_HEIGHT}
+          width={BTN_ICON_WIDTH}
+        />
+      </Button>
+    </Popover>
   )
 }
 

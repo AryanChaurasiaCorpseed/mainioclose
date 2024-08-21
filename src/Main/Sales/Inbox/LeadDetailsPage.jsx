@@ -74,14 +74,22 @@ const LeadDetailsPage = () => {
   const fileRef = useRef()
   const currentUserRoles = useSelector((state) => state?.auth?.roles)
   const { allLeadUrl } = useSelector((prev) => prev?.leadurls)
-  const allTaskStatusData = useSelector((state) => state.leads.allTaskStatusData)
+  const allTaskStatusData = useSelector(
+    (state) => state.leads.allTaskStatusData
+  )
   const allOportunities = useSelector((state) => state.leads.allOportunities)
   const allProductData = useSelector((state) => state.leads.allProductData)
-  const getSingleLeadTask = useSelector((state) => state.leads.getSingleLeadTask)
-  const userDataResponse = useSelector((state) => state.leads.getAllLeadUserData)
+  const getSingleLeadTask = useSelector(
+    (state) => state.leads.getSingleLeadTask
+  )
+  const userDataResponse = useSelector(
+    (state) => state.leads.getAllLeadUserData
+  )
   const categoryData = useSelector((state) => state.leads.categoryData)
   const getAllStatus = useSelector((state) => state.leads.getAllStatus)
-  const singleLeadResponseData = useSelector((state) => state.leads.singleLeadResponseData)
+  const singleLeadResponseData = useSelector(
+    (state) => state.leads.singleLeadResponseData
+  )
   const allProductsList = useSelector((state) => state.leads.allProductsList)
   const clientsContact = useSelector((state) => state.leads.clientsContact)
   const slugList = useSelector((state) => state.leadslug.slugList)
@@ -101,7 +109,6 @@ const LeadDetailsPage = () => {
   const [updateOriginalName, setUpdateOriginalName] = useState(false)
   const [updatedLeadName, setUpdatedLeadName] = useState("")
 
-
   useEffect(() => {
     dispatch(getAllSlugList())
   }, [dispatch])
@@ -120,10 +127,9 @@ const LeadDetailsPage = () => {
     currentUserId: userid,
   })
 
-  
   const getSingleLeadData = useCallback(() => {
     dispatch(getSingleLeadDataByLeadID(leadid))
-  }, [leadid,dispatch])
+  }, [leadid, dispatch])
 
   const updateOriginalNameFun = useCallback(() => {
     dispatch(updateOriginalNameInLeads(originalData))
@@ -145,8 +151,7 @@ const LeadDetailsPage = () => {
           message: "Something went wrong",
         })
       })
-  }, [originalData,dispatch,getSingleLeadData])
-
+  }, [originalData, dispatch, getSingleLeadData])
 
   const leadNotesData = async (id) => {
     try {
@@ -175,8 +180,7 @@ const LeadDetailsPage = () => {
     dispatch(editViewData(leadid))
     dispatch(getAllStatusData())
     dispatch(getAllTaskData(leadid))
-  }, [dispatch, leadid,userid])
-
+  }, [dispatch, leadid, userid])
 
   const adminRole = currentUserRoles.includes("ADMIN")
   const NotesRef = useRef()
@@ -192,7 +196,6 @@ const LeadDetailsPage = () => {
     setRemarkMessage((prev) => ({ ...prev, [e.target.name]: e.target.value }))
   }
 
- 
   const changeLeadStatusFun = (statusId) => {
     dispatch(changeLeadStatus({ leadid, userid, statusId }))
       .then((resp) => {
@@ -241,10 +244,9 @@ const LeadDetailsPage = () => {
     createNewRemark()
   }
 
-
   useEffect(() => {
     getSingleLeadData()
-  }, [updateAssignee, updateOriginalName,getSingleLeadData])
+  }, [updateAssignee, updateOriginalName, getSingleLeadData])
 
   const updateLeadNameSinglePage = useCallback(
     (e) => {
@@ -268,7 +270,7 @@ const LeadDetailsPage = () => {
           })
         })
     },
-    [updatedLeadName, leadid, userid, dispatch,getSingleLeadData]
+    [updatedLeadName, leadid, userid, dispatch, getSingleLeadData]
   )
 
   const changeLeadAssignee = async (id) => {
@@ -319,7 +321,7 @@ const LeadDetailsPage = () => {
           })
         })
     },
-    [leadid, userid, dispatch,getSingleLeadData]
+    [leadid, userid, dispatch, getSingleLeadData]
   )
 
   const openImageInNewTab = (imageUrl) => {
@@ -370,7 +372,7 @@ const LeadDetailsPage = () => {
     })
     setContactData(value)
     setOpenModal(true)
-  } 
+  }
 
   const handleSubmitContact = useCallback(
     (values) => {
@@ -426,7 +428,7 @@ const LeadDetailsPage = () => {
         setContactData(null)
       }
     },
-    [userid, leadid, contactData, dispatch,getSingleLeadData]
+    [userid, leadid, contactData, dispatch, getSingleLeadData]
   )
 
   const updateTaskData = (task) => {
@@ -523,7 +525,7 @@ const LeadDetailsPage = () => {
           })
         })
     },
-    [leadid, dispatch,getSingleLeadData]
+    [leadid, dispatch, getSingleLeadData]
   )
 
   const leadAssignedToSame = (id) => {
@@ -785,6 +787,7 @@ const LeadDetailsPage = () => {
             {updateOriginalName ? (
               <div className="comp-container">
                 <Select
+                  size="small"
                   className="comp-component-1"
                   placeholder="select urls"
                   options={allLeadUrl?.map((item) => ({
@@ -804,11 +807,15 @@ const LeadDetailsPage = () => {
                 <Space className="comp-component-2">
                   <Button
                     type="primary"
+                    size="small"
                     onClick={(e) => updateOriginalNameFun(e)}
                   >
                     Save
                   </Button>
-                  <Button onClick={() => setUpdateOriginalName(false)}>
+                  <Button
+                    size="small"
+                    onClick={() => setUpdateOriginalName(false)}
+                  >
                     Cancel
                   </Button>
                 </Space>
@@ -817,9 +824,19 @@ const LeadDetailsPage = () => {
               <div className="comp-container">
                 <div className="flex-vert-hori-center">
                   {singleLeadResponseData?.originalName ? (
-                    <Icon icon="fluent:circle-20-filled" color="red" />
+                    <Icon
+                      icon="fluent:circle-20-filled"
+                      height={12}
+                      width={12}
+                      color="red"
+                    />
                   ) : (
-                    <Icon icon="fluent:circle-20-filled" color="green" />
+                    <Icon
+                      icon="fluent:circle-20-filled"
+                      height={12}
+                      width={12}
+                      color="green"
+                    />
                   )}
                   <Text className="heading-text">
                     {singleLeadResponseData?.originalName
@@ -857,6 +874,7 @@ const LeadDetailsPage = () => {
                 <Select
                   showSearch
                   allowClear
+                  size="small"
                   className="comp-component-1"
                   placeholder="select the slug"
                   options={slugList?.map((item) => ({
@@ -871,11 +889,15 @@ const LeadDetailsPage = () => {
                 <Space className="comp-component-2">
                   <Button
                     type="primary"
+                    size="small"
                     onClick={(e) => updateLeadNameSinglePage(e)}
                   >
                     Save
                   </Button>
-                  <Button onClick={() => setUpdateLeadNameToggle(true)}>
+                  <Button
+                    size="small"
+                    onClick={() => setUpdateLeadNameToggle(true)}
+                  >
                     Cancel
                   </Button>
                 </Space>
@@ -924,7 +946,7 @@ const LeadDetailsPage = () => {
               </Button>
             </Space>
             <Divider style={{ margin: "6px" }} />
-            <Space>
+            <div className="btn-view-container">
               <CompanyFormModal
                 detailView={true}
                 data={singleLeadResponseData}
@@ -932,7 +954,7 @@ const LeadDetailsPage = () => {
               <Button onClick={() => leadAssignedToSame(leadid)}>
                 Assign to same person{" "}
               </Button>
-            </Space>
+            </div>
 
             <Divider style={{ margin: "6px" }} />
             <Collapse

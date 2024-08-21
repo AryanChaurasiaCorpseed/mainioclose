@@ -81,27 +81,42 @@ function App() {
             actionsLiMargin: 6,
           },
           Typography: {
-            fontSize: 13,
+            fontSize: 12,
           },
           Button: {
             contentFontSize: 13,
             contentFontSizeSM: 12,
+            borderRadius:4,
+            borderRadiusLG:4,
+            borderRadiusSM:4,
+            controlHeightSM:28,
+            paddingInlineSM:10
           },
           Popconfirm: {
             fontSize: 13,
           },
           Select: {
-            fontSize: 13,
+            fontSize: 12,
+            optionFontSize:12,
+            optionHeight:28,
+            controlHeightSM:28,
+            borderRadius:4,
+            borderRadiusSM:4
           },
           Divider: {
             colorSplit: "#D3D3D3",
             margin: 4,
           },
           Table: {
-            fontSize: 13,
             colorText: "#2e2e2e",
             headerColor: "#222222",
             fontWeightStrong: 600,
+            cellFontSize:12,
+            cellFontSizeMD:12,
+            cellFontSizeSM:12,
+            cellPaddingBlock:12,
+            cellPaddingInline:12
+
           },
           Tabs: {
             // cardBg:'#cccccc',

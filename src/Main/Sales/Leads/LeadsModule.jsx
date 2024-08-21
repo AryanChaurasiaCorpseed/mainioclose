@@ -358,6 +358,7 @@ const LeadsModule = () => {
       render: (_, data) => (
         <Select
           showSearch
+          size="small"
           style={{ width: "100%" }}
           value={data?.assignee?.id}
           placeholder="select assignee"
@@ -383,6 +384,7 @@ const LeadsModule = () => {
             render: (_, data) => (
               <Select
                 showSearch
+                size="small"
                 value={data?.helper ? data?.helpUser?.id : ""}
                 style={{ width: "100%" }}
                 options={
@@ -406,9 +408,7 @@ const LeadsModule = () => {
             dataIndex: "createdBy",
             checked: true,
             render: (_, data) => (
-              <OverFlowText>
-                {data?.createdBy?.fullName ? data?.createdBy?.fullName : "NA"}
-              </OverFlowText>
+              <OverFlowText>{data?.createdBy?.fullName}</OverFlowText>
             ),
           },
           {
@@ -431,7 +431,7 @@ const LeadsModule = () => {
             title: "Lead Assigned",
             dataIndex: "assignedSame",
             render: (_, data) => (
-              <Button onClick={() => leadAssignedToSame(data?.id)}>
+              <Button size="small" onClick={() => leadAssignedToSame(data?.id)}>
                 To same{" "}
               </Button>
             ),
@@ -719,7 +719,7 @@ const LeadsModule = () => {
           <CommonTable
             data={allLeadsData}
             columns={columns}
-            scroll={{ y: 505, x: 2500 }}
+            scroll={{ y: 505, x: adminRole ? 2500 : 1500 }}
             rowSelection={true}
             onRowSelection={onSelectChange}
             selectedRowKeys={selectedRowKeys}

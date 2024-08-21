@@ -2,7 +2,7 @@ import React, { useEffect } from "react"
 import { useParams } from "react-router-dom"
 import UserLeadComponent from "../../../Tables/UserLeadComponent"
 import { useDispatch, useSelector } from "react-redux"
-import { updateNotification } from "../../../Toolkit/Slices/NotificationSlice"
+import { getAllNotification, updateNotification } from "../../../Toolkit/Slices/NotificationSlice"
 import MainHeading from "../../../components/design/MainHeading"
 
 const AllNotificationPage = () => {
@@ -21,9 +21,9 @@ const AllNotificationPage = () => {
   //   getNotiFun()
   // }, [])
 
-  // useEffect(() => {
-  //   dispatch(getNotificationFun(userid))
-  // }, [])
+  useEffect(() => {
+    dispatch(getAllNotification(userid))
+  }, [userid,dispatch])
 
   // const getNotiFun = async () => {
   //   try {

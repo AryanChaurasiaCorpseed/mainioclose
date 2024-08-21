@@ -2,22 +2,17 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit"
 import { getQuery } from "../../API/GetQuery"
 import { putQueryNoData } from "../../API/PutQueryWithoutData"
 
-export const getNotificationFun = createAsyncThunk(
-  "allNotificatons",
-  async (userid) => {
-    const allNotification = await getQuery(
-      `/leadService/api/v1/notification/getAllNotification?userId=${userid}`
-    )
-    return allNotification?.data?.reverse()
-  }
-)
-
 
 export const updateNotification = createAsyncThunk("updateNotifications", async (userid) => {
   const markNotification = await putQueryNoData(
     `/leadService/api/v1/notification/viewNotification?userId=${userid}`
   )
   return markNotification
+})
+
+export const getAllNotification= createAsyncThunk('getAllNotifiction',async(id)=>{
+  const response = await getQuery(`/leadService/api/v1/notification/getAllNotification?userId=${id}`)
+  return response.data
 })
 
 
@@ -42,13 +37,13 @@ export const NotificationSlice = createSlice({
     })
 
 
-    builder.addCase(getNotificationFun.pending, (state, action) => {
+    builder.addCase(getAllNotification.pending, (state, action) => {
       state.NotificationLoading = true
     })
-    builder.addCase(getNotificationFun.fulfilled, (state, action) => {
+    builder.addCase(getAllNotification.fulfilled, (state, action) => {
       state.allNotifications = action.payload
     })
-    builder.addCase(getNotificationFun.rejected, (state, action) => {
+    builder.addCase(getAllNotification.rejected, (state, action) => {
       state.NotificationLoading = true
     })
   },

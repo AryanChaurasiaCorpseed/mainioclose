@@ -430,6 +430,11 @@ export const getSingleLeadDataByLeadID = createAsyncThunk(
   }
 )
 
+export const createTicket=createAsyncThunk('createTicket',async(data)=>{
+  const response = await postQuery(`/leadService/api/v1/createTicket`,data)
+  return response.data
+})
+
 export const LeadSlice = createSlice({
   name: "lead",
   initialState: {
