@@ -73,7 +73,9 @@ const CompanyFormModal = ({
   }
 
   const handleButtonClick = useCallback(() => {
-    dispatch(getCompanyDetailsByLeadId(data?.id)).then((resp) => {
+    dispatch(
+      getCompanyDetailsByLeadId(data?.id ? data?.id : data?.leadId)
+    ).then((resp) => {
       if (resp.meta.requestStatus === "fulfilled") {
         if (Object.keys(resp.payload)?.length > 0) {
           if (resp.payload.assignee?.id != userid) {
@@ -304,7 +306,7 @@ const CompanyFormModal = ({
           })
       } else {
         const formData = form.getFieldsValue(["companyId", "companyName"])
-        values.leadId = data?.id
+        values.leadId = data?.id ? data?.id : data?.leadId
         if (Object.keys(companyDetails)?.length > 0) {
           values.isPresent = true
         } else {
