@@ -174,7 +174,6 @@ const CompanyFormModal = ({
         new Error("please enter 16 digit alphanumeric characters")
       )
     }
-
     try {
       const resp = await dispatch(getCompanyDetailsByGst(value))
       if (resp.meta.requestStatus === "fulfilled") {
@@ -194,7 +193,7 @@ const CompanyFormModal = ({
     }
   }
 
-  const normFile = (e) => {
+  const normFile = (e) => { 
     if (Array.isArray(e)) {
       return e
     }

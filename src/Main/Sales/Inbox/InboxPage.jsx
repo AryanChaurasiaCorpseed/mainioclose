@@ -5,113 +5,69 @@ import axios from "axios"
 import TableScalaton from "../../../components/TableScalaton"
 import UserLeadComponent from "../../../Tables/UserLeadComponent"
 import MainHeading from "../../../components/design/MainHeading"
+import CommonTable from "../../../components/CommonTable"
+import { useDispatch, useSelector } from "react-redux"
+import { getAllNotification } from "../../../Toolkit/Slices/NotificationSlice"
 
 const InboxPage = () => {
-  const [activeTab, setActiveTab] = useState(false)
-  const [allLeadData, setAllLeadData] = useState([])
-  const [inboxScalaton, setInboxScalaton] = useState(true)
+  const { userid } = useParams()
+  const dispatch = useDispatch()
+  const allNotifications = useSelector((state) => state.notify.allNotifications)
 
   useEffect(() => {
-    getAllLead()
-  }, [])
+    dispatch(getAllNotification(userid))
+  }, [dispatch, userid])
 
-  const {userid} = useParams()
-  
-  const location = useLocation()
-  const currentPath = location.pathname.split()
-  const splitPath = currentPath[0].split("/")
-  const currentUserId = Number(splitPath[2])
-
-  const leadColumns = [
+  const columns = [
     {
-      name: "name",
-      label: "Name",
-      options: {
-        filter: true,
-        sort: true,
+      dataIndex: "id",
+      title: "S.No",
+      width: 60,
+      render: (_, props) => {
+        return <p className="mb-0">{props?.id}</p>
       },
     },
     {
-      name: "comment",
-      label: "Comment",
-      options: {
-        filter: true,
-        sort: true,
+      dataIndex: "message",
+      title: "Message",
+      render: (_, props) => {
+        const notify = props?.view
+        return (
+          <p className={`mb-0 ${!notify ? "noti-view" : ""}`}>
+            {props?.message}
+          </p>
+        )
       },
     },
     {
-      name: "count",
-      label: "Count",
-      options: {
-        filter: true,
-        sort: true,
+      dataIndex: "notifyDate",
+      title: "Date",
+      render: (_, props) => {
+        const data = props?.notifyDate
+        return data === null || undefined ? (
+          "NA"
+        ) : (
+          <p>
+            {new Date(props.notifyDate).toLocaleDateString()} -{" "}
+            {new Date(props.notifyDate).getHours()}:
+            {new Date(props.notifyDate).getMinutes()}
+          </p>
+        )
       },
     },
   ]
-
-  const inboxColumn = [
-    { field: "name", headerName: "Name", width: 250 },
-    { field: "comment", headerName: "Comment", width: 550 },
-    { field: "count", headerName: "Count", width: 150 },
-  ]
-
-  // const columns = [
-  //   { field: "leadId", headerName: "ID", width: 150 },
-  //   { field: "name", headerName: "Name", width: 150 },
-  //   { field: "comment", headerName: "Comment", width: 150 },
-  //   { field: "count", headerName: "Count", width: 150 },
-  // ]
-
-  const filterOptions = {
-    filterType: "checkbox",
-  }
-
-  const getAllLead = async () => {
-    try {
-      const allLead = await axios.get(
-        `/leadService/api/v1/inbox/getAllInboxData?userId=${userid}`,
-        {
-          headers: {
-            "Access-Control-Allow-Origin": "*",
-            "Content-Type": "application/json",
-          },
-        }
-      )
-
-      setAllLeadData(allLead.data)
-      setInboxScalaton(false)
-    } catch (err) {
-      console.log(err)
-    }
-  }
 
   return (
     <div className="inbox-page cm-padding-one">
       <div className="pb-3">
-      <MainHeading data={`Inbox`} />
-      </div>
-      <div className="inbox-top-btn">
-        <button to="/sales" className={`tab-btn `}>
-          Inbox
-        </button>
-        <button to="/sales2" className={`tab-btn `}>
-          Done (25)
-        </button>
-        <button to="/sales3" className={`tab-btn `}>
-          Failure (45)
-        </button>
+        <MainHeading data={`Inbox`} />
       </div>
 
-    
-      {inboxScalaton ? (
-        <TableScalaton />
-      ) : (
-        <UserLeadComponent
-          columns={inboxColumn}
-          getRowId={(row) => row.leadId}
-          row={allLeadData}
-        />
-      )}
+      <CommonTable
+        data={allNotifications}
+        columns={columns}
+        scroll={{ y: 550 }}
+      />
     </div>
   )
 }

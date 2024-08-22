@@ -122,13 +122,13 @@ const LeadsModule = () => {
           setSelectedRowKeys([])
         } else {
           setLeadDelLoading("rejected")
-          notification.error({ message: "Something went wrong" })
+          notification.error({ message: "Something went wrong !." })
           playErrorSound()
         }
       })
       .catch(() => {
         setLeadDelLoading("rejected")
-        notification.error({ message: "Something went wrong" })
+        notification.error({ message: "Something went wrong !." })
         playErrorSound()
       })
   }, [selectedRowKeys, userid, dispatch, allMultiFilterData])
@@ -147,6 +147,7 @@ const LeadsModule = () => {
     "Mobile no.": row?.mobileNo,
     "Assignee person": row?.assignee?.fullName,
     "Created by": row?.createdBy?.fullName,
+    Helper: row?.helpUser?.fullName,
     Date: row?.createDate,
     Source: row?.source,
   }))
@@ -164,12 +165,12 @@ const LeadsModule = () => {
             playSuccessSound()
             dispatch(getAllLeads(allMultiFilterData))
           } else {
-            notification.error({ message: "Something went wrong" })
+            notification.error({ message: "Something went wrong !." })
             playErrorSound()
           }
         })
         .catch(() => {
-          notification.error({ message: "Something went wrong" })
+          notification.error({ message: "Something went wrong !." })
           playErrorSound()
         })
     },
@@ -192,12 +193,12 @@ const LeadsModule = () => {
             playSuccessSound()
             dispatch(getAllLeads(allMultiFilterData))
           } else {
-            notification.error({ message: "Something went wrong" })
+            notification.error({ message: "Something went wrong !." })
             playErrorSound()
           }
         })
         .catch(() => {
-          notification.error({ message: "Something went wrong" })
+          notification.error({ message: "Something went wrong !." })
           playErrorSound()
         })
     },
@@ -217,12 +218,12 @@ const LeadsModule = () => {
             playSuccessSound()
             dispatch(getAllLeads(allMultiFilterData))
           } else {
-            notification.error({ message: "Something went wrong" })
+            notification.error({ message: "Something went wrong !." })
             playErrorSound()
           }
         })
         .catch(() => {
-          notification.error({ message: "Something went wrong" })
+          notification.error({ message: "Something went wrong !." })
           playErrorSound()
         })
     },
@@ -239,12 +240,12 @@ const LeadsModule = () => {
           playSuccessSound()
           dispatch(getAllLeads(allMultiFilterData))
         } else {
-          notification.error({ message: "Something went wrong" })
+          notification.error({ message: "Something went wrong !." })
           playErrorSound()
         }
       })
       .catch(() => {
-        notification.error({ message: "Something went wrong" })
+        notification.error({ message: "Something went wrong !." })
         playErrorSound()
       })
   }
@@ -293,9 +294,8 @@ const LeadsModule = () => {
         const taskCreated = data?.missedTaskCretedBy
         return taskName !== null ? (
           <OverFlowText type={taskName !== null ? "danger" : ""}>
-            {taskStatus} - {taskCreated} - {taskName}
-            <br />
-            {taskDate} {hours}:{minutes}
+            {taskStatus} - {taskCreated} - {taskName} | {taskDate} {hours}:
+            {minutes}
           </OverFlowText>
         ) : (
           <Text>NA</Text>
@@ -354,7 +354,7 @@ const LeadsModule = () => {
     {
       title: "Change assignee",
       dataIndex: "assignee",
-      checked: true,
+      checked: false,
       render: (_, data) => (
         <Select
           showSearch
@@ -422,7 +422,7 @@ const LeadsModule = () => {
           {
             title: "Create project",
             dataIndex: "project",
-            checked: true,
+            checked: false,
             render: (_, data) => {
               return <CompanyFormModal data={data} />
             },
@@ -430,6 +430,7 @@ const LeadsModule = () => {
           {
             title: "Lead Assigned",
             dataIndex: "assignedSame",
+            checked: false,
             render: (_, data) => (
               <Button size="small" onClick={() => leadAssignedToSame(data?.id)}>
                 To same{" "}
@@ -439,7 +440,7 @@ const LeadsModule = () => {
           {
             dataIndex: "action",
             title: "Action",
-            checked: true,
+            checked: false,
             render: (_, data) => (
               <Popconfirm
                 title="Delete the lead"
@@ -478,13 +479,13 @@ const LeadsModule = () => {
           setMultibtn("success")
           setSelectedRowKeys([])
         } else {
-          notification.error({ message: "Something went wrong" })
+          notification.error({ message: "Something went wrong !." })
           playErrorSound()
           setMultibtn("rejected")
         }
       })
       .catch(() => {
-        notification.error({ message: "Something went wrong" })
+        notification.error({ message: "Something went wrong !." })
         playErrorSound()
         setMultibtn("rejected")
       })
@@ -501,7 +502,9 @@ const LeadsModule = () => {
 
   const handleOpenDropdown = useCallback(() => {
     const res = [...columns]
+    let result = res?.filter((col) => col.checked === true)
     setDropdownData(res)
+    setHeaderData(result)
     setOpenDropdown(true)
   }, [columns])
 
@@ -547,7 +550,6 @@ const LeadsModule = () => {
           {adminRole && (
             <div className="d-end mr-2">
               <Dropdown
-                // destroyPopupOnHide={true}
                 disabled={selectedRow?.length === 0 ? true : false}
                 open={openDropdown}
                 // onOpenChange={(e) => setOpenDropdown(e)}
@@ -575,7 +577,15 @@ const LeadsModule = () => {
                         >
                           Cancel
                         </Button>
-                        <Button type="primary" size="small">
+                        <Button
+                          type="primary"
+                          size="small"
+                          onClick={() => {
+                            setOpenDropdown(false)
+                            setSelectedRow([])
+                            setSelectedRowKeys([])
+                          }}
+                        >
                           <CSVLink
                             className="text-white"
                             data={exportData}
@@ -664,29 +674,6 @@ const LeadsModule = () => {
             }
           />
         </div>
-        {/* <MultiSelect
-            style={{ dropdown: { backgroundColor: "#000" } }}
-            value={allUserMulti}
-            onChange={(e) => setAllUserMulti(e.value)}
-            options={leadUserNew}
-            optionLabel="fullName"
-            placeholder="Select users"
-            optionValue="id"
-            maxSelectedLabels={3}
-            className="multi-select-boxx"
-          /> */}
-
-        {/* <MultiSelect
-            style={{ dropdown: { backgroundColor: "#000" } }}
-            value={allStatusMulti}
-            onChange={(e) => setAllStatusMulti(e.value)}
-            options={getAllStatus}
-            optionLabel="name"
-            optionValue="id"
-            placeholder="Select Status"
-            maxSelectedLabels={3}
-            className="multi-select-boxx"
-          /> */}
 
         <div className="filter-right-container">
           <input

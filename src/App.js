@@ -86,22 +86,22 @@ function App() {
           Button: {
             contentFontSize: 13,
             contentFontSizeSM: 12,
-            borderRadius:4,
-            borderRadiusLG:4,
-            borderRadiusSM:4,
-            controlHeightSM:28,
-            paddingInlineSM:10
+            borderRadius: 4,
+            borderRadiusLG: 4,
+            borderRadiusSM: 4,
+            controlHeightSM: 28,
+            paddingInlineSM: 10,
           },
           Popconfirm: {
             fontSize: 13,
           },
           Select: {
             fontSize: 12,
-            optionFontSize:12,
-            optionHeight:28,
-            controlHeightSM:28,
-            borderRadius:4,
-            borderRadiusSM:4
+            optionFontSize: 12,
+            optionHeight: 28,
+            controlHeightSM: 28,
+            borderRadius: 4,
+            borderRadiusSM: 4,
           },
           Divider: {
             colorSplit: "#D3D3D3",
@@ -111,12 +111,11 @@ function App() {
             colorText: "#2e2e2e",
             headerColor: "#222222",
             fontWeightStrong: 600,
-            cellFontSize:12,
-            cellFontSizeMD:12,
-            cellFontSizeSM:12,
-            cellPaddingBlock:12,
-            cellPaddingInline:12
-
+            cellFontSize: 12,
+            cellFontSizeMD: 12,
+            cellFontSizeSM: 12,
+            cellPaddingBlock: 12,
+            cellPaddingInline: 12,
           },
           Tabs: {
             // cardBg:'#cccccc',
@@ -124,7 +123,16 @@ function App() {
         },
       }}
     >
-      <div className="App">
+      <div
+        className="App"
+        // style={{
+        //   backgroundImage:
+        //     "url(https://as2.ftcdn.net/v2/jpg/07/58/32/43/1000_F_758324370_uljYzOg1XtUTJpPF94XHICqQsyFAYbjS.jpg)",
+        //   backgroundRepeat: "no-repeat",
+        //   backgroundSize: "cover",
+        //   backgroundPosition: "center",
+        // }}
+      >
         <BrowserRouter>
           <Routes>
             <Route path="/newfile" element={<NewGetFile />}></Route>
@@ -163,7 +171,10 @@ function App() {
                 <Route path="tickets" element={<AllTickets />} />
                 <Route path="manager" element={<AllManagerApprovals />} />
                 <Route path="muiuser" element={<DisplayUserTwo />} />
-                <Route path="users/deactivateUser" element={<AllDeactivateUser />} />
+                <Route
+                  path="users/deactivateUser"
+                  element={<AllDeactivateUser />}
+                />
               </Route>
               {/* hr module routes */}
               <Route path="/erp/:userid/hr" element={<HRMod />}>

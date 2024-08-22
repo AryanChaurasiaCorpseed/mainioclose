@@ -36,25 +36,25 @@ const EnquirySend = () => {
     <Popover
       title="Raise ticket"
       trigger={["click"]}
-      placement="topLeft"
+      placement="bottomLeft"
       overlayStyle={{ width: "400px" }}
       open={openModal}
       onOpenChange={(e) => setOpenModal(e)}
       content={
         <Form layout="vertical" onFinish={handleSubmit}>
           <Form.Item
-            label="Subject for"
+            label="Subject"
             name="subject"
             rules={[{ required: true, message: "please write subject" }]}
           >
-            <Input placeholder="Write subject Here..." />
+            <Input placeholder="Write subject here..." />
           </Form.Item>
           <Form.Item
             label="Message"
             name="description"
             rules={[{ required: true, message: "please write message" }]}
           >
-            <Input.TextArea placeholder="Write Message here..." />
+            <Input.TextArea placeholder="Write message here..." />
           </Form.Item>
           <Form.Item>
             <Button type="primary" htmlType="submit">

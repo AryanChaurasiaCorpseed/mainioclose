@@ -2,8 +2,12 @@ import React, { useEffect } from "react"
 import { useParams } from "react-router-dom"
 import UserLeadComponent from "../../../Tables/UserLeadComponent"
 import { useDispatch, useSelector } from "react-redux"
-import { getAllNotification, updateNotification } from "../../../Toolkit/Slices/NotificationSlice"
+import {
+  getAllNotification,
+  updateNotification,
+} from "../../../Toolkit/Slices/NotificationSlice"
 import MainHeading from "../../../components/design/MainHeading"
+import CommonTable from "../../../components/CommonTable"
 
 const AllNotificationPage = () => {
   // const [allNotificationData, setAllNotificationData] = useState([])
@@ -23,7 +27,7 @@ const AllNotificationPage = () => {
 
   useEffect(() => {
     dispatch(getAllNotification(userid))
-  }, [userid,dispatch])
+  }, [userid, dispatch])
 
   // const getNotiFun = async () => {
   //   try {
@@ -42,44 +46,38 @@ const AllNotificationPage = () => {
 
   const columns = [
     {
-      field: "id",
-      headerName: "S.No",
+      dataIndex: "id",
+      title: "S.No",
       width: 60,
       filterable: false,
-      renderCell: (props) => {
-        return (
-          <p className="mb-0">
-            {props.api.getRowIndexRelativeToVisibleRows(props?.row?.id) + 1}
-          </p>
-        )
+      render: (_, props) => {
+        return <p className="mb-0">{props?.id}</p>
       },
     },
     {
-      field: "message",
-      headerName: "Message",
-      width: 700,
-      renderCell: (props) => {
-        const notify = props?.row?.view
+      dataIndex: "message",
+      title: "Message",
+      render: (_, props) => {
+        const notify = props?.view
         return (
           <p className={`mb-0 ${!notify ? "noti-view" : ""}`}>
-            {props?.row?.message}
+            {props?.message}
           </p>
         )
       },
     },
     {
-      field: "notifyDate",
-      headerName: "Date",
-      width: 200,
-      renderCell: (props) => {
-        const data = props?.row?.notifyDate
+      dataIndex: "notifyDate",
+      title: "Date",
+      render: (_, props) => {
+        const data = props?.notifyDate
         return data === null || undefined ? (
           "NA"
         ) : (
           <p>
-            {new Date(props.row.notifyDate).toLocaleDateString()} -{" "}
-            {new Date(props.row.notifyDate).getHours()}:
-            {new Date(props.row.notifyDate).getMinutes()}
+            {new Date(props.notifyDate).toLocaleDateString()} -{" "}
+            {new Date(props.notifyDate).getHours()}:
+            {new Date(props.notifyDate).getMinutes()}
           </p>
         )
       },
@@ -89,9 +87,13 @@ const AllNotificationPage = () => {
   return (
     <div className="small-box-padding">
       <>
-      <MainHeading data={`All Notification`} />
+        <MainHeading data={`All Notification`} />
         <div>
-          <UserLeadComponent row={allNotifications} columns={columns} />
+          <CommonTable
+            data={allNotifications}
+            columns={columns}
+            scroll={{ y: 550 }}
+          />
         </div>
       </>
     </div>
