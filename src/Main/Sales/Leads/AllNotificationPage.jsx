@@ -1,6 +1,5 @@
 import React, { useEffect } from "react"
 import { useParams } from "react-router-dom"
-import UserLeadComponent from "../../../Tables/UserLeadComponent"
 import { useDispatch, useSelector } from "react-redux"
 import {
   getAllNotification,
@@ -10,39 +9,14 @@ import MainHeading from "../../../components/design/MainHeading"
 import CommonTable from "../../../components/CommonTable"
 
 const AllNotificationPage = () => {
-  // const [allNotificationData, setAllNotificationData] = useState([])
   const { userid } = useParams()
-
   const allNotifications = useSelector((state) => state.notify.allNotifications)
   const dispatch = useDispatch()
 
   useEffect(() => {
-    dispatch(updateNotification(userid))
-  }, [])
-  // const SingleNotification = allNotifications[0]
-
-  // useEffect(() => {
-  //   getNotiFun()
-  // }, [])
-
-  useEffect(() => {
     dispatch(getAllNotification(userid))
+    dispatch(updateNotification(userid))
   }, [userid, dispatch])
-
-  // const getNotiFun = async () => {
-  //   try {
-  //     const getAllNoty = await getQuery(
-  //       `/leadService/api/v1/notification/getAllNotification?userId=${userid}`
-  //     )
-  //     //    getAllNoty.data.reverse()
-  //     setAllNotificationData(getAllNoty.data.reverse())
-  //     const updateNoty = await putQueryNoData(
-  //       `/leadService/api/v1/notification/viewNotification?userId=${userid}`
-  //     )
-  //   } catch (err) {
-  //     console.log(err)
-  //   }
-  // }
 
   const columns = [
     {

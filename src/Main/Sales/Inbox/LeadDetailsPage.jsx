@@ -947,11 +947,11 @@ const LeadDetailsPage = () => {
             </Space>
             <Divider style={{ margin: "6px" }} />
             <div className="btn-view-container">
-              <CompanyFormModal
+              <CompanyFormModal    
                 detailView={true}
                 data={singleLeadResponseData}
               />
-              <Button onClick={() => leadAssignedToSame(leadid)}>
+              <Button size="small" onClick={() => leadAssignedToSame(leadid)}>
                 Assign to same person{" "}
               </Button>
             </div>
@@ -1016,9 +1016,6 @@ const LeadDetailsPage = () => {
                 onChange={(e) => changeLeadAssignee(e)}
               />
             </div>
-
-            <div></div>
-
             <div className={`notes-box mt-4 ${notes === true ? "d-none" : ""}`}>
               <div className="comment-icon">
                 <div className="icon-box notes-cl">
@@ -1167,7 +1164,7 @@ const LeadDetailsPage = () => {
         </Col>
       </Row>
       <Modal
-        title="Edit contact details"
+        title={contactData ? "Edit contact details" : "Create contact"}
         open={openModal}
         onCancel={() => setOpenModal(false)}
         onClose={() => setOpenModal(false)}
@@ -1199,7 +1196,7 @@ const LeadDetailsPage = () => {
         </Form>
       </Modal>
       <Modal
-        title="Edit task"
+        title={taskData ? "Edit task" : "Create task"}
         open={openTaskModal}
         onCancel={() => setOpenTaskModal(false)}
         onClose={() => setOpenTaskModal(false)}

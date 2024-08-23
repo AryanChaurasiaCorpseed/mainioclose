@@ -23,6 +23,7 @@ import ComplianceSlice from "./Slices/ComplianceSlice"
 import IvrSlice from "./Slices/IvrSlice"
 import SettingSlice from "./Slices/SettingSlice"
 import CommonSlice from "./Slices/CommonSlice"
+import IndustrySlice from "./Slices/IndustrySlice"
 
 const reducers = combineReducers({
   auth: AuthSlice,
@@ -45,6 +46,7 @@ const reducers = combineReducers({
   ivr: IvrSlice,
   setting: SettingSlice,
   common: CommonSlice,
+  industry:IndustrySlice
 })
 
 const persistConfig = {

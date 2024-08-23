@@ -1,14 +1,15 @@
-import React, { useEffect, } from "react"
+import React, { useEffect } from "react"
 import "./SideBar.scss"
 import { Link, useParams } from "react-router-dom"
 import { useDispatch, useSelector } from "react-redux"
 import { toast } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
-import {
-  getUserProfilePhoto,
-} from "../Toolkit/Slices/UserProfileSlice"
+import { getUserProfilePhoto } from "../Toolkit/Slices/UserProfileSlice"
 import { Icon } from "@iconify/react"
-import { SIDE_BAR_ICON_HEIGHT, SIDE_BAR_ICON_WIDTH } from "../components/Constants"
+import {
+  SIDE_BAR_ICON_HEIGHT,
+  SIDE_BAR_ICON_WIDTH,
+} from "../components/Constants"
 toast.configure()
 
 const SideBar = () => {
@@ -29,13 +30,19 @@ const SideBar = () => {
     if (currentUserId !== undefined) {
       dispatch(getUserProfilePhoto(currentUserId))
     }
-  }, [dispatch,currentUserId])
+  }, [dispatch, currentUserId])
 
   const items = [
     {
       label: "Dashboard",
-      icon: <Icon icon="fluent:top-speed-24-regular" height={SIDE_BAR_ICON_HEIGHT} width={SIDE_BAR_ICON_WIDTH} />,
-      key: 'dashboard',
+      icon: (
+        <Icon
+          icon="fluent:top-speed-24-regular"
+          height={SIDE_BAR_ICON_HEIGHT}
+          width={SIDE_BAR_ICON_WIDTH}
+        />
+      ),
+      key: "dashboard",
       children: [
         ...(getHighestPriorityRole(currentRoles) !== "ADMIN"
           ? [
@@ -87,9 +94,15 @@ const SideBar = () => {
     getHighestPriorityRole(currentRoles) !== "ADMIN"
       ? [
           {
-            label: "Sales", 
+            label: "Sales",
             key: "sales",
-            icon: <Icon icon="fluent:briefcase-24-regular" height={SIDE_BAR_ICON_HEIGHT} width={SIDE_BAR_ICON_WIDTH} />,
+            icon: (
+              <Icon
+                icon="fluent:briefcase-24-regular"
+                height={SIDE_BAR_ICON_HEIGHT}
+                width={SIDE_BAR_ICON_WIDTH}
+              />
+            ),
             children: [
               ...(currentUserDetail?.department === "Sales" &&
               getHighestPriorityRole(currentRoles) !== "ADMIN"
@@ -140,9 +153,15 @@ const SideBar = () => {
       : getHighestPriorityRole(currentRoles) === "ADMIN"
       ? [
           {
-            label: "Sales", 
+            label: "Sales",
             key: "sales",
-            icon: <Icon icon="fluent:briefcase-24-regular" height={SIDE_BAR_ICON_HEIGHT} width={SIDE_BAR_ICON_WIDTH} />,
+            icon: (
+              <Icon
+                icon="fluent:briefcase-24-regular"
+                height={SIDE_BAR_ICON_HEIGHT}
+                width={SIDE_BAR_ICON_WIDTH}
+              />
+            ),
             children: [
               {
                 label: <Link to={`${userid}/sales/leads`}>Leads</Link>,
@@ -172,7 +191,13 @@ const SideBar = () => {
       ? {
           label: "Sales",
           key: "sales",
-          icon: <Icon icon="fluent:briefcase-24-regular" height={SIDE_BAR_ICON_HEIGHT} width={SIDE_BAR_ICON_WIDTH} />,
+          icon: (
+            <Icon
+              icon="fluent:briefcase-24-regular"
+              height={SIDE_BAR_ICON_HEIGHT}
+              width={SIDE_BAR_ICON_WIDTH}
+            />
+          ),
           children: [
             {
               label: <Link to={`${userid}/sales/leads`}>Leads</Link>,
@@ -191,7 +216,13 @@ const SideBar = () => {
           {
             label: <Link to={`/erp/${userid}/compliance`}>Compliances</Link>,
             key: "compliance",
-            icon:<Icon icon="fluent:calendar-person-24-regular" height={SIDE_BAR_ICON_HEIGHT} width={SIDE_BAR_ICON_WIDTH} />
+            icon: (
+              <Icon
+                icon="fluent:calendar-person-24-regular"
+                height={SIDE_BAR_ICON_HEIGHT}
+                width={SIDE_BAR_ICON_WIDTH}
+              />
+            ),
           },
         ]
       : getHighestPriorityRole(currentRoles) === "ADMIN"
@@ -199,7 +230,13 @@ const SideBar = () => {
           {
             label: <Link to={`/erp/${userid}/compliance`}>Compliances</Link>,
             key: "compliance",
-            icon:<Icon icon="fluent:calendar-person-24-regular" height={SIDE_BAR_ICON_HEIGHT} width={SIDE_BAR_ICON_WIDTH} />
+            icon: (
+              <Icon
+                icon="fluent:calendar-person-24-regular"
+                height={SIDE_BAR_ICON_HEIGHT}
+                width={SIDE_BAR_ICON_WIDTH}
+              />
+            ),
           },
         ]
       : []),
@@ -209,10 +246,18 @@ const SideBar = () => {
           {
             label: "HR",
             key: "hr",
-            icon:<Icon icon="fluent:credit-card-person-24-regular" height={SIDE_BAR_ICON_HEIGHT} width={SIDE_BAR_ICON_WIDTH} />,
+            icon: (
+              <Icon
+                icon="fluent:credit-card-person-24-regular"
+                height={SIDE_BAR_ICON_HEIGHT}
+                width={SIDE_BAR_ICON_WIDTH}
+              />
+            ),
             children: [
               {
-                label: <Link to={`/erp/${userid}/hr/userlist`}> User list</Link>,
+                label: (
+                  <Link to={`/erp/${userid}/hr/userlist`}> User list</Link>
+                ),
                 key: "userlist",
               },
               {
@@ -232,10 +277,18 @@ const SideBar = () => {
           {
             label: "HR",
             key: "hr",
-            icon:<Icon icon="fluent:credit-card-person-24-regular" height={SIDE_BAR_ICON_HEIGHT} width={SIDE_BAR_ICON_WIDTH}  />,
+            icon: (
+              <Icon
+                icon="fluent:credit-card-person-24-regular"
+                height={SIDE_BAR_ICON_HEIGHT}
+                width={SIDE_BAR_ICON_WIDTH}
+              />
+            ),
             children: [
               {
-                label: <Link to={`/erp/${userid}/hr/userlist`}> User list</Link>,
+                label: (
+                  <Link to={`/erp/${userid}/hr/userlist`}> User list</Link>
+                ),
                 key: "userlist",
               },
               {
@@ -263,10 +316,20 @@ const SideBar = () => {
           {
             label: "Accounts",
             key: "account",
-            icon:<Icon icon="fluent:inprivate-account-24-regular" height={SIDE_BAR_ICON_HEIGHT} width={SIDE_BAR_ICON_WIDTH} />,
+            icon: (
+              <Icon
+                icon="fluent:inprivate-account-24-regular"
+                height={SIDE_BAR_ICON_HEIGHT}
+                width={SIDE_BAR_ICON_WIDTH}
+              />
+            ),
             children: [
               {
-                label: <Link to={`/erp/${userid}/account/accountlist`}>Accounts list</Link>,
+                label: (
+                  <Link to={`/erp/${userid}/account/accountlist`}>
+                    Accounts list
+                  </Link>
+                ),
                 key: "accountlist",
               },
               {
@@ -286,10 +349,20 @@ const SideBar = () => {
           {
             label: "Accounts",
             key: "account",
-            icon:<Icon icon="fluent:inprivate-account-24-regular" height={SIDE_BAR_ICON_HEIGHT} width={SIDE_BAR_ICON_WIDTH} />,
+            icon: (
+              <Icon
+                icon="fluent:inprivate-account-24-regular"
+                height={SIDE_BAR_ICON_HEIGHT}
+                width={SIDE_BAR_ICON_WIDTH}
+              />
+            ),
             children: [
               {
-                label: <Link to={`/erp/${userid}/account/accountlist`}>Accounts list</Link>,
+                label: (
+                  <Link to={`/erp/${userid}/account/accountlist`}>
+                    Accounts list
+                  </Link>
+                ),
                 key: "accountlist",
               },
               {
@@ -309,9 +382,15 @@ const SideBar = () => {
     getHighestPriorityRole(currentRoles) !== "ADMIN"
       ? [
           {
-            label: 'Quality',
+            label: "Quality",
             key: "quality",
-            icon:<Icon icon="fluent:beaker-24-regular" height={SIDE_BAR_ICON_HEIGHT} width={SIDE_BAR_ICON_WIDTH} />,
+            icon: (
+              <Icon
+                icon="fluent:beaker-24-regular"
+                height={SIDE_BAR_ICON_HEIGHT}
+                width={SIDE_BAR_ICON_WIDTH}
+              />
+            ),
             children: [
               {
                 label: <Link to={`${userid}/quality/ivr`}>Ivr</Link>,
@@ -325,11 +404,50 @@ const SideBar = () => {
           {
             label: "Quality",
             key: "quality",
-            icon:<Icon icon="fluent:beaker-24-regular" height={SIDE_BAR_ICON_HEIGHT} width={SIDE_BAR_ICON_WIDTH} />,
+            icon: (
+              <Icon
+                icon="fluent:beaker-24-regular"
+                height={SIDE_BAR_ICON_HEIGHT}
+                width={SIDE_BAR_ICON_WIDTH}
+              />
+            ),
             children: [
               {
                 label: <Link to={`${userid}/quality/ivr`}>Ivr</Link>,
-                key:'ivr'
+                key: "ivr",
+              },
+            ],
+          },
+        ]
+      : []),
+    ...(getHighestPriorityRole(currentRoles) === "ADMIN"
+      ? [
+          {
+            label: "Industries",
+            key: "industries",
+            icon: (
+              <Icon
+                icon="fluent:building-desktop-24-regular"
+                height={SIDE_BAR_ICON_HEIGHT}
+                width={SIDE_BAR_ICON_WIDTH}
+              />
+            ),
+            children: [
+              {
+                label: (
+                  <Link to={`/erp/${userid}/industries/industry`}>
+                    Industry
+                  </Link>
+                ),
+                key: "industry",
+              },
+              {
+                label: (
+                  <Link to={`/erp/${userid}/industries/subindustry`}>
+                    Sub industry
+                  </Link>
+                ),
+                key: "subindustry",
               },
             ],
           },
@@ -339,16 +457,23 @@ const SideBar = () => {
     ...(getHighestPriorityRole(currentRoles) === "ADMIN"
       ? [
           {
-            label: <Link to={`/erp/${userid}/setting/leadStatus`}>Setting</Link>,
+            label: (
+              <Link to={`/erp/${userid}/setting/leadStatus`}>Setting</Link>
+            ),
             key: "setting",
-            icon:<Icon icon="fluent:settings-24-regular" height={SIDE_BAR_ICON_HEIGHT} width={SIDE_BAR_ICON_WIDTH} />
+            icon: (
+              <Icon
+                icon="fluent:settings-24-regular"
+                height={SIDE_BAR_ICON_HEIGHT}
+                width={SIDE_BAR_ICON_WIDTH}
+              />
+            ),
           },
         ]
       : []),
   ]
 
   return items
-
 }
 
 export default SideBar

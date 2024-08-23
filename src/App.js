@@ -61,6 +61,9 @@ import Desigination from "./Main/Setting/Desigination/Desigination"
 import Department from "./Main/Setting/Department/Department"
 import CompanyForm from "./Main/Accounts/CompanyForm"
 import CompanyPageLayout from "./Main/Sales/company/CompanyPageLayout"
+import Industry from "./Main/Industry/Industry"
+import SubIndustry from "./Main/Industry/SubIndustry/SubIndustry"
+import { SubsubIndustry } from "./Main/Industry/SubsubIndustry/SubsubIndustry"
 const SpinLoading = lazy(() => import("./components/SpinLoading"))
 
 function App() {
@@ -102,6 +105,12 @@ function App() {
             controlHeightSM: 28,
             borderRadius: 4,
             borderRadiusSM: 4,
+            borderRadiusLG: 4,
+          },
+          Input: {
+            borderRadius: 4,
+            borderRadiusSM: 4,
+            borderRadiusLG: 4,
           },
           Divider: {
             colorSplit: "#D3D3D3",
@@ -351,6 +360,15 @@ function App() {
                 />
               </Route>
               {/* end */}
+
+              {/* Industry route */}
+              <Route path="/erp/:userid/industries" element={<Industry />}>
+                <Route path="industry" element={<SubIndustry />} />
+                <Route path="subindustry" element={<SubsubIndustry />} />
+              </Route>
+
+              {/* end */}
+
               <Route path="/erp/:userid/setting" element={<SettingMainPage />}>
                 <Route path="leadStatus" element={<LeadStatusPage />} />
                 <Route path="products" element={<ProductsChange />} />
