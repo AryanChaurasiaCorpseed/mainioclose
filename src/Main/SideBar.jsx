@@ -449,6 +449,14 @@ const SideBar = () => {
                 ),
                 key: "subindustry",
               },
+              {
+                label: (
+                  <Link to={`/erp/${userid}/industries/subsubindustry`}>
+                    Sub sub industry
+                  </Link>
+                ),
+                key: "subsubindustry",
+              },
             ],
           },
         ]

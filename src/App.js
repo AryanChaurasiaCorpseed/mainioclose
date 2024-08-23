@@ -62,8 +62,10 @@ import Department from "./Main/Setting/Department/Department"
 import CompanyForm from "./Main/Accounts/CompanyForm"
 import CompanyPageLayout from "./Main/Sales/company/CompanyPageLayout"
 import Industry from "./Main/Industry/Industry"
+import Industries from "./Main/Industry/Industries/Industries"
 import SubIndustry from "./Main/Industry/SubIndustry/SubIndustry"
-import { SubsubIndustry } from "./Main/Industry/SubsubIndustry/SubsubIndustry"
+import SubsubIndustry from "./Main/Industry/SubsubIndustry/SubsubIndustry"
+
 const SpinLoading = lazy(() => import("./components/SpinLoading"))
 
 function App() {
@@ -363,8 +365,9 @@ function App() {
 
               {/* Industry route */}
               <Route path="/erp/:userid/industries" element={<Industry />}>
-                <Route path="industry" element={<SubIndustry />} />
-                <Route path="subindustry" element={<SubsubIndustry />} />
+                <Route path="industry" element={<Industries />} />
+                <Route path="subindustry" element={<SubIndustry />} />
+                <Route path="subsubindustry" element={<SubsubIndustry />} />
               </Route>
 
               {/* end */}

@@ -875,14 +875,17 @@ const CompanyFormModal = ({
               onChange={(e) => setNewSecondaryAddress(e)}
             />
           </Form.Item>
+
           {newSecondaryAddress && (
             <>
               <Form.Item label="Address" name="saddress">
                 <Input.TextArea />
               </Form.Item>
+
               <Form.Item label="City" name="scity">
                 <Input />
               </Form.Item>
+
               <Form.Item label="State" name="sstate">
                 <Input />
               </Form.Item>
@@ -890,6 +893,7 @@ const CompanyFormModal = ({
               <Form.Item label="Country" name="scountry">
                 <Input />
               </Form.Item>
+              
               <Form.Item label="PinCode" name="secondaryPinCode">
                 <Input />
               </Form.Item>

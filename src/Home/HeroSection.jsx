@@ -5,6 +5,7 @@ import SectionSaprater from "../components/design/SectionSaprater"
 import HomeImageComp from "../components/HomeImageComp"
 import HomeTextComp from "../components/HomeTextComp"
 import homeImg from '../Images/erpImg.jpg'
+import erp from '../Images/ERP2.png'
 
 const HeroSection = () => (
   // <div className="container hero-section home-section-padding">
