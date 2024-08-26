@@ -5,7 +5,6 @@ import CommonTable from "../../../components/CommonTable"
 import {
   createSubsubIndustry,
   getAllIndustry,
-  getAllSubIndustry,
   getAllSubsubIndustry,
 } from "../../../Toolkit/Slices/IndustrySlice"
 import { useDispatch, useSelector } from "react-redux"
@@ -27,7 +26,7 @@ const SubsubIndustry = () => {
       .then((resp) => {
         if (resp.meta.requestStatus === "fulfilled") {
           notification.success({ message: "Industry created successfully" })
-          dispatch(getAllSubIndustry())
+          dispatch(getAllSubsubIndustry())
           setOpenModal(false)
           form.resetFields()
         } else {

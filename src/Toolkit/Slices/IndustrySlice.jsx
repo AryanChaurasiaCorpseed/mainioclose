@@ -62,7 +62,7 @@ export const getAllSubIndustry = createAsyncThunk(
 )
 
 export const getAllMainIndustry = createAsyncThunk("getAllMainIndustry", async () => {
-  const response = await getQuery(`/api/v1/industryData/getAllIndustry`)
+  const response = await getQuery(`/leadService/api/v1/industryData/getAllIndustry`)
   return response.data
 })
 
@@ -70,7 +70,7 @@ export const createMainIndustry = createAsyncThunk(
   "createMainIndustry",
   async (data) => {
     const response = await postQuery(
-      `/api/v1/industryData/createIndustry`,
+      `/leadService/api/v1/industryData/createIndustry`,
       data
     )
     return response.data
@@ -104,7 +104,7 @@ const IndustrySlice = createSlice({
     builder.addCase(getAllSubsubIndustry.fulfilled, (state, action) => {
       state.industryLoading = "fulfilled"
       state.allSubsubIndustry = action.payload
-    })
+    })                                                                                                                                                                                  
     builder.addCase(getAllSubsubIndustry.rejected, (state, action) => {
       state.industryLoading = "rejected"
     })
@@ -119,6 +119,7 @@ const IndustrySlice = createSlice({
     builder.addCase(getAllSubIndustry.rejected, (state, action) => {
       state.industryLoading = "rejected"
     })
+
     builder.addCase(getAllMainIndustry.pending, (state, action) => {
       state.industryLoading = "pending"
     })

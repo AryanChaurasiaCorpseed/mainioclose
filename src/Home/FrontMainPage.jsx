@@ -6,7 +6,7 @@ import JumpStart from "./JumpStart"
 
 const FrontMainPage = () => {
   return (
-    <div>
+    <div >
       <HeroSection />
       <JumpStart />
       <SideNewSection />

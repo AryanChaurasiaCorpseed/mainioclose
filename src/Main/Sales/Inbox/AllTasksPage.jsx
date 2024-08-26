@@ -21,12 +21,7 @@ const AllTasksPage = ({ setOpenAllTask }) => {
       </div>
       <div className="estimate-header">
         <GetAllTaskList />
-       
       </div>
-     
-
-    
-      
     </div>
   )
 }

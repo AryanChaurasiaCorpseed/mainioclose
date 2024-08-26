@@ -77,7 +77,7 @@ const LeadStatusPage = () => {
       <MainHeading data={`Lead status`} />
       <div className="lead-box">
         <Button type="primary" onClick={() => setOpenModal(true)}>
-          Add lead
+          Add lead status
         </Button>
       </div>
 
@@ -104,14 +104,14 @@ const LeadStatusPage = () => {
       >
         <Form layout="vertical" form={form} onFinish={handleFinish}>
           <Form.Item
-            label="Enter lead name"
+            label="Enter lead status name"
             name="name"
             rules={[{ required: true, message: "please enter the lead name" }]}
           >
             <Input />
           </Form.Item>
           <Form.Item
-            label="Enter lead description"
+            label="Enter lead status description"
             name="description"
             rules={[{ required: true, message: "please enter the desciption" }]}
           >
