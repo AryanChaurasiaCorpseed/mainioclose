@@ -6,6 +6,7 @@ import { getAllHistory } from "../../Toolkit/Slices/HistorySlice"
 import TableScalaton from "../../components/TableScalaton"
 import SomethingWrong from "../../components/usefulThings/SomethingWrong"
 import UserListComponent from "../../Tables/UserListComponent"
+import CommonTable from "../../components/CommonTable"
 
 const SingleUserHistory = () => {
   const dispatch = useDispatch()
@@ -20,27 +21,22 @@ const SingleUserHistory = () => {
     (prev) => prev?.uhistory
   )
 
-
   const columns = [
     {
-      field: "id",
-      headerName: "ID",
-      width: 150,
+      dataIndex: "id",
+      title: "ID",
     },
     {
-      field: "userName",
-      headerName: "UserName",
-      width: 200,
+      dataIndex: "userName",
+      title: "UserName",
     },
     {
-      field: "event",
-      headerName: "Event",
-      width: 300,
+      dataIndex: "event",
+      title: "Event",
     },
     {
-      field: "updatedBy",
-      headerName: "Updated By",
-      width: 200,
+      dataIndex: "updatedBy",
+      title: "Updated By",
     },
   ]
 
@@ -52,7 +48,8 @@ const SingleUserHistory = () => {
       {historyLoading && <TableScalaton />}
       {historyError && <SomethingWrong />}
       {allHistory && !historyLoading && !historyError && (
-        <UserListComponent tableName={""} columns={columns} row={allHistory} />
+        // <UserListComponent tableName={""} columns={columns} row={allHistory} />
+        <CommonTable data={allHistory} columns={columns} scroll={{ y: 520 }} />
       )}
     </>
   )

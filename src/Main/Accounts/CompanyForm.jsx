@@ -64,7 +64,7 @@ const CompanyForm = ({ role }) => {
       fixed: "left",
       render: (_, value) => (
         <OverFlowText>
-          {value?.companyName ? value?.companyName : "NA"}
+          {value?.companyName }
         </OverFlowText>
       ),
     },
@@ -117,7 +117,7 @@ const CompanyForm = ({ role }) => {
       title: "Address",
       dataIndex: "address",
       render: (_, value) => (
-        <OverFlowText>{value?.address ? value?.address : "NA"}</OverFlowText>
+        <OverFlowText>{value?.address}</OverFlowText>
       ),
     },
     {
@@ -164,7 +164,7 @@ const CompanyForm = ({ role }) => {
       title: "Secondary address",
       dataIndex: "sAddress",
       render: (_, value) => (
-        <OverFlowText>{value?.sAddress ? value?.sAddress : "NA"}</OverFlowText>
+        <OverFlowText>{value?.sAddress}</OverFlowText>
       ),
     },
     {
@@ -199,7 +199,7 @@ const CompanyForm = ({ role }) => {
         data.status === "approved" ? (
           <Text>Approved</Text>
         ) : data.status === "disapproved" ? (
-          <Text>Dispproved</Text>
+          <Text>Disapproved</Text>
         ) : (
           "Initiated"
         ),
@@ -263,13 +263,13 @@ const CompanyForm = ({ role }) => {
                               })
                             } else {
                               notification.error({
-                                message: "Something went wrong",
+                                message: "Something went wrong !.",
                               })
                             }
                           })
                           .catch(() => {
                             notification.error({
-                              message: "Something went wrong",
+                              message: "Something went wrong !.",
                             })
                           })
                       }}
@@ -302,13 +302,13 @@ const CompanyForm = ({ role }) => {
                               })
                             } else {
                               notification.error({
-                                message: "Something went wrong",
+                                message: "Something went wrong !.",
                               })
                             }
                           })
                           .catch(() => {
                             notification.error({
-                              message: "Something went wrong",
+                              message: "Something went wrong !.",
                             })
                           })
                       }}

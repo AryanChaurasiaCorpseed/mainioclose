@@ -6,12 +6,14 @@ import { useParams } from "react-router-dom"
 import TableScalaton from "../../../components/TableScalaton"
 import { toast } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
+import CommonTable from "../../../components/CommonTable"
+import OverFlowText from "../../../components/OverFlowText"
+import MainHeading from "../../../components/design/MainHeading"
 toast.configure()
 
 const LeadHistory = () => {
   const [leadHistoryData, setLeadHistoryData] = useState([])
   const [historyScalaton, setHistoryScalaton] = useState(true)
-
 
   const { leadid } = useParams()
 
@@ -21,34 +23,43 @@ const LeadHistory = () => {
 
   const columns = [
     {
-      field: "id",
-      headerName: "S.No",
+      dataIndex: "id",
+      title: "Id",
       width: 60,
-      filterable: false,
-      renderCell: (props) => {
+      render: (_, props) => {
+        return <p className="mb-0">{props?.id}</p>
+      },
+    },
+    {
+      dataIndex: "createdDate",
+      title: "Date",
+      render: (_, props) => {
+        let date = new Date(props?.createdDate)
+        let dateNew = date.toLocaleDateString()
         return (
           <p className="mb-0">
-            {props.api.getRowIndexRelativeToVisibleRows(props?.row?.id) + 1}
+            {dateNew.toString()} <span> - </span>
+            {new Date(props?.createdDate).getHours()}:
+            {new Date(props?.createdDate).getMinutes()}
           </p>
         )
       },
     },
+    { dataIndex: "createdBy", title: "Created By" },
     {
-      field: "createdDate",
-      headerName: "Date",
-      width: 200,
-      renderCell: (props) => {
-        let date = new Date(props?.row?.createdDate)
-        let dateNew = date.toLocaleDateString()
-        return <p className="mb-0">{dateNew.toString()} <span> - </span>
-         {new Date(props.row.createdDate).getHours()}:
-            {new Date(props.row.createdDate).getMinutes()}
-        </p>
-      },
+      dataIndex: "event",
+      title: "Event Type",
+      render: (_, records) => (
+        <OverFlowText>{records?.event}</OverFlowText>
+      ),
     },
-    { field: "createdBy", headerName: "Created By", width: 150 },
-    { field: "event", headerName: "Event Type", width: 200 },
-    { field: "description", headerName: "Description", width: 450 },
+    {
+      dataIndex: "description",
+      title: "Description",
+      render: (_, records) => (
+        <OverFlowText>{records?.description}</OverFlowText>
+      ),
+    },
   ]
 
   const leadHistoryFun = async () => {
@@ -72,13 +83,19 @@ const LeadHistory = () => {
 
   return (
     <div className="p-3">
-      <h3 className="big-heading">Lead History</h3>
+      {/* <h3 className="big-heading">Lead History</h3> */}
+      <MainHeading data={'Lead history'}   />
       <div className="mt-3">
-      {historyScalaton ? (
-        <TableScalaton />
-      ) : (
-        <UserLeadComponent row={leadHistoryData} columns={columns} />
-      )}
+        {historyScalaton ? (
+          <TableScalaton />
+        ) : (
+          // <UserLeadComponent row={leadHistoryData} columns={columns} />
+          <CommonTable
+            data={leadHistoryData}
+            columns={columns}
+            scroll={{ y: 520 }}
+          />
+        )}
       </div>
     </div>
   )
