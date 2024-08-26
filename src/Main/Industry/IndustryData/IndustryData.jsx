@@ -1,30 +1,29 @@
 import React, { useEffect, useState } from "react"
 import CommonTable from "../../../components/CommonTable"
-import { Button, Form, Input, Modal, notification, Select } from "antd"
+import { Button, Form, Input, Modal, notification } from "antd"
+import MainHeading from "../../../components/design/MainHeading"
 import { useDispatch, useSelector } from "react-redux"
 import {
-  createMainIndustry,
-  getAllMainIndustry,
+  createIndustry,
+  getAllIndustry,
 } from "../../../Toolkit/Slices/IndustrySlice"
-import MainHeading from "../../../components/design/MainHeading"
 
-const Industries = () => {
+const IndustryData = () => {
   const dispatch = useDispatch()
   const [form] = Form.useForm()
   const [openModal, setOpenModal] = useState(false)
-  const allSubIndustry = useSelector((state) => state.industry.allSubIndustry)
-  const allMainIndustry = useSelector((state) => state.industry.allMainIndustry)
+  const allIndustry = useSelector((state) => state.industry.allIndustry)
 
   useEffect(() => {
-    dispatch(getAllMainIndustry())
+    dispatch(getAllIndustry())
   }, [dispatch])
 
   const handleFinish = (values) => {
-    dispatch(createMainIndustry(values))
+    dispatch(createIndustry(values))
       .then((resp) => {
         if (resp.meta.requestStatus === "fulfilled") {
           notification.success({ message: "Industry created successfully" })
-          dispatch(getAllMainIndustry())
+          dispatch(getAllIndustry())
           setOpenModal(false)
           form.resetFields()
         } else {
@@ -52,15 +51,15 @@ const Industries = () => {
       <div className="create-user-box">
         <MainHeading data={`Industry`} />
         <Button type="primary" onClick={() => setOpenModal(true)}>
-          Add industry
+          Add industry data
         </Button>
       </div>
 
       <div className="table-responsive">
-        <CommonTable data={allMainIndustry} columns={columns} scroll={{ y: 600 }} />
+        <CommonTable data={allIndustry} columns={columns} scroll={{ y: 600 }} />
       </div>
       <Modal
-        title={"Add industry"}
+        title={"Add industry data"}
         open={openModal}
         onCancel={() => setOpenModal(false)}
         onClose={() => setOpenModal(false)}
@@ -80,38 +79,10 @@ const Industries = () => {
           >
             <Input />
           </Form.Item>
-          <Form.Item
-            label="Select industry"
-            name="subIndustryId"
-            rules={[
-              {
-                required: true,
-                message: "please select sub industry",
-              },
-            ]}
-          >
-            <Select
-              showSearch
-              allowClear
-              mode="multiple"
-              options={
-                allSubIndustry?.length > 0
-                  ? allSubIndustry?.map((item) => ({
-                      label: item?.name,
-                      value: item?.id,
-                    }))
-                  : []
-              }
-              filterOption={(input, option) =>
-                option.label.toLowerCase().includes(input.toLowerCase())
-              }
-            />
-          </Form.Item>
         </Form>
       </Modal>
     </div>
   )
 }
 
-export default Industries
-
+export default IndustryData
