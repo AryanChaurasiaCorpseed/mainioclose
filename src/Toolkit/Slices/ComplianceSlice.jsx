@@ -1,9 +1,15 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { getQuery } from "../../API/GetQuery";
+import { postQuery } from "../../API/PostQuery";
 
 
 export const getAllCompliances=createAsyncThunk('getCompliances',async()=>{
     const response=await getQuery(`/leadService/api/v1/complianceDocumnets/getAllComplianceDocuments`)
+    return response.data
+})
+
+export const uploadDocuments=createAsyncThunk(`uploadDocuments`,async(data)=>{
+    const response=await postQuery(`/leadService/api/v1/complianceDocumnets/createDocuments`,data)
     return response.data
 })
 
