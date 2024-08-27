@@ -34,6 +34,11 @@ export const getAllUrlList=createAsyncThunk('allUrlsList',async()=>{
   return response.data
 })
 
+export const convertUrlsToProduct=createAsyncThunk('convertUrlsToProduct',async(data)=>{
+  const response=await postQuery(`/leadService/api/v1/product/importProductByUrls`,data)
+  return response.data
+})
+
 export const LeadUrlSlice = createSlice({
   name: "leadurls",
   initialState: {

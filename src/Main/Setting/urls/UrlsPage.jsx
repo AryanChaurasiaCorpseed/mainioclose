@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from "react"
+import React, { useCallback, useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import {
+  convertUrlsToProduct,
   createAllUrlAction,
   getAllUrlAction,
   handleNextPagination,
@@ -10,7 +11,16 @@ import MainHeading from "../../../components/design/MainHeading"
 import { getAllSlugAction } from "../../../Toolkit/Slices/LeadSlugSlice"
 import { toast } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
-import { Button, Form, Input, Modal, notification, Select, Tooltip, Typography } from "antd"
+import {
+  Button,
+  Form,
+  Input,
+  Modal,
+  notification,
+  Select,
+  Tooltip,
+  Typography,
+} from "antd"
 import EditUrls from "./EditUrls"
 import CommonTable from "../../../components/CommonTable"
 const { Text } = Typography
@@ -22,6 +32,7 @@ const UrlsPage = () => {
   const urlPage = useSelector((state) => state.leadurls.page)
   const [urlDep, setUrlDep] = useState(false)
   const [openModal, setOpenModal] = useState(false)
+  const [selectedRowKeys, setSelectedRowKeys] = useState([])
   const dispatch = useDispatch()
   useEffect(() => {
     dispatch(getAllSlugAction(page))
@@ -41,7 +52,7 @@ const UrlsPage = () => {
   const handleSubmit = async (values) => {
     const createNewUrl = await dispatch(createAllUrlAction(values))
     if (createNewUrl.type === "createLeadUrlData/fulfilled") {
-      notification.success({message:'Url created successfully'})
+      notification.success({ message: "Url created successfully" })
       setUrlDep((prev) => !prev)
       setOpenModal(false)
       form.resetFields()
@@ -88,10 +99,41 @@ const UrlsPage = () => {
     },
   ]
 
+  const onSelectChange = (newSelectedRowKeys) => {
+    setSelectedRowKeys(newSelectedRowKeys)
+  }
+
+  const handleConvertToProduct = useCallback(() => {
+    dispatch(
+      convertUrlsToProduct({
+        urlsId: selectedRowKeys,
+      })
+    )
+      .then((resp) => {
+        if (resp.meta.requestStatus === "fulfilled") {
+          notification.success({
+            message: "urls converted in product successfully",
+          })
+          setSelectedRowKeys([])
+        } else {
+          notification.error({ message: "Something went wrong !." })
+        }
+      })
+      .catch(() => {
+        notification.error({ message: "Something went wrong !." })
+      })
+  }, [dispatch, selectedRowKeys])
+
   return (
     <div>
-      <MainHeading data={`Urls create`} />
+      <MainHeading data={`Urls list`} />
       <div className="lead-box">
+        <Button
+          onClick={handleConvertToProduct}
+          disabled={selectedRowKeys?.length === 0 ? true : false}
+        >
+          Convert to product
+        </Button>
         <Button type="primary" onClick={() => setOpenModal(true)}>
           Create url
         </Button>
@@ -99,6 +141,9 @@ const UrlsPage = () => {
       <CommonTable
         columns={columns}
         data={allLeadUrl}
+        rowSelection={true}
+        onRowSelection={onSelectChange}
+        selectedRowKeys={selectedRowKeys}
         nextPage={handleNextPagination}
         prevPage={handlePrevPagination}
         pagination={true}

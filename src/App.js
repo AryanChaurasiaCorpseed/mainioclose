@@ -114,6 +114,7 @@ function App() {
             borderRadius: 4,
             borderRadiusSM: 4,
             borderRadiusLG: 4,
+            controlHeightSM: 28,
           },
           Divider: {
             colorSplit: "#D3D3D3",

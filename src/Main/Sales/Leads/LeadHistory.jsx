@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react"
 import "./LeadHistory.scss"
-import UserLeadComponent from "../../../Tables/UserLeadComponent"
 import { getQuery } from "../../../API/GetQuery"
 import { useParams } from "react-router-dom"
 import TableScalaton from "../../../components/TableScalaton"
@@ -45,13 +44,11 @@ const LeadHistory = () => {
         )
       },
     },
-    { dataIndex: "createdBy", title: "Created By" },
+    { dataIndex: "createdBy", title: "Created by" },
     {
       dataIndex: "event",
-      title: "Event Type",
-      render: (_, records) => (
-        <OverFlowText>{records?.event}</OverFlowText>
-      ),
+      title: "Event type",
+      render: (_, records) => <OverFlowText>{records?.event}</OverFlowText>,
     },
     {
       dataIndex: "description",
@@ -72,10 +69,10 @@ const LeadHistory = () => {
       setHistoryScalaton(false)
     } catch (err) {
       if (err.response.status === 500) {
-        toast.error("Something Went Wrong")
+        toast.error("Something Went Wrong !.")
       }
       if (err.response.status === 401) {
-        toast.error("Something Went Wrong")
+        toast.error("Something Went Wrong !.")
       }
       console.log("Err", err)
     }
@@ -83,13 +80,11 @@ const LeadHistory = () => {
 
   return (
     <div className="p-3">
-      {/* <h3 className="big-heading">Lead History</h3> */}
-      <MainHeading data={'Lead history'}   />
+      <MainHeading data={"Lead history"} />
       <div className="mt-3">
         {historyScalaton ? (
           <TableScalaton />
         ) : (
-          // <UserLeadComponent row={leadHistoryData} columns={columns} />
           <CommonTable
             data={leadHistoryData}
             columns={columns}

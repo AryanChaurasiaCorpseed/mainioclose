@@ -25,6 +25,7 @@ import {
   Checkbox,
   Divider,
   Dropdown,
+  Input,
   notification,
   Popconfirm,
   Select,
@@ -57,6 +58,10 @@ const LeadsModule = () => {
   const [selectedRow, setSelectedRow] = useState([])
   const [dropdownData, setDropdownData] = useState([])
   const [headerData, setHeaderData] = useState([])
+  const [searchText, setSearchText] = useState("")
+  const [filteredData, setFilteredData] = useState([])
+
+
   const onSelectChange = (newSelectedRowKeys, rowsData) => {
     setSelectedRowKeys(newSelectedRowKeys)
     setSelectedRow(rowsData)
@@ -250,6 +255,11 @@ const LeadsModule = () => {
       })
   }
 
+
+  useEffect(() => {
+    setFilteredData(allLeadsData)
+  }, [])
+
   const columns = [
     {
       dataIndex: "id",
@@ -428,7 +438,7 @@ const LeadsModule = () => {
             },
           },
           {
-            title: "Lead Assigned",
+            title: "Lead assigned",
             dataIndex: "assignedSame",
             checked: false,
             render: (_, data) => (
@@ -536,6 +546,18 @@ const LeadsModule = () => {
     },
     [dropdownData]
   )
+
+
+  const handleSearch = (e) => {
+    const value = e.target.value
+    setSearchText(value)
+    const filtered = allLeadsData?.filter((item) =>
+      Object.values(item)?.some((val) =>
+        String(val)?.toLowerCase()?.includes(value?.toLowerCase())
+      )
+    )
+    setFilteredData(filtered)
+  }
 
   return (
     <div className="lead-module small-box-padding">
@@ -700,13 +722,19 @@ const LeadsModule = () => {
           </button>
         </div>
       </div>
-
+      <Input
+        placeholder="search"
+        size="small"
+        value={searchText}
+        onChange={handleSearch}
+        style={{ width: "250px" }}
+      />
       <div className="table-arrow">
         <Suspense fallback={<TableScalaton />}>
           <CommonTable
-            data={allLeadsData}
+            data={filteredData}
             columns={columns}
-            scroll={{ y: 505, x: adminRole ? 2500 : 1500 }}
+            scroll={{ y: 490, x: adminRole ? 2500 : 1500 }}
             rowSelection={true}
             onRowSelection={onSelectChange}
             selectedRowKeys={selectedRowKeys}
