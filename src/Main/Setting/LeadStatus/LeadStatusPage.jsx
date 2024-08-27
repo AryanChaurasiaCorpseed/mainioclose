@@ -12,6 +12,7 @@ import { useDispatch } from "react-redux"
 import { createLead } from "../../../Toolkit/Slices/LeadSlice"
 import CommonTable from "../../../components/CommonTable"
 import { Icon } from "@iconify/react"
+import OverFlowText from "../../../components/OverFlowText"
 
 const LeadStatusPage = () => {
   const [form] = Form.useForm()
@@ -47,14 +48,19 @@ const LeadStatusPage = () => {
     {
       title: "Id",
       dataIndex: "id",
+      width: 80,
     },
     {
       title: "Name",
       dataIndex: "name",
+      render: (_, records) => <OverFlowText>{records?.name}</OverFlowText>,
     },
     {
       title: "Description",
       dataIndex: "description",
+      render: (_, records) => (
+        <OverFlowText>{records?.description}</OverFlowText>
+      ),
     },
     {
       title: "Edit",
@@ -65,7 +71,12 @@ const LeadStatusPage = () => {
       title: "Delete",
       dataIndex: "delete",
       render: (_, info) => (
-        <Button size="small" type="text" danger onClick={() => deleteStatusFun(info.id)}>
+        <Button
+          size="small"
+          type="text"
+          danger
+          onClick={() => deleteStatusFun(info.id)}
+        >
           <Icon icon="fluent:delete-20-regular" />
         </Button>
       ),
@@ -74,14 +85,14 @@ const LeadStatusPage = () => {
 
   return (
     <div>
-      <MainHeading data={`Lead status`} />
-      <div className="lead-box">
+      <div className="create-user-box">
+        <MainHeading data={`Lead status`} />
         <Button type="primary" onClick={() => setOpenModal(true)}>
           Add lead status
         </Button>
       </div>
 
-      <div className="mt-4 setting-table">
+      <div className="setting-table">
         <div className="table-responsive">
           {statusLoading ? (
             <SmallTableScalaton />

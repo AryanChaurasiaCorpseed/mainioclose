@@ -25,6 +25,7 @@ import {
 } from "../../../Toolkit/Slices/AuthSlice"
 import { playErrorSound, playSuccessSound } from "../../Common/Commons"
 import { Icon } from "@iconify/react"
+import { BTN_ICON_HEIGHT, BTN_ICON_WIDTH } from "../../../components/Constants"
 
 const Department = () => {
   const [form] = Form.useForm()
@@ -132,12 +133,12 @@ const Department = () => {
         return (
           <div className="tagContainer">
             {tags?.[0]}
-            {tags?.length > 0 && (
-              <Tooltip title={tags}  placement="topRight">
+            {tags?.length >= 2 && (
+              <Tooltip title={tags} arrow={false}>
                 <Icon
-                  icon="fluent:more-circle-24-regular"
-                  height={24}
-                  width={24}
+                  icon="fluent:more-horizontal-24-regular"
+                  height={BTN_ICON_HEIGHT}
+                  width={BTN_ICON_WIDTH}
                 />
               </Tooltip>
             )}
@@ -161,13 +162,13 @@ const Department = () => {
   ]
   return (
     <div>
-      <MainHeading data={`Department`} />
-      <div className="lead-box">
+      <div className="create-user-box">
+        <MainHeading data={`Department`} />
         <Button type="primary" onClick={() => setOpenModal(true)}>
           Add department
         </Button>
       </div>
-      <div className="mt-4 setting-table">
+      <div className="setting-table">
         <div className="table-responsive">
           <CommonTable
             data={departmentList?.length > 0 ? departmentList : []}
@@ -191,7 +192,7 @@ const Department = () => {
             rules={[
               {
                 required: true,
-                message: "please write the something to comment ",
+                message: "please write the something to comment. ",
               },
             ]}
           >

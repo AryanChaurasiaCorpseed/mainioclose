@@ -9,6 +9,7 @@ import {
 } from "../../../Toolkit/Slices/SettingSlice"
 import { createAuthDesigination } from "../../../Toolkit/Slices/AuthSlice"
 import { playErrorSound, playSuccessSound } from "../../Common/Commons"
+import OverFlowText from "../../../components/OverFlowText"
 
 const Desigination = () => {
   const [form] = Form.useForm()
@@ -60,10 +61,12 @@ const Desigination = () => {
     {
       title: "Id",
       dataIndex: "id",
+      width: 100,
     },
     {
       title: "Desigination",
       dataIndex: "name",
+      render: (info) => <OverFlowText>{info}</OverFlowText>,
     },
     {
       title: "Weight value",
@@ -72,13 +75,13 @@ const Desigination = () => {
   ]
   return (
     <div>
-      <MainHeading data={`Desigination`} />
-      <div className="lead-box">
+      <div className="create-user-box">
+        <MainHeading data={`Desigination`} />
         <Button type="primary" onClick={() => setOpenModal(true)}>
           Add desigination
         </Button>
       </div>
-      <div className="mt-4 setting-table">
+      <div className="setting-table">
         <div className="table-responsive">
           <CommonTable
             data={desiginationList?.length > 0 ? desiginationList : []}

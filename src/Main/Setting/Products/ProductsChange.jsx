@@ -12,6 +12,7 @@ import { Button, Form, Input, Modal, Select } from "antd"
 import { useDispatch } from "react-redux"
 import CommonTable from "../../../components/CommonTable"
 import { Icon } from "@iconify/react"
+import OverFlowText from "../../../components/OverFlowText"
 
 const ProductsChange = () => {
   const { userid } = useParams()
@@ -20,7 +21,7 @@ const ProductsChange = () => {
   const dispatch = useDispatch()
   const [form] = Form.useForm()
   const [openModal, setOpenModal] = useState(false)
- 
+
   const categoryUrl = `/leadService/api/v1/category/getAllCategories`
   const categoryDep = []
 
@@ -41,19 +42,88 @@ const ProductsChange = () => {
       dataIndex: "productName",
       title: "Product name",
       fixed: "left",
+      render: (_, records) => (
+        <OverFlowText>{records?.productName}</OverFlowText>
+      ),
     },
-    { dataIndex: "govermentfees", title: "Govt. fees" },
-    { dataIndex: "govermentCode", title: "Govt. code" },
-    { dataIndex: "govermentGst", title: "Govt. GST (%)" },
-    { dataIndex: "professionalFees", title: "Prof. fees" },
-    { dataIndex: "professionalCode", title: "Prof. code" },
-    { dataIndex: "profesionalGst", title: "Prof. GST (%)" },
-    { dataIndex: "serviceCharge", title: "Service charge" },
-    { dataIndex: "serviceCode", title: "Service code" },
-    { dataIndex: "serviceGst", title: "Service GST (%)" },
-    { dataIndex: "otherFees", title: "Other fees" },
-    { dataIndex: "otherCode", title: "Other code" },
-    { dataIndex: "otherGst", title: "Other GST (%)" },
+    {
+      dataIndex: "govermentfees",
+      title: "Govt. fees",
+      render: (_, records) => (
+        <OverFlowText>{records?.govermentfees}</OverFlowText>
+      ),
+    },
+    {
+      dataIndex: "govermentCode",
+      title: "Govt. code",
+      render: (_, records) => (
+        <OverFlowText>{records?.govermentCode}</OverFlowText>
+      ),
+    },
+    {
+      dataIndex: "govermentGst",
+      title: "Govt. GST (%)",
+      render: (_, records) => (
+        <OverFlowText>{records?.govermentGst}</OverFlowText>
+      ),
+    },
+    {
+      dataIndex: "professionalFees",
+      title: "Prof. fees",
+      render: (_, records) => (
+        <OverFlowText>{records?.professionalFees}</OverFlowText>
+      ),
+    },
+    {
+      dataIndex: "professionalCode",
+      title: "Prof. code",
+      render: (_, records) => (
+        <OverFlowText>{records?.professionalCode}</OverFlowText>
+      ),
+    },
+    {
+      dataIndex: "profesionalGst",
+      title: "Prof. GST (%)",
+      render: (_, records) => (
+        <OverFlowText>{records?.profesionalGst}</OverFlowText>
+      ),
+    },
+    {
+      dataIndex: "serviceCharge",
+      title: "Service charge",
+      render: (_, records) => (
+        <OverFlowText>{records?.serviceCharge}</OverFlowText>
+      ),
+    },
+    {
+      dataIndex: "serviceCode",
+      title: "Service code",
+      render: (_, records) => (
+        <OverFlowText>{records?.serviceCode}</OverFlowText>
+      ),
+    },
+    {
+      dataIndex: "serviceGst",
+      title: "Service GST (%)",
+      render: (_, records) => (
+        <OverFlowText>{records?.serviceGst}</OverFlowText>
+      ),
+    },
+    {
+      dataIndex: "otherFees",
+      title: "Other fees",
+      render: (_, records) => <OverFlowText>{records?.otherFees}</OverFlowText>,
+    },
+    {
+      dataIndex: "otherCode",
+      title: "Other code",
+      render: (_, records) => <OverFlowText>{records?.otherCode}</OverFlowText>,
+    },
+    {
+      dataIndex: "otherGst",
+      title: "Other GST (%)",
+      render: (_, records) => <OverFlowText>{records?.otherGst}</OverFlowText>,
+    },
     {
       dataIndex: "Action",
       title: "Delete",
@@ -99,8 +169,8 @@ const ProductsChange = () => {
 
   return (
     <div>
-      <MainHeading data={`Lead product`} />
-      <div className="lead-box">
+      <div className="create-user-box">
+        <MainHeading data={`Lead product`} />
         <Button type="primary" onClick={() => setOpenModal(true)}>
           Add product
         </Button>

@@ -10,6 +10,7 @@ import {
 } from "../../../Toolkit/Slices/UserRatingSlice"
 import CommonTable from "../../../components/CommonTable"
 import { Icon } from "@iconify/react"
+import OverFlowText from "../../../components/OverFlowText"
 
 const Comments = () => {
   const [form] = Form.useForm()
@@ -64,10 +65,12 @@ const Comments = () => {
     {
       title: "Id",
       dataIndex: "id",
+      width: 60,
     },
     {
       title: "Comment",
       dataIndex: "name",
+      render: (_, info) => <OverFlowText>{info?.name}</OverFlowText>,
     },
     {
       title: "Edit",
@@ -113,13 +116,13 @@ const Comments = () => {
   ]
   return (
     <div>
-      <MainHeading data={`Comments`} />
-      <div className="lead-box">
+      <div className="create-user-box">
+        <MainHeading data={`Comments`} />
         <Button type="primary" onClick={() => setOpenModal(true)}>
           Add comment
         </Button>
       </div>
-      <div className="mt-4 setting-table">
+      <div className="setting-table">
         <div className="table-responsive">
           <CommonTable
             data={allComments}

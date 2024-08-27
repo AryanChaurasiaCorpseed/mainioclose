@@ -13,6 +13,7 @@ import { useDispatch } from "react-redux"
 import { createLeadCateogry } from "../../../Toolkit/Slices/LeadSlice"
 import CommonTable from "../../../components/CommonTable"
 import { Icon } from "@iconify/react"
+import OverFlowText from "../../../components/OverFlowText"
 toast.configure()
 
 const LeadCategory = () => {
@@ -89,6 +90,9 @@ const LeadCategory = () => {
     {
       title: "Name",
       dataIndex: "categoryName",
+      render: (_, records) => (
+        <OverFlowText>{records?.categoryName}</OverFlowText>
+      ),
     },
     {
       title: "Created Date",
@@ -104,7 +108,12 @@ const LeadCategory = () => {
       title: "Delete",
       dataIndex: "delete",
       render: (_, status) => (
-        <Button type="text" danger onClick={() => deleteCategoryFun(status.id)} size="small">
+        <Button
+          type="text"
+          danger
+          onClick={() => deleteCategoryFun(status.id)}
+          size="small"
+        >
           <Icon icon="fluent:delete-20-regular" />
         </Button>
       ),
@@ -113,13 +122,13 @@ const LeadCategory = () => {
 
   return (
     <div>
-      <MainHeading data={`Lead category`} />
-      <div className="lead-box">
+      <div className="create-user-box">
+        <MainHeading data={`Lead category`} />
         <Button type="primary" onClick={() => setOpenModal(true)}>
           Create lead category
         </Button>
       </div>
-      <div className="mt-4 setting-table">
+      <div className="setting-table">
         <div className="table-responsive">
           <CommonTable
             data={categoryData}

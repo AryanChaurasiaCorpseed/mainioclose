@@ -56,8 +56,8 @@ const SlugCreate = () => {
 
   return (
     <div>
-      <MainHeading data={`Slug create`} />
-      <div className="lead-box">
+      <div className="create-user-box">
+        <MainHeading data={`Slug create`} />
         <Button type="primary" onClick={() => setOpenModal(true)}>
           Create slug
         </Button>

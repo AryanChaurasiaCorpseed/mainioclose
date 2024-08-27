@@ -18,11 +18,15 @@ import {
   Modal,
   notification,
   Select,
+  Tag,
   Tooltip,
   Typography,
 } from "antd"
 import EditUrls from "./EditUrls"
 import CommonTable from "../../../components/CommonTable"
+import OverFlowText from "../../../components/OverFlowText"
+import { Icon } from "@iconify/react"
+import { BTN_ICON_HEIGHT, BTN_ICON_WIDTH } from "../../../components/Constants"
 const { Text } = Typography
 toast.configure()
 
@@ -64,24 +68,37 @@ const UrlsPage = () => {
 
   const slugsInTooltip = (data) => {
     return data?.map((items) => {
-      return <p className="slug-items-tooltip">{items?.name}</p>
+      return <Tag className="slug-items-tooltip">{items?.name}</Tag>
     })
   }
 
   const columns = [
-    { title: "id", dataIndex: "id" },
+    { title: "Id", dataIndex: "id" },
     {
-      title: "Url Name",
-      dataIndex: "",
-      render: (_, data) => <Text>{data?.urlsName?.slice(0, 70)}</Text>,
+      title: "Url name",
+      dataIndex: "urlsName",
+      render: (_, data) => <OverFlowText>{data?.urlsName}</OverFlowText>,
     },
     {
       title: "Slugs",
       dataIndex: "slugs",
       render: (_, data) =>
-        data?.urlSlug?.length > 0 ? (
-          <Tooltip title={slugsInTooltip(data?.urlSlug)}>
-            {data?.urlSlug?.[0]?.name}
+        data?.urlSlug?.length > 0 && data?.urlSlug?.length === 1 ? (
+          <OverFlowText>{data?.urlSlug?.[0]?.name}</OverFlowText>
+        ) : data?.urlSlug?.length >= 2 ? (
+          <Tooltip
+            title={slugsInTooltip(data?.urlSlug)}
+            arrow={false}
+            style={{ display: "flex", alignItems: "center", gap: "4px" }}
+          >
+            <div className="flex-vert-hori-center">
+              {data?.urlSlug?.[0]?.name}{" "}
+              <Icon
+                icon="fluent:more-horizontal-24-regular"
+                height={BTN_ICON_HEIGHT}
+                width={BTN_ICON_WIDTH}
+              />
+            </div>
           </Tooltip>
         ) : (
           "N/A"
@@ -112,7 +129,7 @@ const UrlsPage = () => {
       .then((resp) => {
         if (resp.meta.requestStatus === "fulfilled") {
           notification.success({
-            message: "urls converted in product successfully",
+            message: "urls converted to product successfully",
           })
           setSelectedRowKeys([])
         } else {
@@ -126,18 +143,21 @@ const UrlsPage = () => {
 
   return (
     <div>
-      <MainHeading data={`Urls list`} />
-      <div className="lead-box">
-        <Button
-          onClick={handleConvertToProduct}
-          disabled={selectedRowKeys?.length === 0 ? true : false}
-        >
-          Convert to product
-        </Button>
-        <Button type="primary" onClick={() => setOpenModal(true)}>
-          Create url
-        </Button>
+      <div className="create-user-box">
+        <MainHeading data={`Urls list`} />
+        <div className="lead-box">
+          <Button
+            onClick={handleConvertToProduct}
+            disabled={selectedRowKeys?.length === 0 ? true : false}
+          >
+            Convert to product
+          </Button>
+          <Button type="primary" onClick={() => setOpenModal(true)}>
+            Create url
+          </Button>
+        </div>
       </div>
+
       <CommonTable
         columns={columns}
         data={allLeadUrl}
@@ -162,14 +182,14 @@ const UrlsPage = () => {
       >
         <Form layout="vertical" onFinish={handleSubmit} form={form}>
           <Form.Item
-            label="Enter Url Name"
+            label="Enter url name"
             name="name"
             rules={[{ required: true, message: "please enter url" }]}
           >
             <Input />
           </Form.Item>
           <Form.Item
-            label="Select Slug"
+            label="Select slug"
             name="urlSlug"
             rules={[{ required: true, message: "please select slug" }]}
           >
@@ -191,7 +211,7 @@ const UrlsPage = () => {
             />
           </Form.Item>
           <Form.Item
-            label="Select Quality"
+            label="Select quality"
             name="quality"
             rules={[{ required: true, message: "please select quality" }]}
           >

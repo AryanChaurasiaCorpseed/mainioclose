@@ -965,7 +965,7 @@ select.form-control:not([size]):not([multiple]) {
 
 .flex-vert-hori-center {
   display: flex;
-  /* justify-content: center; */
+  justify-content: center;
   align-items: center;
   gap: 6px;
 }
