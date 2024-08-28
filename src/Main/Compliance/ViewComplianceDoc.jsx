@@ -16,7 +16,6 @@ export const ViewComplianceDoc = ({ data }) => {
     (values) => {
       values.categoryId = data?.id
       values.docList = values?.docList?.fileList?.map((item) => item?.response)
-      console.log("kjshdckjsdgckjsdhgkjg", values)
       dispatch(uploadDocuments(values))
         .then((resp) => {
           if (resp?.meta.requestStatus === "fulfilled") {
@@ -53,14 +52,14 @@ export const ViewComplianceDoc = ({ data }) => {
       </Tag>
 
       <Modal
-        title="Compliance Document"
+        title="Compliance document"
         open={openModal}
         width={800}
         onCancel={() => setOpenModal(false)}
         onClose={() => setOpenModal(false)}
         footer={null}
       >
-        <iframe width={"100%"} height={500} src={docLink} />
+        <iframe title="" width={"100%"} height={500} src={docLink} />
       </Modal>
 
       <Modal

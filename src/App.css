@@ -970,6 +970,13 @@ select.form-control:not([size]):not([multiple]) {
   gap: 6px;
 }
 
+.flex-verti-center-hori-start{
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 6px;
+}
+
 .heading-text {
   font-size: 16px;
   line-height: 18px;

@@ -68,6 +68,7 @@ export const AccountsList = () => {
           title={data?.lead?.map((item, idx) => (
             <Tag color="gray" key={`${idx}leads`}>{item?.leadNameame}</Tag>
           ))}
+          arrow={false}
         >
           <Tag className="lead-tag">{data?.lead?.[0]?.leadNameame}</Tag>
         </Tooltip>

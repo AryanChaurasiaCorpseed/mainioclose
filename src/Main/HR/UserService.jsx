@@ -5,22 +5,21 @@ import { useDispatch, useSelector } from "react-redux"
 import TableScalaton from "../../components/TableScalaton"
 import SomethingWrong from "../../components/usefulThings/SomethingWrong"
 import CreateRatingModel from "../../Model/CreateRatingModel"
-import { getAllSlugAction, getAllSlugList } from "../../Toolkit/Slices/LeadSlugSlice"
+import { getAllSlugAction } from "../../Toolkit/Slices/LeadSlugSlice"
 import CommonTable from "../../components/CommonTable"
 import { getAllUsers } from "../../Toolkit/Slices/UsersSlice"
 import {
   getAllUrlAction,
   getAllUrlList,
-  handleNextPagination,
-  handlePrevPagination,
 } from "../../Toolkit/Slices/LeadUrlSlice"
 import OverFlowText from "../../components/OverFlowText"
+import { Icon } from "@iconify/react"
 import { Input, Typography } from "antd"
 const { Text } = Typography
 
 const UserService = () => {
   const dispatch = useDispatch()
-  const { allLeadUrl, allLeadUrlLoading, allLeadUrlError,allUrlList, page } = useSelector(
+  const { allLeadUrlLoading, allLeadUrlError, allUrlList } = useSelector(
     (prev) => prev?.leadurls
   )
   const [searchText, setSearchText] = useState("")
@@ -85,6 +84,7 @@ const UserService = () => {
           value={searchText}
           onChange={handleSearch}
           style={{ width: "250px" }}
+          prefix={<Icon icon="fluent:search-24-regular" />}
         />
         {allLeadUrlLoading && <TableScalaton />}
         {allLeadUrlError && <SomethingWrong />}

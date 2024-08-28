@@ -1,6 +1,4 @@
 import React, { useEffect, useState } from "react"
-import LongInput from "../../../components/Inputs/LongInput"
-import SmOneBtn from "../../../components/button/SmOneBtn"
 import MainHeading from "../../../components/design/MainHeading"
 import { useDispatch, useSelector } from "react-redux"
 import {
@@ -9,7 +7,6 @@ import {
   handlePrevPagination,
   leadSlugAction,
 } from "../../../Toolkit/Slices/LeadSlugSlice"
-import TableBoot from "../../../components/tablesData/TableBoot"
 import { toast } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
 import EditSlugModal from "../../../Model/EditSlugModal"
@@ -29,7 +26,7 @@ const SlugCreate = () => {
     dispatch(getAllSlugAction(page))
   }, [dispatch, slugDep, page])
 
-  const { allLeadSlug, allLeadSlugLoading, allLeadSlugError } = useSelector(
+  const { allLeadSlug } = useSelector(
     (prev) => prev?.leadslug
   )
 

@@ -8,7 +8,7 @@ import {
   handleNextPagination,
   handlePrevPagination,
 } from "../../Toolkit/Slices/CompanySlice"
-import { Button, notification, Select, Tooltip, Typography } from "antd"
+import { Button, Input, notification, Select, Tooltip, Typography } from "antd"
 import {
   getAllContactDetails,
   updateStatusById,
@@ -34,6 +34,13 @@ const CompanyForm = ({ role }) => {
     (state) => state.auth.getDepartmentDetail
   )
   const [selectedFilter, setSelectedFilter] = useState("initiated")
+
+
+  const [searchText, setSearchText] = useState("")
+  const [filteredData, setFilteredData] = useState([])
+
+
+
   useEffect(() => {
     dispatch(
       getAllCompanyByStatus({ id: userid, status: selectedFilter, page: page })
@@ -51,6 +58,22 @@ const CompanyForm = ({ role }) => {
     dispatch(getAllContactDetails())
   }, [dispatch])
 
+  useEffect(() => {
+    setFilteredData(leadCompanyList)
+  }, [])
+
+  const handleSearch = (e) => {
+    const value = e.target.value
+    setSearchText(value)
+    const filtered = leadCompanyList?.filter((item) =>
+      Object.values(item)?.some((val) =>
+        String(val)?.toLowerCase()?.includes(value?.toLowerCase())
+      )
+    )
+    setFilteredData(filtered)
+  }
+
+
   const columns = [
     {
       title: "Id",
@@ -62,11 +85,7 @@ const CompanyForm = ({ role }) => {
       title: "Company name",
       dataIndex: "companyName",
       fixed: "left",
-      render: (_, value) => (
-        <OverFlowText>
-          {value?.companyName }
-        </OverFlowText>
-      ),
+      render: (_, value) => <OverFlowText>{value?.companyName}</OverFlowText>,
     },
     {
       title: "Pan number",
@@ -116,9 +135,7 @@ const CompanyForm = ({ role }) => {
     {
       title: "Address",
       dataIndex: "address",
-      render: (_, value) => (
-        <OverFlowText>{value?.address}</OverFlowText>
-      ),
+      render: (_, value) => <OverFlowText>{value?.address}</OverFlowText>,
     },
     {
       title: "City",
@@ -163,9 +180,7 @@ const CompanyForm = ({ role }) => {
     {
       title: "Secondary address",
       dataIndex: "sAddress",
-      render: (_, value) => (
-        <OverFlowText>{value?.sAddress}</OverFlowText>
-      ),
+      render: (_, value) => <OverFlowText>{value?.sAddress}</OverFlowText>,
     },
     {
       title: "Secondary city",
@@ -334,10 +349,19 @@ const CompanyForm = ({ role }) => {
         <MainHeading data={"Company list"} />
       </div>
       <div className="mt-3">
-        <div>
+        <div className="flex-verti-center-hori-start">
+          <Input
+             value={searchText}
+             size="small"
+             onChange={handleSearch}
+             style={{ width: "220px" }}
+            placeholder="search"
+            prefix={<Icon icon="fluent:search-24-regular" />}
+          />
           <Select
-            style={{ width: "200px" }}
+            style={{ width: "220px" }}
             showSearch
+            size="small"
             value={selectedFilter}
             options={[
               { label: "Initiated", value: "initiated" },
@@ -348,7 +372,7 @@ const CompanyForm = ({ role }) => {
           />
         </div>
         <CommonTable
-          data={leadCompanyList}
+          data={filteredData}
           columns={columns}
           scroll={{ x: 5000, y: 550 }}
           rowSelection={true}
@@ -356,7 +380,7 @@ const CompanyForm = ({ role }) => {
           nextPage={handleNextPagination}
           prevPage={handlePrevPagination}
           prevDisable={page === 0 && true}
-          nextDisable={leadCompanyList?.length < 50 && true}
+          nextDisable={filteredData?.length < 50 && true}
         />
       </div>
     </TableOutlet>

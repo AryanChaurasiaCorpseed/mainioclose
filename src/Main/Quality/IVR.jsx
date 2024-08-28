@@ -63,7 +63,7 @@ const IVR = () => {
   return (
     <TableOutlet>
       <div className="create-user-box">
-        <MainHeading data={"All Ivr"} />
+        <MainHeading data={"All ivr"} />
         <CreateNEditIVR />
       </div>
       <div>

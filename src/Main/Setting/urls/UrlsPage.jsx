@@ -46,12 +46,9 @@ const UrlsPage = () => {
     dispatch(getAllUrlAction(urlPage))
   }, [dispatch, urlDep, urlPage])
 
-  const { allLeadUrl, allLeadUrlLoading, allLeadUrlError } = useSelector(
+  const { allLeadUrl } = useSelector(
     (prev) => prev?.leadurls
   )
-
-  const { createLeadUrl, createLeadUrlLoading, createLeadUrlError } =
-    useSelector((prev) => prev?.leadurls)
 
   const handleSubmit = async (values) => {
     const createNewUrl = await dispatch(createAllUrlAction(values))

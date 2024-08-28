@@ -36,6 +36,6 @@ const complianceSlice=createSlice({
     }
 })
 
-const {}=complianceSlice.actions
+// const {}=complianceSlice.actions
 
 export default complianceSlice.reducer

@@ -12,6 +12,7 @@ import {
   getAllLeads,
   getAllLeadUser,
   getAllStatusData,
+  getLeadNotificationCount,
   handleDeleteSingleLead,
   handleLeadassignedToSamePerson,
   handleViewHistory,
@@ -45,6 +46,9 @@ const CommonTable = React.lazy(() => import(`../../../components/CommonTable`))
 const LeadsModule = () => {
   const leadUserNew = useSelector((state) => state.leads.getAllLeadUserData)
   const getAllStatus = useSelector((state) => state.leads.getAllStatus)
+  const notificationCount = useSelector(
+    (state) => state.leads.notificationCount
+  )
   const [toDate, setToDate] = useState("")
   const [fromDate, setFromDate] = useState("")
   const [multibtn, setMultibtn] = useState("")
@@ -60,7 +64,6 @@ const LeadsModule = () => {
   const [headerData, setHeaderData] = useState([])
   const [searchText, setSearchText] = useState("")
   const [filteredData, setFilteredData] = useState([])
-
 
   const onSelectChange = (newSelectedRowKeys, rowsData) => {
     setSelectedRowKeys(newSelectedRowKeys)
@@ -254,7 +257,6 @@ const LeadsModule = () => {
         playErrorSound()
       })
   }
-
 
   useEffect(() => {
     setFilteredData(allLeadsData)
@@ -501,10 +503,15 @@ const LeadsModule = () => {
       })
   }, [dispatch, selectedRowKeys, userid, assignedLeadInfo, allMultiFilterData])
 
-  const bellCountUrl = `/leadService/api/v1/notification/getUnseenCount?userId=${userid}`
-  const bellCountDep = []
+  useEffect(() => {
+    const notifcationApi = setInterval(() => {
+      dispatch(getLeadNotificationCount(userid))
+    }, 1 * 60 * 1000)
 
-  const { productData: bellData } = useCustomRoute(bellCountUrl, bellCountDep)
+    dispatch(getLeadNotificationCount(userid))
+
+    return () => clearInterval(notifcationApi)
+  }, [userid])
 
   const menuStyle = {
     boxShadow: "none",
@@ -546,7 +553,6 @@ const LeadsModule = () => {
     },
     [dropdownData]
   )
-
 
   const handleSearch = (e) => {
     const value = e.target.value
@@ -645,7 +651,7 @@ const LeadsModule = () => {
           {adminRole ? <LeadCreateModel /> : ""}
           <Link to={`notification`}>
             <div className="bell-box">
-              <span className="bell-count">{bellData}</span>
+              <span className="bell-count">{notificationCount}</span>
               <span className="bell-icon">
                 <i className="fa-regular fa-bell"></i>
               </span>
@@ -728,6 +734,7 @@ const LeadsModule = () => {
         value={searchText}
         onChange={handleSearch}
         style={{ width: "250px" }}
+        prefix={<Icon icon="fluent:search-24-regular" />}
       />
       <div className="table-arrow">
         <Suspense fallback={<TableScalaton />}>

@@ -435,6 +435,11 @@ export const createTicket=createAsyncThunk('createTicket',async(data)=>{
   return response.data
 })
 
+export const getLeadNotificationCount=createAsyncThunk('getNotificationLead',async(userid)=>{
+  const response=await getQuery(`/leadService/api/v1/notification/getUnseenCount?userId=${userid}`)
+  return response.data
+})
+
 export const LeadSlice = createSlice({
   name: "lead",
   initialState: {
@@ -464,6 +469,7 @@ export const LeadSlice = createSlice({
     singleLeadResponseData: {},
     allProductsList: [],
     clientsContact: [],
+    notificationCount:0
   },
   reducers: {
     handleLoadingState: (state, action) => {
@@ -674,6 +680,22 @@ export const LeadSlice = createSlice({
     builder.addCase(getSingleLeadDataByLeadID.rejected, (state, action) => {
       state.loading = "rejected"
     })
+
+
+    builder.addCase(getLeadNotificationCount.pending, (state, action) => {
+      state.loading = "pending"
+    })
+    builder.addCase(getLeadNotificationCount.fulfilled, (state, action) => {
+      state.loading = "success"
+      state.notificationCount = action.payload
+    })
+    builder.addCase(getLeadNotificationCount.rejected, (state, action) => {
+      state.loading = "rejected"
+    })
+
+
+
+
   },
 })
 export const { handleLoadingState } = LeadSlice.actions
