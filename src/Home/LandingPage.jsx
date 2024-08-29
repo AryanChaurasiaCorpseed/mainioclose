@@ -8,6 +8,7 @@ import img4 from "../Images/AUTOMATED_TRIGGERS_AND_ALERTS.png"
 import masterImg from '../Images/ERP2.png'
 // import img5 from "../Images/SECURED_CLOU_DOCUMENTS.svg"
 import img6 from "../Images/COMPREHENSIV_DASHBOARDS_AND_REPORTS-01.png"
+import erpNew from '../Images/erp-new.webp'
 import "./LandingPage.scss"
 
 const LandingPage = () => {
@@ -711,11 +712,12 @@ const LandingPage = () => {
                   <div class="w-40-l ph3-l mw-500 max-w-none-l center no-center-l">
                     <img
                       fetchpriority="high"
-                      src={masterImg}
+                      src={img6}
                       alt="Brightpearl Composite"
                       class="no-lazyload"
-                      width="500"
-                      height="650"
+                      width="454"
+                      height="591"
+                      style={{marginTop:'80px'}}
                     />
                   </div>
                 </div>
