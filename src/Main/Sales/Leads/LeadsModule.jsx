@@ -752,7 +752,7 @@ const LeadsModule = () => {
             selectedRowKeys={selectedRowKeys}
             rowClassName={(record) => (!record.view ? "light-gray-row" : "")}
             pagination={true}
-            nextDisable={allLeadData?.length <= 50 ? true : false}
+            nextDisable={allLeadData?.length < 50 ? true : false}
             prevDisable={page === 0 ? true : false}
             nextPage={handleNextPagination}
             prevPage={handlePrevPagination}

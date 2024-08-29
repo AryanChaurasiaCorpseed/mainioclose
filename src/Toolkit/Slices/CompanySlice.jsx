@@ -5,9 +5,9 @@ import { putQuery } from "../../API/PutQuery"
 
 export const getCompanyAction = createAsyncThunk(
   "getallCompanyData",
-  async ({ id }) => {
+  async ({ id,page }) => {
     const getCompanyData = await getQuery(
-      `/leadService/api/v1/company/getAllCompany?userId=${id}`
+      `/leadService/api/v1/company/getAllCompany?userId=${id}&page=${page}&size=50`
     )
     return getCompanyData?.data
   }

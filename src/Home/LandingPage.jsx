@@ -1,6 +1,13 @@
 import React, { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
 import logo from "../Images/CORPSEED.webp"
+import img1 from "../Images/COMPLIANCE_RISK_MANAGEMENT.png"
+import im2 from "../Images/COMPLIANCE_MONITORING_FRAMEWORK.png"
+import img3 from "../Images/OUTSOURCE_AND_MANAGE_TASKS.png"
+import img4 from "../Images/AUTOMATED_TRIGGERS_AND_ALERTS.png"
+import masterImg from '../Images/ERP2.png'
+// import img5 from "../Images/SECURED_CLOU_DOCUMENTS.svg"
+import img6 from "../Images/COMPREHENSIV_DASHBOARDS_AND_REPORTS-01.png"
 import "./LandingPage.scss"
 
 const LandingPage = () => {
@@ -29,21 +36,13 @@ const LandingPage = () => {
             <div class="l-wrapper">
               <div class="w-100 pt2 pt3-l flex justify-start">
                 <div class="l-header-logo-wrapper flex-auto relative z-9999">
-                  <a
-                    aria-label="homepage"
-                    href="index.html"
-                    rel="home"
-                    class="l-header-logo dib"
-                    data-wpel-link="internal"
-                  >
-                    <img
-                      src="wp-content/themes/bp-wp-2021/assets/img/sage/brightpearl-by-sage-logo.svg"
-                      class="db no-lazyload"
-                      alt="Brightpearl by Sage"
-                      width="230px"
-                      height="45px"
-                    />
-                  </a>
+                  <img
+                    src={logo}
+                    class="db no-lazyload"
+                    alt="corpseed logo"
+                    width="80px"
+                    height="60px"
+                  />
                 </div>
 
                 <nav
@@ -663,29 +662,29 @@ const LandingPage = () => {
                   <div class="w-60-l pr5-l m-gf-hero-titles mw-700 max-w-none-l pb4 pb0-l center no-center-l">
                     <div class="title-wrapper tl">
                       <h1 class="pre-header sg-jade-light ttu title-sequel lh-copy mb2">
-                        Retail Operating System{" "}
+                        Effortless Compliance, Seamless Growth
                       </h1>
 
                       <h2 class="as-header-1 white pb3">
-                        Save Hundreds of Hours. Eliminate Errors.{" "}
+                        Navigating business approvals has never been easier.
                       </h2>
 
                       <div class="cms m-checks-list white">
                         <p>
-                          Multi-channel merchants and wholesalers turn to
-                          Brightpearl to <strong>streamline operations</strong>,{" "}
-                          <strong>boost efficiency</strong> and{" "}
-                          <strong>stay ahead</strong> in a fast-changing retail
-                          landscape.
+                          We simplify the process of securing essential licenses
+                          and permits, <strong>streamline operations</strong>,{" "}
+                          <strong>handling everything </strong> from
+                          <strong>application</strong> to compliance management.
                         </p>
                         <p>
-                          Brightpearl customers are free to focus on growth.
-                          They use our Automation Engine to…
+                          We streamline the process of obtaining necessary
+                          business approvals to ensure your operations are fully
+                          compliant with regulatory requirements.
                         </p>
                         <ul>
-                          <li>Save two months a year, on average</li>
-                          <li>Reduce human errors by 65%</li>
-                          <li>Lower labor costs by 50%</li>
+                          <li>Focus on what you do best.</li>
+                          <li>Growing your business.</li>
+                          <li>Experience a hassle-free approval process.</li>
                         </ul>
                       </div>
 
@@ -712,11 +711,11 @@ const LandingPage = () => {
                   <div class="w-40-l ph3-l mw-500 max-w-none-l center no-center-l">
                     <img
                       fetchpriority="high"
-                      src="wp-content/themes/bp-wp-2021/assets/img/sage/brightpearl-hero-banner.webp"
+                      src={masterImg}
                       alt="Brightpearl Composite"
                       class="no-lazyload"
-                      width="454"
-                      height="591"
+                      width="500"
+                      height="650"
                     />
                   </div>
                 </div>
@@ -949,41 +948,35 @@ const LandingPage = () => {
                 <div class="row-1 flex-l flex-row-l pv4 pt5-l relative z-5">
                   <div class="w-50-l pr4-l pb3 center no-center-l mw-600">
                     <img
-                      src="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20568%20467'%3E%3C/svg%3E"
+                      src={img1}
                       class="db"
                       alt="home-free-up-time"
                       width="568px"
                       height="467px"
                       data-lazy-src="wp-content/uploads/2024/03/home-free-up-time.png"
                     />
-                    <noscript>
-                      <img
-                        src="wp-content/uploads/2024/03/home-free-up-time.png"
-                        class="db"
-                        alt="home-free-up-time"
-                        width="568px"
-                        height="467px"
-                      />
-                    </noscript>
                   </div>
 
                   <div class="w-50-l pl5-l flex-l flex-row-l items-center-l">
                     <div class="center no-center-l mw-600 pt4-l tc tl-l">
                       <h2 class="mid title-sequel pt3">
-                        Free up your time, <i>keep up your profits</i>
+                        Master Compliance, <i>Minimize Risk</i>
                       </h2>
                       <h3>by automating (almost) everything</h3>
                       <p>
-                        Right now, your business needs you to spend your time
-                        innovating, adapting and seizing opportunities – not
-                        getting bogged down by tedious, low-profit tasks.
+                        Transform your approach to compliance with our
+                        cutting-edge risk management solutions. We simplify the
+                        complexities of regulatory requirements, identifying and
+                        mitigating potential risks to ensure your business
+                        remains secure and compliant.
                       </p>
                       <p>
-                        Easily automate everything from complex order
-                        fulfillment and multi-location inventory management to
-                        shipping and accounting with Brightpearl’s powerful
-                        Automation Engine. <strong>Save 1000s of hours</strong>{" "}
-                        and focus your energy where it counts.
+                        With our expertise, you can confidently navigate legal
+                        landscapes, avoid costly penalties, and focus on driving
+                        your business forward. Let us turn compliance challenges
+                        into opportunities for growth and stability.{" "}
+                        <strong>Save 1000s of hours</strong> and focus your
+                        energy where it counts.
                       </p>
                     </div>
                   </div>
@@ -996,54 +989,38 @@ const LandingPage = () => {
                 <div class="row-2 flex-l flex-row-l pv4 pt5-l">
                   <div class="w-50-l pl4-l pb3 center no-center-l mw-600 order-1-l flex-l flex-row-l items-center-l">
                     <img
-                      src="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20568%20414'%3E%3C/svg%3E"
+                      src={im2}
                       class="db"
                       alt="home-supply-chain"
                       width="568px"
                       height="414px"
                       data-lazy-src="wp-content/uploads/2024/02/home-supply-chain.png"
                     />
-                    <noscript>
-                      <img
-                        src="wp-content/uploads/2024/02/home-supply-chain.png"
-                        class="db"
-                        alt="home-supply-chain"
-                        width="568px"
-                        height="414px"
-                      />
-                    </noscript>
                   </div>
 
                   <div class="w-50-l pr5-l order-0-l flex-l flex-row-l items-center-l">
                     <div class="center no-center-l mw-600 pt4-l tc tl-l">
                       <h2 class="mid title-sequel pt3">
-                        Dodge supply chain
-                        <br /> <i>curveballs</i>
+                        Stay Ahead with
+                        <br /> <i>Proactive Compliance</i>
                       </h2>
                       <h3>
-                        with smart sales forecasting and inventory planning
+                        Elevate your business’s compliance strategy with our
+                        advanced monitoring framework.
                       </h3>
                       <p>
-                        Delayed orders? Warehouse full of stock you can’t shift?
-                        Best-sellers always running low? You need an{" "}
-                        <a
-                          href="inventory-planning.html"
-                          data-wpel-link="internal"
-                        >
-                          advanced inventory planning solution
-                        </a>{" "}
-                        that can handle unpredictable demand and supply chain
-                        disruption to{" "}
-                        <strong>keep your cash flow healthy</strong>. You need
-                        Brightpearl.
+                        We provide real-time insights and proactive oversight to
+                        ensure your operations adhere to evolving regulations.
+                        By implementing cutting-edge tools and expert analysis,
+                        we help you stay ahead of compliance challenges,
+                        mitigate risks, and maintain seamless regulatory
+                        alignment.
+                        <strong></strong>
                       </p>
                       <p>
-                        Get buying recommendations based on accurate sales
-                        forecasting so you always know what to order, how much
-                        to order and when to order it. You can even factor in
-                        rapidly-changing trends and sudden market shifts into
-                        your planning – in the current market, it’s the only way
-                        to get ahead.
+                        Embrace a future of transparency and confidence with a
+                        compliance monitoring system designed for dynamic
+                        success.
                       </p>
                     </div>
                   </div>
@@ -1055,46 +1032,43 @@ const LandingPage = () => {
               <div class="row-3 flex-l flex-row-l pv4 pt5-l">
                 <div class="w-50-l pr4-l pb3 center no-center-l mw-600">
                   <img
-                    src="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20568%20518'%3E%3C/svg%3E"
+                    src={img3}
                     class="db"
                     alt="home-kpi-summary"
                     width="568px"
                     height="518px"
                     data-lazy-src="wp-content/uploads/2024/03/home-kpi-summary.png"
                   />
-                  <noscript>
-                    <img
-                      src="wp-content/uploads/2024/03/home-kpi-summary.png"
-                      class="db"
-                      alt="home-kpi-summary"
-                      width="568px"
-                      height="518px"
-                    />
-                  </noscript>
                 </div>
 
                 <div class="w-50-l pl5-l flex-l flex-row-l items-center-l">
                   <div class="center no-center-l mw-600 pt4-l tc tl-l">
                     <h2 class="mid title-sequel pt3">
-                      Get more bang
-                      <br /> <i>for your buck</i>
+                      Unlock Efficiency with
+                      <br /> <i>Outsourced Excellence</i>
                     </h2>
-                    <h3>with advanced insights + analysis</h3>
+                    <h3>
+                      Streamline your operations by outsourcing and managing
+                      critical tasks with ease.{" "}
+                    </h3>
                     <p>
-                      Make smarter decisions and grow your business faster with{" "}
-                      <strong>Brightpearl’s retail analytics</strong>.
+                      Our tailored solutions handle your administrative,
+                      regulatory, and operational needs,{" "}
+                      <strong>
+                        allowing you to focus on strategic growth.
+                      </strong>
+                      .
                     </p>
                     <p>
-                      Yes, our business intelligence tools include key KPIs like
-                      Customer Acquisition Cost (CAC), Lifetime Value (LTV),
-                      best-selling products and paid search and social
-                      performance – but, unlike other tools, our data is
-                      accurate and super easy to navigate.
+                      Experience unparalleled efficiency and expertise as we
+                      manage complex tasks and ensure seamless execution,
+                      freeing you to concentrate on what truly matters—driving
+                      your business forward.
                     </p>
-                    <p>
+                    {/* <p>
                       You can even <strong>access industry benchmarks</strong>{" "}
                       to see how your performance compares to your competition.
-                    </p>
+                    </p> */}
                   </div>
                 </div>
               </div>
@@ -1106,42 +1080,36 @@ const LandingPage = () => {
                   <div class="w-50-l pl4-l pb2 center no-center-l mw-600 order-1-l">
                     <div class="mw-400 center">
                       <img
-                        src="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20363%20363'%3E%3C/svg%3E"
+                        src={img4}
                         class="db m-picture-block"
                         alt="logos-plug-and-play-apps"
                         width="363px"
                         height="363px"
                         data-lazy-src="wp-content/uploads/2024/02/logos-plug-and-play-apps.png"
                       />
-                      <noscript>
-                        <img
-                          src="wp-content/uploads/2024/02/logos-plug-and-play-apps.png"
-                          class="db m-picture-block"
-                          alt="logos-plug-and-play-apps"
-                          width="363px"
-                          height="363px"
-                        />
-                      </noscript>
                     </div>
                   </div>
 
                   <div class="w-50-l pr5-l order-0-l flex-l flex-row-l items-center-l">
                     <div class="center no-center-l mw-600 tc tl-l">
                       <h2 class="mid title-sequel pt3">
-                        Be where your
-                        <br /> <i>customers are</i>
+                        Stay Ahead with
+                        <br /> <i>Intelligent Alerts</i>
                       </h2>
-                      <h3>with a huge range of Plug &amp; Play apps</h3>
+                      <h3>
+                        Revolutionize your business operations with automated
+                        alerts and triggers that keep you informed and in
+                        control.{" "}
+                      </h3>
                       <p>
-                        Attracting new customers (and being where your current
-                        ones hang out online) is key to growth but can introduce
-                        complexity. Brightpearl’s market-disrupting{" "}
-                        <a href="app-store.html" data-wpel-link="internal">
-                          library of Plug &amp; Play integrations
-                        </a>{" "}
-                        makes it simple.
+                        Our intelligent system delivers real-time notifications
+                        and proactive alerts, ensuring you never miss critical
+                        updates or deadlines. Streamline decision-making,
+                        enhance responsiveness, and stay ahead of potential
+                        issues with a solution designed to keep your business
+                        running smoothly and efficiently.
                       </p>
-                      <p>
+                      {/* <p>
                         Add new sales channels – including TikTok, Instagram,
                         live stream platforms and more – in minutes. Curate an
                         ever-changing roster of the latest tech tools, as and
@@ -1149,14 +1117,14 @@ const LandingPage = () => {
                         certified network of development partners so that{" "}
                         <strong>where other brands falter, you can soar</strong>
                         .
-                      </p>
+                      </p> */}
                     </div>
                   </div>
                 </div>
               </div>
             </div>
 
-            <div class="l-wrapper mw-82">
+            {/* <div class="l-wrapper mw-82">
               <div class="row-5 flex-l flex-row-l pt4 pt5-l">
                 <div class="w-50-l pb4 pb0-l center no-center-l mw-600  flex-l flex-row-l items-end-l">
                   <img
@@ -1206,7 +1174,7 @@ const LandingPage = () => {
                   </p>
                 </div>
               </div>
-            </div>
+            </div> */}
           </section>
 
           <section class="get-connected-in-page bg-black">
@@ -1465,7 +1433,7 @@ const LandingPage = () => {
             </div>
           </section>
 
-          <section class="brightpearl-at-a-glance bg-black">
+          {/* <section class="brightpearl-at-a-glance bg-black">
             <div class="l-wrapper mw-82 pt5 pb4 overflow-hidden">
               <div class="pb4 white tc">
                 <h2 class="white mb0 pb4 pb5-l">
@@ -1672,9 +1640,9 @@ const LandingPage = () => {
                 </div>
               </div>
             </div>
-          </section>
+          </section> */}
 
-          <section class="integrations bg-grey">
+          {/* <section class="integrations bg-grey">
             <div class="l-wrapper mw-82 pv5">
               <div class="pb4">
                 <h2 class="as-intro-text sg-jade-mid mb0 pb2">
@@ -2045,9 +2013,9 @@ const LandingPage = () => {
                 </a>
               </div>
             </div>
-          </section>
+          </section> */}
 
-          <section class="news-and-events relative overflow-hidden">
+          {/* <section class="news-and-events relative overflow-hidden">
             <div class="l-wrapper mw-82 pv4 pv5-l">
               <div class="pb4">
                 <h2 class="as-intro-text sg-jade-mid mb0 pb2">More reading</h2>
@@ -2175,7 +2143,7 @@ const LandingPage = () => {
                 </div>
               </div>
             </div>
-          </section>
+          </section> */}
 
           <section class="get-connected bg-black">
             <div class="l-wrapper mw-82 pv4 pt5-l">

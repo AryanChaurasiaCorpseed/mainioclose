@@ -4,6 +4,8 @@ import MainHeading from "../../../components/design/MainHeading"
 import { useDispatch, useSelector } from "react-redux"
 import {
   getCompanyAction,
+  handleNextPagination,
+  handlePrevPagination,
   updateCompanyAssignee,
 } from "../../../Toolkit/Slices/CompanySlice"
 import TableScalaton from "../../../components/TableScalaton"
@@ -13,7 +15,7 @@ import { useParams } from "react-router-dom"
 import { getAllLeadUser } from "../../../Toolkit/Slices/LeadSlice"
 import { Input, notification, Select } from "antd"
 import OverFlowText from "../../../components/OverFlowText"
-import {Icon} from '@iconify/react'
+import { Icon } from "@iconify/react"
 const CommonTable = lazy(() => import("../../../components/CommonTable"))
 
 const MainCompanyPage = () => {
@@ -21,25 +23,24 @@ const MainCompanyPage = () => {
   const { userid } = useParams()
   const currUserId = useSelector((prev) => prev?.auth?.currentUser?.id)
   const leadUserNew = useSelector((state) => state.leads.getAllLeadUserData)
+  const { allCompnay, loadingCompany, errorCompany } = useSelector(
+    (prev) => prev?.company
+  )
+  const page = useSelector((prev) => prev?.company.page)
   const [searchText, setSearchText] = useState("")
   const [filteredData, setFilteredData] = useState([])
 
   useEffect(() => {
-    dispatch(getCompanyAction({ id: currUserId }))
-  }, [dispatch, currUserId])
+    dispatch(getCompanyAction({ id: currUserId, page }))
+  }, [dispatch, currUserId, page])
 
   useEffect(() => {
     dispatch(getAllLeadUser(userid))
   }, [userid, dispatch])
 
-  const { allCompnay, loadingCompany, errorCompany } = useSelector(
-    (prev) => prev?.company
-  )
-
-
   useEffect(() => {
     setFilteredData(allCompnay)
-  }, [])
+  }, [allCompnay])
 
   const handleSearch = (e) => {
     const value = e.target.value
@@ -51,8 +52,6 @@ const MainCompanyPage = () => {
     )
     setFilteredData(filtered)
   }
-
-
 
   const handleUpdateAssignee = useCallback(
     (assigneeId, companyId) => {
@@ -100,6 +99,7 @@ const MainCompanyPage = () => {
       title: "Assignee",
       render: (_, props) => (
         <Select
+          size="small"
           showSearch
           style={{ width: "100%" }}
           value={props?.assignee?.id}
@@ -174,16 +174,15 @@ const MainCompanyPage = () => {
     <TableOutlet>
       <MainHeading data={`All company (${allCompnay?.length})`} />
       <div className="flex-verti-center-hori-start mt-2">
-          <Input
-             value={searchText}
-             size="small"
-             onChange={handleSearch}
-             style={{ width: "220px" }}
-            placeholder="search"
-            prefix={<Icon icon="fluent:search-24-regular" />}
-          />
-          
-        </div>
+        <Input
+          value={searchText}
+          size="small"
+          onChange={handleSearch}
+          style={{ width: "220px" }}
+          placeholder="search"
+          prefix={<Icon icon="fluent:search-24-regular" />}
+        />
+      </div>
       <div className="mt-3">
         {loadingCompany && <TableScalaton />}
         {errorCompany && <SomethingWrong />}
@@ -194,6 +193,11 @@ const MainCompanyPage = () => {
               columns={columns}
               scroll={{ x: 2200, y: 520 }}
               rowSelection={true}
+              pagination={true}
+              nextDisable={allCompnay?.length < 50 ? true : false}
+              prevDisable={page === 0 ? true : false}
+              nextPage={handleNextPagination}
+              prevPage={handlePrevPagination}
             />
           </Suspense>
         )}
