@@ -60,7 +60,7 @@ const CompanyForm = ({ role }) => {
 
   useEffect(() => {
     setFilteredData(leadCompanyList)
-  }, [])
+  }, [leadCompanyList])
 
   const handleSearch = (e) => {
     const value = e.target.value
