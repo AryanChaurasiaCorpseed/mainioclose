@@ -5,7 +5,7 @@ import { getQuery } from "../../API/GetQuery"
 import { deleteQuery } from "../../API/DeleteQuery"
 
 export const getAllLeads = createAsyncThunk("allLeadsData", async (data) => {
-  const allLeads = await postQuery(`/leadService/api/v1/lead/getAllLead`, data)
+  const allLeads = await postQuery(`/leadService/api/v1/lead/getAllLead?page=${data?.page}&size=50`, data)
   return allLeads?.data?.reverse()
 })
 
@@ -469,11 +469,18 @@ export const LeadSlice = createSlice({
     singleLeadResponseData: {},
     allProductsList: [],
     clientsContact: [],
-    notificationCount:0
+    notificationCount:0,
+    page:0,
   },
   reducers: {
     handleLoadingState: (state, action) => {
       state.loading = action.payload
+    },
+    handleNextPagination: (state, action) => {
+      state.page = state.page + 1
+    },
+    handlePrevPagination: (state, action) => {
+      state.page = state.page >= 0 ? state.page - 1 : 0
     },
   },
   extraReducers: (builder) => {
@@ -482,6 +489,7 @@ export const LeadSlice = createSlice({
       state.leadsError = false
     })
     builder.addCase(getAllLeads.fulfilled, (state, action) => {
+      console.log('kdjscj',action.payload)
       state.allLeads = action.payload
       state.leadsLoading = false
       state.leadsError = false
@@ -698,5 +706,5 @@ export const LeadSlice = createSlice({
 
   },
 })
-export const { handleLoadingState } = LeadSlice.actions
+export const { handleLoadingState,handleNextPagination,handlePrevPagination } = LeadSlice.actions
 export default LeadSlice.reducer

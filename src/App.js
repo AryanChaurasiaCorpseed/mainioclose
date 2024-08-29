@@ -66,6 +66,8 @@ import SubIndustry from "./Main/Industry/SubIndustry/SubIndustry"
 import SubsubIndustry from "./Main/Industry/SubsubIndustry/SubsubIndustry"
 import IndustryData from "./Main/Industry/IndustryData/IndustryData"
 import Industries from "./Main/Industry/Industries/Industries"
+import HomePageFile from "./Home/HomePageFile"
+import LandingPage from "./Home/LandingPage"
 
 const SpinLoading = lazy(() => import("./components/SpinLoading"))
 
@@ -150,10 +152,19 @@ function App() {
           <Routes>
             <Route path="/newfile" element={<NewGetFile />}></Route>
             <Route path="*" element={<NotFoundPage />} />
-            <Route path="/" element={<HomePage />}>
+
+            {/* <Route path="/" element={<HomePage />}>
               <Route path="/" element={<FrontMainPage />} />
               <Route path="/contact" element={<div>Contact</div>} />
+            </Route> */}
+
+            <Route path="/" element={<HomePageFile />}>
+              <Route path="/" element={<LandingPage />} />
+              <Route path="/contact" element={<div>Contact</div>} />
             </Route>
+
+
+
             <Route path="/erp" element={<MainLoginRouter />}>
               <Route path="login" element={<Login />} />
               <Route

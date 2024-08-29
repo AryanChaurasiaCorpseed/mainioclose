@@ -135,14 +135,15 @@
 
 .sm-box {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   flex-direction: column;
-  height: 350px;
+  height: 550px;
   background: #fff;
   padding: 20px;
   border-radius: 12px;
-  width: 65%;
+  width: 40%;
+  gap: 24px;
   // border: 1px solid rgb(216, 221, 230);
   border: transparent;
   box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;

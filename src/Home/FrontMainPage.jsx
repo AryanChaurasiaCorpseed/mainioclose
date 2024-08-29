@@ -3,7 +3,6 @@ import HeroSection from "./HeroSection"
 import SubmitQuery from "./SubmitQuery"
 import SideNewSection from "./SideNewSection"
 import JumpStart from "./JumpStart"
-
 const FrontMainPage = () => {
   return (
     <div >

@@ -16,7 +16,7 @@ const CommonTable = ({
   rowSelection,
   onRowSelection,
   selectedRowKeys,
-  rowClassName
+  rowClassName,footerContent
 }) => {
   const dispatch = useDispatch()
   return (
@@ -39,6 +39,7 @@ const CommonTable = ({
           pagination
             ? () => (
                 <div className="table-footer">
+                  <div>{footerContent}</div>
                   <Space>
                     <Tooltip title="Prev page" arrow={false}>
                       <Button
