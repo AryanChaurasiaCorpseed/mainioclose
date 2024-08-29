@@ -128,6 +128,34 @@ const MainCompanyPage = () => {
       render: (_, props) => <ColComp data={props?.gstType} />,
     },
     {
+      dataIndex: "primaryContact",
+      title: "Client name",
+      render: (_, record) => (
+        <OverFlowText>{record?.primaryContact?.name}</OverFlowText>
+      ),
+    },
+    {
+      dataIndex: "contactNo",
+      title: "Contact no.",
+      render: (_, record) => (
+        <OverFlowText>{record?.primaryContact?.contactNo}</OverFlowText>
+      ),
+    },
+    {
+      dataIndex: "emails",
+      title: "Email",
+      render: (_, record) => (
+        <OverFlowText>{record?.primaryContact?.emails}</OverFlowText>
+      ),
+    },
+    {
+      dataIndex: "whatsappNo",
+      title: "Whatsapp no.",
+      render: (_, record) => (
+        <OverFlowText>{record?.primaryContact?.whatsappNo}</OverFlowText>
+      ),
+    },
+    {
       dataIndex: "address",
       title: "Address",
       render: (_, props) => <ColComp data={props?.address} />,
