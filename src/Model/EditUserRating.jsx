@@ -76,6 +76,7 @@ export const EditUserRating = ({ data }) => {
               showSearch
               allowClear
               mode="multiple"
+              maxTagCount='responsive'
               options={
                 allUsers?.map((item) => ({
                   value: item.id,

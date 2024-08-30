@@ -93,6 +93,7 @@ const Industries = () => {
             <Select
               showSearch
               allowClear
+              maxTagCount='responsive'
               mode="multiple"
               options={
                 allSubIndustry?.length > 0

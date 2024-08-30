@@ -193,6 +193,7 @@ const UrlsPage = () => {
             <Select
               allowClear
               mode="multiple"
+              maxTagCount='responsive'
               showSearch
               options={
                 allLeadSlug?.length

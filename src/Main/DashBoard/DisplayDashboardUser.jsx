@@ -12,7 +12,7 @@ import TableScalaton from "../../components/TableScalaton"
 import MainHeading from "../../components/design/MainHeading"
 import SomethingWrong from "../../components/usefulThings/SomethingWrong"
 import { allUserdataCol } from "../../data/Userdata"
-import { Button, Space, Typography } from "antd"
+import { Button, Input, Space, Typography } from "antd"
 import { Icon } from "@iconify/react"
 import CommonTable from "../../components/CommonTable"
 import {
@@ -25,6 +25,9 @@ const DisplayDashboardUser = () => {
   const [userSuspand, setUserSuspand] = useState(false)
   const [userToggle, setUserToggle] = useState(false)
   const dispatch = useDispatch()
+
+  const [searchText, setSearchText] = useState("")
+  const [filteredData, setFilteredData] = useState([])
 
   const {
     allUsers: allMainUser,
@@ -151,6 +154,22 @@ const DisplayDashboardUser = () => {
     },
   ]
 
+
+  useEffect(() => {
+    setFilteredData(allMainUser)
+  }, [allMainUser])
+
+  const handleSearch = (e) => {
+    const value = e.target.value
+    setSearchText(value)
+    const filtered = allMainUser?.filter((item) =>
+      Object.values(item)?.some((val) =>
+        String(val)?.toLowerCase()?.includes(value?.toLowerCase())
+      )
+    )
+    setFilteredData(filtered)
+  }
+
   return (
     <>
       <div className="create-user-box">
@@ -164,14 +183,25 @@ const DisplayDashboardUser = () => {
           </Space>
         </div>
       </div>
+
+      <div className="flex-verti-center-hori-start mt-2">
+        <Input
+          value={searchText}
+          size="small"
+          onChange={handleSearch}
+          style={{ width: "220px" }}
+          placeholder="search"
+          prefix={<Icon icon="fluent:search-24-regular" />}
+        />
+      </div>
       {userLoading && <TableScalaton />}
       {userError && <SomethingWrong />}
       {allMainUser && !userLoading && !userError && (
         <CommonTable
           columns={columns}
-          data={allMainUser}
+          data={filteredData}
           rowSelection={true}
-          scroll={{ y: 550, x: 2000 }}
+          scroll={{ y: 520, x: 2000 }}
         />
       )}
     </>

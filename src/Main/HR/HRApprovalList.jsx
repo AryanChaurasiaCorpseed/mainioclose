@@ -8,7 +8,7 @@ import TableScalaton from "../../components/TableScalaton"
 import SomethingWrong from "../../components/usefulThings/SomethingWrong"
 import { ApproveduserByHr } from "../../Toolkit/Slices/ApprovedStatus"
 import CommonTable from "../../components/CommonTable"
-import { Button, Typography } from "antd"
+import { Button, Input, Typography } from "antd"
 import { Icon } from "@iconify/react"
 import CreateHrDashBoard from "../../Model/CreateHrDashBoard"
 import OverFlowText from "../../components/OverFlowText"
@@ -31,6 +31,9 @@ const HRApprovalList = () => {
     dispatch(headHrUser(currentUserId))
   }, [dispatch, approvedUserDep, currentUserId])
 
+  const [searchText, setSearchText] = useState("")
+  const [filteredData, setFilteredData] = useState([])
+
   const columns = [
     {
       dataIndex: "id",
@@ -49,44 +52,44 @@ const HRApprovalList = () => {
     {
       dataIndex: "designation",
       title: "Designation",
-      render: (_, props) => <ColComp data={props?.designation} />,
+      render: (_, props) => <OverFlowText> {props?.designation} </OverFlowText>,
     },
     {
       dataIndex: "department",
       title: "Department",
-      render: (_, props) => <ColComp data={props?.department} />,
+      render: (_, props) => <OverFlowText> {props?.department} </OverFlowText>,
     },
 
     {
       dataIndex: "role",
       title: "Role",
-      render: (_, props) => <ColComp data={props?.role} />,
+      render: (_, props) => <OverFlowText> {props?.role} </OverFlowText>,
     },
     {
       dataIndex: "aadharCard",
       title: "Aadhar card",
-      render: (_, props) => <ColComp data={props?.aadharCard} />,
+      render: (_, props) => <OverFlowText> {props?.aadharCard} </OverFlowText>,
     },
     {
       dataIndex: "dateOfJoining",
       title: "Joining date",
       render: (_, props) => (
-        <Text>
+        <OverFlowText>
           {props?.dateOfJoining
             ? new Date(props?.dateOfJoining)?.toLocaleDateString()
             : "NA"}
-        </Text>
+        </OverFlowText>
       ),
     },
     {
       dataIndex: "employeeId",
       title: "Employee id",
-      render: (_, props) => <ColComp data={props?.employeeId} />,
+      render: (_, props) => <OverFlowText> {props?.employeeId} </OverFlowText>,
     },
     {
       dataIndex: "epfNo",
       title: "Employee id",
-      render: (_, props) => <ColComp data={props?.epfNo} />,
+      render: (_, props) => <OverFlowText> {props?.epfNo} </OverFlowText>,
     },
     {
       dataIndex: "experience",
@@ -101,12 +104,12 @@ const HRApprovalList = () => {
     {
       dataIndex: "managers",
       title: "Manager",
-      render: (_, props) => <ColComp data={props?.managers?.fullName} />,
+      render: (_, props) => <OverFlowText> {props?.managers?.fullName} </OverFlowText>,
     },
     {
       dataIndex: "panNumber",
       title: "Pan number",
-      render: (_, props) => <ColComp data={props?.panNumber} />,
+      render: (_, props) => <OverFlowText> {props?.panNumber} </OverFlowText>,
     },
     {
       dataIndex: "nationality",
@@ -211,17 +214,42 @@ const HRApprovalList = () => {
     setApprovedUserDep((prev) => !prev)
   }
 
+  useEffect(() => {
+    setFilteredData(hrApprovalUser)
+  }, [hrApprovalUser])
+
+  const handleSearch = (e) => {
+    const value = e.target.value
+    setSearchText(value)
+    const filtered = hrApprovalUser?.filter((item) =>
+      Object.values(item)?.some((val) =>
+        String(val)?.toLowerCase()?.includes(value?.toLowerCase())
+      )
+    )
+    setFilteredData(filtered)
+  }
+
   return (
     <TableOutlet>
       <MainHeading data={"Approval list"} />
+      <div className="flex-verti-center-hori-start mt-2">
+        <Input
+          value={searchText}
+          size="small"
+          onChange={handleSearch}
+          style={{ width: "220px" }}
+          placeholder="search"
+          prefix={<Icon icon="fluent:search-24-regular" />}
+        />
+      </div>
       <div className="mt-3">
         {userHRLoading && <TableScalaton />}
         {userHRError && <SomethingWrong />}
         {hrApprovalUser && !userHRLoading && !userHRError && (
           <CommonTable
-            data={hrApprovalUser}
+            data={filteredData}
             columns={columns}
-            scroll={{ x: 5000, y: 540 }}
+            scroll={{ x: 5000, y: 510 }}
             rowSelection={true}
           />
         )}

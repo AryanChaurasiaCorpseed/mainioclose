@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react"
 import SideBox from "../../components/SideBox"
 import { useDispatch, useSelector } from "react-redux"
-import UserListComponent from "../../Tables/UserListComponent"
 import { getAllRoles, getAllUsers } from "../../Toolkit/Slices/UsersSlice"
 import TableScalaton from "../../components/TableScalaton"
 import CreateHrDashBoard from "../../Model/CreateHrDashBoard"
@@ -13,6 +12,8 @@ import {
   getAllDepartment,
   getAllDesiginations,
 } from "../../Toolkit/Slices/SettingSlice"
+import {Icon} from '@iconify/react'
+import { Input } from "antd"
 
 const HrUserList = () => {
   const dispatch = useDispatch()
@@ -22,11 +23,7 @@ const HrUserList = () => {
     userError,
   } = useSelector((prev) => prev.user)
 
-  const [getId, setGetId] = useState("")
-  const [editType, setEditType] = useState(false)
-
   const userCount = allMainUser.length
-
   useEffect(() => {
     dispatch(getAllUsers())
   }, [dispatch])
@@ -37,9 +34,22 @@ const HrUserList = () => {
     dispatch(getAllRoles())
   }, [dispatch])
 
-  const myNewId = (id) => {
-    setGetId(id)
-    setEditType(true)
+  const [searchText, setSearchText] = useState("")
+  const [filteredData, setFilteredData] = useState([])
+
+  useEffect(() => {
+    setFilteredData(allMainUser)
+  }, [allMainUser])
+
+  const handleSearch = (e) => {
+    const value = e.target.value
+    setSearchText(value)
+    const filtered = allMainUser?.filter((item) =>
+      Object.values(item)?.some((val) =>
+        String(val)?.toLowerCase()?.includes(value?.toLowerCase())
+      )
+    )
+    setFilteredData(filtered)
   }
 
   const columns = [
@@ -69,14 +79,24 @@ const HrUserList = () => {
           <CreateHrDashBoard modalTitle={"Create user"} />
         </div>
       </div>
+      <div className="flex-verti-center-hori-start mt-2">
+        <Input
+          value={searchText}
+          size="small"
+          onChange={handleSearch}
+          style={{ width: "220px" }}
+          placeholder="search"
+          prefix={<Icon icon="fluent:search-24-regular" />}
+        />
+      </div>
       {userLoading && <TableScalaton />}
       {userError && <SomethingWrong />}
       {allMainUser && !userLoading && !userError && (
         <CommonTable
-          data={allMainUser}
+          data={filteredData}
           columns={columns}
           rowSelection={true}
-          scroll={{ y: 580, x: 5500 }}
+          scroll={{ y: 580, x: 4800 }}
         />
       )}
     </SideBox>

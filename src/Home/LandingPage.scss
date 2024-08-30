@@ -149,12 +149,12 @@ button,
 select {
   text-transform: none;
 }
-button,
-[type="button"],
-[type="reset"],
-[type="submit"] {
--webkit-appearance: button;
-}
+// button,
+// [type="button"],
+// [type="reset"],
+// [type="submit"] {
+// -webkit-appearance: button;
+// }
 button::-moz-focus-inner,
 [type="button"]::-moz-focus-inner,
 [type="reset"]::-moz-focus-inner,
@@ -196,10 +196,10 @@ textarea {
 [type="number"]::-webkit-outer-spin-button {
   height: auto;
 }
-[type="search"] {
-  -webkit-appearance: textfield;
-  outline-offset: -2px;
-}
+// [type="search"] {
+//   -webkit-appearance: textfield;
+//   outline-offset: -2px;
+// }
 [type="search"]::-webkit-search-decoration {
   -webkit-appearance: none;
 }
@@ -288,7 +288,7 @@ figure {
   margin: 1em 0;
 }
 table {
-  margin: 0 0 1.5em;
+  margin: 0;
   width: 100%;
 }
 a {
@@ -303,13 +303,13 @@ a:focus {
   outline: 0;
   color: #00d639;
 }
-a:focus-visible {
-  outline: 2px solid #226bfb;
-}
-a:hover,
-a:active {
-  outline: 0;
-}
+// a:focus-visible {
+//   outline: 2px solid #226bfb;
+// }
+// a:hover,
+// a:active {
+//   outline: 0;
+// }
 p a,
 ul a,
 ol a,
@@ -321,9 +321,9 @@ input[type="button"],
 input[type="reset"],
 input[type="submit"] {
   border: 1px solid;
-  border-color: #00d639;
+  // border-color: #00d639;
   border-radius: 3px;
-  background: #00d639;
+  // background: #00d639;
   color: #000;
   line-height: 1;
   padding: 1em;
@@ -332,8 +332,8 @@ button:hover,
 input[type="button"]:hover,
 input[type="reset"]:hover,
 input[type="submit"]:hover {
-  background: #00d639;
-  border-color: #00d639;
+  // background: #00d639;
+  // border-color: #00d639;
   opacity: 0.95;
 }
 button:active,
@@ -344,8 +344,8 @@ input[type="reset"]:active,
 input[type="reset"]:focus,
 input[type="submit"]:active,
 input[type="submit"]:focus {
-  background: #00d639;
-  border-color: #00d639;
+  // background: #00d639;
+  // border-color: #00d639;
   opacity: 0.95;
 }
 input[type="text"],

@@ -100,6 +100,7 @@ const SubsubIndustry = () => {
               showSearch
               allowClear
               mode="multiple"
+              maxTagCount='responsive'
               options={
                 allIndustry?.length > 0
                   ? allIndustry?.map((item) => ({

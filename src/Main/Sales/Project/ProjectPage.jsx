@@ -1,4 +1,4 @@
-import React, { useEffect } from "react"
+import React, { useEffect, useState } from "react"
 import TableOutlet from "../../../components/design/TableOutlet"
 import MainHeading from "../../../components/design/MainHeading"
 import TableScalaton from "../../../components/TableScalaton"
@@ -8,6 +8,8 @@ import { getProjectAction } from "../../../Toolkit/Slices/ProjectSlice"
 import ColComp from "../../../components/small/ColComp"
 import CommonTable from "../../../components/CommonTable"
 import OverFlowText from "../../../components/OverFlowText"
+import {Icon} from '@iconify/react'
+import { Input } from "antd"
 
 const ProjectPage = () => {
   const dispatch = useDispatch()
@@ -21,6 +23,24 @@ const ProjectPage = () => {
   const { allProject, loadingProject, errorProject } = useSelector(
     (prev) => prev?.project
   )
+
+  const [searchText, setSearchText] = useState("")
+  const [filteredData, setFilteredData] = useState([])
+
+  useEffect(() => {
+    setFilteredData(allProject)
+  }, [allProject])
+
+  const handleSearch = (e) => {
+    const value = e.target.value
+    setSearchText(value)
+    const filtered = allProject?.filter((item) =>
+      Object.values(item)?.some((val) =>
+        String(val)?.toLowerCase()?.includes(value?.toLowerCase())
+      )
+    )
+    setFilteredData(filtered)
+  }
 
   const columns = [
     {
@@ -111,12 +131,22 @@ const ProjectPage = () => {
   return (
     <TableOutlet>
       <MainHeading data={`All projects`} />
+      <div className="flex-verti-center-hori-start mt-2">
+        <Input
+          value={searchText}
+          size="small"
+          onChange={handleSearch}
+          style={{ width: "220px" }}
+          placeholder="search"
+          prefix={<Icon icon="fluent:search-24-regular" />}
+        />
+      </div>
       <div className="mt-3">
         {loadingProject && <TableScalaton />}
         {errorProject && <SomethingWrong />}
         {allProject && !loadingProject && !errorProject && (
           <CommonTable
-            data={allProject}
+            data={filteredData}
             columns={columns}
             scroll={{ y: 600, x: 2500 }}
           />

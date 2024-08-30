@@ -4,7 +4,6 @@ import { Link, useParams } from "react-router-dom"
 import LeadCreateModel from "../../../Model/LeadCreateModel"
 import { useDispatch, useSelector } from "react-redux"
 import TableScalaton from "../../../components/TableScalaton"
-import { useCustomRoute } from "../../../Routes/GetCustomRoutes"
 import { CSVLink } from "react-csv"
 import {
   deleteMultipleLeads,
@@ -516,7 +515,7 @@ const LeadsModule = () => {
     dispatch(getLeadNotificationCount(userid))
 
     return () => clearInterval(notifcationApi)
-  }, [userid])
+  }, [userid, dispatch])
 
   const menuStyle = {
     boxShadow: "none",
@@ -669,6 +668,7 @@ const LeadsModule = () => {
         <div className="filter-container">
           <Select
             mode="multiple"
+            maxTagCount="responsive"
             allowClear
             showSearch
             style={{ width: "45%" }}
@@ -689,6 +689,7 @@ const LeadsModule = () => {
           />
           <Select
             mode="multiple"
+            maxTagCount="responsive"
             style={{ width: "45%" }}
             allowClear
             showSearch

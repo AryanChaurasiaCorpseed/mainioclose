@@ -1,4 +1,4 @@
-import { Button, Form, Input, Modal, Select, message } from "antd"
+import { Button, Form, Input, Modal, Select, notification } from "antd"
 import React, { useCallback, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { editUrls, getAllUrlAction } from "../../../Toolkit/Slices/LeadUrlSlice"
@@ -17,22 +17,31 @@ const EditUrls = ({ data }) => {
       urlSlug: data?.urlSlug?.map((item) => item?.id),
       quality: data?.quality,
     })
-  }, [data])
+  }, [data, form])
 
   const handleSubmit = useCallback(
     async (values) => {
       values.urlsId = data?.id
       try {
-        const response = await dispatch(editUrls(values)).unwrap()
-        message.success("URL edited successfully!")
-        setOpenModal(false)
-        dispatch(getAllUrlAction(0))
+        await dispatch(editUrls(values)).then((resp) => {
+          if (resp.meta.requestStatus === "fulfilled") {
+            notification.success({ message: "URL edited successfully !" })
+            setOpenModal(false)
+            dispatch(getAllUrlAction(0))
+            form.resetFields()
+          } else {
+            notification.error({
+              message: "Failed to edit the URL. Please try again.",
+            })
+          }
+        })
       } catch (error) {
-        message.error("Failed to edit the URL. Please try again.")
-        setOpenModal(false)
+        notification.error({
+          message: "Failed to edit the URL. Please try again.",
+        })
       }
     },
-    [data]
+    [data, dispatch, form]
   )
   return (
     <>
@@ -62,9 +71,10 @@ const EditUrls = ({ data }) => {
             rules={[{ required: true, message: "please select slug" }]}
           >
             <Select
-            allowClear
-            showSearch
+              allowClear
+              showSearch
               mode="multiple"
+              maxTagCount="responsive"
               options={allLeadSlug?.map((item) => ({
                 label: item?.name,
                 value: item?.id,
@@ -80,8 +90,8 @@ const EditUrls = ({ data }) => {
             rules={[{ required: true, message: "please select quality" }]}
           >
             <Select
-            allowClear
-            showSearch
+              allowClear
+              showSearch
               options={[
                 { label: "True", value: true },
                 { label: "False", value: false },

@@ -1,5 +1,4 @@
 import { Typography } from "antd"
-import ColComp from "../components/small/ColComp"
 import { Icon } from "@iconify/react"
 import OverFlowText from "../components/OverFlowText"
 const { Text } = Typography
@@ -24,32 +23,33 @@ export const hrUserData = [
   {
     dataIndex: "designation",
     title: "Designation",
-    render: (_, data) => <Text>{data?.userDesignation?.name}</Text>,
+    render: (_, data) => <OverFlowText>{data?.userDesignation?.name}</OverFlowText>,
   },
   {
     dataIndex: "department",
     title: "Department",
-    render: (_, data) => <Text>{data?.userDepartment?.name}</Text>,
+    render: (_, data) => <OverFlowText>{data?.userDepartment?.name}</OverFlowText>,
   },
 
   {
     dataIndex: "role",
     title: "Role",
-    render: (_, data) => <Text>{data?.role?.[0]}</Text>,
+    render: (_, data) => <OverFlowText>{data?.role?.[0]}</OverFlowText>,
   },
   {
     dataIndex: "aadharCard",
     title: "Aadhar card",
+    render: (_, data) => <OverFlowText>{data?.aadharCard}</OverFlowText>,
   },
   {
     dataIndex: "dateOfJoining",
     title: "Joining date",
     render: (_, props) => (
-      <Text>
+      <OverFlowText>
         {props?.dateOfJoining
           ? new Date(props?.dateOfJoining)?.toLocaleDateString()
           : "NA"}
-      </Text>
+      </OverFlowText>
     ),
   },
   {
@@ -59,31 +59,32 @@ export const hrUserData = [
   {
     dataIndex: "epfNo",
     title: "Employee id",
-
-    render: (_, props) => <ColComp data={props?.epfNo} />,
+    render: (_, props) =><OverFlowText>{props?.epfNo}</OverFlowText>,
   },
   {
     dataIndex: "experience",
     title: "Experience",
     render: (_, props) => (
-      <p className="m-0">
+      <OverFlowText>
         {props?.expInYear ? props?.expInYear + " years" : "NA"} and{" "}
         {props?.expInMonth ? props?.expInMonth + " months" : "NA"}
-      </p>
+      </OverFlowText>
     ),
   },
   {
     dataIndex: "managers",
     title: "Manager",
-    render: (_, props) => <Text>{props?.managers?.fullName}</Text>,
+    render: (_, props) => <OverFlowText>{props?.managers?.fullName}</OverFlowText>,
   },
   {
     dataIndex: "panNumber",
     title: "Pan number",
+    render: (_, props) => <OverFlowText>{props?.panNumber}</OverFlowText>,
   },
   {
     dataIndex: "nationality",
     title: "Nationality",
+    render: (_, props) => <OverFlowText>{props?.nationality}</OverFlowText>,
   },
   {
     dataIndex: "permanentAddress",
@@ -100,46 +101,57 @@ export const hrUserData = [
   {
     dataIndex: "fatherName",
     title: "Father name",
+    render: (_, data) => <OverFlowText>{data?.fatherName}</OverFlowText>,
   },
   {
     dataIndex: "fatherContactNo",
     title: "Father contact no.",
+    render: (_, data) => <OverFlowText>{data?.fatherContactNo}</OverFlowText>,
   },
   {
     dataIndex: "fatherOccupation",
     title: "Father occupation",
+    render: (_, data) => <OverFlowText>{data?.fatherOccupation}</OverFlowText>,
   },
   {
     dataIndex: "motherName",
     title: "Mother name",
+    render: (_, data) => <OverFlowText>{data?.motherName}</OverFlowText>,
   },
   {
     dataIndex: "motherContactNo",
     title: "Mother contact no.",
+    render: (_, data) => <OverFlowText>{data?.motherContactNo}</OverFlowText>,
   },
   {
     dataIndex: "motherOccupation",
     title: "Mother occupation",
+    render: (_, data) => <OverFlowText>{data?.motherOccupation}</OverFlowText>,
   },
   {
     dataIndex: "spouseName",
     title: "Spouse name",
+    render: (_, data) => <OverFlowText>{data?.spouseName}</OverFlowText>,
   },
   {
     dataIndex: "spouseContactNo",
     title: "Spouse contact no",
+    render: (_, data) => <OverFlowText>{data?.spouseContactNo}</OverFlowText>,
   },
   {
     dataIndex: "language",
     title: "Language",
+    render: (_, data) => <OverFlowText>{data?.language}</OverFlowText>,
   },
   {
     dataIndex: "emergencyNumber",
     title: "Emergency number",
+    render: (_, data) => <OverFlowText>{data?.emergencyNumber}</OverFlowText>,
   },
   {
     dataIndex: "lockerSize",
     title: "Locker size",
+    render: (_, data) => <OverFlowText>{data?.lockerSize}</OverFlowText>,
   },
   {
     dataIndex: "backupTeam",

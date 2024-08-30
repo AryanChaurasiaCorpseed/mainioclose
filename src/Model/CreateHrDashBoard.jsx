@@ -34,47 +34,8 @@ const CreateHrDashBoard = ({ data, edit, modalTitle }) => {
   const dispatch = useDispatch()
   const [openModal, setOpenModal] = useState(false)
   const [loading, setLoading] = useState("")
-  const desiginationList = useSelector(
-    (state) => state.setting.desiginationList
-  )
   const departmentList = useSelector((state) => state?.setting?.allDepartment)
   const allRoles = useSelector((state) => state.user.allRoles)
-  const [userRowData, setUserRowData] = useState({
-    userName: "",
-    email: "",
-    role: [],
-    designation: "",
-    department: "",
-    // "id": 0,
-    epfNo: "",
-    aadharCard: "",
-    employeeId: "",
-    managerId: 0,
-    expInMonth: 0,
-    expInYear: 0,
-    dateOfJoining: "",
-    type: "",
-    fatherName: "",
-    fatherOccupation: "",
-    fatherContactNo: "",
-    motherName: "",
-    motherOccupation: "",
-    motherContactNo: "",
-    spouseName: "",
-    spouseContactNo: "",
-    nationality: "",
-    language: "",
-    emergencyNumber: "",
-    panNumber: "",
-    permanentAddress: "",
-    residentialAddress: "",
-    manager: true,
-    lockerSize: 0,
-    master: true,
-    backupTeam: true,
-  })
-
-  const allUserList = useSelector((prev) => prev.user.allUsers)
   const allDesiginationListById = useSelector(
     (state) => state.common.desiginationListById
   )
@@ -171,7 +132,7 @@ const CreateHrDashBoard = ({ data, edit, modalTitle }) => {
       personalEmail:data?.personalEmail,
       companyMobile:data?.companyMobile
     })
-  }, [data, form])
+  }, [data, form,dispatch])
 
   const handleSubmitUser = useCallback(
     (values) => {
@@ -274,7 +235,7 @@ const CreateHrDashBoard = ({ data, edit, modalTitle }) => {
           })
       }
     },
-    [dispatch, data, edit]
+    [dispatch, data, edit,form]
   )
 
   return (
@@ -378,6 +339,7 @@ const CreateHrDashBoard = ({ data, edit, modalTitle }) => {
               >
                 <Select
                   mode="multiple"
+                  maxTagCount='responsive'
                   showSearch
                   allowClear
                   options={

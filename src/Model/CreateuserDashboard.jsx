@@ -191,6 +191,7 @@ const CreateuserDashboard = ({ data, modalText, edit }) => {
           >
             <Select
               mode="multiple"
+              maxTagCount='responsive'
               showSearch
               allowClear
               options={

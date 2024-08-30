@@ -147,6 +147,7 @@ const CreateCompanyModal = () => {
           >
             <Select
               mode="multiple"
+              maxTagCount='responsive'
               allowClear
               showSearch
               options={allLeadList}
@@ -163,6 +164,7 @@ const CreateCompanyModal = () => {
             <Select
               options={allProjectList}
               mode="multiple"
+              maxTagCount='responsive'
               showSearch
               allowClear
               filterOption={(input, option) =>

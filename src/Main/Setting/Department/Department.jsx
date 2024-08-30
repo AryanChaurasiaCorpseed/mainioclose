@@ -219,6 +219,7 @@ const Department = () => {
               showSearch
               allowClear
               mode="multiple"
+              maxTagCount='responsive'
               options={
                 desiginationList?.length > 0
                   ? desiginationList?.map((item) => ({

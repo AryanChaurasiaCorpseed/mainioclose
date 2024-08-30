@@ -1,5 +1,5 @@
-import { Tag, Tooltip, Typography } from "antd"
-import React, { useEffect } from "react"
+import { Input, Tag, Tooltip, Typography } from "antd"
+import React, { useEffect, useState } from "react"
 import CommonTable from "../../components/CommonTable"
 import "./Accounts.scss"
 import { useDispatch, useSelector } from "react-redux"
@@ -14,12 +14,15 @@ import {
 import TableOutlet from "../../components/design/TableOutlet"
 import MainHeading from "../../components/design/MainHeading"
 import OverFlowText from "../../components/OverFlowText"
+import {Icon} from '@iconify/react'
 const { Text } = Typography
 
 export const AccountsList = () => {
   const dispatch = useDispatch()
   const { userid } = useParams()
   const allCompany = useSelector((state) => state.company.allCompany)
+  const [searchText, setSearchText] = useState("")
+  const [filteredData, setFilteredData] = useState([])
 
   useEffect(() => {
     if (userid !== undefined && userid !== null) {
@@ -98,18 +101,43 @@ export const AccountsList = () => {
     },
   ]
 
+
+  useEffect(() => {
+    setFilteredData(allCompany)
+  }, [allCompany])
+
+  const handleSearch = (e) => {
+    const value = e.target.value
+    setSearchText(value)
+    const filtered = allCompany?.filter((item) =>
+      Object.values(item)?.some((val) =>
+        String(val)?.toLowerCase()?.includes(value?.toLowerCase())
+      )
+    )
+    setFilteredData(filtered)
+  }
+
+
   return (
     <TableOutlet>
       <div className="create-user-box">
         <MainHeading data={`Account list`} />
-      </div>
-      <div className="account-table-header">
         <CreateCompanyModal />
+      </div>
+      <div className="flex-verti-center-hori-start mt-2">
+        <Input
+          value={searchText}
+          size="small"
+          onChange={handleSearch}
+          style={{ width: "220px" }}
+          placeholder="search"
+          prefix={<Icon icon="fluent:search-24-regular" />}
+        />
       </div>
 
       <CommonTable
         columns={columns}
-        data={allCompany}
+        data={filteredData}
         scroll={{ x: 1500, y: 520 }}
       />
     </TableOutlet>
