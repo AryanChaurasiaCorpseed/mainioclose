@@ -6,7 +6,7 @@ import { deleteQuery } from "../../API/DeleteQuery"
 
 export const getAllLeads = createAsyncThunk("allLeadsData", async (data) => {
   const allLeads = await postQuery(`/leadService/api/v1/lead/getAllLead?page=${data?.page}&size=50`, data)
-  return allLeads?.data?.reverse()
+  return allLeads?.data
 })
 
 export const updateAutoAssignnee = createAsyncThunk(

@@ -511,9 +511,7 @@ const LeadsModule = () => {
     const notifcationApi = setInterval(() => {
       dispatch(getLeadNotificationCount(userid))
     }, 1 * 60 * 1000)
-
     dispatch(getLeadNotificationCount(userid))
-
     return () => clearInterval(notifcationApi)
   }, [userid, dispatch])
 
