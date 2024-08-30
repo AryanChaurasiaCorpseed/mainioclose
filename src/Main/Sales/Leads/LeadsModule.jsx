@@ -45,6 +45,7 @@ const { Text } = Typography
 const CommonTable = React.lazy(() => import(`../../../components/CommonTable`))
 
 const LeadsModule = () => {
+  const allLeadData = useSelector((state) => state.leads.allLeads)
   const leadUserNew = useSelector((state) => state.leads.getAllLeadUserData)
   const getAllStatus = useSelector((state) => state.leads.getAllStatus)
   const notificationCount = useSelector(
@@ -114,9 +115,7 @@ const LeadsModule = () => {
     dispatch(getAllLeads(allMultiFilterData))
   }, [filterBtnNew, allMultiFilterData, dispatch, page])
 
-  const allLeadData = useSelector((state) => state.leads.allLeads)
-  const allLeadsData = [...allLeadData]
-  const leadCount = allLeadsData.length
+
 
   const handleDeleteMutipleLeads = useCallback(() => {
     let obj = {
@@ -263,8 +262,9 @@ const LeadsModule = () => {
   }
 
   useEffect(() => {
+    const allLeadsData = [...allLeadData]
     setFilteredData(allLeadsData)
-  }, [allLeadsData])
+  }, [allLeadData])
 
   const columns = [
     {
@@ -561,7 +561,7 @@ const LeadsModule = () => {
   const handleSearch = (e) => {
     const value = e.target.value
     setSearchText(value)
-    const filtered = allLeadsData?.filter((item) =>
+    const filtered = allLeadData?.filter((item) =>
       Object.values(item)?.some((val) =>
         String(val)?.toLowerCase()?.includes(value?.toLowerCase())
       )
@@ -572,7 +572,7 @@ const LeadsModule = () => {
   return (
     <div className="lead-module small-box-padding">
       <div className="create-user-box">
-        <MainHeading data={`Leads (${leadCount})`} />
+        <MainHeading data={`Leads (${allLeadData?.length})`} />
         <div className="all-center">
           <Link to={`allTask`}>
             <Button className="mr-2" type="primary">
