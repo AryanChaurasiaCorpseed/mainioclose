@@ -26,9 +26,7 @@ const SlugCreate = () => {
     dispatch(getAllSlugAction(page))
   }, [dispatch, slugDep, page])
 
-  const { allLeadSlug } = useSelector(
-    (prev) => prev?.leadslug
-  )
+  const { allLeadSlug } = useSelector((prev) => prev?.leadslug)
 
   const allLeadSlugs = [...allLeadSlug]
 
@@ -66,8 +64,8 @@ const SlugCreate = () => {
         prevPage={handlePrevPagination}
         pagination={true}
         scroll={{ y: 580 }}
-        prevDisable={page === 0 && true}
-        nextDisable={allLeadSlugs?.length < 50 && true}
+        prevDisable={page === 0 ? true : false}
+        nextDisable={allLeadSlugs?.length < 50 ? true : false}
       />
       <Modal
         title="Create slug"

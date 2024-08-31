@@ -1,4 +1,4 @@
-import { Button, Modal } from "antd"
+import { Button, Form, Input, Modal, notification } from "antd"
 import React, { useCallback, useState } from "react"
 import LongInput from "../components/Inputs/LongInput"
 import SmOneBtn from "../components/button/SmOneBtn"
@@ -8,35 +8,57 @@ import { Icon } from "@iconify/react"
 
 const EditSlugModal = ({ data }) => {
   const dispatch = useDispatch()
+  const [form] = Form.useForm()
   const [openModal, setOpenModal] = useState(false)
-  const [slugName, setSlugName] = useState(data?.name)
-  const editSlugQuery = useCallback(() => {
-    dispatch(editSulg({ id: data?.id, name: slugName }))
-  }, [dispatch, data, slugName])
+
+  const handleFinish = useCallback(
+    (values) => {
+      values.id = data?.id
+      dispatch(editSulg(values))
+        .then((resp) => {
+          if (resp.meta.requestStatus === "fulfilled") {
+            notification.success({ message: "Slug edited successfully." })
+            setOpenModal(false)
+          } else {
+            notification.error({ message: "Something went wrong !." })
+          }
+        })
+        .catch(() => {
+          notification.error({ message: "Something went wrong !." })
+        })
+    },
+    [dispatch, data]
+  )
 
   return (
     <div>
-      <Button type="text"  onClick={() => setOpenModal(true)} size="small">
+      <Button
+        type="text"
+        onClick={() => {
+          form.setFieldsValue({ name: data?.name })
+          setOpenModal(true)
+        }}
+        size="small"
+      >
         <Icon icon="fluent:edit-20-regular" />
       </Button>
       <Modal
+        title="Edit slug"
         open={openModal}
         onCancel={() => setOpenModal(false)}
-        width={800}
-        footer={null}
         onClose={() => setOpenModal(false)}
+        onOk={() => form.submit()}
+        okText="Submit"
       >
-        <div className="lead-box">
-          <form>
-            <LongInput
-              type="text"
-              label={`Enter Slug Name`}
-              value={slugName}
-              onChange={(e) => setSlugName(e.target.value)}
-            />
-            <SmOneBtn name="Submit" onClick={editSlugQuery} />
-          </form>
-        </div>
+        <Form layout="vertical" form={form} onFinish={handleFinish}>
+          <Form.Item
+            label="Enter slug name"
+            name="name"
+            rules={[{ required: true, message: "Please enter slug name" }]}
+          >
+            <Input />
+          </Form.Item>
+        </Form>
       </Modal>
     </div>
   )

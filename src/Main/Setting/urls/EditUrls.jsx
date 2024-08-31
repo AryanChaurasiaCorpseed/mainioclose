@@ -49,10 +49,9 @@ const EditUrls = ({ data }) => {
         <Icon icon="fluent:edit-20-regular" />
       </Button>
       <Modal
-        title="Edit Url"
+        title="Edit url"
         open={openModal}
         onCancel={() => setOpenModal(false)}
-        width={800}
         onClose={() => setOpenModal(false)}
         onOk={() => form.submit()}
         okText="Submit"

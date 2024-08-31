@@ -46,9 +46,7 @@ const UrlsPage = () => {
     dispatch(getAllUrlAction(urlPage))
   }, [dispatch, urlDep, urlPage])
 
-  const { allLeadUrl } = useSelector(
-    (prev) => prev?.leadurls
-  )
+  const { allLeadUrl } = useSelector((prev) => prev?.leadurls)
 
   const handleSubmit = async (values) => {
     const createNewUrl = await dispatch(createAllUrlAction(values))
@@ -70,10 +68,11 @@ const UrlsPage = () => {
   }
 
   const columns = [
-    { title: "Id", dataIndex: "id" },
+    { title: "Id", dataIndex: "id", fixed: "left", width: 80 },
     {
       title: "Url name",
       dataIndex: "urlsName",
+      fixed: "left",
       render: (_, data) => <OverFlowText>{data?.urlsName}</OverFlowText>,
     },
     {
@@ -83,20 +82,21 @@ const UrlsPage = () => {
         data?.urlSlug?.length > 0 && data?.urlSlug?.length === 1 ? (
           <OverFlowText>{data?.urlSlug?.[0]?.name}</OverFlowText>
         ) : data?.urlSlug?.length >= 2 ? (
-          <Tooltip
-            title={slugsInTooltip(data?.urlSlug)}
-            arrow={false}
-            style={{ display: "flex", alignItems: "center", gap: "4px" }}
-          >
-            <div className="flex-vert-hori-center">
-              {data?.urlSlug?.[0]?.name}{" "}
+          <div className="flex-vert-hori-center">
+            <OverFlowText>{data?.urlSlug?.[0]?.name} </OverFlowText>
+            <Tooltip
+              title={slugsInTooltip(data?.urlSlug)}
+              arrow={false}
+              style={{ display: "flex", alignItems: "center", gap: "4px" }}
+              overlayStyle={{ maxWidth: 800 }}
+            >
               <Icon
-                icon="fluent:more-horizontal-24-regular"
-                height={BTN_ICON_HEIGHT}
-                width={BTN_ICON_WIDTH}
+                icon="fluent:more-circle-24-regular"
+                height={BTN_ICON_HEIGHT + 8}
+                width={BTN_ICON_WIDTH + 8}
               />
-            </div>
-          </Tooltip>
+            </Tooltip>
+          </div>
         ) : (
           "N/A"
         ),
@@ -164,7 +164,7 @@ const UrlsPage = () => {
         nextPage={handleNextPagination}
         prevPage={handlePrevPagination}
         pagination={true}
-        scroll={{ y: 550 }}
+        scroll={{ y: 550, x: 1200 }}
         prevDisable={urlPage === 0 ? true : false}
         nextDisable={allLeadUrl?.length < 50 ? true : false}
       />
@@ -193,7 +193,7 @@ const UrlsPage = () => {
             <Select
               allowClear
               mode="multiple"
-              maxTagCount='responsive'
+              maxTagCount="responsive"
               showSearch
               options={
                 allLeadSlug?.length

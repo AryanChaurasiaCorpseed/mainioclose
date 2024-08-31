@@ -1,131 +1,88 @@
-import React, { useRef, useState } from "react"
+import React, { useState } from "react"
 import "./CommonData.scss"
-import axios from "axios"
 import { useNavigate } from "react-router-dom"
-import { useDispatch, useSelector } from "react-redux"
-
-import {
-  forgetPasswordAction
-} from "../Redux/Action/AuthAction"
+import { useDispatch } from "react-redux"
 import { toast } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
-import InputErrorComponent from "../components/InputErrorComponent"
-import LongButton from "../components/button/LongButton"
 import { forgetPasswordApi } from "../Toolkit/Slices/ForgetPasswordSlice"
-import LoginSidebarArea from "../components/LoginSidebarArea"
+import { Icon } from "@iconify/react"
+import { Button, Form, Input } from "antd"
 toast.configure()
 
 const ForgetPassword = () => {
-  const [emailData, setEmailData] = useState("")
-  const [emailErr, setEmailErr] = useState(false)
-  const [emailFormat, setEmailFormat] = useState(false)
-  const [emailNotExist, setEmailNotExist] = useState(false)
-  const [loading, setLoading] = useState(false)
-
-  const emailRef = useRef()
+  const [loading, setLoading] = useState("")
   const navigate = useNavigate()
   const dispatch = useDispatch()
 
-  const isUserData = useSelector((user) => user.AuthReducer)
-
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    if (emailRef.current.value === "") {
-      setEmailErr(true)
-      setEmailFormat(false)
-      return
-    }
-    let regex = new RegExp("[a-z0-9]+@[a-z]+.[a-z]{2,3}")
-    if (regex.test(emailRef.current.value) !== true) {
-      setEmailFormat(true)
-      setEmailErr(false)
-    }
-    setLoading(true)
-
-    const forgetData = async () => {
-      try {
-        const data = await dispatch(forgetPasswordApi(emailData))
-        navigate("/erp/forgetotp")
-      } catch (err) {
+  const handleSubmit = (values) => {
+    setLoading("pending")
+    dispatch(forgetPasswordApi(values?.email))
+      .then((resp) => {
+        if (resp.meta.requestStatus === "fulfilled") {
+          setLoading("success")
+          navigate("/erp/forgetotp")
+        }
+      })
+      .catch((err) => {
         console.log(err)
-      }
-    }
-
-    forgetData()
-
-    const forgetPass = async () => {
-      try {
-        const passwordOtp = await axios.post(
-          `/securityService/api/auth/forgetOtp?email=${emailData}`,
-          {
-            headers: {
-              "Access-Control-Allow-Origin": "*",
-              "Content-Type": "application/json",
-            },
-          }
-        )
-        dispatch(forgetPasswordAction(passwordOtp.data))
-        setLoading(false)
-        navigate("/erp/forgetotp")
-      } catch (err) {
-        if (err.response.status === 500) {
-          toast.error("Something Went wrong")
-          setLoading(false)
-        }
-        if (err.response.status === 401) {
-          setEmailNotExist(true)
-          setLoading(false)
-        }
-        setLoading(false)
-      }
-    }
-
-    // forgetPass()
+        setLoading("error")
+      })
   }
 
   return (
-    <div className="grid-two">
-      <form>
-        <div className="cm-box container">
-          <div>
-            <img src="https://www.corpseed.com/assets/img/brands/CORPSEED.webp" />
+    <div>
+      <div className="cm-box bg-g-light container">
+        <div className="sm-box">
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              width: "100%",
+            }}
+          >
+            <img src="https://www.corpseed.com/assets/img/brands/CORPSEED.webp" alt="" />
+            <h3
+              style={{
+                margin: "4px 0px 4px 14px",
+                fontWeight: "bold",
+                fontSize: "24px",
+              }}
+            >
+              Forgot password
+            </h3>
           </div>
-          <div className="sm-box">
-            <div className="w-100">
-              <h2 className="cm-heading text-center">Forget Password</h2>
-              <div className="cm-input-box my-3">
-                <i className="fa-regular cm-icon fa-envelope"></i>
-                <input
-                  className="input2-design  w-100"
-                  ref={emailRef}
-                  type="text"
-                  onChange={(e) => setEmailData(e.target.value)}
-                  placeholder="Enter Your Email"
-                />
-              </div>
-
-              {emailErr ? (
-                <p className="errors-new">Email can't be blank</p>
-              ) : (
-                ""
-              )}
-              {emailFormat ? (
-                <InputErrorComponent value="Email Not in Proper Format" />
-              ) : (
-                ""
-              )}
-              {emailNotExist ? (
-                <InputErrorComponent value="Email Not Found in System" />
-              ) : (
-                ""
-              )}
-              <LongButton onClick={(e) => handleSubmit(e)} data="Continue" />
-            </div>
-          </div>
+          <Form
+            layout="vertical"
+            size="large"
+            style={{ width: "90%" }}
+            onFinish={handleSubmit}
+          >
+            <Form.Item
+              label="Email"
+              name="email"
+              rules={[{ required: true, message: "please enter your email" }]}
+            >
+              <Input
+                prefix={
+                  <Icon icon="fluent:mail-24-regular" height={24} width={24} />
+                }
+                placeholder="Enter your email"
+                size="large"
+              />
+            </Form.Item>
+            <Form.Item>
+              <Button
+                type="primary"
+                htmlType="submit"
+                style={{ width: "100%" }}
+                loading={loading === "pending" ? true : false}
+              >
+                {loading === "pending" ? "Loading..." : "Submit"}
+              </Button>
+            </Form.Item>
+          </Form>
         </div>
-      </form>
-      <div>
-        <LoginSidebarArea />
       </div>
     </div>
   )
