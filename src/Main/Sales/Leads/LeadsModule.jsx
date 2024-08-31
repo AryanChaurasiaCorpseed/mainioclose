@@ -337,6 +337,13 @@ const LeadsModule = () => {
       title: "Client name",
       dataIndex: "name",
       checked: true,
+      sorter: (a, b) => {
+        const nameA = a.clients[0]?.name.toLowerCase();
+        const nameB = b.clients[0]?.name.toLowerCase();
+        if (nameA < nameB) return -1;
+        if (nameA > nameB) return 1;
+        return 0;
+      },
       render: (_, data) => (
         <OverFlowText>
           {data?.clients[0]?.name ? data?.clients[0]?.name : "NA"}
