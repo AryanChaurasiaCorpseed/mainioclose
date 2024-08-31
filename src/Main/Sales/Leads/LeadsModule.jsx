@@ -115,8 +115,6 @@ const LeadsModule = () => {
     dispatch(getAllLeads(allMultiFilterData))
   }, [filterBtnNew, allMultiFilterData, dispatch, page])
 
-
-
   const handleDeleteMutipleLeads = useCallback(() => {
     let obj = {
       leadId: selectedRowKeys,
@@ -279,6 +277,13 @@ const LeadsModule = () => {
       title: "Lead name",
       fixed: "left",
       checked: true,
+      sorter: (a, b) => {
+        const nameA = a.leadName.toLowerCase();
+        const nameB = b.leadName.toLowerCase();
+        if (nameA < nameB) return -1;
+        if (nameA > nameB) return 1;
+        return 0;
+      },
       render: (_, data) => (
         <OverFlowText
           linkText={true}
@@ -376,7 +381,7 @@ const LeadsModule = () => {
           showSearch
           size="small"
           style={{ width: "100%" }}
-          value={data?.assignee?.id}
+          value={adminRole ? data?.assignee?.id : ""}
           placeholder="select assignee"
           options={
             leadUserNew?.map((ele) => ({
@@ -650,7 +655,7 @@ const LeadsModule = () => {
           >
             Filter data
           </Button>
-          {adminRole ? <LeadCreateModel /> : ""}
+           <LeadCreateModel /> 
           <Link to={`notification`}>
             <div className="bell-box">
               <span className="bell-count">{notificationCount}</span>
@@ -664,27 +669,29 @@ const LeadsModule = () => {
 
       <div className={`${hideMUltiFilter ? "" : "d-none"} all-between py-2`}>
         <div className="filter-container">
-          <Select
-            mode="multiple"
-            maxTagCount="responsive"
-            allowClear
-            showSearch
-            style={{ width: "45%" }}
-            value={allUserMulti}
-            placeholder="Select users"
-            onChange={(e) => setAllUserMulti(e)}
-            options={
-              leadUserNew?.length > 0
-                ? leadUserNew?.map((item) => ({
-                    label: item?.fullName,
-                    value: item?.id,
-                  }))
-                : []
-            }
-            filterOption={(input, option) =>
-              option.label.toLowerCase().includes(input.toLowerCase())
-            }
-          />
+          {adminRole && (
+            <Select
+              mode="multiple"
+              maxTagCount="responsive"
+              allowClear
+              showSearch
+              style={{ width: "45%" }}
+              value={allUserMulti}
+              placeholder="Select users"
+              onChange={(e) => setAllUserMulti(e)}
+              options={
+                leadUserNew?.length > 0
+                  ? leadUserNew?.map((item) => ({
+                      label: item?.fullName,
+                      value: item?.id,
+                    }))
+                  : []
+              }
+              filterOption={(input, option) =>
+                option.label.toLowerCase().includes(input.toLowerCase())
+              }
+            />
+          )}
           <Select
             mode="multiple"
             maxTagCount="responsive"
