@@ -57,7 +57,7 @@ const LeadsModule = () => {
   const [multibtn, setMultibtn] = useState("")
   const [leadDelLoading, setLeadDelLoading] = useState("")
   const [hideMUltiFilter, setHideMUltiFilter] = useState(false)
-  const [allStatusMulti, setAllStatusMulti] = useState([])
+  const [allStatusMulti, setAllStatusMulti] = useState([1])
   const [allUserMulti, setAllUserMulti] = useState([])
   const [filterBtnNew, setFilterBtnNew] = useState(false)
   const [openDropdown, setOpenDropdown] = useState(false)
@@ -277,6 +277,7 @@ const LeadsModule = () => {
       title: "Lead name",
       fixed: "left",
       checked: true,
+      width:300,
       sorter: (a, b) => {
         const nameA = a.leadName.toLowerCase();
         const nameB = b.leadName.toLowerCase();

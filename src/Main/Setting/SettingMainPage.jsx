@@ -98,6 +98,17 @@ const SettingMainPage = () => {
         </Link>
       ),
     },
+    {
+      key: "ipaddress",
+      label: (
+        <Link
+          className="link-four"
+          to={`/erp/${currentUserId}/setting/ipaddress`}
+        >
+          Ip address
+        </Link>
+      ),
+    },
   ]
 
   return (

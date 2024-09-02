@@ -117,7 +117,7 @@ const OtpPage = () => {
     <div className="container otp-page">
       <h2 className="otp-heading">Enter confirmation code</h2>
       <p className="otp-number">A 6-digit code was sent to your <b>Mail ID</b></p>
-      <p className="otp-number">*****@gmail.com</p>
+      <p className="otp-number">*****@corpseed.com</p>
       <div className="input-boxes">
         <input
           className="single-input"

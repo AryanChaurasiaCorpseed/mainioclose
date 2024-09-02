@@ -1,8 +1,8 @@
-import React, { useCallback, useEffect, useRef, useState } from "react"
+import React, { useCallback, useEffect, useState } from "react"
 import "./Model.css"
 import { leadSource } from "../data/FakeData"
 import { useParams } from "react-router"
-import { Button, Form, Input, message, Modal, notification, Select } from "antd"
+import { Button, Form, Input, Modal, notification, Select } from "antd"
 import { useDispatch, useSelector } from "react-redux"
 import {
   createLeads,
@@ -15,9 +15,8 @@ const LeadCreateModel = ({ leadByCompany, companyId }) => {
   const dispatch = useDispatch()
   const { userid } = useParams()
   const allLeadUser = useSelector((state) => state.leads.allLeadUsers)
-  const loading = useSelector((state) => state.leads.loading)
   const [openModal, setOpenModal] = useState(false)
-  const [messageApi, contextHolder] = message.useMessage()
+
 
   useEffect(() => {
     dispatch(getAllLeadUsers())
@@ -91,13 +90,13 @@ const LeadCreateModel = ({ leadByCompany, companyId }) => {
           <Form.Item
             label="Client email"
             name="email"
-            rules={[
-              {
-                required: true,
-                message: "please enter the client email",
-                type: "email",
-              },
-            ]}
+            // rules={[
+            //   {
+            //     required: true,
+            //     message: "please enter the client email",
+            //     type: "email",
+            //   },
+            // ]}
           >
             <Input />
           </Form.Item>

@@ -82,12 +82,13 @@ const MainCompanyPage = () => {
       dataIndex: "companyId",
       title: "Id",
       fixed: "left",
-      width: 50,
+      width: 80,
     },
     {
       dataIndex: "companyName",
       title: "Company name",
       fixed: "left",
+      width:250,
       render: (_, props) => (
         <OverFlowText linkText={true} to={`${props?.companyId}/details`}>
           {props?.companyName}
@@ -219,7 +220,7 @@ const MainCompanyPage = () => {
             <CommonTable
               data={filteredData}
               columns={columns}
-              scroll={{ x: 2200, y: 520 }}
+              scroll={{ x: 3000, y: 520 }}
               rowSelection={true}
               pagination={true}
               nextDisable={allCompnay?.length < 50 ? true : false}

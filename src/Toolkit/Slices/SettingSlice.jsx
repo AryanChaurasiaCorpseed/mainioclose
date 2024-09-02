@@ -45,12 +45,24 @@ export const createDesiginationByDepartmentId=createAsyncThunk('createDesiginati
   return response.data
 })
 
+
+export const getAllIpAddress=createAsyncThunk('allIpAddress',async()=>{
+  const response=await getQuery(`/securityService/api/auth/getAllIpAddress`)
+  return response.data
+})
+
+export const addIpAddress=createAsyncThunk('addIpAddress',async(data)=>{
+  const response=await postQuery(`/securityService/api/auth/addIpAddress?ipAddressName=${data?.ipaddress}`)
+  return response.data
+})
+
 const settingSlice = createSlice({
   name: "setting",
   initialState: {
     desiginationList: [],
     loading: "",
     allDepartment: [],
+    allIpAddress:[]
   },
   extraReducers: (builder) => {
     builder.addCase(getAllDesiginations.pending, (state, action) => {
@@ -92,6 +104,16 @@ const settingSlice = createSlice({
       state.allDepartment = [...state.allDepartment, action.payload]
     })
     builder.addCase(createDepartment.rejected, (state, action) => {
+      state.loading = "rejected"
+    })
+    builder.addCase(getAllIpAddress.pending, (state, action) => {
+      state.loading = "pending"
+    })
+    builder.addCase(getAllIpAddress.fulfilled, (state, action) => {
+      state.loading = "success"
+      state.allIpAddress = action.payload
+    })
+    builder.addCase(getAllIpAddress.rejected, (state, action) => {
       state.loading = "rejected"
     })
   },

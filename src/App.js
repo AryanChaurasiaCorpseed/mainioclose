@@ -68,6 +68,7 @@ import IndustryData from "./Main/Industry/IndustryData/IndustryData"
 import Industries from "./Main/Industry/Industries/Industries"
 import HomePageFile from "./Home/HomePageFile"
 import LandingPage from "./Home/LandingPage"
+import IpAddress from "./Main/Setting/IpAddress/IpAddress"
 
 const SpinLoading = lazy(() => import("./components/SpinLoading"))
 
@@ -413,6 +414,14 @@ function App() {
                   element={
                     <Suspense fallback={<SpinLoading />}>
                       <Department />
+                    </Suspense>
+                  }
+                />
+                <Route
+                  path="ipaddress"
+                  element={
+                    <Suspense fallback={<SpinLoading />}>
+                      <IpAddress />
                     </Suspense>
                   }
                 />

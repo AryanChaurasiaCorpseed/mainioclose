@@ -489,7 +489,6 @@ export const LeadSlice = createSlice({
       state.leadsError = false
     })
     builder.addCase(getAllLeads.fulfilled, (state, action) => {
-      console.log('kdjscj',action.payload)
       state.allLeads = action.payload
       state.leadsLoading = false
       state.leadsError = false
