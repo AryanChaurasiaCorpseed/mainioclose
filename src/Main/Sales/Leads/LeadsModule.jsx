@@ -277,17 +277,17 @@ const LeadsModule = () => {
       title: "Lead name",
       fixed: "left",
       checked: true,
-      width:300,
+      width: 250,
       sorter: (a, b) => {
-        const nameA = a.leadName.toLowerCase();
-        const nameB = b.leadName.toLowerCase();
-        if (nameA < nameB) return -1;
-        if (nameA > nameB) return 1;
-        return 0;
+        const nameA = a.leadName.toLowerCase()
+        const nameB = b.leadName.toLowerCase()
+        if (nameA < nameB) return -1
+        if (nameA > nameB) return 1
+        return 0
       },
       render: (_, data) => (
-        <OverFlowText
-          linkText={true}
+        <Link
+          className="link-heading"
           to={`/erp/${userid}/sales/leads/${data?.id}`}
           onClick={() =>
             dispatch(
@@ -300,12 +300,12 @@ const LeadsModule = () => {
           }
         >
           {data?.leadName}
-        </OverFlowText>
+        </Link>
       ),
     },
     {
-      title:'Lead frequency',
-      dataIndex:'count'
+      title: "Lead frequency",
+      dataIndex: "count",
     },
     {
       title: "Missed task",
@@ -343,11 +343,11 @@ const LeadsModule = () => {
       dataIndex: "name",
       checked: true,
       sorter: (a, b) => {
-        const nameA = a.clients[0]?.name.toLowerCase();
-        const nameB = b.clients[0]?.name.toLowerCase();
-        if (nameA < nameB) return -1;
-        if (nameA > nameB) return 1;
-        return 0;
+        const nameA = a.clients[0]?.name.toLowerCase()
+        const nameB = b.clients[0]?.name.toLowerCase()
+        if (nameA < nameB) return -1
+        if (nameA > nameB) return 1
+        return 0
       },
       render: (_, data) => (
         <OverFlowText>
@@ -667,7 +667,7 @@ const LeadsModule = () => {
           >
             Filter data
           </Button>
-           <LeadCreateModel /> 
+          <LeadCreateModel />
           <Link to={`notification`}>
             <div className="bell-box">
               <span className="bell-count">{notificationCount}</span>

@@ -12,6 +12,7 @@ import "react-toastify/dist/ReactToastify.css"
 import EditSlugModal from "../../../Model/EditSlugModal"
 import { Button, Form, Input, Modal } from "antd"
 import CommonTable from "../../../components/CommonTable"
+import { Icon } from "@iconify/react"
 toast.configure()
 
 const SlugCreate = () => {
@@ -21,6 +22,8 @@ const SlugCreate = () => {
 
   const dispatch = useDispatch()
   const [form] = Form.useForm()
+  const [searchText, setSearchText] = useState("")
+  const [filteredData, setFilteredData] = useState([])
 
   useEffect(() => {
     dispatch(getAllSlugAction(page))
@@ -28,7 +31,7 @@ const SlugCreate = () => {
 
   const { allLeadSlug } = useSelector((prev) => prev?.leadslug)
 
-  const allLeadSlugs = [...allLeadSlug]
+  
 
   const handleSubmit = async (values) => {
     const slugCreation = await dispatch(leadSlugAction(values?.slugName))
@@ -49,6 +52,22 @@ const SlugCreate = () => {
     },
   ]
 
+  useEffect(() => {
+    const allLeadSlugs = [...allLeadSlug]
+    setFilteredData(allLeadSlugs)
+  }, [allLeadSlug])
+
+  const handleSearch = (e) => {
+    const value = e.target.value
+    setSearchText(value)
+    const filtered = allLeadSlug?.filter((item) =>
+      Object.values(item)?.some((val) =>
+        String(val)?.toLowerCase()?.includes(value?.toLowerCase())
+      )
+    )
+    setFilteredData(filtered)
+  }
+
   return (
     <div>
       <div className="create-user-box">
@@ -57,15 +76,25 @@ const SlugCreate = () => {
           Create slug
         </Button>
       </div>
+      <div className="flex-verti-center-hori-start mt-2">
+        <Input
+          value={searchText}
+          size="small"
+          onChange={handleSearch}
+          style={{ width: "220px" }}
+          placeholder="search"
+          prefix={<Icon icon="fluent:search-24-regular" />}
+        />
+      </div>
       <CommonTable
         columns={columns}
-        data={allLeadSlugs?.reverse()}
+        data={filteredData?.reverse()}
         nextPage={handleNextPagination}
         prevPage={handlePrevPagination}
         pagination={true}
         scroll={{ y: 580 }}
         prevDisable={page === 0 ? true : false}
-        nextDisable={allLeadSlugs?.length < 50 ? true : false}
+        nextDisable={allLeadSlug?.length < 50 ? true : false}
       />
       <Modal
         title="Create slug"

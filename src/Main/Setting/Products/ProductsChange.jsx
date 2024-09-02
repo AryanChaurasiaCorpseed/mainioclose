@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react"
+import React, { useEffect, useRef, useState } from "react"
 import { useParams } from "react-router-dom"
 import { useCustomRoute } from "../../../Routes/GetCustomRoutes"
 import { postQuery } from "../../../API/PostQuery"
@@ -35,6 +35,25 @@ const ProductsChange = () => {
     productUrl,
     productDep
   )
+
+  const [searchText, setSearchText] = useState("")
+  const [filteredData, setFilteredData] = useState([])
+
+
+  useEffect(() => {
+    setFilteredData(productData)
+  }, [productData])
+
+  const handleSearch = (e) => {
+    const value = e.target.value
+    setSearchText(value)
+    const filtered = productData?.filter((item) =>
+      Object.values(item)?.some((val) =>
+        String(val)?.toLowerCase()?.includes(value?.toLowerCase())
+      )
+    )
+    setFilteredData(filtered)
+  }
 
   const ProductCol = [
     { dataIndex: "id", title: "Id", fixed: "left", width: 50 },
@@ -175,11 +194,21 @@ const ProductsChange = () => {
           Add product
         </Button>
       </div>
+      <div className="flex-verti-center-hori-start mt-2">
+          <Input
+            value={searchText}
+            size="small"
+            onChange={handleSearch}
+            style={{ width: "220px" }}
+            placeholder="search"
+            prefix={<Icon icon="fluent:search-24-regular" />}
+          />
+        </div>
       {productLoading ? (
         <SmallTableScalaton />
       ) : (
         <CommonTable
-          data={productData}
+          data={filteredData}
           columns={ProductCol}
           scroll={{ y: 500, x: 2500 }}
         />

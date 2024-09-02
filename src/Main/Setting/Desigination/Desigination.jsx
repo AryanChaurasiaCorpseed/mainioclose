@@ -10,6 +10,7 @@ import {
 import { createAuthDesigination } from "../../../Toolkit/Slices/AuthSlice"
 import { playErrorSound, playSuccessSound } from "../../Common/Commons"
 import OverFlowText from "../../../components/OverFlowText"
+import { Icon } from "@iconify/react"
 
 const Desigination = () => {
   const [form] = Form.useForm()
@@ -18,6 +19,23 @@ const Desigination = () => {
     (state) => state.setting.desiginationList
   )
   const [openModal, setOpenModal] = useState()
+  const [searchText, setSearchText] = useState("")
+  const [filteredData, setFilteredData] = useState([])
+
+  useEffect(() => {
+    setFilteredData(desiginationList)
+  }, [desiginationList])
+
+  const handleSearch = (e) => {
+    const value = e.target.value
+    setSearchText(value)
+    const filtered = desiginationList?.filter((item) =>
+      Object.values(item)?.some((val) =>
+        String(val)?.toLowerCase()?.includes(value?.toLowerCase())
+      )
+    )
+    setFilteredData(filtered)
+  }
 
   const handleFinish = useCallback(
     (values) => {
@@ -82,9 +100,19 @@ const Desigination = () => {
         </Button>
       </div>
       <div className="setting-table">
+        <div className="flex-verti-center-hori-start mt-2">
+          <Input
+            value={searchText}
+            size="small"
+            onChange={handleSearch}
+            style={{ width: "220px" }}
+            placeholder="search"
+            prefix={<Icon icon="fluent:search-24-regular" />}
+          />
+        </div>
         <div className="table-responsive">
           <CommonTable
-            data={desiginationList?.length > 0 ? desiginationList : []}
+            data={filteredData}
             columns={columns}
             scroll={{ y: 550 }}
           />

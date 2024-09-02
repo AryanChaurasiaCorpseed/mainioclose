@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react"
+import React, { useEffect, useRef, useState } from "react"
 import "./LeadStatusPage.scss"
 import { useCustomRoute } from "../../../Routes/GetCustomRoutes"
 import SmallTableScalaton from "../../../components/Scalaton/SmallTableScalaton"
@@ -22,6 +22,9 @@ const LeadStatusPage = () => {
   const [openModal, setOpenModal] = useState(false)
   const statusUrl = `/leadService/api/v1/status/getAllStatus`
   const statusDep = [leadCreateDep, deleteStatusDep]
+  const [searchText, setSearchText] = useState("")
+  const [filteredData, setFilteredData] = useState([])
+
 
   const { productData: statusData, loading: statusLoading } = useCustomRoute(
     statusUrl,
@@ -41,9 +44,28 @@ const LeadStatusPage = () => {
     }
   }
 
+
+  useEffect(() => {
+    setFilteredData(statusData)
+  }, [statusData])
+
+  const handleSearch = (e) => {
+    const value = e.target.value
+    setSearchText(value)
+    const filtered = statusData?.filter((item) =>
+      Object.values(item)?.some((val) =>
+        String(val)?.toLowerCase()?.includes(value?.toLowerCase())
+      )
+    )
+    setFilteredData(filtered)
+  }
+
   const handleFinish = (values) => {
     dispatch(createLead(values)).then(() => window.location.reload())
   }
+
+
+
   const columns = [
     {
       title: "Id",
@@ -93,12 +115,22 @@ const LeadStatusPage = () => {
       </div>
 
       <div className="setting-table">
+      <div className="flex-verti-center-hori-start mt-2">
+          <Input
+            value={searchText}
+            size="small"
+            onChange={handleSearch}
+            style={{ width: "220px" }}
+            placeholder="search"
+            prefix={<Icon icon="fluent:search-24-regular" />}
+          />
+        </div>
         <div className="table-responsive">
           {statusLoading ? (
             <SmallTableScalaton />
           ) : (
             <CommonTable
-              data={statusData}
+              data={filteredData}
               columns={columns}
               scroll={{ y: 480 }}
             />

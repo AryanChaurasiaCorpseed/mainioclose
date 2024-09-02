@@ -37,6 +37,9 @@ const UrlsPage = () => {
   const [urlDep, setUrlDep] = useState(false)
   const [openModal, setOpenModal] = useState(false)
   const [selectedRowKeys, setSelectedRowKeys] = useState([])
+  const [searchText, setSearchText] = useState("")
+  const [filteredData, setFilteredData] = useState([])
+
   const dispatch = useDispatch()
   useEffect(() => {
     dispatch(getAllSlugAction(page))
@@ -113,6 +116,21 @@ const UrlsPage = () => {
     },
   ]
 
+  useEffect(() => {
+    setFilteredData(allLeadUrl)
+  }, [allLeadUrl])
+
+  const handleSearch = (e) => {
+    const value = e.target.value
+    setSearchText(value)
+    const filtered = allLeadUrl?.filter((item) =>
+      Object.values(item)?.some((val) =>
+        String(val)?.toLowerCase()?.includes(value?.toLowerCase())
+      )
+    )
+    setFilteredData(filtered)
+  }
+
   const onSelectChange = (newSelectedRowKeys) => {
     setSelectedRowKeys(newSelectedRowKeys)
   }
@@ -154,10 +172,19 @@ const UrlsPage = () => {
           </Button>
         </div>
       </div>
-
+      <div className="flex-verti-center-hori-start mt-2">
+        <Input
+          value={searchText}
+          size="small"
+          onChange={handleSearch}
+          style={{ width: "220px" }}
+          placeholder="search"
+          prefix={<Icon icon="fluent:search-24-regular" />}
+        />
+      </div>
       <CommonTable
         columns={columns}
-        data={allLeadUrl}
+        data={filteredData}
         rowSelection={true}
         onRowSelection={onSelectChange}
         selectedRowKeys={selectedRowKeys}

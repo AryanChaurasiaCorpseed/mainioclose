@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react"
+import React, { useEffect, useRef, useState } from "react"
 import { useParams } from "react-router-dom"
 import { postQuery } from "../../../API/PostQuery"
 import InputErrorComponent from "../../../components/InputErrorComponent"
@@ -33,6 +33,12 @@ const LeadCategory = () => {
   const [btnLoading, setBtnLoading] = useState(false)
   const [nameError, setNameError] = useState(false)
   const nameRef = useRef()
+
+
+  const [searchText, setSearchText] = useState("")
+  const [filteredData, setFilteredData] = useState([])
+
+  
 
   const createCatFun = async (e) => {
     e.preventDefault()
@@ -82,6 +88,24 @@ const LeadCategory = () => {
   const handleFinish = (values) => {
     dispatch(createLeadCateogry(values)).then(() => window.location.reload())
   }
+
+  useEffect(() => {
+    setFilteredData(categoryData)
+  }, [categoryData])
+
+  const handleSearch = (e) => {
+    const value = e.target.value
+    setSearchText(value)
+    const filtered = categoryData?.filter((item) =>
+      Object.values(item)?.some((val) =>
+        String(val)?.toLowerCase()?.includes(value?.toLowerCase())
+      )
+    )
+    setFilteredData(filtered)
+  }
+
+
+
   const columns = [
     {
       title: "Id",
@@ -129,9 +153,19 @@ const LeadCategory = () => {
         </Button>
       </div>
       <div className="setting-table">
+      <div className="flex-verti-center-hori-start mt-2">
+          <Input
+            value={searchText}
+            size="small"
+            onChange={handleSearch}
+            style={{ width: "220px" }}
+            placeholder="search"
+            prefix={<Icon icon="fluent:search-24-regular" />}
+          />
+        </div>
         <div className="table-responsive">
           <CommonTable
-            data={categoryData}
+            data={filteredData}
             columns={columns}
             scroll={{ y: 550 }}
           />

@@ -38,11 +38,29 @@ const Department = () => {
   const [openModal, setOpenModal] = useState(false)
   const [openDesiginationModal, setOpenDesiginationModal] = useState(false)
   const [departmentData, setDepartmentData] = useState(null)
+  const [searchText, setSearchText] = useState("")
+  const [filteredData, setFilteredData] = useState([])
 
   useEffect(() => {
     dispatch(getAllDepartment())
     dispatch(getAllDesiginations())
   }, [dispatch])
+
+
+  useEffect(() => {
+    setFilteredData(departmentList)
+  }, [departmentList])
+
+  const handleSearch = (e) => {
+    const value = e.target.value
+    setSearchText(value)
+    const filtered = departmentList?.filter((item) =>
+      Object.values(item)?.some((val) =>
+        String(val)?.toLowerCase()?.includes(value?.toLowerCase())
+      )
+    )
+    setFilteredData(filtered)
+  }
 
   const handleFinish = (values) => {
     dispatch(createAuthDepartment(values)).then((resp) => {
@@ -169,9 +187,19 @@ const Department = () => {
         </Button>
       </div>
       <div className="setting-table">
+      <div className="flex-verti-center-hori-start mt-2">
+        <Input
+          value={searchText}
+          size="small"
+          onChange={handleSearch}
+          style={{ width: "220px" }}
+          placeholder="search"
+          prefix={<Icon icon="fluent:search-24-regular" />}
+        />
+      </div>
         <div className="table-responsive">
           <CommonTable
-            data={departmentList?.length > 0 ? departmentList : []}
+            data={filteredData}
             columns={columns}
             scroll={{ y: 550 }}
           />
