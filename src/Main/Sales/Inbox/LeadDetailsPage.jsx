@@ -822,7 +822,7 @@ const LeadDetailsPage = () => {
               </div>
             ) : (
               <div className="comp-container">
-                <Text className="heading-text">Count : {singleLeadResponseData?.count}</Text>
+                <Text className="heading-text">Lead frequency : {singleLeadResponseData?.count}</Text>
                 <div className="flex-vert-hori-center">
                   {singleLeadResponseData?.originalName ? (
                     <Icon

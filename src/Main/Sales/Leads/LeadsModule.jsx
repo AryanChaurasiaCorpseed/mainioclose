@@ -303,6 +303,10 @@ const LeadsModule = () => {
       ),
     },
     {
+      title:'Lead frequency',
+      dataIndex:'count'
+    },
+    {
       title: "Missed task",
       dataIndex: "missedTaskDate",
       checked: true,
