@@ -5,7 +5,6 @@ import {
   Input,
   Select,
   Space,
-  Switch,
   Typography,
   Upload,
   notification,
@@ -25,7 +24,6 @@ const BulkFileUploader = () => {
   const [files, setFiles] = useState([])
   const [text, setText] = useState("")
   const [flag, setFlag] = useState(null)
-  const [commentType, setCommentType] = useState("selected")
   const [inputCommentText, setInputCommentText] = useState("")
   const [apiLoading, setApiLoading] = useState("")
   useEffect(() => {
@@ -46,8 +44,8 @@ const BulkFileUploader = () => {
     let data = {
       leadId: leadid,
       userId: userid,
-      type: commentType,
-      message: commentType === "input" ? inputCommentText : text,
+      type: text === "Other" ? "Other" : "selected",
+      message: text === "Other" ? inputCommentText : text,
       file: files,
     }
     if ((text !== "" || inputCommentText !== "") && files?.length > 0) {
@@ -97,22 +95,38 @@ const BulkFileUploader = () => {
     } else {
       setFlag(false)
     }
-  }, [leadid, userid, text, files, dispatch, inputCommentText, commentType])
+  }, [leadid, userid, text, files, dispatch, inputCommentText])
 
   return (
     <>
       <Space>
-        <Switch
-          size="small"
-          onChange={(e) =>
-            e ? setCommentType("input") : setCommentType("selected")
-          }
-        />
-        <Text>
-          {commentType === "input" ? "Select the comment" : "Write comment"}
-        </Text>
+        <Text className="heading-text">Select the comment</Text>
       </Space>
-      {commentType === "input" ? (
+      <Select
+        style={{ width: "100%", margin: "12px 0px" }}
+        placeholder="select comment..."
+        size="large"
+        value={text === "" ? null : text}
+        showSearch
+        allowClear
+        options={
+          [...allComments, { name: "Other" }]?.map((item) => ({
+            label: item?.name,
+            value: item?.name,
+          })) || []
+        }
+        filterOption={(input, option) =>
+          option.label.toLowerCase().includes(input.toLowerCase())
+        }
+        onClear={(e) => {
+          setText(undefined)
+        }}
+        onChange={(e) => {
+          setText(e)
+          setFlag(null)
+        }}
+      />
+      {text === "Other" && (
         <Input.TextArea
           style={{ width: "100%", margin: "12px 0px" }}
           size="large"
@@ -120,28 +134,6 @@ const BulkFileUploader = () => {
           placeholder="write comment here ..."
           autoSize={{ minRows: 1, maxRows: 2 }}
           onChange={(e) => setInputCommentText(e.target.value)}
-        />
-      ) : (
-        <Select
-          style={{ width: "100%", margin: "12px 0px" }}
-          placeholder="select comment..."
-          size="large"
-          value={text}
-          showSearch
-          allowClear
-          options={
-            allComments?.map((item) => ({
-              label: item?.name,
-              value: item?.name,
-            })) || []
-          }
-          filterOption={(input, option) =>
-            option.label.toLowerCase().includes(input.toLowerCase())
-          }
-          onChange={(e) => {
-            setText(e)
-            setFlag(null)
-          }}
         />
       )}
 
@@ -164,6 +156,7 @@ const BulkFileUploader = () => {
         <Button
           type="primary"
           loading={apiLoading === "pending" ? true : false}
+          disabled={text === "" || text === undefined ? true : false}
           onClick={onSubmit}
         >
           {" "}

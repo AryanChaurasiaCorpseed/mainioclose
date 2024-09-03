@@ -112,6 +112,7 @@ function App() {
             borderRadius: 4,
             borderRadiusSM: 4,
             borderRadiusLG: 4,
+            fontSizeLG:13
           },
           Input: {
             borderRadius: 4,

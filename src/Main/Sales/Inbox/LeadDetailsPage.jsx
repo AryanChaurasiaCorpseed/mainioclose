@@ -384,7 +384,7 @@ const LeadDetailsPage = () => {
           .then((resp) => {
             if (resp.meta.requestStatus === "fulfilled") {
               notification.success({
-                message: "Contact details updated successfully",
+                message: "Contact details updated successfully.",
               })
               getSingleLeadData()
               setOpenModal(false)
@@ -392,13 +392,13 @@ const LeadDetailsPage = () => {
               window.location.reload()
             } else {
               notification.error({
-                message: "Something went wrong",
+                message: "Something went wrong !.",
               })
             }
           })
           .catch(() => {
             notification.error({
-              message: "Something went wrong",
+              message: "Something went wrong !.",
             })
           })
         setContactData(null)
@@ -408,7 +408,7 @@ const LeadDetailsPage = () => {
           .then((resp) => {
             if (resp.meta.requestStatus === "fulfilled") {
               notification.success({
-                message: "Contact details created successfully",
+                message: "Contact details created successfully.",
               })
               getSingleLeadData()
               setOpenModal(false)
@@ -416,19 +416,19 @@ const LeadDetailsPage = () => {
               window.location.reload()
             } else {
               notification.error({
-                message: "Something went wrong",
+                message: "Something went wrong !.",
               })
             }
           })
           .catch(() => {
             notification.error({
-              message: "Something went wrong",
+              message: "Something went wrong !.",
             })
           })
         setContactData(null)
       }
     },
-    [userid, leadid, contactData, dispatch, getSingleLeadData]
+    [userid, leadid, contactData, dispatch, getSingleLeadData, form1]
   )
 
   const updateTaskData = (task) => {
@@ -457,7 +457,7 @@ const LeadDetailsPage = () => {
           .then((resp) => {
             if (resp.meta.requestStatus === "fulfilled") {
               notification.success({
-                message: "Task updated successfully",
+                message: "Task updated successfully.",
               })
               dispatch(getAllTaskData(leadid))
               setOpenTaskModal(false)
@@ -465,13 +465,13 @@ const LeadDetailsPage = () => {
               window.location.reload()
             } else {
               notification.error({
-                message: "Something went wrong",
+                message: "Something went wrong !.",
               })
             }
           })
           .catch(() => {
             notification.error({
-              message: "Something went wrong",
+              message: "Something went wrong !.",
             })
           })
       } else {
@@ -479,7 +479,7 @@ const LeadDetailsPage = () => {
           .then((resp) => {
             if (resp.meta.requestStatus === "fulfilled") {
               notification.success({
-                message: "Task created successfully",
+                message: "Task created successfully.",
               })
               dispatch(getAllTaskData(leadid))
               setOpenTaskModal(false)
@@ -487,18 +487,18 @@ const LeadDetailsPage = () => {
               window.location.reload()
             } else {
               notification.error({
-                message: "Something went wrong",
+                message: "Something went wrong !.",
               })
             }
           })
           .catch(() => {
             notification.error({
-              message: "Something went wrong",
+              message: "Something went wrong !.",
             })
           })
       }
     },
-    [userid, leadid, taskData, dispatch]
+    [userid, leadid, taskData, dispatch, form2]
   )
 
   const handleProductSubmit = useCallback(
@@ -508,20 +508,20 @@ const LeadDetailsPage = () => {
         .then((resp) => {
           if (resp.meta.requestStatus === "fulfilled") {
             notification.success({
-              message: "Product updated successfully",
+              message: "Product updated successfully.",
             })
             getSingleLeadData()
             setOpenProductModal(false)
             window.location.reload()
           } else {
             notification.error({
-              message: "Something went wrong",
+              message: "Something went wrong !.",
             })
           }
         })
         .catch(() => {
           notification.error({
-            message: "Something went wrong",
+            message: "Something went wrong !.",
           })
         })
     },
@@ -533,18 +533,18 @@ const LeadDetailsPage = () => {
       .then((response) => {
         if (response.meta.requestStatus === "fulfilled") {
           notification.success({
-            message: "Lead assigned to same person successfully",
+            message: "Lead assigned to same person successfully.",
           })
           playSuccessSound()
           getSingleLeadData()
           window.location.reload()
         } else {
-          notification.error({ message: "Something went wrong" })
+          notification.error({ message: "Something went wrong !." })
           playErrorSound()
         }
       })
       .catch(() => {
-        notification.error({ message: "Something went wrong" })
+        notification.error({ message: "Something went wrong !." })
         playErrorSound()
       })
   }
@@ -789,6 +789,7 @@ const LeadDetailsPage = () => {
                 <Select
                   size="small"
                   className="comp-component-1"
+                  style={{ width: "100%" }}
                   placeholder="select urls"
                   options={allLeadUrl?.map((item) => ({
                     label: item?.urlsName,
@@ -822,7 +823,6 @@ const LeadDetailsPage = () => {
               </div>
             ) : (
               <div className="comp-container">
-                <Text className="heading-text">Lead frequency : {singleLeadResponseData?.count}</Text>
                 <div className="flex-vert-hori-center">
                   {singleLeadResponseData?.originalName ? (
                     <Icon
@@ -838,6 +838,11 @@ const LeadDetailsPage = () => {
                       width={12}
                       color="green"
                     />
+                  )}
+                  {singleLeadResponseData?.count !== undefined && (
+                    <Text className="heading-text">
+                      {`( ${singleLeadResponseData?.count} )`}
+                    </Text>
                   )}
                   <Text className="heading-text">
                     {singleLeadResponseData?.originalName
@@ -876,6 +881,7 @@ const LeadDetailsPage = () => {
                   showSearch
                   allowClear
                   size="small"
+                  style={{ width: "100%" }}
                   className="comp-component-1"
                   placeholder="select the slug"
                   options={slugList?.map((item) => ({
@@ -948,7 +954,7 @@ const LeadDetailsPage = () => {
             </Space>
             <Divider style={{ margin: "6px" }} />
             <div className="btn-view-container">
-              <CompanyFormModal    
+              <CompanyFormModal
                 detailView={true}
                 data={singleLeadResponseData}
               />
@@ -988,7 +994,7 @@ const LeadDetailsPage = () => {
                   History
                 </Button>
               </Link>
-              <Link to={`/erp/${userid}/sales/leads`}>
+              {/* <Link to={`/erp/${userid}/sales/leads`}>
                 <Button>
                   <Icon
                     icon="fluent:chevron-left-24-filled"
@@ -997,13 +1003,14 @@ const LeadDetailsPage = () => {
                   />
                   Back
                 </Button>
-              </Link>
+              </Link> */}
               <Button onClick={() => openTasksFun()}>All tasks</Button>
             </div>
             <div className="lead-assignee-container mt-3">
               <Text className="heading-text">Update assignee</Text>
               <Select
                 placeholder="Change assignee"
+                style={{ width: "100%", margin: "12px 0px" }}
                 size="large"
                 options={
                   userDataResponse?.map((ele) => ({
@@ -1024,7 +1031,6 @@ const LeadDetailsPage = () => {
                 </div>
                 <div className="line"></div>
               </div>
-
               <div className="side-notes">
                 <BulkFileUploader />
               </div>
@@ -1044,12 +1050,12 @@ const LeadDetailsPage = () => {
                 <textarea
                   className="text-area-box"
                   id="notes"
-                  placeholder="write a notes ......"
+                  placeholder="write a notes ..."
                   name="message"
                   rows="4"
                   cols="50"
                   onChange={(e) => remarkMessageFunction(e)}
-                ></textarea>
+                />
                 <div className="comment-below">
                   <button
                     className="comment-btn"
@@ -1080,7 +1086,7 @@ const LeadDetailsPage = () => {
                   rows="4"
                   cols="50"
                   onChange={(e) => remarkMessageFunction(e)}
-                ></textarea>
+                />
                 <div className="comment-below">
                   <button
                     className="comment-btn"
@@ -1099,7 +1105,7 @@ const LeadDetailsPage = () => {
                   <div className={`notes-box mt-2`}>
                     <div className="comment-icon">
                       <div className="icon-box h-70">
-                        <i className="fa-regular cm-icon fa-comment"></i>
+                        <i className="fa-regular cm-icon fa-comment"></i> 
                       </div>
                       <div className="line"></div>
                     </div>

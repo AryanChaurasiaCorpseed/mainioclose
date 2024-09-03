@@ -1,16 +1,15 @@
-import { Avatar, Button, Drawer, Modal, Popover, Space, Typography } from "antd"
-import React, { useCallback, useEffect, useRef, useState } from "react"
+import { Avatar, Button, Drawer, Space, Typography } from "antd"
+import React, { useCallback, useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { logoutFun } from "../Toolkit/Slices/AuthSlice"
 import { useNavigate } from "react-router-dom"
-import axios from "axios"
 import { updateProfilePhoto } from "../Toolkit/Slices/UserProfileSlice"
 import { toast } from "react-toastify"
 import "./ProfileDrawer.scss"
 import { Icon } from "@iconify/react"
 import { Upload } from "antd"
 import ImgCrop from "antd-img-crop"
-const { Text, Title } = Typography
+const { Text } = Typography
 
 const ProfileDrawer = () => {
   const navigate = useNavigate()
@@ -26,7 +25,7 @@ const ProfileDrawer = () => {
     if (window.confirm("Are you sure for Logout?") === true) {
       const key = localStorage.getItem("persist:root")
       dispatch(logoutFun())
-      const token = localStorage.removeItem(key)
+      localStorage.removeItem(key)
       navigate("/erp/login")
       toast.success("Logout Succesfully")
     }
@@ -43,7 +42,7 @@ const ProfileDrawer = () => {
         setFileList(newFileList)
       }
     },
-    [currentUserId]
+    [currentUserId,dispatch]
   )
 
   useEffect(() => {
@@ -68,8 +67,6 @@ const ProfileDrawer = () => {
     imgWindow?.document.write(image.outerHTML)
   }
 
-  console.log("sdxckvgosdghvouasdyhgoviu", currentUserProfile)
-
   return (
     <>
       <div className="user-profile-container">
@@ -79,7 +76,8 @@ const ProfileDrawer = () => {
             : "UserName"}
         </Text>
         <Avatar
-          size={32}
+          size={"small"}
+          className="custom-avatar"
           src={profilePhoto}
           alt="profile_photo"
           onClick={() => setOpenDrawer(true)}

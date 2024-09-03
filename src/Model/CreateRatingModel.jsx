@@ -1,11 +1,8 @@
 import React, { useCallback, useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { getAllUrlAction, getAllUrlList } from "../Toolkit/Slices/LeadUrlSlice"
-import { addNewRating } from "../Toolkit/Slices/RatingSlice"
-import { toast } from "react-toastify"
-import "react-toastify/dist/ReactToastify.css"
+import { addNewRating, allRatingUsers } from "../Toolkit/Slices/RatingSlice"
 import { Button, Form, Modal, notification, Select } from "antd"
-toast.configure()
 
 const CreateRatingModel = ({ edit, urlRating, urlId }) => {
   const dispatch = useDispatch()
@@ -13,6 +10,7 @@ const CreateRatingModel = ({ edit, urlRating, urlId }) => {
   const [openModal, setOpenModal] = useState(false)
   const allLeadUrl = useSelector((state) => state.leadurls.allUrlList)
   const page = useSelector((state) => state.leadurls.page)
+
   useEffect(() => {
     dispatch(getAllUrlList())
   }, [dispatch])
@@ -37,11 +35,14 @@ const CreateRatingModel = ({ edit, urlRating, urlId }) => {
             notification.success({
               message: "Rating updated successfully",
             })
+            dispatch(allRatingUsers({ id: urlId }))
             dispatch(getAllUrlAction(page))
             form.resetFields()
             setOpenModal(false)
           } else if (response.meta.requestStatus === "rejected") {
-            notification.error({ message: "Either user is already persent or empt" })
+            notification.error({
+              message: "Either user is already persent or empt",
+            })
             setOpenModal(false)
           }
         })
@@ -50,7 +51,7 @@ const CreateRatingModel = ({ edit, urlRating, urlId }) => {
           setOpenModal(false)
         })
     },
-    [urlId,dispatch,form,urlRating,page]
+    [urlId, dispatch, form, urlRating,  page]
   )
 
   return (
@@ -80,7 +81,7 @@ const CreateRatingModel = ({ edit, urlRating, urlId }) => {
               showSearch
               allowClear
               mode="multiple"
-              maxTagCount='responsive'
+              maxTagCount="responsive"
               options={
                 allUsers?.length > 0
                   ? allUsers?.map((item) => ({

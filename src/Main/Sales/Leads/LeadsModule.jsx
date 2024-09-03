@@ -266,6 +266,14 @@ const LeadsModule = () => {
 
   const columns = [
     {
+      dataIndex: "sno",
+      title: "S no.",
+      fixed: "left",
+      width: 80,
+      checked: true,
+      render: (y, x, idx) => <Text>{idx + 1}</Text>,
+    },
+    {
       dataIndex: "id",
       title: "Id",
       fixed: "left",
@@ -751,14 +759,16 @@ const LeadsModule = () => {
           </button>
         </div>
       </div>
-      <Input
-        placeholder="search"
-        size="small"
-        value={searchText}
-        onChange={handleSearch}
-        style={{ width: "250px" }}
-        prefix={<Icon icon="fluent:search-24-regular" />}
-      />
+      <div className="flex-verti-center-hori-start mt-2">
+        <Input
+          placeholder="search"
+          size="small"
+          value={searchText}
+          onChange={handleSearch}
+          style={{ width: "250px" }}
+          prefix={<Icon icon="fluent:search-24-regular" />}
+        />
+      </div>
       <div className="table-arrow">
         <Suspense fallback={<TableScalaton />}>
           <CommonTable

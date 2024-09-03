@@ -69,6 +69,7 @@ const MainPage = () => {
             style={{
               padding: 0,
               background: colorBgContainer,
+              height:'45px'
             }}
           >
             <TopNav />
