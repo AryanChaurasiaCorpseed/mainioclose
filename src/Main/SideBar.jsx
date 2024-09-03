@@ -21,8 +21,10 @@ const SideBar = () => {
   )
   const currentUserId = useSelector((state) => state.auth?.currentUser?.id)
   function getHighestPriorityRole(roles) {
-    if (roles.includes("ADMIN")) {
-      return "ADMIN"
+    if (roles?.length > 0) {
+      if (roles?.includes("ADMIN")) {
+        return "ADMIN"
+      }
     }
   }
 

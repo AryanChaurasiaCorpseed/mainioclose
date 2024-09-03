@@ -48,9 +48,11 @@ const CompanyForm = ({ role }) => {
   }, [dispatch, selectedFilter, userid, page])
 
   function getHighestPriorityRole(roles) {
-    if (roles.includes("ADMIN")) {
+   if(roles?.length>0){
+    if (roles?.includes("ADMIN")) {
       return "ADMIN"
     }
+   }
   }
 
   useEffect(() => {
