@@ -57,6 +57,7 @@ const CommonTable = ({
                         onClick={() => dispatch(nextPage())}
                       >
                         <Icon icon="fluent:chevron-right-20-regular" />
+                        
                       </Button>
                     </Tooltip>
                   </Space>
