@@ -1,5 +1,5 @@
 import { Button, Space, Table, Tooltip } from "antd"
-import React from "react"
+import React, { useEffect, useRef } from "react"
 import { Icon } from "@iconify/react"
 import { useDispatch } from "react-redux"
 import "./CommonTable.scss"
@@ -16,11 +16,65 @@ const CommonTable = ({
   rowSelection,
   onRowSelection,
   selectedRowKeys,
-  rowClassName,footerContent
+  rowClassName,
+  footerContent,
 }) => {
   const dispatch = useDispatch()
+  const tableContainerRef = useRef(null)
+  const scrollIntervalRef = useRef(null);
+  
+
+  const startScrolling = (direction) => {
+    scrollIntervalRef.current = setInterval(() => {
+      scrollTable(direction);
+    }, 50);
+  };
+
+  const stopScrolling = () => {
+    clearInterval(scrollIntervalRef.current);
+  };
+
+
+  const scrollTable = (direction) => {
+    if (tableContainerRef.current) {
+      const scrollAmount = 150 
+      if (direction === "left") {
+        tableContainerRef.current.scrollLeft -= scrollAmount
+      } else {
+        tableContainerRef.current.scrollLeft += scrollAmount
+      }
+    }
+  }
+
+  useEffect(() => {
+    const tableBody = document.querySelector(".ant-table-body")
+    if (tableBody) {
+      tableContainerRef.current = tableBody
+    }
+  }, [])
+
   return (
-    <>
+    <div className="table-container">
+      <Button
+        shape="round"
+        size="small"
+        className="scroll-button scroll-left"
+        onMouseDown={() => startScrolling("left")}
+        onMouseUp={stopScrolling}
+        onMouseLeave={stopScrolling}
+      >
+        <Icon icon="fluent:chevron-left-20-regular" />
+      </Button>
+      <Button
+        shape="round"
+        size="small"
+        className="scroll-button scroll-right"
+        onMouseDown={() => startScrolling("right")}
+        onMouseUp={stopScrolling}
+        onMouseLeave={stopScrolling}
+      >
+        <Icon icon="fluent:chevron-right-20-regular" />
+      </Button>
       <Table
         columns={columns}
         dataSource={data}
@@ -57,7 +111,6 @@ const CommonTable = ({
                         onClick={() => dispatch(nextPage())}
                       >
                         <Icon icon="fluent:chevron-right-20-regular" />
-                        
                       </Button>
                     </Tooltip>
                   </Space>
@@ -66,7 +119,7 @@ const CommonTable = ({
             : null
         }
       />
-    </>
+    </div>
   )
 }
 

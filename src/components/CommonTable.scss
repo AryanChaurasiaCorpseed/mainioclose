@@ -3,3 +3,35 @@
     justify-content: space-between;
     align-items: center;
   }
+
+.table-container {
+  position: relative;
+  overflow: hidden;
+  .scroll-button {
+    position: absolute;
+    top: 45%;
+    transform: translateY(-45%);
+    background-color: rgba(0, 0, 0, 0.2);
+    color: white;
+    border: none;
+    display: none; 
+    z-index: 10;
+  }
+
+  .scroll-left {
+    left: 0;
+  }
+
+  .scroll-right {
+    right: 0;
+  }
+
+  &:hover .scroll-button {
+    display: block; 
+  }
+}
+
+.ant-table-body {
+  padding: 0; 
+  // scroll-behavior: smooth;
+}
