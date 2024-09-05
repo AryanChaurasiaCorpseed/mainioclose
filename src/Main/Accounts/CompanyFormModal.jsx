@@ -168,10 +168,10 @@ const CompanyFormModal = ({
       return Promise.reject(new Error("please enter the GST number"))
     }
 
-    const pattern = /^[a-zA-Z0-9]{16}$/
+    const pattern = /^[a-zA-Z0-9]{15}$/
     if (!pattern.test(value)) {
       return Promise.reject(
-        new Error("please enter 16 digit alphanumeric characters")
+        new Error("please enter 15 digit alphanumeric characters")
       )
     }
     try {
@@ -459,7 +459,7 @@ const CompanyFormModal = ({
                 : []
             }
           >
-            <Input maxLength={16} />
+            <Input maxLength={15} />
           </Form.Item>
 
           <Form.Item

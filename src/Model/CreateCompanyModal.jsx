@@ -65,7 +65,7 @@ const CreateCompanyModal = () => {
             name="gstNo"
             rules={[{ required: true, message: "please enter the GST number" }]}
           >
-            <Input />
+            <Input maxLength={15} />
           </Form.Item>
           <Form.Item
             label="Company age"
