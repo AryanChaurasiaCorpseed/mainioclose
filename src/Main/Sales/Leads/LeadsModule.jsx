@@ -312,7 +312,7 @@ const LeadsModule = () => {
       ),
     },
     {
-      title: "Lead frequency",
+      title: "Lead freq.",
       dataIndex: "count",
     },
     {
@@ -371,7 +371,6 @@ const LeadsModule = () => {
     {
       title: "Email",
       dataIndex: "email",
-      width: 300,
       checked: true,
       render: (_, record) => <OverFlowText>{record?.email}</OverFlowText>,
     },
@@ -725,6 +724,7 @@ const LeadsModule = () => {
             mode="multiple"
             maxTagCount="responsive"
             style={{ width: "45%" }}
+            value={allStatusMulti}
             allowClear
             showSearch
             placeholder="Select Status"

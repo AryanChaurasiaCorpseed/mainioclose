@@ -1,13 +1,19 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { useCustomRoute } from "../../../Routes/GetCustomRoutes"
 import { Link, useParams } from "react-router-dom"
 import UserLeadComponent from "../../../Tables/UserLeadComponent"
 import MainHeading from "../../../components/design/MainHeading"
+import CommonTable from "../../../components/CommonTable"
+import { Input, Tag, Typography } from "antd"
+import OverFlowText from "../../../components/OverFlowText"
+import { Icon } from "@iconify/react"
+const { Text } = Typography
 
 const GetAllTaskList = () => {
   const { userid } = useParams()
   const [dateInput, setDateInput] = useState("")
-
+  const [searchText, setSearchText] = useState("")
+  const [filteredData, setFilteredData] = useState([])
 
   const allTasksByUser = `/leadService/api/v1/task/getAllTaskByAssignee?assigneeId=${userid}`
   const allTaskDep = [dateInput]
@@ -19,14 +25,14 @@ const GetAllTaskList = () => {
     error: taskError,
   } = useCustomRoute(allTasksByUser, allTaskDep)
 
-  const taskCount = taskData.length;
+  const taskCount = taskData.length
   // let inputDataBefore = new Date(dateInput).getTime()
 
   let currentDateNew = new Date(new Date().toJSON().slice(0, 10)).getTime()
 
   let currentDate = Date.now()
   let currentDate2 = new Date().getTime()
- 
+
   let beforeDate = currentDateNew
   let endDate = beforeDate + 86400000
 
@@ -59,74 +65,83 @@ const GetAllTaskList = () => {
 
   const columns = [
     {
-      field: "id",
-      headerName: "S.No",
+      dataIndex: "id",
+      title: "S.No",
       width: 60,
       filterable: false,
-      renderCell: (props) => {
+      render: (_, props, index) => <Text>{index + 1}</Text>,
+    },
+    {
+      dataIndex: "name",
+      title: "Name",
+      render: (_, props) => {
         return (
-          <p className="mb-0">
-            {props.api.getRowIndexRelativeToVisibleRows(props.row.id) + 1}
-          </p>
+          <Link to={`/erp/4/sales/leads/${props?.leadId}`}>{props?.name}</Link>
         )
       },
     },
     {
-      field: "name",
-      headerName: "Name",
-      width: 200,
-      renderCell: (props) => {
-        return (
-          <Link to={`/erp/4/sales/leads/${props.row.leadId}`}>
-            {props?.row?.name}
-          </Link>
-        )
-      },
+      dataIndex: "description",
+      title: "Description",
+      render: (_, props) => <OverFlowText>{props?.description}</OverFlowText>,
     },
     {
-      field: "description",
-      headerName: "Description",
-      width: 350,
-    },
-    {
-      field: "statusName",
-      headerName: "Status",
-      width: 150,
-      renderCell: (props) => {
+      dataIndex: "statusName",
+      title: "Status",
+      render: (_, props) => {
         return (
-          <p
-            className={`task-pending mb-0 ${
-              props?.row?.taskStatus === "Done" ? "task-done" : " "
-            }`}
+          <Tag
+            color={
+              props?.taskStatus === "Re-Open"
+                ? "error"
+                : props?.status === "Done"
+                ? "green"
+                : ""
+            }
           >
-            {props?.row?.statusName}
-          </p>
+            {props?.statusName}
+          </Tag>
         )
       },
     },
     {
-      field: "expectedDate",
-      headerName: "Date",
-      width: 200,
+      dataIndex: "expectedDate",
+      title: "Date",
       renderCell: (props) => {
         const data = props?.row?.expectedDate
         return data === null || undefined ? (
           "NA"
         ) : (
-          <p>
+          <Text>
             {new Date(props.row.expectedDate).toLocaleDateString()} -{" "}
             {new Date(props.row.expectedDate).getHours()}:
             {new Date(props.row.expectedDate).getMinutes()}
-          </p>
+          </Text>
         )
       },
     },
   ]
 
+  useEffect(() => {
+    const taskDatas = [...taskData]
+    setFilteredData(taskDatas)
+  }, [taskData])
+
+  const handleSearch = (e) => {
+    const value = e.target.value
+    setSearchText(value)
+    const filtered = taskData?.filter((item) =>
+      Object.values(item)?.some((val) =>
+        String(val)?.toLowerCase()?.includes(value?.toLowerCase())
+      )
+    )
+    setFilteredData(filtered)
+  }
+
   return (
     <div className="lead-module small-box-padding">
       <div className="create-user-box">
-      <MainHeading data={`All Tasks (${taskCount})`} />
+        <MainHeading data={`All tasks (${taskCount})`} />
         <div>
           <input
             type="date"
@@ -142,9 +157,24 @@ const GetAllTaskList = () => {
         </div>
       </div>
       <div className="mt-3">
-        {taskLoading && <h1>Loading...</h1>}
-        {taskError &&  <h1>Something Went Wrong</h1> }
-       {taskData && !taskLoading && !taskError && <UserLeadComponent row={taskData} columns={columns} />  }
+        <div className="flex-verti-center-hori-start mt-2">
+          <Input
+            placeholder="search"
+            size="small"
+            value={searchText}
+            onChange={handleSearch}
+            style={{ width: "250px" }}
+            prefix={<Icon icon="fluent:search-24-regular" />}
+          />
+        </div>
+        {taskData && !taskLoading && !taskError && (
+          // <UserLeadComponent row={taskData} columns={columns} />
+          <CommonTable
+            data={filteredData}
+            columns={columns}
+            scroll={{ y: 550 }}
+          />
+        )}
       </div>
     </div>
   )

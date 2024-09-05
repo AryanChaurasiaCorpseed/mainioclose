@@ -27,7 +27,7 @@ const CommonTable = ({
 
   const scrollTable = (direction) => {
     if (tableContainerRef.current) {
-      const scrollAmount = 150; 
+      const scrollAmount = 150;
       const currentScrollLeft = tableContainerRef.current.scrollLeft;
       const maxScrollLeft =
         tableContainerRef.current.scrollWidth -
@@ -45,23 +45,20 @@ const CommonTable = ({
     }
   };
 
- 
   const checkScrollButtons = () => {
     if (tableContainerRef.current) {
       const { scrollLeft, scrollWidth, clientWidth } = tableContainerRef.current;
-      setCanScrollLeft(scrollLeft > 0); 
+      setCanScrollLeft(scrollLeft > 0);
       setCanScrollRight(scrollLeft + clientWidth < scrollWidth);
     }
   };
 
-
   const startScrolling = (direction) => {
-    stopScrolling(); 
+    stopScrolling();
     scrollIntervalRef.current = setInterval(() => {
       scrollTable(direction);
     }, 50);
   };
-
 
   const stopScrolling = () => {
     if (scrollIntervalRef.current) {
@@ -70,22 +67,21 @@ const CommonTable = ({
     }
   };
 
-
   useEffect(() => {
     const tableBody = document.querySelector(".ant-table-body");
     if (tableBody) {
       tableContainerRef.current = tableBody;
-      checkScrollButtons(); 
-      tableBody.addEventListener("scroll", checkScrollButtons); 
+      checkScrollButtons();
+      tableBody.addEventListener("scroll", checkScrollButtons);
     }
 
     return () => {
       if (tableBody) {
-        tableBody.removeEventListener("scroll", checkScrollButtons); 
+        tableBody.removeEventListener("scroll", checkScrollButtons);
       }
-      stopScrolling(); 
+      stopScrolling();
     };
-  }, [data, columns]); 
+  }, [data, columns]);
 
   return (
     <div className="table-container">

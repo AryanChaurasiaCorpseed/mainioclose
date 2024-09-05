@@ -1,10 +1,13 @@
-import React, { Suspense, useEffect } from "react"
+import React, { Suspense, useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { getAllTickets } from "../../Toolkit/Slices/TicketSlice"
 import TableScalaton from "../../components/TableScalaton"
 import MainHeading from "../../components/design/MainHeading"
 import { ticketsColumns } from "../../data/TicketData"
 import SomethingWrong from "../../components/usefulThings/SomethingWrong"
+import CommonTable from "../../components/CommonTable"
+import { Icon } from "@iconify/react"
+import { Input } from "antd"
 
 const UserListComponent = React.lazy(() =>
   import(`../../Tables/UserListComponent`)
@@ -13,12 +16,12 @@ const UserListComponent = React.lazy(() =>
 const AllTickets = () => {
   const currentUserId = useSelector((state) => state?.auth?.currentUser?.id)
   const dispatch = useDispatch()
+  const [searchText, setSearchText] = useState("")
+  const [filteredData, setFilteredData] = useState([])
 
-  useEffect(() => {     
+  useEffect(() => {
     dispatch(getAllTickets(currentUserId))
-  }, [dispatch,currentUserId
-    
-  ])
+  }, [dispatch, currentUserId])
 
   const {
     allTickets: ticketsData,
@@ -28,18 +31,47 @@ const AllTickets = () => {
 
   const ticketCount = ticketsData.length
 
+  useEffect(() => {
+    setFilteredData(ticketsData)
+  }, [ticketsData])
+
+  const handleSearch = (e) => {
+    const value = e.target.value
+    setSearchText(value)
+    const filtered = ticketsData?.filter((item) =>
+      Object.values(item)?.some((val) =>
+        String(val)?.toLowerCase()?.includes(value?.toLowerCase())
+      )
+    )
+    setFilteredData(filtered)
+  }
 
   return (
     <>
-      <MainHeading data={`All Tickets (${ticketCount})`} />
+      <MainHeading data={`All tickets (${ticketCount})`} />
       <div className="py-2">
+        <div className="flex-verti-center-hori-start mt-2">
+          <Input
+            placeholder="search"
+            size="small"
+            value={searchText}
+            onChange={handleSearch}
+            style={{ width: "250px" }}
+            prefix={<Icon icon="fluent:search-24-regular" />}
+          />
+        </div>
         {TicketsError && <SomethingWrong />}
         {!TicketsError && (
           <Suspense fallback={<TableScalaton />}>
-            <UserListComponent
+            {/* <UserListComponent
               tableName={""}
               columns={ticketsColumns}
               row={ticketsData}
+            /> */}
+            <CommonTable
+              data={filteredData}
+              columns={ticketsColumns}
+              scroll={{ y: 550 }}
             />
           </Suspense>
         )}

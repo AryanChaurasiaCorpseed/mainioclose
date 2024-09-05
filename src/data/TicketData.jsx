@@ -1,64 +1,60 @@
 import { Tag, Typography } from "antd"
 import { EditTicketStaus } from "../Model/EditTicketStaus"
+import OverFlowText from "../components/OverFlowText"
 
 const { Text } = Typography
 export const ticketsColumns = [
   {
-    field: "id",
-    headerName: "S.No",
-    width: 80,
-    filterable: false,
-    renderCell: (props) => {
+    dataIndex: "id",
+    title: "S.No",
+    width:80,
+    render: (_,props,index) => {
       return (
-        <p className="mb-0">
-          {props.api.getRowIndexRelativeToVisibleRows(props?.row?.id) + 1}
-        </p>
+        <Text>
+          {index+ 1}
+        </Text>
       )
     },
   },
   {
-    field: "subject",
-    headerName: "Subject",
-    width: 250,
+    dataIndex: "subject",
+    title: "Subject",
   },
   {
-    field: "description",
-    headerName: "Description",
-    width: 400,
+    dataIndex: "description",
+    title: "Description",
+    render:(_,props)=><OverFlowText>{props?.description}</OverFlowText>
   },
   {
-    field: "createdBy",
-    headerName: "Created By",
-    width: 200,
-    renderCell: (props) =>
-      props?.row?.createdBy?.fullName ? (
-        <Text>{props?.row?.createdBy?.fullName}</Text>
+    dataIndex: "createdBy",
+    title: "Created By",
+    render: (_,props) =>
+      props?.createdBy?.fullName ? (
+        <Text>{props?.createdBy?.fullName}</Text>
       ) : (
         "N/A"
       ),
   },
   {
-    field: "status",
-    headerName: "Status",
-    width: 100,
-    renderCell: (props) => (
+    dataIndex: "status",
+    title: "Status",
+    render: (_,props) => (
       <Tag
         color={
-          props.row?.status === "Re-Open"
+          props?.status === "Re-Open"
             ? "error"
-            : props.row?.status === "Done"
+            : props?.status === "Done"
             ? "green"
             : ""
         }
       >
-        {props?.row?.status}
+        {props?.status}
       </Tag>
     ),
   },
   {
-    field: "edit",
-    headerName: "Edit",
-    width: 100,
-    renderCell: (props) => <EditTicketStaus data={props?.row} />,
+    dataIndex: "edit",
+    title: "Edit",
+    render: (_,props) => <EditTicketStaus data={props} />,
   },
 ]

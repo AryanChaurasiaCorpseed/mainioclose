@@ -1189,7 +1189,7 @@ const LeadDetailsPage = () => {
           <Form.Item
             label="Email"
             name="email"
-            rules={[{ required: true, message: "please give email" }]}
+            // rules={[{ required: true, message: "please give email" }]}
           >
             <Input />
           </Form.Item>

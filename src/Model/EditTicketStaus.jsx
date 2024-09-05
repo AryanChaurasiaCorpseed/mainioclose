@@ -15,7 +15,6 @@ export const EditTicketStaus = ({ data }) => {
     form.setFieldsValue({ status: data?.status })
   }, [form, data])
 
-  console.log("dkjfgudgysdy", data)
 
   const handleSubmit = useCallback(
     (values) => {
@@ -33,7 +32,7 @@ export const EditTicketStaus = ({ data }) => {
 
   return (
     <>
-      <Button size="small" onClick={handleEdit}>
+      <Button size="small" type="text" onClick={handleEdit}>
         <Icon icon="fluent:edit-20-regular" />
       </Button>
       <Modal
