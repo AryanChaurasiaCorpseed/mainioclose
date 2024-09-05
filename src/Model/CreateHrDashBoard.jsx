@@ -130,7 +130,8 @@ const CreateHrDashBoard = ({ data, edit, modalTitle }) => {
       master: data?.master,
       maritalStatus: data?.maritalStatus,
       personalEmail:data?.personalEmail,
-      companyMobile:data?.companyMobile
+      companyMobile:data?.companyMobile,
+      lockerSize:data?.lockerSize
     })
   }, [data, form,dispatch])
 
