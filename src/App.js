@@ -112,7 +112,7 @@ function App() {
             borderRadius: 4,
             borderRadiusSM: 4,
             borderRadiusLG: 4,
-            fontSizeLG:13
+            fontSizeLG: 13,
           },
           Input: {
             borderRadius: 4,
@@ -133,27 +133,26 @@ function App() {
             cellFontSizeSM: 12,
             cellPaddingBlock: 8,
             cellPaddingInline: 8,
-            cellPaddingBlockMD:8
+            cellPaddingBlockMD: 8,
           },
           Tabs: {
             // cardBg:'#cccccc',
           },
-          Collapse:{
-            headerPadding:'6px 8px'
-          }
+          Collapse: {
+            headerPadding: "6px 8px",
+          },
+          Menu: {
+            horizontalLineHeight: 38,
+            itemHeight: 32,
+            itemPaddingInline: 12,
+            groupTitleFontSize: 12,
+            fontSize: 13,
+            fontSizeLG: 13,
+          },
         },
       }}
     >
-      <div
-        className="App"
-        // style={{
-        //   backgroundImage:
-        //     "url(https://as2.ftcdn.net/v2/jpg/07/58/32/43/1000_F_758324370_uljYzOg1XtUTJpPF94XHICqQsyFAYbjS.jpg)",
-        //   backgroundRepeat: "no-repeat",
-        //   backgroundSize: "cover",
-        //   backgroundPosition: "center",
-        // }}
-      >
+      <div className="App">
         <BrowserRouter>
           <Routes>
             <Route path="/newfile" element={<NewGetFile />}></Route>
@@ -168,8 +167,6 @@ function App() {
               <Route path="/" element={<LandingPage />} />
               <Route path="/contact" element={<div>Contact</div>} />
             </Route>
-
-
 
             <Route path="/erp" element={<MainLoginRouter />}>
               <Route path="login" element={<Login />} />

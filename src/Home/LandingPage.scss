@@ -91,7 +91,7 @@ hr {
 }
 pre {
   font-family: monospace, monospace;
-  font-size: 1em;
+  // font-size: 1em;
 }
 a {
   background-color: transparent;
@@ -709,11 +709,10 @@ h5 {
 h6 {
   font-size: 0.8125rem;
 }
-p,
-ul,
-a {
-  font-size: 1rem;
-}
+// p,
+// ul{
+//   font-size: 1rem;
+// }
 p.intro-text,
 ul.intro-text,
 a.intro-text {

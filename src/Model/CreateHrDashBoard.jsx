@@ -165,27 +165,27 @@ const CreateHrDashBoard = ({ data, edit, modalTitle }) => {
                     dispatch(getAllUsers())
                   } else if (res.meta.requestStatus === "rejected") {
                     setLoading("rejected")
-                    notification.error({ message: "Something went wrong" })
+                    notification.error({ message: "Something went wrong !." })
                     setOpenModal(false)
                     form.resetFields()
                   }
                 })
                 .catch(() => {
                   setLoading("rejected")
-                  notification.error({ message: "Something went wrong" })
+                  notification.error({ message: "Something went wrong !." })
                   setOpenModal(false)
                   form.resetFields()
                 })
             } else if (response.meta.requestStatus === "rejected") {
               setLoading("rejected")
-              notification.error({ message: "Something went wrong" })
+              notification.error({ message: "Something went wrong !." })
               setOpenModal(false)
               form.resetFields()
             }
           })
           .catch(() => {
             setLoading("rejected")
-            notification.error({ message: "Something went wrong" })
+            notification.error({ message: "Something went wrong !." })
             setOpenModal(false)
             form.resetFields()
           })
@@ -203,33 +203,33 @@ const CreateHrDashBoard = ({ data, edit, modalTitle }) => {
                 .then((info) => {
                   if (info.meta.requestStatus === "fulfilled") {
                     notification.success({
-                      message: "User created successfully",
+                      message: "User created successfully .",
                     })
                     setLoading("success")
                     setOpenModal(false)
                     dispatch(getAllUsers())
                   } else if (info.meta.requestStatus === "rejected") {
-                    notification.error({ message: "Something went wrong" })
+                    notification.error({ message: "Something went wrong !." })
                     setLoading("rejected")
                     setOpenModal(false)
                     form.resetFields()
                   }
                 })
                 .catch(() => {
-                  notification.error({ message: "Something went wrong" })
+                  notification.error({ message: "Something went wrong !." })
                   setLoading("rejected")
                   setOpenModal(false)
                   form.resetFields()
                 })
             } else if (resp.meta.requestStatus === "rejected") {
-              notification.error({ message: "Something went wrong" })
+              notification.error({ message: "Something went wrong !." })
               setLoading("rejected")
               setOpenModal(false)
               form.resetFields()
             }
           })
           .catch(() => {
-            notification.error({ message: "Something went wrong" })
+            notification.error({ message: "Something went wrong !." })
             setLoading("rejected")
             setOpenModal(false)
             form.resetFields()
