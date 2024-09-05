@@ -841,7 +841,7 @@ const LeadDetailsPage = () => {
                   )}
                   {singleLeadResponseData?.count !== undefined && (
                     <Text className="heading-text">
-                      {`( ${singleLeadResponseData?.count} )`}
+                      {`(${singleLeadResponseData?.count})`}
                     </Text>
                   )}
                   <Text className="heading-text">
@@ -927,6 +927,7 @@ const LeadDetailsPage = () => {
             <Select
               showSearch
               allowClear
+              size="small"
               placeholder="change status"
               value={singleLeadResponseData?.status?.id}
               options={
@@ -975,7 +976,7 @@ const LeadDetailsPage = () => {
         <Col span={15}>
           <div className="lead-filter-above">
             <div className="filter-box">
-              <Button onClick={() => setNotes((prev) => !prev)}>
+              <Button shape='round' onClick={() => setNotes((prev) => !prev)}>
                 <Icon
                   icon="fluent:document-text-24-regular"
                   height={BTN_ICON_HEIGHT}
@@ -985,7 +986,7 @@ const LeadDetailsPage = () => {
               </Button>
 
               <Link to={`history`}>
-                <Button>
+                <Button shape='round'>
                   <Icon
                     icon="fluent:history-24-regular"
                     height={BTN_ICON_HEIGHT}
@@ -1004,14 +1005,13 @@ const LeadDetailsPage = () => {
                   Back
                 </Button>
               </Link> */}
-              <Button onClick={() => openTasksFun()}>All tasks</Button>
+              <Button onClick={() => openTasksFun()} shape='round'>All tasks</Button>
             </div>
             <div className="lead-assignee-container mt-3">
               <Text className="heading-text">Update assignee</Text>
               <Select
                 placeholder="Change assignee"
-                style={{ width: "100%", margin: "12px 0px" }}
-                size="large"
+                style={{ width: "100%", margin: "6px 0px" }}
                 options={
                   userDataResponse?.map((ele) => ({
                     label: ele?.fullName,
@@ -1024,7 +1024,7 @@ const LeadDetailsPage = () => {
                 onChange={(e) => changeLeadAssignee(e)}
               />
             </div>
-            <div className={`notes-box mt-4 ${notes === true ? "d-none" : ""}`}>
+            <div className={`notes-box mt-2 ${notes === true ? "d-none" : ""}`}>
               <div className="comment-icon">
                 <div className="icon-box notes-cl">
                   <i className="fa-regular fa-note-sticky"></i>

@@ -131,12 +131,16 @@ function App() {
             cellFontSize: 12,
             cellFontSizeMD: 12,
             cellFontSizeSM: 12,
-            cellPaddingBlock: 12,
-            cellPaddingInline: 12,
+            cellPaddingBlock: 8,
+            cellPaddingInline: 8,
+            cellPaddingBlockMD:8
           },
           Tabs: {
             // cardBg:'#cccccc',
           },
+          Collapse:{
+            headerPadding:'6px 8px'
+          }
         },
       }}
     >

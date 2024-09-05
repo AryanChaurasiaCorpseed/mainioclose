@@ -215,12 +215,12 @@ button:focus {
   text-decoration: none;
 }
 
-.cm-padding-one {
+/* .cm-padding-one {
   padding-top: 30px;
   padding-bottom: 30px;
   padding-left: 15px;
   padding-right: 15px;
-}
+} */
 
 /* .small-box-padding {
   padding: 12px;
@@ -979,8 +979,8 @@ select.form-control:not([size]):not([multiple]) {
 }
 
 .heading-text {
-  font-size: 16px;
-  line-height: 18px;
+  font-size: 14px;
+  line-height: 16px;
   font-weight: 550;
   color: #0f0f0f;
 }
@@ -999,7 +999,7 @@ select.form-control:not([size]):not([multiple]) {
 
 .link-heading {
   color: #1677ff;
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 400;
 }
 

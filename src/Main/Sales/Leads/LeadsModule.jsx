@@ -534,9 +534,17 @@ const LeadsModule = () => {
 
   useEffect(() => {
     const notifcationApi = setInterval(() => {
-      dispatch(getLeadNotificationCount(userid))
+      dispatch(getLeadNotificationCount(userid)).then((resp) => {
+        if (resp.meta.requestStatus === "fulfilled") {
+          // playSuccessSound()
+        }
+      })
     }, 1 * 60 * 1000)
-    dispatch(getLeadNotificationCount(userid))
+    dispatch(getLeadNotificationCount(userid)).then((resp) => {
+      if (resp.meta.requestStatus === "fulfilled") {
+        // playSuccessSound()
+      }
+    })
     return () => clearInterval(notifcationApi)
   }, [userid, dispatch])
 
@@ -598,7 +606,7 @@ const LeadsModule = () => {
         <MainHeading data={`Leads (${allLeadData?.length})`} />
         <div className="all-center">
           <Link to={`allTask`}>
-            <Button className="mr-2" type="primary">
+            <Button className="mr-2" size="small"  type="primary">
               All tasks
             </Button>
           </Link>
@@ -659,7 +667,7 @@ const LeadsModule = () => {
                   </div>
                 )}
               >
-                <Button onClick={handleOpenDropdown}>
+                <Button size="small" onClick={handleOpenDropdown}>
                   <Icon
                     icon="fluent:arrow-upload-16-filled"
                     height={BTN_ICON_HEIGHT}
@@ -672,6 +680,7 @@ const LeadsModule = () => {
           <Button
             onClick={() => setHideMUltiFilter((prev) => !prev)}
             className="mr-2"
+            size="small"
           >
             Filter data
           </Button>

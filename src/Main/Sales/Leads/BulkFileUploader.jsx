@@ -105,7 +105,6 @@ const BulkFileUploader = () => {
       <Select
         style={{ width: "100%", margin: "12px 0px" }}
         placeholder="select comment..."
-        size="large"
         value={text === "" ? null : text}
         showSearch
         allowClear
@@ -132,7 +131,7 @@ const BulkFileUploader = () => {
           size="large"
           value={inputCommentText}
           placeholder="write comment here ..."
-          autoSize={{ minRows: 1, maxRows: 2 }}
+          // autoSize={{ minRows: 1, maxRows: 2 }}
           onChange={(e) => setInputCommentText(e.target.value)}
         />
       )}

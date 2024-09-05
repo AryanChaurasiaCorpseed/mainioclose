@@ -50,7 +50,7 @@ const LeadCreateModel = ({ leadByCompany, companyId }) => {
   return (
     <>
       <div className="team-model">
-        <Button type="primary" onClick={() => setOpenModal(true)}>
+        <Button type="primary" size="small" onClick={() => setOpenModal(true)}>
           Create lead
         </Button>
       </div>
