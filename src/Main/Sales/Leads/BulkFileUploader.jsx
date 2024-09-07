@@ -1,3 +1,122 @@
+// import React, { useEffect, useState } from "react";
+// import { Upload, Button, notification, Typography } from "antd";
+// import { UploadOutlined } from "@ant-design/icons";
+// import "./BulkFileUpload.scss"; // Ensure this path is correct
+
+// const { Text } = Typography;
+
+// const BulkFileUploader = () => {
+//   const [fileList, setFileList] = useState([]); // Store files for upload
+//   const [uploadedFiles, setUploadedFiles] = useState([]); // Store uploaded file paths/names
+
+//   useEffect(() => {
+//     const handlePaste = (event) => {
+//       const clipboardItems = event.clipboardData.items;
+//       const pastedFiles = [];
+
+//       for (const item of clipboardItems) {
+//         if (item.kind === "file") {
+//           const file = item.getAsFile();
+//           pastedFiles.push(new File([file], file.name, { type: file.type }));
+//         }
+//       }
+
+//       if (pastedFiles.length > 0) {
+//         const newFileList = pastedFiles.map((file, index) => ({
+//           uid: `${file.name}-${index}`,
+//           name: file.name,
+//           status: 'done',
+//           originFileObj: file,
+//           url: URL.createObjectURL(file) // Generate a URL to display
+//         }));
+
+//         // Set the file list and uploaded files list
+//         setFileList((prevList) => [...prevList, ...newFileList]);
+//         setUploadedFiles((prevFiles) => [...prevFiles, ...newFileList.map(f => f.url)]);
+//       }
+//     };
+
+//     window.addEventListener("paste", handlePaste);
+
+//     return () => {
+//       window.removeEventListener("paste", handlePaste);
+//     };
+//   }, []);
+
+//   // Ant Design Upload button props
+//   const uploadProps = {
+//     name: "file",
+//     multiple: true,
+//     beforeUpload: (file) => {
+//       setFileList((prevList) => [
+//         ...prevList,
+//         {
+//           uid: file.uid,
+//           name: file.name,
+//           status: 'done',
+//           originFileObj: file,
+//           url: URL.createObjectURL(file) // Simulate file URL
+//         }
+//       ]);
+//       setUploadedFiles((prevFiles) => [...prevFiles, URL.createObjectURL(file)]);
+//       return false; // Prevent default upload behavior
+//     },
+//     fileList: fileList,
+//     onRemove: (file) => {
+//       setFileList(fileList.filter((item) => item.uid !== file.uid));
+//       setUploadedFiles(uploadedFiles.filter((url) => url !== file.url));
+//     },
+//   };
+
+//   return (
+//     <div className="file-upload-container" tabIndex={0}>
+//       <div className="upload-button-container">
+//         <Upload {...uploadProps} showUploadList={false}>
+//           <Button icon={<UploadOutlined />}>Click to Upload</Button>
+//         </Upload>
+//       </div>
+//       <p>Click the button to upload or paste (Ctrl + V) documents, images, or PDFs anywhere in this box</p>
+      
+//       {uploadedFiles.length > 0 && (
+//         <div>
+//           <Text strong>Uploaded Files:</Text>
+//           <ul className="uploaded-files-list">
+//             {fileList.map((file) => (
+//               <li key={file.uid}>
+//                 <a href={file.url} target="_blank" rel="noopener noreferrer">
+//                   {file.name}
+//                 </a>
+//               </li>
+//             ))}
+//           </ul>
+//         </div>
+//       )}
+//     </div>
+//   );
+// };
+
+// export default BulkFileUploader;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 import React, { useCallback, useEffect, useState } from "react"
 import { Icon } from "@iconify/react"
 import {

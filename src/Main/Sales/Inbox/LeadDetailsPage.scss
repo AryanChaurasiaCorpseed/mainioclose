@@ -231,3 +231,11 @@
   justify-content: flex-end;
   padding: 4px 2px;
 }
+
+.description-container{
+  display: flex;
+  flex-wrap: wrap;
+  padding: 8px;
+  border: 0.5px solid rgb(197, 195, 195) ;
+  border-radius: 4px;
+}

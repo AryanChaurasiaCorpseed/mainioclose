@@ -35,3 +35,31 @@
   padding: 0; 
   // scroll-behavior: smooth;
 }
+
+
+.table-container {
+  .ant-table-body {
+    max-height: 70vh; 
+  }
+
+
+  @media (max-width: 1366px) {
+    .ant-table-body {
+      max-height: 40vh; 
+    }
+  }
+
+ 
+  @media (min-width: 1367px) and (max-width: 1920px) {
+    .ant-table-body {
+      max-height: 70vh; 
+    }
+  }
+
+
+  @media (min-width: 1921px) {
+    .ant-table-body {
+      max-height: 70vh; 
+    }
+  }
+}

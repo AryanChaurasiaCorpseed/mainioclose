@@ -33,7 +33,7 @@ const CreateRatingModel = ({ edit, urlRating, urlId }) => {
         .then((response) => {
           if (response.meta.requestStatus === "fulfilled") {
             notification.success({
-              message: "Rating updated successfully",
+              message: "Rating updated successfully .",
             })
             dispatch(allRatingUsers({ id: urlId }))
             dispatch(getAllUrlAction(page))
@@ -41,13 +41,13 @@ const CreateRatingModel = ({ edit, urlRating, urlId }) => {
             setOpenModal(false)
           } else if (response.meta.requestStatus === "rejected") {
             notification.error({
-              message: "Either user is already persent or empt",
+              message: "Either user is already persent or empty",
             })
             setOpenModal(false)
           }
         })
         .catch((err) => {
-          notification.error({ message: "Something went wrong" })
+          notification.error({ message: "Something went wrong !." })
           setOpenModal(false)
         })
     },

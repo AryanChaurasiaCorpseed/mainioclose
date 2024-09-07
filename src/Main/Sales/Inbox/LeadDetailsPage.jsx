@@ -28,6 +28,7 @@ import {
   getSingleLeadDataByLeadID,
   handleLeadassignedToSamePerson,
   updateAutoAssignnee,
+  updateLeadDescription,
   updateLeadProducts,
   updateLeadsContact,
   updateLeadTask,
@@ -72,6 +73,7 @@ const LeadDetailsPage = () => {
   const { userid, leadid } = useParams()
   const dispatch = useDispatch()
   const fileRef = useRef()
+  const [descriptionText, setDescriptionText] = useState("")
   const currentUserRoles = useSelector((state) => state?.auth?.roles)
   const { allLeadUrl } = useSelector((prev) => prev?.leadurls)
   const allTaskStatusData = useSelector(
@@ -89,6 +91,9 @@ const LeadDetailsPage = () => {
   const getAllStatus = useSelector((state) => state.leads.getAllStatus)
   const singleLeadResponseData = useSelector(
     (state) => state.leads.singleLeadResponseData
+  )
+  const currentUserDetail = useSelector(
+    (state) => state.auth.getDepartmentDetail
   )
   const allProductsList = useSelector((state) => state.leads.allProductsList)
   const clientsContact = useSelector((state) => state.leads.clientsContact)
@@ -126,6 +131,10 @@ const LeadDetailsPage = () => {
     originalName: "",
     currentUserId: userid,
   })
+
+  useEffect(() => {
+    setDescriptionText(singleLeadResponseData?.description)
+  }, [singleLeadResponseData])
 
   const getSingleLeadData = useCallback(() => {
     dispatch(getSingleLeadDataByLeadID(leadid))
@@ -389,7 +398,7 @@ const LeadDetailsPage = () => {
               getSingleLeadData()
               setOpenModal(false)
               form1.resetFields()
-              window.location.reload()
+              dispatch(getSingleLeadDataByLeadID(leadid))
             } else {
               notification.error({
                 message: "Something went wrong !.",
@@ -413,7 +422,7 @@ const LeadDetailsPage = () => {
               getSingleLeadData()
               setOpenModal(false)
               form1.resetFields()
-              window.location.reload()
+              dispatch(getSingleLeadDataByLeadID(leadid))
             } else {
               notification.error({
                 message: "Something went wrong !.",
@@ -460,9 +469,9 @@ const LeadDetailsPage = () => {
                 message: "Task updated successfully.",
               })
               dispatch(getAllTaskData(leadid))
+              dispatch(getSingleLeadDataByLeadID(leadid))
               setOpenTaskModal(false)
               form2.resetFields()
-              window.location.reload()
             } else {
               notification.error({
                 message: "Something went wrong !.",
@@ -482,9 +491,9 @@ const LeadDetailsPage = () => {
                 message: "Task created successfully.",
               })
               dispatch(getAllTaskData(leadid))
+              dispatch(getSingleLeadDataByLeadID(leadid))
               setOpenTaskModal(false)
               form2.resetFields()
-              window.location.reload()
             } else {
               notification.error({
                 message: "Something went wrong !.",
@@ -512,7 +521,7 @@ const LeadDetailsPage = () => {
             })
             getSingleLeadData()
             setOpenProductModal(false)
-            window.location.reload()
+            dispatch(getSingleLeadDataByLeadID(leadid))
           } else {
             notification.error({
               message: "Something went wrong !.",
@@ -548,6 +557,28 @@ const LeadDetailsPage = () => {
         playErrorSound()
       })
   }
+
+  const handleUpdateLeadDescription = useCallback(() => {
+    let obj = { id: leadid, description: descriptionText }
+    dispatch(updateLeadDescription(obj))
+      .then((response) => {
+        if (response.meta.requestStatus === "fulfilled") {
+          notification.success({
+            message: "Lead description successfully.",
+          })
+          playSuccessSound()
+          getSingleLeadData()
+          window.location.reload()
+        } else {
+          notification.error({ message: "Something went wrong !." })
+          playErrorSound()
+        }
+      })
+      .catch(() => {
+        notification.error({ message: "Something went wrong !." })
+        playErrorSound()
+      })
+  }, [leadid, dispatch, descriptionText])
 
   const items = [
     {
@@ -953,6 +984,33 @@ const LeadDetailsPage = () => {
                 Not same
               </Button>
             </Space>
+
+            {singleLeadResponseData?.source && (
+              <>
+                <Divider style={{ margin: "6px" }} />
+                <Text className="heading-text">Lead description</Text>
+                {currentUserDetail?.department === "Quality" ||
+                currentUserRoles?.includes("ADMIN") ? (
+                  <div className="comp-container">
+                    <Input.TextArea
+                      value={descriptionText}
+                      onChange={(e) => setDescriptionText(e.target.value)}
+                    />
+                    <Button
+                      type="primary"
+                      size="small"
+                      onClick={handleUpdateLeadDescription}
+                    >
+                      Submit
+                    </Button>
+                  </div>
+                ) : (
+                  <div className="description-container">
+                    <Text>{descriptionText}</Text>
+                  </div>
+                )}
+              </>
+            )}
             <Divider style={{ margin: "6px" }} />
             <div className="btn-view-container">
               <CompanyFormModal
@@ -976,7 +1034,7 @@ const LeadDetailsPage = () => {
         <Col span={15}>
           <div className="lead-filter-above">
             <div className="filter-box">
-              <Button shape='round' onClick={() => setNotes((prev) => !prev)}>
+              <Button shape="round" onClick={() => setNotes((prev) => !prev)}>
                 <Icon
                   icon="fluent:document-text-24-regular"
                   height={BTN_ICON_HEIGHT}
@@ -986,7 +1044,7 @@ const LeadDetailsPage = () => {
               </Button>
 
               <Link to={`history`}>
-                <Button shape='round'>
+                <Button shape="round">
                   <Icon
                     icon="fluent:history-24-regular"
                     height={BTN_ICON_HEIGHT}
@@ -1005,7 +1063,9 @@ const LeadDetailsPage = () => {
                   Back
                 </Button>
               </Link> */}
-              <Button onClick={() => openTasksFun()} shape='round'>All tasks</Button>
+              <Button onClick={() => openTasksFun()} shape="round">
+                All tasks
+              </Button>
             </div>
             <div className="lead-assignee-container mt-3">
               <Text className="heading-text">Update assignee</Text>
@@ -1102,10 +1162,10 @@ const LeadDetailsPage = () => {
             {notesApiData.map((note, index) => {
               return (
                 <div className="lead-filter-above" key={`${index}yug`}>
-                  <div className={`notes-box mt-2`}>
+                  <div className={`notes-box`}>
                     <div className="comment-icon">
                       <div className="icon-box h-70">
-                        <i className="fa-regular cm-icon fa-comment"></i> 
+                        <i className="fa-regular cm-icon fa-comment"></i>
                       </div>
                       <div className="line"></div>
                     </div>
@@ -1146,7 +1206,7 @@ const LeadDetailsPage = () => {
                         </div>
                       </div>
                       <div className="text-display-box">
-                        <pre>{note.message}</pre>
+                        <Text>{note.message}</Text>
                       </div>
                       {note?.imageList?.length && (
                         <Image.PreviewGroup

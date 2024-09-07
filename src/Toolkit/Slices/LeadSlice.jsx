@@ -5,7 +5,10 @@ import { getQuery } from "../../API/GetQuery"
 import { deleteQuery } from "../../API/DeleteQuery"
 
 export const getAllLeads = createAsyncThunk("allLeadsData", async (data) => {
-  const allLeads = await postQuery(`/leadService/api/v1/lead/getAllLead?page=${data?.page}&size=50`, data)
+  const allLeads = await postQuery(
+    `/leadService/api/v1/lead/getAllLead?page=${data?.page}&size=50`,
+    data
+  )
   return allLeads?.data
 })
 
@@ -430,15 +433,37 @@ export const getSingleLeadDataByLeadID = createAsyncThunk(
   }
 )
 
-export const createTicket=createAsyncThunk('createTicket',async(data)=>{
-  const response = await postQuery(`/leadService/api/v1/createTicket`,data)
+export const createTicket = createAsyncThunk("createTicket", async (data) => {
+  const response = await postQuery(`/leadService/api/v1/createTicket`, data)
   return response.data
 })
 
-export const getLeadNotificationCount=createAsyncThunk('getNotificationLead',async(userid)=>{
-  const response=await getQuery(`/leadService/api/v1/notification/getUnseenCount?userId=${userid}`)
+export const getLeadNotificationCount = createAsyncThunk(
+  "getNotificationLead",
+  async (userid) => {
+    const response = await getQuery(
+      `/leadService/api/v1/notification/getUnseenCount?userId=${userid}`
+    )
+    return response.data
+  }
+)
+
+export const searchLeads = createAsyncThunk("searchLeads", async (input) => {
+  const response = await getQuery(
+    `/leadService/api/v1/lead/searchLead?searchParam=${input}`
+  )
   return response.data
 })
+
+export const updateLeadDescription = createAsyncThunk(
+  "updateLeadDescription",
+  async (data) => {
+    const response = await putQuery(
+      `/leadService/api/v1/lead/updateLeadDescription?leadId=${data?.id}&desc=${data?.description}`
+    )
+    return response.data
+  }
+)
 
 export const LeadSlice = createSlice({
   name: "lead",
@@ -469,8 +494,8 @@ export const LeadSlice = createSlice({
     singleLeadResponseData: {},
     allProductsList: [],
     clientsContact: [],
-    notificationCount:0,
-    page:0,
+    notificationCount: 0,
+    page: 0,
   },
   reducers: {
     handleLoadingState: (state, action) => {
@@ -688,7 +713,6 @@ export const LeadSlice = createSlice({
       state.loading = "rejected"
     })
 
-
     builder.addCase(getLeadNotificationCount.pending, (state, action) => {
       state.loading = "pending"
     })
@@ -700,10 +724,21 @@ export const LeadSlice = createSlice({
       state.loading = "rejected"
     })
 
-
-
-
+    builder.addCase(searchLeads.pending, (state, action) => {
+      state.loading = "pending"
+    })
+    builder.addCase(searchLeads.fulfilled, (state, action) => {
+      state.loading = "success"
+      state.allLeads = action.payload
+    })
+    builder.addCase(searchLeads.rejected, (state, action) => {
+      state.loading = "rejected"
+    })
   },
 })
-export const { handleLoadingState,handleNextPagination,handlePrevPagination } = LeadSlice.actions
+export const {
+  handleLoadingState,
+  handleNextPagination,
+  handlePrevPagination,
+} = LeadSlice.actions
 export default LeadSlice.reducer

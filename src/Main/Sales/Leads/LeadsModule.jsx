@@ -18,6 +18,7 @@ import {
   handlePrevPagination,
   handleViewHistory,
   multiAssignedLeads,
+  searchLeads,
   updateAssigneeInLeadModule,
   updateHelper,
 } from "../../../Toolkit/Slices/LeadSlice"
@@ -41,6 +42,7 @@ import OverFlowText from "../../../components/OverFlowText"
 import { BTN_ICON_HEIGHT, BTN_ICON_WIDTH } from "../../../components/Constants"
 import { playErrorSound, playSuccessSound } from "../../Common/Commons"
 const { Text } = Typography
+const { Search } = Input
 
 const CommonTable = React.lazy(() => import(`../../../components/CommonTable`))
 
@@ -588,15 +590,23 @@ const LeadsModule = () => {
     [dropdownData]
   )
 
-  const handleSearch = (e) => {
-    const value = e.target.value
-    setSearchText(value)
-    const filtered = allLeadData?.filter((item) =>
-      Object.values(item)?.some((val) =>
-        String(val)?.toLowerCase()?.includes(value?.toLowerCase())
-      )
-    )
-    setFilteredData(filtered)
+  // const handleSearch = (e) => {
+  //   const value = e.target.value
+  //   setSearchText(value)
+  //   const filtered = allLeadData?.filter((item) =>
+  //     Object.values(item)?.some((val) =>
+  //       String(val)?.toLowerCase()?.includes(value?.toLowerCase())
+  //     )
+  //   )
+  //   setFilteredData(filtered)
+  // }
+
+  const onSearchLead = (e, b, c) => {
+    console.log("sdksjdsjdaghsjdghdsjk", c)
+    dispatch(searchLeads(e))
+    if (!b) {
+      dispatch(searchLeads(""))
+    }
   }
 
   return (
@@ -605,7 +615,7 @@ const LeadsModule = () => {
         <MainHeading data={`Leads (${allLeadData?.length})`} />
         <div className="all-center">
           <Link to={`allTask`}>
-            <Button className="mr-2" size="small"  type="primary">
+            <Button className="mr-2" size="small" type="primary">
               All tasks
             </Button>
           </Link>
@@ -701,6 +711,7 @@ const LeadsModule = () => {
             <Select
               mode="multiple"
               maxTagCount="responsive"
+              size="small"
               allowClear
               showSearch
               style={{ width: "45%" }}
@@ -723,6 +734,7 @@ const LeadsModule = () => {
           <Select
             mode="multiple"
             maxTagCount="responsive"
+            size="small"
             style={{ width: "45%" }}
             value={allStatusMulti}
             allowClear
@@ -769,11 +781,14 @@ const LeadsModule = () => {
         </div>
       </div>
       <div className="flex-verti-center-hori-start mt-2">
-        <Input
+        <Search
           placeholder="search"
           size="small"
-          value={searchText}
-          onChange={handleSearch}
+          allowClear
+          // value={searchText}
+          onSearch={onSearchLead}
+          onChange={(e) => (!e.target.value ? dispatch(searchLeads("")) : "")}
+          enterButton="search"
           style={{ width: "250px" }}
           prefix={<Icon icon="fluent:search-24-regular" />}
         />
@@ -813,6 +828,7 @@ const LeadsModule = () => {
                       <Button
                         danger
                         disabled={selectedRowKeys?.length === 0 ? true : false}
+                        size="small"
                       >
                         {leadDelLoading === "pending"
                           ? "Please wait..."
@@ -823,6 +839,7 @@ const LeadsModule = () => {
                     <Select
                       allowClear
                       showSearch
+                      size="small"
                       style={{ width: 200 }}
                       placeholder="Select status"
                       options={
@@ -848,6 +865,7 @@ const LeadsModule = () => {
                     <Select
                       showSearch
                       allowClear
+                      size="small"
                       style={{ width: 200 }}
                       placeholder="select user"
                       options={
@@ -874,6 +892,7 @@ const LeadsModule = () => {
                       type="primary"
                       disabled={selectedRowKeys?.length === 0 ? true : false}
                       onClick={handleMultipleAssignedLeads}
+                      size="small"
                     >
                       {multibtn === "pending" ? "Loading..." : "Send"}
                     </Button>

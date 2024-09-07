@@ -131,20 +131,20 @@ sup {
 img {
   border-style: none;
 }
-button,
-input,
-optgroup,
-select,
-textarea {
-  font-family: inherit;
-  font-size: 100%;
-  line-height: 1.15;
-  margin: 0;
-}
-button,
-input {
-  overflow: visible;
-}
+// button,
+// input,
+// optgroup,
+// select,
+// textarea {
+//   font-family: inherit;
+//   // font-size: 100%;
+//   line-height: 1.15;
+//   margin: 0;
+// }
+// button,
+// input {
+//   overflow: visible;
+// }
 button,
 select {
   text-transform: none;
@@ -322,11 +322,11 @@ input[type="reset"],
 input[type="submit"] {
   border: 1px solid;
   // border-color: #00d639;
-  border-radius: 3px;
+  // border-radius: 3px;
   // background: #00d639;
   color: #000;
   line-height: 1;
-  padding: 1em;
+  // padding: 1em;
 }
 button:hover,
 input[type="button"]:hover,
@@ -581,7 +581,7 @@ textarea {
   color: #000;
   font-family: "Sage Text", "Calibri", "Helvetica Neue", "Helvetica", "Arial",
     sans-serif;
-  font-size: 1rem;
+  // font-size: 1rem;
   line-height: 1.5;
 }
 h1,
@@ -4062,7 +4062,7 @@ select {
   -moz-appearance: none;
   appearance: none;
   color: #000 !important;
-  font-size: 1rem !important;
+  // font-size: 1rem !important;
   -webkit-box-shadow: none !important;
   box-shadow: none !important;
   -webkit-box-sizing: border-box !important;

@@ -106,6 +106,8 @@ function App() {
           },
           Select: {
             fontSize: 12,
+            contentFontSize:11,
+            contentFontSizeSM:11,
             optionFontSize: 12,
             optionHeight: 28,
             controlHeightSM: 28,
