@@ -985,7 +985,7 @@ const LeadDetailsPage = () => {
               </Button>
             </Space>
 
-            {singleLeadResponseData?.source && (
+            {singleLeadResponseData?.source === "IVR" && (
               <>
                 <Divider style={{ margin: "6px" }} />
                 <Text className="heading-text">Lead description</Text>
