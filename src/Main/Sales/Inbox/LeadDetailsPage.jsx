@@ -113,6 +113,7 @@ const LeadDetailsPage = () => {
   const [updateAssignee, setUpdateAssignee] = useState(false)
   const [updateOriginalName, setUpdateOriginalName] = useState(false)
   const [updatedLeadName, setUpdatedLeadName] = useState("")
+  const [showDescriptionField, setShowDescriptionField] = useState(false)
 
   useEffect(() => {
     dispatch(getAllSlugList())
@@ -568,7 +569,7 @@ const LeadDetailsPage = () => {
           })
           playSuccessSound()
           getSingleLeadData()
-          window.location.reload()
+          setShowDescriptionField(false)
         } else {
           notification.error({ message: "Something went wrong !." })
           playErrorSound()
@@ -989,26 +990,60 @@ const LeadDetailsPage = () => {
               <>
                 <Divider style={{ margin: "6px" }} />
                 <Text className="heading-text">Lead description</Text>
-                {currentUserDetail?.department === "Quality" ||
-                currentUserRoles?.includes("ADMIN") ? (
+                {showDescriptionField ? (
                   <div className="comp-container">
                     <Input.TextArea
                       value={descriptionText}
                       onChange={(e) => setDescriptionText(e.target.value)}
                     />
-                    <Button
-                      type="primary"
-                      size="small"
-                      onClick={handleUpdateLeadDescription}
-                    >
-                      Submit
-                    </Button>
                   </div>
                 ) : (
                   <div className="description-container">
                     <Text>{descriptionText}</Text>
                   </div>
                 )}
+
+                {currentUserDetail?.department === "Quality" ||
+                  (currentUserRoles?.includes("ADMIN") && (
+                    <Space>
+                      <Button
+                        size="small"
+                        onClick={() =>
+                          setShowDescriptionField(!showDescriptionField)
+                        }
+                      >
+                        {showDescriptionField ? "Cancel" : "Edit"}
+                      </Button>
+                      <Button
+                        type="primary"
+                        size="small"
+                        onClick={handleUpdateLeadDescription}
+                      >
+                        Submit
+                      </Button>
+                    </Space>
+                  ))}
+
+                {/* {currentUserDetail?.department === "Quality" ||
+                currentUserRoles?.includes("ADMIN") ? (
+                  <>
+                    {
+                      showDescriptionField ? ():(
+                        <div className="description-container">
+                      <Text>{descriptionText}</Text>
+                    </div>
+                      )
+                    }
+                    
+                  </>
+                ) : (
+                  <div className="comp-container">
+                    <Input.TextArea
+                      value={descriptionText}
+                      onChange={(e) => setDescriptionText(e.target.value)}
+                    />
+                  </div>
+                )} */}
               </>
             )}
             <Divider style={{ margin: "6px" }} />
