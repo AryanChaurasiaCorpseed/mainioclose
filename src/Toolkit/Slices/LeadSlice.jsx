@@ -448,9 +448,9 @@ export const getLeadNotificationCount = createAsyncThunk(
   }
 )
 
-export const searchLeads = createAsyncThunk("searchLeads", async (input) => {
+export const searchLeads = createAsyncThunk("searchLeads", async (data) => {
   const response = await getQuery(
-    `/leadService/api/v1/lead/searchLead?searchParam=${input}`
+    `/leadService/api/v1/lead/searchLead?searchParam=${data.input}&userId=${data.id}`
   )
   return response.data
 })

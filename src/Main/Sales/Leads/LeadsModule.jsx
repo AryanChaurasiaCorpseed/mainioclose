@@ -603,9 +603,9 @@ const LeadsModule = () => {
 
   const onSearchLead = (e, b, c) => {
     console.log("sdksjdsjdaghsjdghdsjk", c)
-    dispatch(searchLeads(e))
+    dispatch(searchLeads({input:e,id:userid}))
     if (!b) {
-      dispatch(searchLeads(""))
+      dispatch(searchLeads({input:"",id:userid}))
     }
   }
 
@@ -787,7 +787,7 @@ const LeadsModule = () => {
           allowClear
           // value={searchText}
           onSearch={onSearchLead}
-          onChange={(e) => (!e.target.value ? dispatch(searchLeads("")) : "")}
+          onChange={(e) => (!e.target.value ? dispatch(searchLeads({input:"",id:userid})) : "")}
           enterButton="search"
           style={{ width: "250px" }}
           prefix={<Icon icon="fluent:search-24-regular" />}
