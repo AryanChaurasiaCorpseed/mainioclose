@@ -5,7 +5,7 @@ import { putQuery } from "../../API/PutQuery"
 
 export const getCompanyAction = createAsyncThunk(
   "getallCompanyData",
-  async ({ id,page }) => {
+  async ({ id, page }) => {
     const getCompanyData = await getQuery(
       `/leadService/api/v1/company/getAllCompany?userId=${id}&page=${page}&size=50`
     )
@@ -130,6 +130,22 @@ export const updateCompanyForm = createAsyncThunk(
     return response.data
   }
 )
+
+export const searchCompanyForm = createAsyncThunk("searchCompanyForm", async (data) => {
+  const response = await getQuery(
+    `/leadService/api/v1/company/searchCompanyByStatus?searchNameAndGSt=${data?.inputText}&userId=${data?.userId}&status=${data?.status}&page=${data?.page}&size=50`
+  )
+  return response.data
+})
+
+
+
+export const searchCompany = createAsyncThunk("searchCompany", async (data) => {
+  const response = await getQuery(
+    `/leadService/api/v1/company/searchCompanyByStatus?searchNameAndGSt=${data?.inputText}&userId=${data?.userId}`
+  )
+  return response.data
+})
 
 const CompnaySlice = createSlice({
   name: "company",
@@ -265,6 +281,29 @@ const CompnaySlice = createSlice({
       state.loading = "success"
     })
     builder.addCase(getCompanyDetailsById.rejected, (state, action) => {
+      state.loading = "rejected"
+    })
+
+
+    builder.addCase(searchCompany.pending, (state, action) => {
+      state.loading = "pending"
+    })
+    builder.addCase(searchCompany.fulfilled, (state, action) => {
+      state.allCompany = action.payload
+      state.loading = "success"
+    })
+    builder.addCase(searchCompany.rejected, (state, action) => {
+      state.loading = "rejected"
+    })
+
+    builder.addCase(searchCompanyForm.pending, (state, action) => {
+      state.loading = "pending"
+    })
+    builder.addCase(searchCompanyForm.fulfilled, (state, action) => {
+      state.allLeadCompanyList = action.payload
+      state.loading = "success"
+    })
+    builder.addCase(searchCompanyForm.rejected, (state, action) => {
       state.loading = "rejected"
     })
   },

@@ -7,6 +7,7 @@ import {
   getAllCompanyByStatus,
   handleNextPagination,
   handlePrevPagination,
+  searchCompanyForm,
 } from "../../Toolkit/Slices/CompanySlice"
 import { Button, Input, notification, Select, Tooltip, Typography } from "antd"
 import {
@@ -21,6 +22,7 @@ import ColComp from "../../components/small/ColComp"
 import CompanyFormModal from "./CompanyFormModal"
 import { getAllUsers } from "../../Toolkit/Slices/UsersSlice"
 const { Text } = Typography
+const { Search } = Input
 
 const CompanyForm = ({ role }) => {
   const dispatch = useDispatch()
@@ -35,12 +37,6 @@ const CompanyForm = ({ role }) => {
   )
   const [selectedFilter, setSelectedFilter] = useState("initiated")
 
-
-  const [searchText, setSearchText] = useState("")
-  const [filteredData, setFilteredData] = useState([])
-
-
-
   useEffect(() => {
     dispatch(
       getAllCompanyByStatus({ id: userid, status: selectedFilter, page: page })
@@ -48,11 +44,11 @@ const CompanyForm = ({ role }) => {
   }, [dispatch, selectedFilter, userid, page])
 
   function getHighestPriorityRole(roles) {
-   if(roles?.length>0){
-    if (roles?.includes("ADMIN")) {
-      return "ADMIN"
+    if (roles?.length > 0) {
+      if (roles?.includes("ADMIN")) {
+        return "ADMIN"
+      }
     }
-   }
   }
 
   useEffect(() => {
@@ -60,21 +56,26 @@ const CompanyForm = ({ role }) => {
     dispatch(getAllContactDetails())
   }, [dispatch])
 
-  useEffect(() => {
-    setFilteredData(leadCompanyList)
-  }, [leadCompanyList])
-
-  const handleSearch = (e) => {
-    const value = e.target.value
-    setSearchText(value)
-    const filtered = leadCompanyList?.filter((item) =>
-      Object.values(item)?.some((val) =>
-        String(val)?.toLowerCase()?.includes(value?.toLowerCase())
-      )
+  const onSearchLead = (e, b, c) => {
+    dispatch(
+      searchCompanyForm({
+        inputText: e,
+        userId: userid,
+        page,
+        status: selectedFilter,
+      })
     )
-    setFilteredData(filtered)
+    if (!b) {
+      dispatch(
+        searchCompanyForm({
+          inputText: "",
+          userId: userid,
+          page,
+          status: selectedFilter,
+        })
+      )
+    }
   }
-
 
   const columns = [
     {
@@ -352,12 +353,24 @@ const CompanyForm = ({ role }) => {
       </div>
       <div className="mt-3">
         <div className="flex-verti-center-hori-start">
-          <Input
-             value={searchText}
-             size="small"
-             onChange={handleSearch}
-             style={{ width: "220px" }}
+          <Search
+            size="small"
+            onSearch={onSearchLead}
+            style={{ width: "220px" }}
             placeholder="search"
+            onChange={(e) =>
+              !e.target.value
+                ? dispatch(
+                    searchCompanyForm({
+                      inputText: "",
+                      userId: userid,
+                      page,
+                      status: selectedFilter,
+                    })
+                  )
+                : ""
+            }
+            enterButton="search"
             prefix={<Icon icon="fluent:search-24-regular" />}
           />
           <Select
@@ -374,7 +387,7 @@ const CompanyForm = ({ role }) => {
           />
         </div>
         <CommonTable
-          data={filteredData}
+          data={leadCompanyList}
           columns={columns}
           scroll={{ x: 5000, y: 550 }}
           rowSelection={true}
@@ -382,7 +395,7 @@ const CompanyForm = ({ role }) => {
           nextPage={handleNextPagination}
           prevPage={handlePrevPagination}
           prevDisable={page === 0 && true}
-          nextDisable={filteredData?.length < 50 && true}
+          nextDisable={leadCompanyList?.length < 50 && true}
         />
       </div>
     </TableOutlet>

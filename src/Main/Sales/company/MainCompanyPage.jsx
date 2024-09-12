@@ -6,6 +6,7 @@ import {
   getCompanyAction,
   handleNextPagination,
   handlePrevPagination,
+  searchCompany,
   updateCompanyAssignee,
 } from "../../../Toolkit/Slices/CompanySlice"
 import TableScalaton from "../../../components/TableScalaton"
@@ -17,6 +18,7 @@ import { Input, notification, Select } from "antd"
 import OverFlowText from "../../../components/OverFlowText"
 import { Icon } from "@iconify/react"
 const CommonTable = lazy(() => import("../../../components/CommonTable"))
+const { Search } = Input
 
 const MainCompanyPage = () => {
   const dispatch = useDispatch()
@@ -27,8 +29,6 @@ const MainCompanyPage = () => {
     (prev) => prev?.company
   )
   const page = useSelector((prev) => prev?.company.page)
-  const [searchText, setSearchText] = useState("")
-  const [filteredData, setFilteredData] = useState([])
 
   useEffect(() => {
     dispatch(getCompanyAction({ id: currUserId, page }))
@@ -38,19 +38,11 @@ const MainCompanyPage = () => {
     dispatch(getAllLeadUser(userid))
   }, [userid, dispatch])
 
-  useEffect(() => {
-    setFilteredData(allCompnay)
-  }, [allCompnay])
-
-  const handleSearch = (e) => {
-    const value = e.target.value
-    setSearchText(value)
-    const filtered = allCompnay?.filter((item) =>
-      Object.values(item)?.some((val) =>
-        String(val)?.toLowerCase()?.includes(value?.toLowerCase())
-      )
-    )
-    setFilteredData(filtered)
+  const onSearchLead = (e, b, c) => {
+    dispatch(searchCompany({ inputText: e, userId: userid }))
+    if (!b) {
+      dispatch(searchCompany({ inputText: "", userId: userid }))
+    }
   }
 
   const handleUpdateAssignee = useCallback(
@@ -88,7 +80,7 @@ const MainCompanyPage = () => {
       dataIndex: "companyName",
       title: "Company name",
       fixed: "left",
-      width:250,
+      width: 250,
       render: (_, props) => (
         <OverFlowText linkText={true} to={`${props?.companyId}/details`}>
           {props?.companyName}
@@ -203,12 +195,17 @@ const MainCompanyPage = () => {
     <TableOutlet>
       <MainHeading data={`All company (${allCompnay?.length})`} />
       <div className="flex-verti-center-hori-start mt-2">
-        <Input
-          value={searchText}
+        <Search
           size="small"
-          onChange={handleSearch}
+          onSearch={onSearchLead}
           style={{ width: "220px" }}
           placeholder="search"
+          onChange={(e) =>
+            !e.target.value
+              ? dispatch(searchCompany({ inputText: "", userId: userid }))
+              : ""
+          }
+          enterButton="search"
           prefix={<Icon icon="fluent:search-24-regular" />}
         />
       </div>
@@ -218,7 +215,7 @@ const MainCompanyPage = () => {
         {allCompnay && !loadingCompany && !errorCompany && (
           <Suspense fallback={<TableScalaton />}>
             <CommonTable
-              data={filteredData}
+              data={allCompnay}
               columns={columns}
               scroll={{ x: 3000, y: 520 }}
               rowSelection={true}
