@@ -27,6 +27,7 @@ import {
   Button,
   Checkbox,
   Divider,
+  Drawer,
   Dropdown,
   Input,
   notification,
@@ -41,6 +42,7 @@ import CompanyFormModal from "../../Accounts/CompanyFormModal"
 import OverFlowText from "../../../components/OverFlowText"
 import { BTN_ICON_HEIGHT, BTN_ICON_WIDTH } from "../../../components/Constants"
 import { playErrorSound, playSuccessSound } from "../../Common/Commons"
+import LeadDetailsPage from "../Inbox/LeadDetailsPage"
 const { Text } = Typography
 const { Search } = Input
 
@@ -69,6 +71,8 @@ const LeadsModule = () => {
   const [headerData, setHeaderData] = useState([])
   const [searchText, setSearchText] = useState("")
   const [filteredData, setFilteredData] = useState([])
+  const [openDrawer, setOpenDrawer] = useState(false)
+  const [leadId, setLeadId] = useState(null)
 
   const onSelectChange = (newSelectedRowKeys, rowsData) => {
     setSelectedRowKeys(newSelectedRowKeys)
@@ -298,8 +302,10 @@ const LeadsModule = () => {
       render: (_, data) => (
         <Link
           className="link-heading"
-          to={`/erp/${userid}/sales/leads/${data?.id}`}
-          onClick={() =>
+          // to={`/erp/${userid}/sales/leads/${data?.id}`}
+          onClick={() => {
+            
+            setLeadId(data?.id)
             dispatch(
               handleViewHistory({ leadId: data?.id, userid: userid })
             ).then((resp) => {
@@ -307,7 +313,8 @@ const LeadsModule = () => {
                 dispatch(getAllLeads(allMultiFilterData))
               }
             })
-          }
+            setOpenDrawer(true)
+          }}
         >
           {data?.leadName}
         </Link>
@@ -537,13 +544,13 @@ const LeadsModule = () => {
     const notifcationApi = setInterval(() => {
       dispatch(getLeadNotificationCount(userid)).then((resp) => {
         if (resp.meta.requestStatus === "fulfilled") {
-          // playSuccessSound()
+          playSuccessSound()
         }
       })
     }, 1 * 60 * 1000)
     dispatch(getLeadNotificationCount(userid)).then((resp) => {
       if (resp.meta.requestStatus === "fulfilled") {
-        // playSuccessSound()
+        playSuccessSound()
       }
     })
     return () => clearInterval(notifcationApi)
@@ -603,9 +610,9 @@ const LeadsModule = () => {
 
   const onSearchLead = (e, b, c) => {
     console.log("sdksjdsjdaghsjdghdsjk", c)
-    dispatch(searchLeads({input:e,id:userid}))
+    dispatch(searchLeads({ input: e, id: userid }))
     if (!b) {
-      dispatch(searchLeads({input:"",id:userid}))
+      dispatch(searchLeads({ input: "", id: userid }))
     }
   }
 
@@ -787,7 +794,11 @@ const LeadsModule = () => {
           allowClear
           // value={searchText}
           onSearch={onSearchLead}
-          onChange={(e) => (!e.target.value ? dispatch(searchLeads({input:"",id:userid})) : "")}
+          onChange={(e) =>
+            !e.target.value
+              ? dispatch(searchLeads({ input: "", id: userid }))
+              : ""
+          }
           enterButton="search"
           style={{ width: "250px" }}
           prefix={<Icon icon="fluent:search-24-regular" />}
@@ -906,6 +917,15 @@ const LeadsModule = () => {
           />
         </Suspense>
       </div>
+
+      <Drawer
+        title="Lead detail"
+        open={openDrawer}
+        onClose={() => setOpenDrawer(false)}
+        width={1200}
+      >
+        <LeadDetailsPage leadid={leadId} />
+      </Drawer>
     </div>
   )
 }

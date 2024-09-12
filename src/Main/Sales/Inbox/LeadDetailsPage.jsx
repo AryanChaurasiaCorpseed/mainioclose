@@ -66,11 +66,11 @@ const { Text } = Typography
 
 toast.configure()
 
-const LeadDetailsPage = () => {
+const LeadDetailsPage = ({leadid}) => {
   const [form1] = Form.useForm()
   const [form2] = Form.useForm()
   const [form3] = Form.useForm()
-  const { userid, leadid } = useParams()
+  const { userid } = useParams()
   const dispatch = useDispatch()
   const fileRef = useRef()
   const [descriptionText, setDescriptionText] = useState("")
@@ -1003,26 +1003,26 @@ const LeadDetailsPage = () => {
                   </div>
                 )}
 
-                {currentUserDetail?.department === "Quality" ||
-                  (currentUserRoles?.includes("ADMIN") && (
-                    <Space>
-                      <Button
-                        size="small"
-                        onClick={() =>
-                          setShowDescriptionField(!showDescriptionField)
-                        }
-                      >
-                        {showDescriptionField ? "Cancel" : "Edit"}
-                      </Button>
-                      <Button
-                        type="primary"
-                        size="small"
-                        onClick={handleUpdateLeadDescription}
-                      >
-                        Submit
-                      </Button>
-                    </Space>
-                  ))}
+                {(currentUserDetail?.department === "Quality Team" ||
+                  currentUserRoles?.includes("ADMIN")) && (
+                  <Space>
+                    <Button
+                      size="small"
+                      onClick={() =>
+                        setShowDescriptionField(!showDescriptionField)
+                      }
+                    >
+                      {showDescriptionField ? "Cancel" : "Edit"}
+                    </Button>
+                    <Button
+                      type="primary"
+                      size="small"
+                      onClick={handleUpdateLeadDescription}
+                    >
+                      Submit
+                    </Button>
+                  </Space>
+                )}
 
                 {/* {currentUserDetail?.department === "Quality" ||
                 currentUserRoles?.includes("ADMIN") ? (

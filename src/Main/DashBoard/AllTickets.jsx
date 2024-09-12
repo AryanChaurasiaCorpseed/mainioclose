@@ -5,12 +5,11 @@ import TableScalaton from "../../components/TableScalaton"
 import MainHeading from "../../components/design/MainHeading"
 import { ticketsColumns } from "../../data/TicketData"
 import SomethingWrong from "../../components/usefulThings/SomethingWrong"
-import CommonTable from "../../components/CommonTable"
 import { Icon } from "@iconify/react"
 import { Input } from "antd"
 
-const UserListComponent = React.lazy(() =>
-  import(`../../Tables/UserListComponent`)
+const CommonTable = React.lazy(() =>
+  import(`../../components/CommonTable`)
 )
 
 const AllTickets = () => {
@@ -63,11 +62,6 @@ const AllTickets = () => {
         {TicketsError && <SomethingWrong />}
         {!TicketsError && (
           <Suspense fallback={<TableScalaton />}>
-            {/* <UserListComponent
-              tableName={""}
-              columns={ticketsColumns}
-              row={ticketsData}
-            /> */}
             <CommonTable
               data={filteredData}
               columns={ticketsColumns}

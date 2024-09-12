@@ -1,4 +1,4 @@
-import { Button, Form,  Modal, Select, notification } from "antd"
+import { Button, Form, Modal, Select, notification } from "antd"
 import React, { useCallback, useState } from "react"
 import { Icon } from "@iconify/react"
 import { useDispatch, useSelector } from "react-redux"
@@ -15,20 +15,24 @@ export const EditTicketStaus = ({ data }) => {
     form.setFieldsValue({ status: data?.status })
   }, [form, data])
 
-
   const handleSubmit = useCallback(
     (values) => {
       values.userId = currentUserId
       values.ticketId = data?.id
-      dispatch(editTicketStatus(values)).then(() => {
-        dispatch(getAllTickets(currentUserId))
-        setOpenModal(false)
-        notification.success({ message: "Status updated successfully" })
-      })
+      dispatch(editTicketStatus(values))
+        .then((resp) => {
+          if (resp.meta.requestStatus === "fulfilled") {
+            dispatch(getAllTickets(currentUserId))
+            setOpenModal(false)
+            notification.success({ message: "Status updated successfully" })
+          } else {
+            notification.error({ message: "Something went wrong !." })
+          }
+        })
+        .catch(() => notification.error({ message: "Something went wrong !." }))
     },
     [dispatch, data, currentUserId]
   )
-
 
   return (
     <>
@@ -36,7 +40,7 @@ export const EditTicketStaus = ({ data }) => {
         <Icon icon="fluent:edit-20-regular" />
       </Button>
       <Modal
-        title="Edit Ticket Status"
+        title="Edit ticket status"
         open={openModal}
         onCancel={() => setOpenModal(false)}
         onClose={() => setOpenModal(false)}
@@ -46,8 +50,8 @@ export const EditTicketStaus = ({ data }) => {
         <Form form={form} onFinish={handleSubmit} layout="vertical">
           <Form.Item label="Status" name="status">
             <Select
-            showSearch
-            allowClear
+              showSearch
+              allowClear
               options={[
                 { label: "To-Do", value: "To-Do" },
                 { label: "In-Progress", value: "In-Progress" },

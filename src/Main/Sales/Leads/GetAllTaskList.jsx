@@ -4,9 +4,11 @@ import { Link, useParams } from "react-router-dom"
 import UserLeadComponent from "../../../Tables/UserLeadComponent"
 import MainHeading from "../../../components/design/MainHeading"
 import CommonTable from "../../../components/CommonTable"
-import { Input, Tag, Typography } from "antd"
+import { Drawer, Input, Tag, Typography } from "antd"
 import OverFlowText from "../../../components/OverFlowText"
 import { Icon } from "@iconify/react"
+import dayjs from "dayjs"
+import LeadDetailsPage from "../Inbox/LeadDetailsPage"
 const { Text } = Typography
 
 const GetAllTaskList = () => {
@@ -14,6 +16,8 @@ const GetAllTaskList = () => {
   const [dateInput, setDateInput] = useState("")
   const [searchText, setSearchText] = useState("")
   const [filteredData, setFilteredData] = useState([])
+  const [openDrawer, setOpenDrawer] = useState(false)
+  const [leadId, setLeadId] = useState(null)
 
   const allTasksByUser = `/leadService/api/v1/task/getAllTaskByAssignee?assigneeId=${userid}`
   const allTaskDep = [dateInput]
@@ -76,7 +80,16 @@ const GetAllTaskList = () => {
       title: "Name",
       render: (_, props) => {
         return (
-          <Link className="link-heading" to={`/erp/${userid}/sales/leads/${props?.leadId}`}>{props?.name}</Link>
+          // <Link className="link-heading" to={`/erp/${userid}/sales/leads/${props?.leadId}`}>{props?.name}</Link>
+          <Link
+            className="link-heading"
+            onClick={() => {
+              setLeadId(props?.leadId)
+              setOpenDrawer(true)
+            }}
+          >
+            {props?.name}
+          </Link>
         )
       },
     },
@@ -104,19 +117,20 @@ const GetAllTaskList = () => {
         )
       },
     },
+
     {
       dataIndex: "expectedDate",
       title: "Date",
-      renderCell: (props) => {
-        const data = props?.row?.expectedDate
-        return data === null || undefined ? (
+      sorter: (a, b) => {
+        const dateA = dayjs(a.expectedDate)
+        const dateB = dayjs(b.expectedDate)
+        return dateA?.isBefore(dateB) ? -1 : dateA?.isAfter(dateB) ? 1 : 0
+      },
+      render: (expectedDate) => {
+        return expectedDate === null || expectedDate === undefined ? (
           "NA"
         ) : (
-          <Text>
-            {new Date(props.row.expectedDate).toLocaleDateString()} -{" "}
-            {new Date(props.row.expectedDate).getHours()}:
-            {new Date(props.row.expectedDate).getMinutes()}
-          </Text>
+          <Text>{dayjs(expectedDate).format("YYYY-MM-DD HH:mm")}</Text>
         )
       },
     },
@@ -176,6 +190,15 @@ const GetAllTaskList = () => {
           />
         )}
       </div>
+
+      <Drawer
+        title="Lead detail"
+        open={openDrawer}
+        onClose={() => setOpenDrawer(false)}
+        width={1200}
+      >
+        <LeadDetailsPage leadid={leadId} />
+      </Drawer>
     </div>
   )
 }

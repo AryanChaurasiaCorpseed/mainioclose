@@ -14,7 +14,7 @@ import {
 import TableOutlet from "../../components/design/TableOutlet"
 import MainHeading from "../../components/design/MainHeading"
 import OverFlowText from "../../components/OverFlowText"
-import {Icon} from '@iconify/react'
+import { Icon } from "@iconify/react"
 const { Text } = Typography
 
 export const AccountsList = () => {
@@ -40,7 +40,7 @@ export const AccountsList = () => {
       key: "1",
       fixed: "left",
       width: 300,
-      render:(_,data)=><OverFlowText>{data?.companyName}</OverFlowText>
+      render: (_, data) => <OverFlowText>{data?.companyName}</OverFlowText>,
     },
     {
       title: "Pan",
@@ -68,8 +68,11 @@ export const AccountsList = () => {
       key: "6",
       render: (_, data) => (
         <Tooltip
+          overlayStyle={{ maxWidth: "750px" }}
           title={data?.lead?.map((item, idx) => (
-            <Tag color="gray" key={`${idx}leads`}>{item?.leadNameame}</Tag>
+            <Tag color="gray" key={`${idx}leads`}>
+              {item?.leadNameame}
+            </Tag>
           ))}
           arrow={false}
         >
@@ -101,7 +104,6 @@ export const AccountsList = () => {
     },
   ]
 
-
   useEffect(() => {
     setFilteredData(allCompany)
   }, [allCompany])
@@ -116,7 +118,6 @@ export const AccountsList = () => {
     )
     setFilteredData(filtered)
   }
-
 
   return (
     <TableOutlet>
@@ -134,7 +135,7 @@ export const AccountsList = () => {
           prefix={<Icon icon="fluent:search-24-regular" />}
         />
       </div>
-
+      
       <CommonTable
         columns={columns}
         data={filteredData}
