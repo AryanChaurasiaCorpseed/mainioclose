@@ -76,7 +76,7 @@ const GetAllTaskList = () => {
       title: "Name",
       render: (_, props) => {
         return (
-          <Link to={`/erp/4/sales/leads/${props?.leadId}`}>{props?.name}</Link>
+          <Link className="link-heading" to={`/erp/${userid}/sales/leads/${props?.leadId}`}>{props?.name}</Link>
         )
       },
     },
