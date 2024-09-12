@@ -142,7 +142,7 @@ export const searchCompanyForm = createAsyncThunk("searchCompanyForm", async (da
 
 export const searchCompany = createAsyncThunk("searchCompany", async (data) => {
   const response = await getQuery(
-    `/leadService/api/v1/company/searchCompanyByStatus?searchNameAndGSt=${data?.inputText}&userId=${data?.userId}`
+    `/leadService/api/v1/company/fetchAllCompanyDetail?searchNameAndGSt=${data?.inputText}&userId=${data?.userId}`
   )
   return response.data
 })
