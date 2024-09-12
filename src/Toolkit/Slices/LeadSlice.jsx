@@ -425,13 +425,14 @@ export const getAllTaskData = createAsyncThunk("getAllTaskData", async (id) => {
 
 export const getSingleLeadDataByLeadID = createAsyncThunk(
   "getSingleLeadData",
-  async (leadid) => {
+  async (data) => {
     const response = await getQuery(
-      `/leadService/api/v1/lead/getSingleLeadData?leadId=${leadid}`
+      `/leadService/api/v1/lead/getSingleLeadData?leadId=${data?.leadid}&currentUserId=${data?.userid}`
     )
     return response.data
   }
 )
+
 
 export const createTicket = createAsyncThunk("createTicket", async (data) => {
   const response = await postQuery(`/leadService/api/v1/createTicket`, data)

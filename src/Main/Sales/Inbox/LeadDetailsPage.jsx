@@ -66,7 +66,7 @@ const { Text } = Typography
 
 toast.configure()
 
-const LeadDetailsPage = ({leadid}) => {
+const LeadDetailsPage = ({ leadid }) => {
   const [form1] = Form.useForm()
   const [form2] = Form.useForm()
   const [form3] = Form.useForm()
@@ -138,7 +138,7 @@ const LeadDetailsPage = ({leadid}) => {
   }, [singleLeadResponseData])
 
   const getSingleLeadData = useCallback(() => {
-    dispatch(getSingleLeadDataByLeadID(leadid))
+    dispatch(getSingleLeadDataByLeadID({ leadid, userid }))
   }, [leadid, dispatch])
 
   const updateOriginalNameFun = useCallback(() => {
@@ -399,7 +399,7 @@ const LeadDetailsPage = ({leadid}) => {
               getSingleLeadData()
               setOpenModal(false)
               form1.resetFields()
-              dispatch(getSingleLeadDataByLeadID(leadid))
+              dispatch(getSingleLeadDataByLeadID({ leadid, userid }))
             } else {
               notification.error({
                 message: "Something went wrong !.",
@@ -423,7 +423,7 @@ const LeadDetailsPage = ({leadid}) => {
               getSingleLeadData()
               setOpenModal(false)
               form1.resetFields()
-              dispatch(getSingleLeadDataByLeadID(leadid))
+              dispatch(getSingleLeadDataByLeadID({ leadid, userid }))
             } else {
               notification.error({
                 message: "Something went wrong !.",
@@ -470,7 +470,7 @@ const LeadDetailsPage = ({leadid}) => {
                 message: "Task updated successfully.",
               })
               dispatch(getAllTaskData(leadid))
-              dispatch(getSingleLeadDataByLeadID(leadid))
+              dispatch(getSingleLeadDataByLeadID({ leadid, userid }))
               setOpenTaskModal(false)
               form2.resetFields()
             } else {
@@ -492,7 +492,7 @@ const LeadDetailsPage = ({leadid}) => {
                 message: "Task created successfully.",
               })
               dispatch(getAllTaskData(leadid))
-              dispatch(getSingleLeadDataByLeadID(leadid))
+              dispatch(getSingleLeadDataByLeadID({ leadid, userid }))
               setOpenTaskModal(false)
               form2.resetFields()
             } else {
@@ -522,7 +522,7 @@ const LeadDetailsPage = ({leadid}) => {
             })
             getSingleLeadData()
             setOpenProductModal(false)
-            dispatch(getSingleLeadDataByLeadID(leadid))
+            dispatch(getSingleLeadDataByLeadID({ leadid, userid }))
           } else {
             notification.error({
               message: "Something went wrong !.",
