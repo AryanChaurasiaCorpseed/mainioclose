@@ -195,7 +195,7 @@ const GetAllTaskList = () => {
         title="Lead detail"
         open={openDrawer}
         onClose={() => setOpenDrawer(false)}
-        width={1200}
+        width={'80%'}
       >
         <LeadDetailsPage leadid={leadId} />
       </Drawer>
