@@ -289,7 +289,7 @@ const CompnaySlice = createSlice({
       state.loading = "pending"
     })
     builder.addCase(searchCompany.fulfilled, (state, action) => {
-      state.allCompany = action.payload
+      state.allCompnay = action.payload
       state.loading = "success"
     })
     builder.addCase(searchCompany.rejected, (state, action) => {
