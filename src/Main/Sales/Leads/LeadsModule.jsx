@@ -778,7 +778,7 @@ const LeadsModule = () => {
           placeholder="search"
           size="small"
           allowClear
-          value={searchText}
+          // value={searchText}
           onSearch={onSearchLead}
           onChange={(e) =>
             !e.target.value
