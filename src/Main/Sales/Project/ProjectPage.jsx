@@ -4,25 +4,28 @@ import MainHeading from "../../../components/design/MainHeading"
 import TableScalaton from "../../../components/TableScalaton"
 import SomethingWrong from "../../../components/usefulThings/SomethingWrong"
 import { useDispatch, useSelector } from "react-redux"
-import { getProjectAction } from "../../../Toolkit/Slices/ProjectSlice"
+import {
+  getProjectAction,
+  handleNext,
+  handlePrev,
+} from "../../../Toolkit/Slices/ProjectSlice"
 import ColComp from "../../../components/small/ColComp"
 import CommonTable from "../../../components/CommonTable"
 import OverFlowText from "../../../components/OverFlowText"
-import {Icon} from '@iconify/react'
+import { Icon } from "@iconify/react"
 import { Input } from "antd"
 
 const ProjectPage = () => {
   const dispatch = useDispatch()
 
   const currUserId = useSelector((prev) => prev?.auth?.currentUser?.id)
-
-  useEffect(() => {
-    dispatch(getProjectAction({ id: currUserId }))
-  }, [currUserId, dispatch])
-
-  const { allProject, loadingProject, errorProject } = useSelector(
+  const { allProject, loadingProject, errorProject, page } = useSelector(
     (prev) => prev?.project
   )
+
+  useEffect(() => {
+    dispatch(getProjectAction({ id: currUserId, page }))
+  }, [currUserId, dispatch, page])
 
   const [searchText, setSearchText] = useState("")
   const [filteredData, setFilteredData] = useState([])
@@ -148,7 +151,12 @@ const ProjectPage = () => {
           <CommonTable
             data={filteredData}
             columns={columns}
-            scroll={{ y: 600, x: 2500 }}
+            scroll={{ y: 500, x: 2500 }}
+            pagination={true}
+            nextPage={handleNext}
+            prevPage={handlePrev}
+            nextDisable={allProject?.length < 50 ? true : false}
+            prevDisable={page === 0 ? true : false}
           />
         )}
       </div>

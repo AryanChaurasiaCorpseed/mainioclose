@@ -47,7 +47,7 @@ const CompanyFormModal = ({
   const companyDetails = useSelector(
     (state) => state?.leads?.companyDetailsById
   )
-  const allUsers=useSelector((state)=>state.user.allUsers)
+  const allUsers = useSelector((state) => state.user.allUsers)
   const companyUnits = useSelector((state) => state?.leads?.companyUnits)
   const companyDetailByUnitId = useSelector(
     (state) => state?.leads?.companyDetailByUnitId
@@ -156,6 +156,7 @@ const CompanyFormModal = ({
             scity: editData?.scity,
             scontactId: editData?.scontactId,
             scontactWhatsappNo: editData?.scontactWhatsappNo,
+            amount: editData?.amount,
           })
         }
       })
@@ -193,7 +194,7 @@ const CompanyFormModal = ({
     }
   }
 
-  const normFile = (e) => { 
+  const normFile = (e) => {
     if (Array.isArray(e)) {
       return e
     }
@@ -578,19 +579,22 @@ const CompanyFormModal = ({
           <Form.Item
             label="Pan number"
             name="panNo"
-            rules={[
-              {
-                required: true,
-                message: "Please enter your PAN card number",
-              },
-              {
-                pattern: /^[A-Z0-9]{10}$/,
-                message:
-                  "Invalid PAN card number, should not accept any special charcter ",
-              },
-            ]}
+            // rules={[
+            //   {
+            //     required: true,
+            //     message: "Please enter your PAN card number",
+            //   },
+            //   {
+            //     pattern: /^[A-Z0-9]{10}$/,
+            //     message:
+            //       "Invalid PAN card number, should not accept any special charcter ",
+            //   },
+            // ]}
           >
             <Input maxLength={10} onChange={handlePanNumberChange} />
+          </Form.Item>
+          <Form.Item label="Amount" name="amount">
+            <Input />
           </Form.Item>
 
           <Divider style={{ color: "#cccccc" }} orientation="center">
@@ -893,7 +897,7 @@ const CompanyFormModal = ({
               <Form.Item label="Country" name="scountry">
                 <Input />
               </Form.Item>
-              
+
               <Form.Item label="PinCode" name="secondaryPinCode">
                 <Input />
               </Form.Item>

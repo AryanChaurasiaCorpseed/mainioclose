@@ -131,14 +131,15 @@ export const updateCompanyForm = createAsyncThunk(
   }
 )
 
-export const searchCompanyForm = createAsyncThunk("searchCompanyForm", async (data) => {
-  const response = await getQuery(
-    `/leadService/api/v1/company/searchCompanyByStatus?searchNameAndGSt=${data?.inputText}&userId=${data?.userId}&status=${data?.status}&page=${data?.page}&size=50`
-  )
-  return response.data
-})
-
-
+export const searchCompanyForm = createAsyncThunk(
+  "searchCompanyForm",
+  async (data) => {
+    const response = await getQuery(
+      `/leadService/api/v1/company/searchCompanyByStatus?searchNameAndGSt=${data?.inputText}&userId=${data?.userId}&status=${data?.status}&page=${data?.page}&size=50`
+    )
+    return response.data
+  }
+)
 
 export const searchCompany = createAsyncThunk("searchCompany", async (data) => {
   const response = await getQuery(
@@ -146,6 +147,23 @@ export const searchCompany = createAsyncThunk("searchCompany", async (data) => {
   )
   return response.data
 })
+
+export const getFormComment = createAsyncThunk("getFormComment", async (id) => {
+  const response = await getQuery(
+    `/leadService/api/v1/company/getCompanyComment?companyFormId=${id}`
+  )
+  return response.data
+})
+
+export const addCommentCompanyForm = createAsyncThunk(
+  "addCommentCompanyForm",
+  async (data) => {
+    const response = await putQuery(
+      `/leadService/api/v1/company/addComment?companyFormId=${data?.id}&comment=${data?.comment}`
+    )
+    return response.data
+  }
+)
 
 const CompnaySlice = createSlice({
   name: "company",
@@ -283,7 +301,6 @@ const CompnaySlice = createSlice({
     builder.addCase(getCompanyDetailsById.rejected, (state, action) => {
       state.loading = "rejected"
     })
-
 
     builder.addCase(searchCompany.pending, (state, action) => {
       state.loading = "pending"

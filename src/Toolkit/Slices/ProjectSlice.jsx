@@ -3,9 +3,9 @@ import { getQuery } from "../../API/GetQuery"
 
 export const getProjectAction = createAsyncThunk(
   "getallProjectData",
-  async ({ id }) => {
+  async ({ id,page }) => {
     const getProjectData = await getQuery(
-      `/leadService/api/v1/project/getAllProject?userId=${id}`
+      `/leadService/api/v1/project/getAllProject?userId=${id}&page=${page}&size=50`
     )
     return getProjectData?.data
   }
@@ -22,7 +22,16 @@ const ProjectSlice = createSlice({
     allProject: [],
     loadingProject: false,
     errorProject: false,
-    allProjectList:[]
+    allProjectList:[],
+    page:0
+  },
+  reducers:{
+    handleNext:(state,action)=>{
+      state.page = state.page + 1
+    },
+    handlePrev:(state,action)=>{
+      state.page = state.page - 1
+    }
   },
   extraReducers: (builder) => {
     builder.addCase(getProjectAction.pending, (state, action) => {
@@ -54,5 +63,7 @@ const ProjectSlice = createSlice({
     })
   },
 })
+
+export const {handleNext,handlePrev}=ProjectSlice.actions
 
 export default ProjectSlice.reducer

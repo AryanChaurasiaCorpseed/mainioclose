@@ -94,9 +94,7 @@ const LeadDetailsPage = ({ leadid }) => {
   const singleLeadResponseData = useSelector(
     (state) => state.leads.singleLeadResponseData
   )
-  const notesApiData = useSelector(
-    (state) => state.leads.remarkData
-  )
+  const notesApiData = useSelector((state) => state.leads.remarkData)
   const currentUserDetail = useSelector(
     (state) => state.auth.getDepartmentDetail
   )
@@ -155,13 +153,13 @@ const LeadDetailsPage = ({ leadid }) => {
           setUpdateOriginalName((prev) => !prev)
         } else {
           notification.error({
-            message: "Something went wrong",
+            message: "Something went wrong !.",
           })
         }
       })
       .catch(() => {
         notification.error({
-          message: "Something went wrong",
+          message: "Something went wrong !.",
         })
       })
   }, [originalData, dispatch, getSingleLeadData])
@@ -202,13 +200,13 @@ const LeadDetailsPage = ({ leadid }) => {
           getSingleLeadData()
         } else {
           notification.error({
-            message: "Something went wrong",
+            message: "Something went wrong !.",
           })
         }
       })
       .catch(() => {
         notification.error({
-          message: "Something went wrong",
+          message: "Something went wrong !.",
         })
       })
   }
@@ -232,7 +230,7 @@ const LeadDetailsPage = ({ leadid }) => {
       } catch (err) {
         console.log(err)
         if (err.response.status === 500) {
-          toast.error("Something Went Wrong")
+          toast.error("Something Went Wrong !.")
         }
       }
     }
@@ -255,13 +253,13 @@ const LeadDetailsPage = ({ leadid }) => {
             setUpdateLeadNameToggle(true)
           } else {
             notification.error({
-              message: "Something went wrong",
+              message: "Something went wrong !.",
             })
           }
         })
         .catch(() => {
           notification.error({
-            message: "Something went wrong",
+            message: "Something went wrong !.",
           })
         })
     },
@@ -279,13 +277,13 @@ const LeadDetailsPage = ({ leadid }) => {
           setUpdateAssignee((prev) => !prev)
         } else {
           notification.error({
-            message: "Something went wrong",
+            message: "Something went wrong !.",
           })
         }
       })
       .catch(() => {
         notification.error({
-          message: "Something went wrong",
+          message: "Something went wrong !.",
         })
       })
   }
@@ -306,13 +304,13 @@ const LeadDetailsPage = ({ leadid }) => {
             getSingleLeadData()
           } else {
             notification.error({
-              message: "Something went wrong",
+              message: "Something went wrong !.",
             })
           }
         })
         .catch(() => {
           notification.error({
-            message: "Something went wrong",
+            message: "Something went wrong !.",
           })
         })
     },
@@ -610,15 +608,17 @@ const LeadDetailsPage = ({ leadid }) => {
                 >
                   <Icon icon="fluent:edit-20-regular" />
                 </Button>
-                <Popconfirm
-                  title="Delete the task"
-                  description="Are you sure to delete this task?"
-                  onConfirm={() => deleteContactFun(item.clientId)}
-                >
-                  <Button size="small" danger type="text">
-                    <Icon icon="fluent:delete-20-regular" />
-                  </Button>
-                </Popconfirm>
+                {adminRole && (
+                  <Popconfirm
+                    title="Delete the task"
+                    description="Are you sure to delete this task?"
+                    onConfirm={() => deleteContactFun(item.clientId)}
+                  >
+                    <Button size="small" danger type="text">
+                      <Icon icon="fluent:delete-20-regular" />
+                    </Button>
+                  </Popconfirm>
+                )}
               </Space>
             </List.Item>
           )}
@@ -1126,7 +1126,7 @@ const LeadDetailsPage = ({ leadid }) => {
                 </div>
                 <div className="line"></div>
               </div>
-     
+
               <div className="side-notes">
                 <div className="comment-above">
                   <h2 className="write-heading">Write a Email</h2>

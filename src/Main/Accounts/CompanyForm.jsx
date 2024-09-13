@@ -1,15 +1,27 @@
-import React, { useEffect, useState } from "react"
+import React, { useCallback, useEffect, useState } from "react"
 import MainHeading from "../../components/design/MainHeading"
 import CommonTable from "../../components/CommonTable"
 import TableOutlet from "../../components/design/TableOutlet"
 import { useDispatch, useSelector } from "react-redux"
 import {
+  addCommentCompanyForm,
   getAllCompanyByStatus,
+  getFormComment,
   handleNextPagination,
   handlePrevPagination,
   searchCompanyForm,
 } from "../../Toolkit/Slices/CompanySlice"
-import { Button, Input, notification, Select, Tooltip, Typography } from "antd"
+import {
+  Button,
+  Form,
+  Input,
+  Modal,
+  notification,
+  Radio,
+  Select,
+  Tooltip,
+  Typography,
+} from "antd"
 import {
   getAllContactDetails,
   updateStatusById,
@@ -27,6 +39,7 @@ const { Search } = Input
 const CompanyForm = ({ role }) => {
   const dispatch = useDispatch()
   const { userid } = useParams()
+  const [form] = Form.useForm()
   const leadCompanyList = useSelector(
     (state) => state.company.allLeadCompanyList
   )
@@ -36,6 +49,8 @@ const CompanyForm = ({ role }) => {
     (state) => state.auth.getDepartmentDetail
   )
   const [selectedFilter, setSelectedFilter] = useState("initiated")
+  const [openModal, setOpenModal] = useState(false)
+  const [formId, setFormId] = useState(null)
 
   useEffect(() => {
     dispatch(
@@ -261,7 +276,26 @@ const CompanyForm = ({ role }) => {
             render: (_, value) => {
               return (
                 <>
-                  <Tooltip title="Approved" arrow={false}>
+                  <Button
+                    type="primary"
+                    size="small"
+                    shape="round"
+                    onClick={() => {
+                      setFormId(value?.id)
+                      setOpenModal(true)
+                      dispatch(getFormComment(value?.id)).then((resp) => {
+                        if (resp.meta.requestStatus === "fulfilled") {
+                          form.setFieldsValue({
+                            comment: resp?.payload,
+                            status: value?.status,
+                          })
+                        }
+                      })
+                    }}
+                  >
+                    Status
+                  </Button>
+                  {/* <Tooltip title="Approved" arrow={false}>
                     <Button
                       size="small"
                       type="text"
@@ -338,7 +372,7 @@ const CompanyForm = ({ role }) => {
                         color={value?.status === "disapproved" ? "red" : ""}
                       />
                     </Button>
-                  </Tooltip>
+                  </Tooltip> */}
                 </>
               )
             },
@@ -346,6 +380,56 @@ const CompanyForm = ({ role }) => {
         ]
       : []),
   ]
+
+  const handleSubmit = useCallback(
+    (values) => {
+      dispatch(
+        updateStatusById({
+          status: values?.status,
+          id: formId,
+          userid: userid,
+        })
+      )
+        .then((resp) => {
+          if (resp.meta.requestStatus === "fulfilled") {
+            notification.success({
+              message: "Status update successfully",
+            })
+            setOpenModal(false)
+            getAllCompanyByStatus({ id: userid, status: selectedFilter, page: page })
+          } else {
+            notification.error({
+              message: "Something went wrong in status !.",
+            })
+          }
+        })
+        .catch(() => {
+          notification.error({
+            message: "Something went wrong in status !.",
+          })
+        })
+      dispatch(addCommentCompanyForm({ id: formId, comment: values?.comment }))
+        .then((resp) => {
+          if (resp.meta.requestStatus === "fulfilled") {
+            notification.success({
+              message: "Comment update successfully",
+            })
+            setOpenModal(false)
+          } else {
+            notification.error({
+              message: "Something went wrong in comment !.",
+            })
+          }
+        })
+        .catch(() => {
+          notification.error({
+            message: "Something went wrong in comment !.",
+          })
+        })
+    },
+    [formId, userid, dispatch]
+  )
+
   return (
     <TableOutlet>
       <div className="create-user-box">
@@ -398,6 +482,34 @@ const CompanyForm = ({ role }) => {
           nextDisable={leadCompanyList?.length < 50 && true}
         />
       </div>
+      <Modal
+        title="Company form Status"
+        onCancel={() => setOpenModal(false)}
+        onClose={() => setOpenModal(false)}
+        onOk={() => form.submit()}
+        open={openModal}
+        okText="Submit"
+      >
+        <Form layout="vertical" form={form} onFinish={handleSubmit}>
+          <Form.Item
+            label="Status"
+            name="status"
+            rules={[{ required: true, message: "please select the status" }]}
+          >
+            <Radio.Group>
+              <Radio value="approved">Approved</Radio>
+              <Radio value="disapproved">Disapproved</Radio>
+            </Radio.Group>
+          </Form.Item>
+          <Form.Item
+            label="Comment"
+            name="comment"
+            rules={[{ required: true, message: "please give the comment" }]}
+          >
+            <Input.TextArea />
+          </Form.Item>
+        </Form>
+      </Modal>
     </TableOutlet>
   )
 }
