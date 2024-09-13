@@ -47,7 +47,7 @@ const CompanyFormModal = ({
   const companyDetails = useSelector(
     (state) => state?.leads?.companyDetailsById
   )
-  const allUsers=useSelector((state)=>state.leads.getAllLeadUserData)
+  const allUsers=useSelector((state)=>state.user.allUsers)
   const companyUnits = useSelector((state) => state?.leads?.companyUnits)
   const companyDetailByUnitId = useSelector(
     (state) => state?.leads?.companyDetailByUnitId

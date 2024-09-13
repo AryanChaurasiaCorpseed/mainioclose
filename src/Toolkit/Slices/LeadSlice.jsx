@@ -713,8 +713,8 @@ export const LeadSlice = createSlice({
     builder.addCase(getSingleLeadDataByLeadID.fulfilled, (state, action) => {
       state.loading = "success"
       state.singleLeadResponseData = action.payload
-      state.allProductsList = action.payload?.serviceDetails
-      state.clientsContact = action.payload?.clients.reverse()
+      state.allProductsList = action?.payload?.serviceDetails
+      state.clientsContact = action?.payload?.clients?.reverse()
     })
     builder.addCase(getSingleLeadDataByLeadID.rejected, (state, action) => {
       state.loading = "rejected"
