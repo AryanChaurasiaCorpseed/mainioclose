@@ -136,10 +136,10 @@ import { getAllComments } from "../../../Toolkit/Slices/UserRatingSlice"
 const { Dragger } = Upload
 const { Text } = Typography
 
-const BulkFileUploader = () => {
+const BulkFileUploader = ({leadid}) => {
   const dispatch = useDispatch()
   const allComments = useSelector((state) => state.rating.allComments)
-  const { userid, leadid } = useParams()
+  const { userid } = useParams()
   const [files, setFiles] = useState([])
   const [text, setText] = useState("")
   const [flag, setFlag] = useState(null)
@@ -179,7 +179,7 @@ const BulkFileUploader = () => {
             setText("")
             setInputCommentText("")
             dispatch(getAllComments())
-            window.location.reload()
+
           } else {
             notification.error({ message: "Something went wrong" })
             setApiLoading("error")
@@ -201,7 +201,6 @@ const BulkFileUploader = () => {
             setInputCommentText("")
             setApiLoading("success")
             dispatch(getAllComments())
-            window.location.reload()
           } else {
             notification.error({ message: "Something went wrong" })
             setApiLoading("error")

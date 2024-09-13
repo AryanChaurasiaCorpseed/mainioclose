@@ -265,11 +265,6 @@ const LeadsModule = () => {
       })
   }
 
-  useEffect(() => {
-    const allLeadsData = [...allLeadData]
-    setFilteredData(allLeadsData)
-  }, [allLeadData])
-
   const columns = [
     {
       dataIndex: "sno",
@@ -597,19 +592,10 @@ const LeadsModule = () => {
     [dropdownData]
   )
 
-  // const handleSearch = (e) => {
-  //   const value = e.target.value
-  //   setSearchText(value)
-  //   const filtered = allLeadData?.filter((item) =>
-  //     Object.values(item)?.some((val) =>
-  //       String(val)?.toLowerCase()?.includes(value?.toLowerCase())
-  //     )
-  //   )
-  //   setFilteredData(filtered)
-  // }
 
   const onSearchLead = (e, b, c) => {
     console.log("sdksjdsjdaghsjdghdsjk", c)
+    setSearchText(e)
     dispatch(searchLeads({ input: e, id: userid }))
     if (!b) {
       dispatch(searchLeads({ input: "", id: userid }))
@@ -792,7 +778,7 @@ const LeadsModule = () => {
           placeholder="search"
           size="small"
           allowClear
-          // value={searchText}
+          value={searchText}
           onSearch={onSearchLead}
           onChange={(e) =>
             !e.target.value
@@ -807,7 +793,7 @@ const LeadsModule = () => {
       <div className="table-arrow">
         <Suspense fallback={<TableScalaton />}>
           <CommonTable
-            data={filteredData}
+            data={allLeadData}
             columns={columns}
             scroll={{ y: 490, x: adminRole ? 2500 : 1500 }}
             rowSelection={true}

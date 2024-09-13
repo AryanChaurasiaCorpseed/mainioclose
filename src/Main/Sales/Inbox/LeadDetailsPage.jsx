@@ -1132,7 +1132,7 @@ const LeadDetailsPage = ({ leadid }) => {
                 <div className="line"></div>
               </div>
               <div className="side-notes">
-                <BulkFileUploader />
+                <BulkFileUploader leadid={leadid} />
               </div>
             </div>
             <div className={`notes-box mt-4 ${"d-none"}`}>
@@ -1142,7 +1142,7 @@ const LeadDetailsPage = ({ leadid }) => {
                 </div>
                 <div className="line"></div>
               </div>
-
+     
               <div className="side-notes">
                 <div className="comment-above">
                   <h2 className="write-heading">Write a Email</h2>
