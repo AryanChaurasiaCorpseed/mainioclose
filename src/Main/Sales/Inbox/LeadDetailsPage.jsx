@@ -50,6 +50,7 @@ import {
   Modal,
   notification,
   Popconfirm,
+  Result,
   Row,
   Select,
   Space,
@@ -804,7 +805,7 @@ const LeadDetailsPage = ({ leadid }) => {
     // },
   ]
 
-  return (
+  return Object.keys(singleLeadResponseData)?.length > 0 ? (
     <div className="lead-details cm-padding-one">
       {estimateOpenBtn ? (
         <EstimateDesignPage setEstimateOpenBtn={setEstimateOpenBtn} />
@@ -1025,25 +1026,25 @@ const LeadDetailsPage = ({ leadid }) => {
                 )}
 
                 {/* {currentUserDetail?.department === "Quality" ||
-                currentUserRoles?.includes("ADMIN") ? (
-                  <>
-                    {
-                      showDescriptionField ? ():(
-                        <div className="description-container">
-                      <Text>{descriptionText}</Text>
-                    </div>
-                      )
-                    }
-                    
-                  </>
-                ) : (
-                  <div className="comp-container">
-                    <Input.TextArea
-                      value={descriptionText}
-                      onChange={(e) => setDescriptionText(e.target.value)}
-                    />
+              currentUserRoles?.includes("ADMIN") ? (
+                <>
+                  {
+                    showDescriptionField ? ():(
+                      <div className="description-container">
+                    <Text>{descriptionText}</Text>
                   </div>
-                )} */}
+                    )
+                  }
+                  
+                </>
+              ) : (
+                <div className="comp-container">
+                  <Input.TextArea
+                    value={descriptionText}
+                    onChange={(e) => setDescriptionText(e.target.value)}
+                  />
+                </div>
+              )} */}
               </>
             )}
             <Divider style={{ margin: "6px" }} />
@@ -1056,7 +1057,11 @@ const LeadDetailsPage = ({ leadid }) => {
                 Assign to same person{" "}
               </Button>
             </div>
-
+            <Divider style={{ margin: "6px" }} />
+            <Text className="heading-text">
+              {" "}
+              Url : {singleLeadResponseData?.urls}{" "}
+            </Text>
             <Divider style={{ margin: "6px" }} />
             <Collapse
               accordion
@@ -1089,15 +1094,15 @@ const LeadDetailsPage = ({ leadid }) => {
                 </Button>
               </Link>
               {/* <Link to={`/erp/${userid}/sales/leads`}>
-                <Button>
-                  <Icon
-                    icon="fluent:chevron-left-24-filled"
-                    height={BTN_ICON_HEIGHT}
-                    width={BTN_ICON_WIDTH}
-                  />
-                  Back
-                </Button>
-              </Link> */}
+              <Button>
+                <Icon
+                  icon="fluent:chevron-left-24-filled"
+                  height={BTN_ICON_HEIGHT}
+                  width={BTN_ICON_WIDTH}
+                />
+                Back
+              </Button>
+            </Link> */}
               <Button onClick={() => openTasksFun()} shape="round">
                 All tasks
               </Button>
@@ -1437,6 +1442,12 @@ const LeadDetailsPage = ({ leadid }) => {
         </Form>
       </Modal>
     </div>
+  ) : (
+    <Result
+      status="404"
+      title="404"
+      subTitle="Sorry, the data is not available."
+    />
   )
 }
 
