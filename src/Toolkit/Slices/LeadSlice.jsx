@@ -466,6 +466,11 @@ export const updateLeadDescription = createAsyncThunk(
   }
 )
 
+export const getAllRemarkAndCommnts=createAsyncThunk('getAllRemarks',async(id)=>{
+  const response = await getQuery(`/leadService/api/v1/getAllRemarks?leadId=${id}`)
+  return response.data
+})
+
 export const LeadSlice = createSlice({
   name: "lead",
   initialState: {
@@ -497,6 +502,7 @@ export const LeadSlice = createSlice({
     clientsContact: [],
     notificationCount: 0,
     page: 0,
+    remarkData:[]
   },
   reducers: {
     handleLoadingState: (state, action) => {
@@ -733,6 +739,18 @@ export const LeadSlice = createSlice({
       state.allLeads = action.payload
     })
     builder.addCase(searchLeads.rejected, (state, action) => {
+      state.loading = "rejected"
+    })
+
+
+    builder.addCase(getAllRemarkAndCommnts.pending, (state, action) => {
+      state.loading = "pending"
+    })
+    builder.addCase(getAllRemarkAndCommnts.fulfilled, (state, action) => {
+      state.loading = "success"
+      state.remarkData = action.payload
+    })
+    builder.addCase(getAllRemarkAndCommnts.rejected, (state, action) => {
       state.loading = "rejected"
     })
   },

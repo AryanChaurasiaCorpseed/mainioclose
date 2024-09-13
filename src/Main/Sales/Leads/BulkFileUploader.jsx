@@ -130,7 +130,7 @@ import {
 } from "antd"
 import "./BulkFileUpload.scss"
 import { useDispatch, useSelector } from "react-redux"
-import { createRemakWithFile } from "../../../Toolkit/Slices/LeadSlice"
+import { createRemakWithFile, getAllRemarkAndCommnts, getSingleLeadDataByLeadID } from "../../../Toolkit/Slices/LeadSlice"
 import { useParams } from "react-router-dom"
 import { getAllComments } from "../../../Toolkit/Slices/UserRatingSlice"
 const { Dragger } = Upload
@@ -178,8 +178,7 @@ const BulkFileUploader = ({leadid}) => {
             setFiles([])
             setText("")
             setInputCommentText("")
-            dispatch(getAllComments())
-
+            dispatch(getAllRemarkAndCommnts(leadid))
           } else {
             notification.error({ message: "Something went wrong" })
             setApiLoading("error")
@@ -200,7 +199,7 @@ const BulkFileUploader = ({leadid}) => {
             setText("")
             setInputCommentText("")
             setApiLoading("success")
-            dispatch(getAllComments())
+            dispatch(getAllRemarkAndCommnts(leadid))
           } else {
             notification.error({ message: "Something went wrong" })
             setApiLoading("error")

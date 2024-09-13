@@ -22,6 +22,7 @@ import {
   getAllOppurtunities,
   getAllProductData,
   getAllProductWithCattegory,
+  getAllRemarkAndCommnts,
   getAllStatusData,
   getAllTaskData,
   getAllTaskStatus,
@@ -93,6 +94,9 @@ const LeadDetailsPage = ({ leadid }) => {
   const singleLeadResponseData = useSelector(
     (state) => state.leads.singleLeadResponseData
   )
+  const notesApiData = useSelector(
+    (state) => state.leads.remarkData
+  )
   const currentUserDetail = useSelector(
     (state) => state.auth.getDepartmentDetail
   )
@@ -105,9 +109,7 @@ const LeadDetailsPage = ({ leadid }) => {
   const [openProductModal, setOpenProductModal] = useState(false)
   const [taskData, setTaskData] = useState("")
   const [notes, setNotes] = useState(false)
-  const [notesApiData, setNotesApiData] = useState([])
   const [allFilterProducts, setAllFilterProducts] = useState([])
-  const [notesUpdateToggle, setNotesUpdateToggle] = useState(false)
   const [updateLeadNameToggle, setUpdateLeadNameToggle] = useState(true)
   const [openAllTask, setOpenAllTask] = useState(false)
   const [estimateOpenBtn, setEstimateOpenBtn] = useState(false)
@@ -164,24 +166,6 @@ const LeadDetailsPage = ({ leadid }) => {
       })
   }, [originalData, dispatch, getSingleLeadData])
 
-  const leadNotesData = async (id) => {
-    try {
-      const getAllLeadNotes = await getQuery(
-        `/leadService/api/v1/getAllRemarks?leadId=${leadid}`
-      )
-      const newData = getAllLeadNotes.data.reverse()
-      setNotesApiData(newData)
-    } catch (err) {
-      if (err.response.status === 500) {
-        console.log("Something Went Wrong")
-      }
-    }
-  }
-
-  useEffect(() => {
-    leadNotesData()
-  }, [notesUpdateToggle])
-
   useEffect(() => {
     dispatch(getAllProductData())
     dispatch(getAllLeadUser(userid))
@@ -191,6 +175,7 @@ const LeadDetailsPage = ({ leadid }) => {
     dispatch(editViewData(leadid))
     dispatch(getAllStatusData())
     dispatch(getAllTaskData(leadid))
+    dispatch(getAllRemarkAndCommnts(leadid))
   }, [dispatch, leadid, userid])
 
   const adminRole = currentUserRoles.includes("ADMIN")
@@ -241,7 +226,6 @@ const LeadDetailsPage = ({ leadid }) => {
           `/leadService/api/v1/createRemarks`,
           remarkMessage
         )
-        setNotesUpdateToggle((prev) => !prev)
         NotesRef.current.value = ""
         fileRef.current.value = ""
         window.location.reload()
