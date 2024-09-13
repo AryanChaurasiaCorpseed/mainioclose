@@ -168,12 +168,12 @@ const LeadDetailsPage = ({ leadid }) => {
 
   useEffect(() => {
     dispatch(getAllProductData())
-    dispatch(getAllLeadUser(userid))
+    // dispatch(getAllLeadUser(userid))
     dispatch(getAllTaskStatus())
     dispatch(getAllOppurtunities())
     dispatch(getAllProductWithCattegory())
     dispatch(editViewData(leadid))
-    dispatch(getAllStatusData())
+    // dispatch(getAllStatusData())
     dispatch(getAllTaskData(leadid))
     dispatch(getAllRemarkAndCommnts(leadid))
   }, [dispatch, leadid, userid])

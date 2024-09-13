@@ -748,7 +748,7 @@ export const LeadSlice = createSlice({
     })
     builder.addCase(getAllRemarkAndCommnts.fulfilled, (state, action) => {
       state.loading = "success"
-      state.remarkData = action.payload
+      state.remarkData = action?.payload?.reverse()
     })
     builder.addCase(getAllRemarkAndCommnts.rejected, (state, action) => {
       state.loading = "rejected"
