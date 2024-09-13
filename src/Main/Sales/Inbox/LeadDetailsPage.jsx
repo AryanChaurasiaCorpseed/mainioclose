@@ -1067,7 +1067,7 @@ const LeadDetailsPage = ({ leadid }) => {
                 Notes
               </Button>
 
-              <Link to={`history`}>
+              <Link to={`${leadid}/history`}>
                 <Button shape="round">
                   <Icon
                     icon="fluent:history-24-regular"

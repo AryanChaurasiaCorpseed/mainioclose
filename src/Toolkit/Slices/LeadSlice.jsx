@@ -502,7 +502,8 @@ export const LeadSlice = createSlice({
     clientsContact: [],
     notificationCount: 0,
     page: 0,
-    remarkData:[]
+    remarkData:[],
+    navigateLeadId:null
   },
   reducers: {
     handleLoadingState: (state, action) => {
