@@ -227,8 +227,8 @@ const CompanyForm = ({ role }) => {
     },
     {
       title: "Comment",
-      dataIndex: "Comment",
-      render: (_, data) => <OverFlowText>{data?.Comment}</OverFlowText>,
+      dataIndex: "comment",
+      render: (_, data) => <OverFlowText>{data?.comment}</OverFlowText>,
     },
 
     {
