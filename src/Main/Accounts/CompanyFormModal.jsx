@@ -157,6 +157,7 @@ const CompanyFormModal = ({
             scontactId: editData?.scontactId,
             scontactWhatsappNo: editData?.scontactWhatsappNo,
             amount: editData?.amount,
+            comment:editData?.comment
           })
         }
       })
@@ -393,7 +394,7 @@ const CompanyFormModal = ({
           style={{ maxHeight: "75vh", overflow: "auto" }}
           scrollToFirstError
           onFinish={handleFinish}
-          initialValues={{ primaryContact: false, isUnit: false }}
+          initialValues={{ primaryContact: false, isUnit: false,secondaryContact:false }}
         >
           {Object.keys(companyDetails)?.length > 0 ? (
             <Form.Item
@@ -903,6 +904,13 @@ const CompanyFormModal = ({
               </Form.Item>
             </>
           )}
+         {
+          edit && (
+            <Form.Item label='Comment' name='comment' rules={[{required:true,message:'please write the comment '}]} >
+            <Input.TextArea/>
+          </Form.Item>
+          )
+         }
         </Form>
       </Modal>
     </>

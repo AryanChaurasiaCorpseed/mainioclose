@@ -111,10 +111,10 @@ const LeadDetailsPage = ({ leadid }) => {
   const [updateLeadNameToggle, setUpdateLeadNameToggle] = useState(true)
   const [openAllTask, setOpenAllTask] = useState(false)
   const [estimateOpenBtn, setEstimateOpenBtn] = useState(false)
-  const [updateAssignee, setUpdateAssignee] = useState(false)
   const [updateOriginalName, setUpdateOriginalName] = useState(false)
   const [updatedLeadName, setUpdatedLeadName] = useState("")
   const [showDescriptionField, setShowDescriptionField] = useState(false)
+  const [assigneValue,setAssigneValue]=useState(null)
 
   useEffect(() => {
     dispatch(getAllSlugList())
@@ -211,7 +211,6 @@ const LeadDetailsPage = ({ leadid }) => {
       })
   }
 
-  // Create New Notes or Remarks
   const createRemarkfun = (e) => {
     e.preventDefault()
     if (NotesRef.current.value === "") {
@@ -239,7 +238,7 @@ const LeadDetailsPage = ({ leadid }) => {
 
   useEffect(() => {
     getSingleLeadData()
-  }, [updateAssignee, updateOriginalName, getSingleLeadData])
+  }, [ updateOriginalName, getSingleLeadData])
 
   const updateLeadNameSinglePage = useCallback(
     (e) => {
@@ -267,6 +266,7 @@ const LeadDetailsPage = ({ leadid }) => {
   )
 
   const changeLeadAssignee = async (id) => {
+    setAssigneValue(id)
     dispatch(changeLeadAssigneeLeads({ leadid, id, userid }))
       .then((resp) => {
         if (resp.meta.requestStatus === "fulfilled") {
@@ -274,7 +274,7 @@ const LeadDetailsPage = ({ leadid }) => {
             message: "Assignee updated successfully",
           })
           getSingleLeadData()
-          setUpdateAssignee((prev) => !prev)
+          setAssigneValue(null)
         } else {
           notification.error({
             message: "Something went wrong !.",
@@ -1096,6 +1096,7 @@ const LeadDetailsPage = ({ leadid }) => {
               <Select
                 placeholder="Change assignee"
                 style={{ width: "100%", margin: "6px 0px" }}
+                value={assigneValue}
                 options={
                   userDataResponse?.map((ele) => ({
                     label: ele?.fullName,

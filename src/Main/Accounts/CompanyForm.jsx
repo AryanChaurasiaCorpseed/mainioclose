@@ -267,7 +267,8 @@ const CompanyForm = ({ role }) => {
           },
         ]
       : []),
-    ...(role !== "sales"
+    ...(currentUserDetail?.department === "Accounts" ||
+    getHighestPriorityRole(currentRoles) === "ADMIN"
       ? [
           {
             title: "Approved / Disapproved",
@@ -276,7 +277,6 @@ const CompanyForm = ({ role }) => {
               return (
                 <>
                   <Button
-                    type="primary"
                     size="small"
                     shape="round"
                     onClick={() => {
@@ -292,7 +292,7 @@ const CompanyForm = ({ role }) => {
                       })
                     }}
                   >
-                    Status
+                    <Icon icon="fluent:keyboard-shift-24-regular" />
                   </Button>
                   {/* <Tooltip title="Approved" arrow={false}>
                     <Button
@@ -476,7 +476,7 @@ const CompanyForm = ({ role }) => {
         <CommonTable
           data={leadCompanyList}
           columns={columns}
-          scroll={{ x: 5000, y: 550 }}
+          scroll={{ x: 5000, y: 540 }}
           rowSelection={true}
           pagination={true}
           nextPage={handleNextPagination}
