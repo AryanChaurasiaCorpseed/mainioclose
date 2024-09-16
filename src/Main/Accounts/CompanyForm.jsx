@@ -125,11 +125,11 @@ const CompanyForm = ({ role }) => {
       dataIndex: "companyAge",
       render: (_, data) => <ColComp data={data?.companyAge} />,
     },
-    // {
-    //   title:'Assignee',
-    //   dataIndex:'assignee',
-    //   render:(_,data)=><Text>{data?.assignee?.fullName}</Text>
-    // },
+    {
+      title: "Amount",
+      dataIndex: "amount",
+      render: (_, data) => <ColComp data={data?.amount} />,
+    },
     {
       title: "Contact name",
       dataIndex: "contactName",
@@ -225,6 +225,12 @@ const CompanyForm = ({ role }) => {
       dataIndex: "updatedBy",
       render: (_, data) => <ColComp data={data?.updatedBy?.fullName} />,
     },
+    {
+      title: "Comment",
+      dataIndex: "Comment",
+      render: (_, data) => <OverFlowText>{data?.Comment}</OverFlowText>,
+    },
+
     {
       title: "Status",
       dataIndex: "status",
