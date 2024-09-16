@@ -55,6 +55,7 @@ const CompanyFormModal = ({
   const contactList = useSelector((state) => state?.leads?.allContactList)
   const contactDetail = useSelector((state) => state?.leads?.contactDetail)
   const companyDetail = useSelector((state) => state?.company?.companyDetail)
+  const page = useSelector((state) => state.company.page)
   const [openModal, setOpenModal] = useState(false)
   const [formLoading, setFormLoading] = useState("")
   const [gstMand, setGstMand] = useState("")
@@ -290,7 +291,7 @@ const CompanyFormModal = ({
               setFormLoading("success")
               playSuccessSound()
               dispatch(
-                getAllCompanyByStatus({ id: userid, status: selectedFilter })
+                getAllCompanyByStatus({ id: userid, status: selectedFilter,page })
               )
               notification.success({ message: "Company created successfully" })
               setOpenModal(false)
