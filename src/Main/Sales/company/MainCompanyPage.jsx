@@ -25,6 +25,7 @@ const MainCompanyPage = () => {
   const { userid } = useParams()
   const currUserId = useSelector((prev) => prev?.auth?.currentUser?.id)
   const leadUserNew = useSelector((state) => state.leads.getAllLeadUserData)
+  const currentRoles = useSelector((state) => state?.auth?.roles)
   const { allCompnay, loadingCompany, errorCompany } = useSelector(
     (prev) => prev?.company
   )
@@ -37,6 +38,14 @@ const MainCompanyPage = () => {
   useEffect(() => {
     dispatch(getAllLeadUser(userid))
   }, [userid, dispatch])
+
+  function getHighestPriorityRole(roles) {
+    if (roles?.length > 0) {
+      if (roles?.includes("ADMIN")) {
+        return "ADMIN"
+      }
+    }
+  }
 
   const onSearchLead = (e, b, c) => {
     dispatch(searchCompany({ inputText: e, userId: userid }))
@@ -90,25 +99,28 @@ const MainCompanyPage = () => {
     {
       dataIndex: "assignee",
       title: "Assignee",
-      render: (_, props) => (
-        <Select
-          size="small"
-          showSearch
-          style={{ width: "100%" }}
-          value={props?.assignee?.id}
-          placeholder="select assignee"
-          options={
-            leadUserNew?.map((ele) => ({
-              label: ele?.fullName,
-              value: ele?.id,
-            })) || []
-          }
-          filterOption={(input, option) =>
-            option.label.toLowerCase().includes(input.toLowerCase())
-          }
-          onChange={(e) => handleUpdateAssignee(e, props?.companyId)}
-        />
-      ),
+      render: (_, props) =>
+        getHighestPriorityRole(currentRoles) === "ADMIN" ? (
+          <Select
+            size="small"
+            showSearch
+            style={{ width: "100%" }}
+            value={props?.assignee?.id}
+            placeholder="select assignee"
+            options={
+              leadUserNew?.map((ele) => ({
+                label: ele?.fullName,
+                value: ele?.id,
+              })) || []
+            }
+            filterOption={(input, option) =>
+              option.label.toLowerCase().includes(input.toLowerCase())
+            }
+            onChange={(e) => handleUpdateAssignee(e, props?.companyId)}
+          />
+        ) : (
+          <ColComp data={props?.assignee?.fullName} />
+        ),
     },
     {
       dataIndex: "gstNo",
