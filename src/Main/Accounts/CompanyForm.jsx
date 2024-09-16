@@ -238,8 +238,7 @@ const CompanyForm = ({ role }) => {
         ),
     },
     ...(getHighestPriorityRole(currentRoles) !== "ADMIN" &&
-    currentUserDetail?.department === "Sales" &&
-    selectedFilter === "initiated"
+    (selectedFilter === "initiated" || selectedFilter === "disapproved")
       ? [
           {
             title: "Edit company",
@@ -396,7 +395,11 @@ const CompanyForm = ({ role }) => {
               message: "Status update successfully",
             })
             setOpenModal(false)
-            getAllCompanyByStatus({ id: userid, status: selectedFilter, page: page })
+            getAllCompanyByStatus({
+              id: userid,
+              status: selectedFilter,
+              page: page,
+            })
           } else {
             notification.error({
               message: "Something went wrong in status !.",
