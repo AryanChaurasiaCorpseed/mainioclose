@@ -110,8 +110,8 @@ const VendorForm = ({ leadId, userId, serviceName, setOpenPopOver }) => {
           <Button size="small">
             <Icon
               icon="fluent:arrow-upload-20-filled"
-              height={BTN_ICON_HEIGHT}
-              width={BTN_ICON_WIDTH}
+            //   height={BTN_ICON_HEIGHT}
+            //   width={BTN_ICON_WIDTH}
             />{" "}
             Upload
           </Button>
@@ -163,7 +163,7 @@ const Vendors = ({ leadId, userId, urlName }) => {
         placement="bottomRight"
         trigger={["click"]}
         open={openPopOver}
-        onOpenChange={() => setOpenPopOver((prev) => !prev)}
+        onOpenChange={(e) => setOpenPopOver(e)}
       >
         <Button shape="round" onClick={() => setOpenPopOver(true)}>
           Vendor
@@ -176,7 +176,7 @@ const Vendors = ({ leadId, userId, urlName }) => {
         placement="bottomRight"
         trigger={["click"]}
         open={openPopOver1}
-        onOpenChange={() => setOpenPopOver1((prev) => !prev)}
+        onOpenChange={(e) => setOpenPopOver1(e)}
       >
         <Button shape="round" onClick={() => setOpenPopOver1(true)}>
           Vendor's status
