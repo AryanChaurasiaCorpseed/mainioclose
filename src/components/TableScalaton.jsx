@@ -5,8 +5,8 @@ import { Box } from "@mui/material"
 const TableScalaton = () => {
   return (
     <div>
-        <Skeleton animation="wave"  width="100%" height="100" />
-    <div className="scalaton-grid">
+      <Skeleton animation="wave" width="100%" height="100" />
+      <div className="scalaton-grid">
         <Box sx={{ width: 250 }}>
           <Skeleton />
           <Skeleton animation="wave" />
@@ -99,8 +99,7 @@ const TableScalaton = () => {
           <Skeleton animation="wave" />
           <Skeleton animation={false} />
         </Box>
-      
-    </div>
+      </div>
     </div>
   )
 }

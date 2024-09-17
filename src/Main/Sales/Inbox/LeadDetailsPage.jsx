@@ -64,6 +64,7 @@ import dayjs from "dayjs"
 import { BTN_ICON_HEIGHT, BTN_ICON_WIDTH } from "../../../components/Constants"
 import { playErrorSound, playSuccessSound } from "../../Common/Commons"
 import CompanyFormModal from "../../Accounts/CompanyFormModal"
+import Vendors from "../Leads/Vendors"
 const { Text } = Typography
 
 toast.configure()
@@ -1090,6 +1091,7 @@ const LeadDetailsPage = ({ leadid }) => {
               <Button onClick={() => openTasksFun()} shape="round">
                 All tasks
               </Button>
+              <Vendors leadId={leadid} userId={userid} urlName={singleLeadResponseData?.originalName}  />
             </div>
             <div className="lead-assignee-container mt-3">
               <Text className="heading-text">Update assignee</Text>

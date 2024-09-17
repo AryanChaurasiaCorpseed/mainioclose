@@ -293,7 +293,7 @@ const CompanyFormModal = ({
               dispatch(
                 getAllCompanyByStatus({ id: userid, status: selectedFilter,page })
               )
-              notification.success({ message: "Company created successfully" })
+              notification.success({ message: "Company created successfully." })
               setOpenModal(false)
             } else {
               setFormLoading("rejected")
@@ -322,7 +322,7 @@ const CompanyFormModal = ({
             if (response.meta.requestStatus === "fulfilled") {
               setFormLoading("success")
               dispatch(getAllUsers())
-              notification.success({ message: "Company created successfully" })
+              notification.success({ message: "Company created successfully." })
               playSuccessSound()
               setOpenModal(false)
             } else {

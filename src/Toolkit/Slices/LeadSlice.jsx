@@ -433,7 +433,6 @@ export const getSingleLeadDataByLeadID = createAsyncThunk(
   }
 )
 
-
 export const createTicket = createAsyncThunk("createTicket", async (data) => {
   const response = await postQuery(`/leadService/api/v1/createTicket`, data)
   return response.data
@@ -466,8 +465,28 @@ export const updateLeadDescription = createAsyncThunk(
   }
 )
 
-export const getAllRemarkAndCommnts=createAsyncThunk('getAllRemarks',async(id)=>{
-  const response = await getQuery(`/leadService/api/v1/getAllRemarks?leadId=${id}`)
+export const getAllRemarkAndCommnts = createAsyncThunk(
+  "getAllRemarks",
+  async (id) => {
+    const response = await getQuery(
+      `/leadService/api/v1/getAllRemarks?leadId=${id}`
+    )
+    return response.data
+  }
+)
+
+export const addVendorsDetail = createAsyncThunk(
+  "vendorsDetail",
+  async (data) => {
+    const response = await postQuery(
+      `/leadService/api/v1/vendor/create-vendor-request?leadId=${data?.leadId}&userId=${data?.userId}`,data?.data
+    )
+    return response.data
+  }
+)
+
+export const getVendorDetailList=createAsyncThunk('getVendorDetail',async(data)=>{
+  const response=await getQuery(`/leadService/api/v1/vendor/find-vendor-request-by-user-id?userId=${data?.userId}&leadId=${data?.leadId}`)
   return response.data
 })
 
@@ -502,8 +521,9 @@ export const LeadSlice = createSlice({
     clientsContact: [],
     notificationCount: 0,
     page: 0,
-    remarkData:[],
-    navigateLeadId:null
+    remarkData: [],
+    navigateLeadId: null,
+    vendorsList:[]
   },
   reducers: {
     handleLoadingState: (state, action) => {
@@ -743,7 +763,6 @@ export const LeadSlice = createSlice({
       state.loading = "rejected"
     })
 
-
     builder.addCase(getAllRemarkAndCommnts.pending, (state, action) => {
       state.loading = "pending"
     })
@@ -754,6 +773,19 @@ export const LeadSlice = createSlice({
     builder.addCase(getAllRemarkAndCommnts.rejected, (state, action) => {
       state.loading = "rejected"
     })
+
+    builder.addCase(getVendorDetailList.pending, (state, action) => {
+      state.loading = "pending"
+    })
+    builder.addCase(getVendorDetailList.fulfilled, (state, action) => {
+      state.loading = "success"
+      state.vendorsList = action?.payload
+    })
+    builder.addCase(getVendorDetailList.rejected, (state, action) => {
+      state.loading = "rejected"
+    })
+
+
   },
 })
 export const {

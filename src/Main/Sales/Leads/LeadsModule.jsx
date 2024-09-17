@@ -70,7 +70,6 @@ const LeadsModule = () => {
   const [dropdownData, setDropdownData] = useState([])
   const [headerData, setHeaderData] = useState([])
   const [searchText, setSearchText] = useState("")
-  const [filteredData, setFilteredData] = useState([])
   const [openDrawer, setOpenDrawer] = useState(false)
   const [leadId, setLeadId] = useState(null)
 
@@ -131,20 +130,20 @@ const LeadsModule = () => {
       .then((response) => {
         if (response?.meta?.requestStatus === "fulfilled") {
           notification.success({ message: "Leads deleted successfully" })
-          playSuccessSound()
+          // playSuccessSound()
           dispatch(getAllLeads(allMultiFilterData))
           setLeadDelLoading("success")
           setSelectedRowKeys([])
         } else {
           setLeadDelLoading("rejected")
           notification.error({ message: "Something went wrong !." })
-          playErrorSound()
+          // playErrorSound()
         }
       })
       .catch(() => {
         setLeadDelLoading("rejected")
         notification.error({ message: "Something went wrong !." })
-        playErrorSound()
+        // playErrorSound()
       })
   }, [selectedRowKeys, userid, dispatch, allMultiFilterData])
 
@@ -177,16 +176,16 @@ const LeadsModule = () => {
         .then((response) => {
           if (response?.meta?.requestStatus === "fulfilled") {
             notification.success({ message: "Helper updated successfully" })
-            playSuccessSound()
+            // playSuccessSound()
             dispatch(getAllLeads(allMultiFilterData))
           } else {
             notification.error({ message: "Something went wrong !." })
-            playErrorSound()
+            // playErrorSound()
           }
         })
         .catch(() => {
           notification.error({ message: "Something went wrong !." })
-          playErrorSound()
+          // playErrorSound()
         })
     },
     [dispatch, allMultiFilterData]
@@ -203,18 +202,18 @@ const LeadsModule = () => {
         .then((response) => {
           if (response.meta.requestStatus === "fulfilled") {
             notification.success({
-              message: "Assignee is updated successfully",
+              message: "Assignee is updated successfully.",
             })
-            playSuccessSound()
+            // playSuccessSound()
             dispatch(getAllLeads(allMultiFilterData))
           } else {
             notification.error({ message: "Something went wrong !." })
-            playErrorSound()
+            // playErrorSound()
           }
         })
         .catch(() => {
           notification.error({ message: "Something went wrong !." })
-          playErrorSound()
+          // playErrorSound()
         })
     },
     [userid, allMultiFilterData, dispatch]
@@ -229,17 +228,17 @@ const LeadsModule = () => {
       dispatch(handleDeleteSingleLead(obj))
         .then((response) => {
           if (response.meta.requestStatus === "fulfilled") {
-            notification.success({ message: "Lead deleted successfully" })
-            playSuccessSound()
+            notification.success({ message: "Lead deleted successfully." })
+            // playSuccessSound()
             dispatch(getAllLeads(allMultiFilterData))
           } else {
             notification.error({ message: "Something went wrong !." })
-            playErrorSound()
+            // playErrorSound()
           }
         })
         .catch(() => {
           notification.error({ message: "Something went wrong !." })
-          playErrorSound()
+          // playErrorSound()
         })
     },
     [userid, dispatch, allMultiFilterData]
@@ -252,16 +251,16 @@ const LeadsModule = () => {
           notification.success({
             message: "Lead assigned to same person successfully",
           })
-          playSuccessSound()
+          // playSuccessSound()
           dispatch(getAllLeads(allMultiFilterData))
         } else {
           notification.error({ message: "Something went wrong !." })
-          playErrorSound()
+          // playErrorSound()
         }
       })
       .catch(() => {
         notification.error({ message: "Something went wrong !." })
-        playErrorSound()
+        // playErrorSound()
       })
   }
 
@@ -299,7 +298,6 @@ const LeadsModule = () => {
           className="link-heading"
           // to={`/erp/${userid}/sales/leads/${data?.id}`}
           onClick={() => {
-            
             setLeadId(data?.id)
             dispatch(
               handleViewHistory({ leadId: data?.id, userid: userid })
@@ -459,17 +457,13 @@ const LeadsModule = () => {
             title: "Source",
             dataIndex: "source",
             checked: true,
-            render: (_, data) => (
-              <OverFlowText>{data?.source ? data?.source : "NA"}</OverFlowText>
-            ),
+            render: (_, data) => <OverFlowText>{data?.source}</OverFlowText>,
           },
           {
             title: "Create project",
             dataIndex: "project",
             checked: false,
-            render: (_, data) => {
-              return <CompanyFormModal data={data} />
-            },
+            render: (_, data) => <CompanyFormModal data={data} />,
           },
           {
             title: "Lead assigned",
@@ -518,19 +512,19 @@ const LeadsModule = () => {
       .then((response) => {
         if (response?.meta?.requestStatus === "fulfilled") {
           notification.success({ message: "Leads assigned successfully" })
-          playSuccessSound()
+          // playSuccessSound()
           dispatch(getAllLeads(allMultiFilterData))
           setMultibtn("success")
           setSelectedRowKeys([])
         } else {
           notification.error({ message: "Something went wrong !." })
-          playErrorSound()
+          // playErrorSound()
           setMultibtn("rejected")
         }
       })
       .catch(() => {
         notification.error({ message: "Something went wrong !." })
-        playErrorSound()
+        // playErrorSound()
         setMultibtn("rejected")
       })
   }, [dispatch, selectedRowKeys, userid, assignedLeadInfo, allMultiFilterData])
@@ -539,13 +533,13 @@ const LeadsModule = () => {
     const notifcationApi = setInterval(() => {
       dispatch(getLeadNotificationCount(userid)).then((resp) => {
         if (resp.meta.requestStatus === "fulfilled") {
-          playSuccessSound()
+          // playSuccessSound()
         }
       })
     }, 1 * 60 * 1000)
     dispatch(getLeadNotificationCount(userid)).then((resp) => {
       if (resp.meta.requestStatus === "fulfilled") {
-        playSuccessSound()
+        // playSuccessSound()
       }
     })
     return () => clearInterval(notifcationApi)
@@ -591,7 +585,6 @@ const LeadsModule = () => {
     },
     [dropdownData]
   )
-
 
   const onSearchLead = (e, b, c) => {
     console.log("sdksjdsjdaghsjdghdsjk", c)
@@ -817,7 +810,7 @@ const LeadsModule = () => {
                   >
                     <Popconfirm
                       title="Delete the leads"
-                      description="Are you sure to delete these leads?"
+                      description="Are you sure to delete these leads ?."
                       okText="Yes"
                       cancelText="No"
                       onConfirm={handleDeleteMutipleLeads}
@@ -908,7 +901,7 @@ const LeadsModule = () => {
         title="Lead detail"
         open={openDrawer}
         onClose={() => setOpenDrawer(false)}
-        width={'80%'}
+        width={"80%"}
       >
         <LeadDetailsPage leadid={leadId} />
       </Drawer>

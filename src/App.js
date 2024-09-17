@@ -151,6 +151,10 @@ function App() {
             fontSize: 13,
             fontSizeLG: 13,
           },
+          Form:{
+            fontSize:12,
+            fontSizeLG:12
+          }
         },
       }}
     >
