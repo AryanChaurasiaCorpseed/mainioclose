@@ -8,6 +8,18 @@ import { toast } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
 import { getDepartmentOfUser } from "../Toolkit/Slices/AuthSlice"
 import { Layout, Menu, theme } from "antd"
+import { getAllUsers } from "../Toolkit/Slices/UsersSlice"
+import {
+  getAllContactDetails,
+  getAllLeadUser,
+  getAllOppurtunities,
+  getAllProductData,
+  getAllProductWithCattegory,
+  getAllStatusData,
+  getAllTaskStatus,
+} from "../Toolkit/Slices/LeadSlice"
+import { getAllUrlAction } from "../Toolkit/Slices/LeadUrlSlice"
+import { getAllSlugList } from "../Toolkit/Slices/LeadSlugSlice"
 const { Header, Sider, Content } = Layout
 toast.configure()
 
@@ -22,7 +34,20 @@ const MainPage = () => {
 
   useEffect(() => {
     dispatch(getDepartmentOfUser(userid))
+    dispatch(getAllLeadUser(userid))
   }, [dispatch, userid])
+
+  useEffect(() => {
+    dispatch(getAllUsers())
+    dispatch(getAllContactDetails())
+    dispatch(getAllStatusData())
+    dispatch(getAllUrlAction(0))
+    dispatch(getAllSlugList())
+    dispatch(getAllProductData())
+    dispatch(getAllTaskStatus())
+    dispatch(getAllOppurtunities())
+    dispatch(getAllProductWithCattegory())
+  }, [dispatch])
 
   const pathname = window.location.pathname
 
@@ -37,8 +62,6 @@ const MainPage = () => {
     const lastWord = parts[parts.length - 2]
     return lastWord
   }
-
-  console.log("sjabasdkjhdjhciu", getPathKey(), getSecondLastKey())
 
   return (
     <>
@@ -69,7 +92,7 @@ const MainPage = () => {
             style={{
               padding: 0,
               background: colorBgContainer,
-              height:'45px'
+              height: "45px",
             }}
           >
             <TopNav />

@@ -3,6 +3,7 @@ import { postQuery } from "../../API/PostQuery"
 import { putQuery } from "../../API/PutQuery"
 import { getQuery } from "../../API/GetQuery"
 import { deleteQuery } from "../../API/DeleteQuery"
+import { notification } from "antd"
 
 export const getAllLeads = createAsyncThunk("allLeadsData", async (data) => {
   const allLeads = await postQuery(
@@ -316,6 +317,7 @@ export const updateStatusById = createAsyncThunk(
 export const deleteMultipleLeads = createAsyncThunk(
   "deleteMultipleLeads",
   async (data) => {
+    console.log('sdklnvlakdjbvlkjaxb',data)
     const response = await deleteQuery(
       `/leadService/api/v1/lead/deleteMultiLead`,
       data
@@ -489,6 +491,18 @@ export const getVendorDetailList=createAsyncThunk('getVendorDetail',async(data)=
   const response=await getQuery(`/leadService/api/v1/vendor/find-vendor-request-by-user-id?userId=${data?.userId}&leadId=${data?.leadId}`)
   return response.data
 })
+
+export const updateRemarks=createAsyncThunk('updateRemarks',async(data)=>{
+  const response=await putQuery(`/leadService/api/v1/updateRemark`,data)
+  return response.data
+})
+
+export const deleteRemarks=createAsyncThunk('deleteRemarks',async(data)=>{
+  const response=await deleteQuery(`/leadService/api/v1/deleteRemark?remarkId=${data?.remarkId}&currentUser=${data?.userid}&leadId=${data?.leadid}`)
+  return response.data
+})
+
+
 
 export const LeadSlice = createSlice({
   name: "lead",
@@ -784,8 +798,6 @@ export const LeadSlice = createSlice({
     builder.addCase(getVendorDetailList.rejected, (state, action) => {
       state.loading = "rejected"
     })
-
-
   },
 })
 export const {

@@ -106,8 +106,8 @@ function App() {
           },
           Select: {
             fontSize: 12,
-            contentFontSize:11,
-            contentFontSizeSM:11,
+            contentFontSize: 11,
+            contentFontSizeSM: 11,
             optionFontSize: 12,
             optionHeight: 28,
             controlHeightSM: 28,
@@ -138,7 +138,11 @@ function App() {
             cellPaddingBlockMD: 8,
           },
           Tabs: {
-            // cardBg:'#cccccc',
+            fontSize: 13,
+            fontSizeSM: 13,
+            fontWeightStrong: 600,
+            cardPaddingSM: "5px 12px",
+            horizontalMargin: "0px 0px 4px 0px",
           },
           Collapse: {
             headerPadding: "6px 8px",
@@ -151,10 +155,16 @@ function App() {
             fontSize: 13,
             fontSizeLG: 13,
           },
-          Form:{
-            fontSize:12,
-            fontSizeLG:12
-          }
+          Form: {
+            fontSize: 12,
+            fontSizeLG: 12,
+          },
+          List: {
+            descriptionFontSize: 12,
+            fontSize: 12,
+            fontSizeSM: 12,
+            titleMarginBottom:0
+          },
         },
       }}
     >

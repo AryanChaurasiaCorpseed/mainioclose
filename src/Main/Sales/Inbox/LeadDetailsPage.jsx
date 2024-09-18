@@ -23,7 +23,6 @@ import {
   getAllProductData,
   getAllProductWithCattegory,
   getAllRemarkAndCommnts,
-  getAllStatusData,
   getAllTaskData,
   getAllTaskStatus,
   getSingleLeadDataByLeadID,
@@ -44,6 +43,7 @@ import {
   Collapse,
   DatePicker,
   Divider,
+  Flex,
   Form,
   Image,
   Input,
@@ -65,32 +65,22 @@ import { BTN_ICON_HEIGHT, BTN_ICON_WIDTH } from "../../../components/Constants"
 import { playErrorSound, playSuccessSound } from "../../Common/Commons"
 import CompanyFormModal from "../../Accounts/CompanyFormModal"
 import Vendors from "../Leads/Vendors"
+import LeadComments from "./LeadComments"
 const { Text } = Typography
 
 toast.configure()
 
 const LeadDetailsPage = ({ leadid }) => {
   const [form1] = Form.useForm()
-  const [form2] = Form.useForm()
-  const [form3] = Form.useForm()
   const { userid } = useParams()
   const dispatch = useDispatch()
   const fileRef = useRef()
   const [descriptionText, setDescriptionText] = useState("")
   const currentUserRoles = useSelector((state) => state?.auth?.roles)
   const { allLeadUrl } = useSelector((prev) => prev?.leadurls)
-  const allTaskStatusData = useSelector(
-    (state) => state.leads.allTaskStatusData
-  )
-  const allOportunities = useSelector((state) => state.leads.allOportunities)
-  const allProductData = useSelector((state) => state.leads.allProductData)
-  const getSingleLeadTask = useSelector(
-    (state) => state.leads.getSingleLeadTask
-  )
   const userDataResponse = useSelector(
     (state) => state.leads.getAllLeadUserData
   )
-  const categoryData = useSelector((state) => state.leads.categoryData)
   const getAllStatus = useSelector((state) => state.leads.getAllStatus)
   const singleLeadResponseData = useSelector(
     (state) => state.leads.singleLeadResponseData
@@ -99,35 +89,23 @@ const LeadDetailsPage = ({ leadid }) => {
   const currentUserDetail = useSelector(
     (state) => state.auth.getDepartmentDetail
   )
-  const allProductsList = useSelector((state) => state.leads.allProductsList)
+
   const clientsContact = useSelector((state) => state.leads.clientsContact)
   const slugList = useSelector((state) => state.leadslug.slugList)
   const [openModal, setOpenModal] = useState(false)
   const [contactData, setContactData] = useState(null)
-  const [openTaskModal, setOpenTaskModal] = useState(false)
-  const [openProductModal, setOpenProductModal] = useState(false)
-  const [taskData, setTaskData] = useState("")
   const [notes, setNotes] = useState(false)
-  const [allFilterProducts, setAllFilterProducts] = useState([])
   const [updateLeadNameToggle, setUpdateLeadNameToggle] = useState(true)
   const [openAllTask, setOpenAllTask] = useState(false)
   const [estimateOpenBtn, setEstimateOpenBtn] = useState(false)
   const [updateOriginalName, setUpdateOriginalName] = useState(false)
   const [updatedLeadName, setUpdatedLeadName] = useState("")
   const [showDescriptionField, setShowDescriptionField] = useState(false)
-  const [assigneValue,setAssigneValue]=useState(null)
-
-  useEffect(() => {
-    dispatch(getAllSlugList())
-  }, [dispatch])
+  const [assigneValue, setAssigneValue] = useState(null)
 
   const openTasksFun = () => {
     setOpenAllTask((prev) => !prev)
   }
-
-  useEffect(() => {
-    dispatch(getAllUrlAction(0))
-  }, [dispatch])
 
   const [originalData, setOriginalData] = useState({
     leadId: leadid,
@@ -166,14 +144,7 @@ const LeadDetailsPage = ({ leadid }) => {
   }, [originalData, dispatch, getSingleLeadData])
 
   useEffect(() => {
-    dispatch(getAllProductData())
-    // dispatch(getAllLeadUser(userid))
-    dispatch(getAllTaskStatus())
-    dispatch(getAllOppurtunities())
-    dispatch(getAllProductWithCattegory())
     dispatch(editViewData(leadid))
-    // dispatch(getAllStatusData())
-    dispatch(getAllTaskData(leadid))
     dispatch(getAllRemarkAndCommnts(leadid))
   }, [dispatch, leadid, userid])
 
@@ -239,7 +210,7 @@ const LeadDetailsPage = ({ leadid }) => {
 
   useEffect(() => {
     getSingleLeadData()
-  }, [ updateOriginalName, getSingleLeadData])
+  }, [updateOriginalName, getSingleLeadData])
 
   const updateLeadNameSinglePage = useCallback(
     (e) => {
@@ -425,103 +396,6 @@ const LeadDetailsPage = ({ leadid }) => {
     [userid, leadid, contactData, dispatch, getSingleLeadData, form1]
   )
 
-  const updateTaskData = (task) => {
-    form2.setFieldsValue({
-      name: task?.name,
-      description: task?.description,
-      statusId: task?.taskStatus?.id,
-      expectedDate: dayjs(task?.expectedDate),
-    })
-    setOpenTaskModal(true)
-    setTaskData(task)
-  }
-
-  const handleTaskFormSubmit = useCallback(
-    (values) => {
-      values.expectedDate = dayjs(values?.expectedDate).format(
-        "YYYY-MM-DDTHH:mm:ss.SSSZ"
-      )
-      values.leadId = leadid
-      values.assignedById = userid
-      values.assigneeId = 0
-      values.currentUserId = userid
-      if (taskData) {
-        values.taskId = taskData?.id
-        dispatch(updateLeadTask(values))
-          .then((resp) => {
-            if (resp.meta.requestStatus === "fulfilled") {
-              notification.success({
-                message: "Task updated successfully.",
-              })
-              dispatch(getAllTaskData(leadid))
-              dispatch(getSingleLeadDataByLeadID({ leadid, userid }))
-              setOpenTaskModal(false)
-              form2.resetFields()
-            } else {
-              notification.error({
-                message: "Something went wrong !.",
-              })
-            }
-          })
-          .catch(() => {
-            notification.error({
-              message: "Something went wrong !.",
-            })
-          })
-      } else {
-        dispatch(createNewLeadTask(values))
-          .then((resp) => {
-            if (resp.meta.requestStatus === "fulfilled") {
-              notification.success({
-                message: "Task created successfully.",
-              })
-              dispatch(getAllTaskData(leadid))
-              dispatch(getSingleLeadDataByLeadID({ leadid, userid }))
-              setOpenTaskModal(false)
-              form2.resetFields()
-            } else {
-              notification.error({
-                message: "Something went wrong !.",
-              })
-            }
-          })
-          .catch(() => {
-            notification.error({
-              message: "Something went wrong !.",
-            })
-          })
-      }
-    },
-    [userid, leadid, taskData, dispatch, form2]
-  )
-
-  const handleProductSubmit = useCallback(
-    (values) => {
-      values.leadId = leadid
-      dispatch(updateLeadProducts(values))
-        .then((resp) => {
-          if (resp.meta.requestStatus === "fulfilled") {
-            notification.success({
-              message: "Product updated successfully.",
-            })
-            getSingleLeadData()
-            setOpenProductModal(false)
-            dispatch(getSingleLeadDataByLeadID({ leadid, userid }))
-          } else {
-            notification.error({
-              message: "Something went wrong !.",
-            })
-          }
-        })
-        .catch(() => {
-          notification.error({
-            message: "Something went wrong !.",
-          })
-        })
-    },
-    [leadid, dispatch, getSingleLeadData]
-  )
-
   const leadAssignedToSame = (id) => {
     dispatch(handleLeadassignedToSamePerson(id))
       .then((response) => {
@@ -529,7 +403,7 @@ const LeadDetailsPage = ({ leadid }) => {
           notification.success({
             message: "Lead assigned to same person successfully.",
           })
-          playSuccessSound()
+          // playSuccessSound()
           getSingleLeadData()
           window.location.reload()
         } else {
@@ -551,7 +425,7 @@ const LeadDetailsPage = ({ leadid }) => {
           notification.success({
             message: "Lead description successfully.",
           })
-          playSuccessSound()
+          // playSuccessSound()
           getSingleLeadData()
           setShowDescriptionField(false)
         } else {
@@ -626,168 +500,6 @@ const LeadDetailsPage = ({ leadid }) => {
         />
       ),
     },
-    {
-      key: "2",
-      label: "Tasks",
-      extra: (
-        <Button
-          type="text"
-          size="small"
-          onClick={(e) => {
-            e.stopPropagation()
-            setOpenTaskModal(true)
-          }}
-        >
-          <Icon icon="fluent:add-20-regular" />
-        </Button>
-      ),
-      children: (
-        <List
-          dataSource={getSingleLeadTask}
-          renderItem={(item) => (
-            <List.Item key={item.email}>
-              <List.Item.Meta
-                title={item?.name}
-                description={
-                  <Space size={2} direction="vertical">
-                    <div className="flex-vert-hori-center">
-                      <Tag
-                        color={
-                          item?.taskStatus?.name === "Re-Open"
-                            ? "error"
-                            : item?.taskStatus?.name === "Done"
-                            ? "green"
-                            : ""
-                        }
-                      >
-                        {item?.taskStatus?.name}
-                      </Tag>
-                      <Text strong>{item?.assignedBy?.fullName}</Text>
-                    </div>
-                    <Space size={2} direction="vertical">
-                      <Text type="secondary">
-                        {new Date(item.expectedDate).toLocaleDateString()} -{" "}
-                        {new Date(item.expectedDate).getHours()}:
-                        {new Date(item.expectedDate).getMinutes()}
-                      </Text>
-                      <Text type="secondary">
-                        {new Date(item.lastUpdateDate).toLocaleDateString()} -{" "}
-                        {new Date(item.lastUpdateDate).getHours()}:
-                        {new Date(item.lastUpdateDate).getMinutes()}
-                      </Text>
-                    </Space>
-                  </Space>
-                }
-              />
-              <Space size={1}>
-                <Button
-                  size="small"
-                  type="text"
-                  onClick={() => updateTaskData(item)}
-                >
-                  <Icon icon="fluent:edit-20-regular" />
-                </Button>
-                <Popconfirm
-                  title="Delete the task"
-                  description="Are you sure to delete this task?"
-                  onConfirm={() => deleteTask({ id: item.id, userid: userid })}
-                >
-                  <Button size="small" type="text" danger>
-                    <Icon icon="fluent:delete-20-regular" />
-                  </Button>
-                </Popconfirm>
-              </Space>
-            </List.Item>
-          )}
-        />
-      ),
-    },
-    // {
-    //   key: "3",
-    //   label: "Product",
-    //   extra: (
-    //     <Button
-    //       size="small"
-    //       type="text"
-    //       onClick={(e) => {
-    //         e.stopPropagation()
-    //         setOpenProductModal(true)
-    //       }}
-    //     >
-    //       <Icon icon="fluent:add-20-regular" />
-    //     </Button>
-    //   ),
-    //   children: (
-    //     <List
-    //       dataSource={allProductsList}
-    //       renderItem={(item) => (
-    //         <List.Item key={item.email}>
-    //           <List.Item.Meta
-    //             title={item?.serviceName}
-    //             description={item?.name}
-    //           />
-    //           <Space>
-    //             <Popconfirm
-    //               title="Delete the product"
-    //               description="Are you sure to delete this product?"
-    //               onConfirm={() =>
-    //                 dispatch(
-    //                   deleteProduct({
-    //                     serviceId: item.id,
-    //                     leadid: leadid,
-    //                     userid: userid,
-    //                   })
-    //                 )
-    //               }
-    //               okButtonProps={{ disabled: adminRole ? true : false }}
-    //             >
-    //               <Button size="small" type="text" danger>
-    //                 <Icon icon="fluent:delete-20-regular" />
-    //               </Button>
-    //             </Popconfirm>
-    //           </Space>
-    //         </List.Item>
-    //       )}
-    //     />
-    //   ),
-    // },
-    // {
-    //   key: "4",
-    //   label: "Estimate",
-    //   children: "",
-    // },
-    // {
-    //   key: "5",
-    //   label: "Opportunities",
-    //   children: (
-    //     <List
-    //       dataSource={allOportunities}
-    //       renderItem={(item) => (
-    //         <List.Item key={item.email}>
-    //           <List.Item.Meta
-    //             title={"BIS Registration"}
-    //             description={
-    //               <Space direction="vertical">
-    //                 <Text type="secondary">{item?.description}</Text>
-    //                 <Text>{item?.estimateClose}</Text>
-    //               </Space>
-    //             }
-    //           />
-    //           <Space>
-    //             <Popconfirm
-    //               title="Delete the product"
-    //               description="Are you sure to delete this product?"
-    //             >
-    //               <Button size="small" type="text" danger>
-    //                 <Icon icon="fluent:delete-20-regular" />
-    //               </Button>
-    //             </Popconfirm>
-    //           </Space>
-    //         </List.Item>
-    //       )}
-    //     />
-    //   ),
-    // },
   ]
 
   return Object.keys(singleLeadResponseData)?.length > 0 ? (
@@ -798,8 +510,7 @@ const LeadDetailsPage = ({ leadid }) => {
         ""
       )}
 
-      {openAllTask ? <AllTasksPage setOpenAllTask={setOpenAllTask} /> : ""}
-      <Row gutter={12}>
+      <Row gutter={16}>
         <Col span={9}>
           <div className="left-lead-section">
             {updateOriginalName ? (
@@ -929,19 +640,40 @@ const LeadDetailsPage = ({ leadid }) => {
               </div>
             )}
             <div className="flex-vert-hori-center">
-              <Icon icon="fluent:location-24-regular" height={18} width={18} />
+              <Icon icon="fluent:location-24-regular" />
               <Text type="secondary">
                 {singleLeadResponseData?.city
                   ? singleLeadResponseData?.city
                   : "Address"}
               </Text>
             </div>
-
-            <Text>
-              Assignee Person - {singleLeadResponseData?.assigne?.fullName}
-            </Text>
-            <Text>Status - {singleLeadResponseData?.status?.name}</Text>
-
+            <Divider style={{ margin: "6px" }} />
+            <div className="lead-assignee-container">
+              <Text className="heading-text">Update assignee</Text>
+              <Select
+                placeholder="Change assignee"
+                size="small"
+                style={{ width: "100%", margin: "6px 0px" }}
+                value={assigneValue}
+                options={
+                  userDataResponse?.map((ele) => ({
+                    label: ele?.fullName,
+                    value: ele?.id,
+                  })) || []
+                }
+                filterOption={(input, option) =>
+                  option.label.toLowerCase().includes(input.toLowerCase())
+                }
+                onChange={(e) => changeLeadAssignee(e)}
+              />
+            </div>
+            <div className="flex-vert-hori-center">
+              <Icon icon="fluent:person-24-regular" />
+              <Text>
+                Assignee Person - {singleLeadResponseData?.assigne?.fullName}
+              </Text>
+            </div>
+            <Divider style={{ margin: "6px" }} />
             <Select
               showSearch
               allowClear
@@ -959,6 +691,10 @@ const LeadDetailsPage = ({ leadid }) => {
               }
               onChange={(e) => changeLeadStatusFun(e)}
             />
+            <div className="flex-vert-hori-center">
+              <Icon icon="fluent:bookmark-24-regular" />
+              <Text>Status - {singleLeadResponseData?.status?.name}</Text>
+            </div>
             <Space>
               <Button
                 size="small"
@@ -1032,21 +768,12 @@ const LeadDetailsPage = ({ leadid }) => {
               )} */}
               </>
             )}
+
             <Divider style={{ margin: "6px" }} />
-            <div className="btn-view-container">
-              <CompanyFormModal
-                detailView={true}
-                data={singleLeadResponseData}
-              />
-              <Button size="small" onClick={() => leadAssignedToSame(leadid)}>
-                Assign to same person{" "}
-              </Button>
+            <div className="flex-vert-hori-center">
+              <Icon icon="fluent:link-24-filled" />
+              <Text type="secondary">{singleLeadResponseData?.urls} </Text>
             </div>
-            <Divider style={{ margin: "6px" }} />
-            <Text className="heading-text">
-              {" "}
-              Url : {singleLeadResponseData?.urls}{" "}
-            </Text>
             <Divider style={{ margin: "6px" }} />
             <Collapse
               accordion
@@ -1057,204 +784,27 @@ const LeadDetailsPage = ({ leadid }) => {
           </div>
         </Col>
         <Col span={15}>
-          <div className="lead-filter-above">
-            <div className="filter-box">
-              <Button shape="round" onClick={() => setNotes((prev) => !prev)}>
-                <Icon
-                  icon="fluent:document-text-24-regular"
-                  height={BTN_ICON_HEIGHT}
-                  width={BTN_ICON_WIDTH}
-                />
-                Notes
+          <div className="flex-justify-end">
+            <div className="btn-view-container">
+            <Button size="small" onClick={() => leadAssignedToSame(leadid)}>
+                Assign to same person{" "}
               </Button>
-
-              <Link to={`${leadid}/history`}>
-                <Button shape="round">
-                  <Icon
-                    icon="fluent:history-24-regular"
-                    height={BTN_ICON_HEIGHT}
-                    width={BTN_ICON_WIDTH}
-                  />
-                  History
-                </Button>
-              </Link>
-              {/* <Link to={`/erp/${userid}/sales/leads`}>
-              <Button>
-                <Icon
-                  icon="fluent:chevron-left-24-filled"
-                  height={BTN_ICON_HEIGHT}
-                  width={BTN_ICON_WIDTH}
-                />
-                Back
-              </Button>
-            </Link> */}
-              <Button onClick={() => openTasksFun()} shape="round">
-                All tasks
-              </Button>
-              <Vendors leadId={leadid} userId={userid} urlName={singleLeadResponseData?.originalName}  />
-            </div>
-            <div className="lead-assignee-container mt-3">
-              <Text className="heading-text">Update assignee</Text>
-              <Select
-                placeholder="Change assignee"
-                style={{ width: "100%", margin: "6px 0px" }}
-                value={assigneValue}
-                options={
-                  userDataResponse?.map((ele) => ({
-                    label: ele?.fullName,
-                    value: ele?.id,
-                  })) || []
-                }
-                filterOption={(input, option) =>
-                  option.label.toLowerCase().includes(input.toLowerCase())
-                }
-                onChange={(e) => changeLeadAssignee(e)}
+              <CompanyFormModal
+                detailView={true}
+                data={singleLeadResponseData}
               />
+              
             </div>
+          </div>
+
+          <div className="lead-filter-above">
             <div className={`notes-box mt-2 ${notes === true ? "d-none" : ""}`}>
-              <div className="comment-icon">
-                <div className="icon-box notes-cl">
-                  <i className="fa-regular fa-note-sticky"></i>
-                </div>
-                <div className="line"></div>
-              </div>
               <div className="side-notes">
                 <BulkFileUploader leadid={leadid} />
               </div>
             </div>
-            <div className={`notes-box mt-4 ${"d-none"}`}>
-              <div className="comment-icon">
-                <div className="icon-box email-cl">
-                  <i className="fa-regular fa-envelope"></i>
-                </div>
-                <div className="line"></div>
-              </div>
-
-              <div className="side-notes">
-                <div className="comment-above">
-                  <h2 className="write-heading">Write a Email</h2>
-                </div>
-                <textarea
-                  className="text-area-box"
-                  id="notes"
-                  placeholder="write a notes ..."
-                  name="message"
-                  rows="4"
-                  cols="50"
-                  onChange={(e) => remarkMessageFunction(e)}
-                />
-                <div className="comment-below">
-                  <button
-                    className="comment-btn"
-                    onClick={(e) => createRemarkfun(e)}
-                  >
-                    Submit
-                  </button>
-                </div>
-              </div>
-            </div>
-            <div className={`notes-box mt-4 ${"d-none"}`}>
-              <div className="comment-icon">
-                <div className="icon-box sms-cl">
-                  <i className="fa-regular cm-icon fa-comment"></i>
-                </div>
-                <div className="line"></div>
-              </div>
-
-              <div className="side-notes">
-                <div className="comment-above">
-                  <h2 className="write-heading">Write a SMS</h2>
-                </div>
-                <textarea
-                  className="text-area-box"
-                  id="notes"
-                  placeholder="write a notes ......"
-                  name="message"
-                  rows="4"
-                  cols="50"
-                  onChange={(e) => remarkMessageFunction(e)}
-                />
-                <div className="comment-below">
-                  <button
-                    className="comment-btn"
-                    onClick={(e) => createRemarkfun(e)}
-                  >
-                    Submit
-                  </button>
-                </div>
-              </div>
-            </div>
           </div>
-          <div className="lead-set-data">
-            {notesApiData.map((note, index) => {
-              return (
-                <div className="lead-filter-above" key={`${index}yug`}>
-                  <div className={`notes-box`}>
-                    <div className="comment-icon">
-                      <div className="icon-box h-70">
-                        <i className="fa-regular cm-icon fa-comment"></i>
-                      </div>
-                      <div className="line"></div>
-                    </div>
-
-                    <div className="side-notes">
-                      <p className="mb-0 write-heading text-center pb-2">
-                        <span className="mr-2 font-13">
-                          {new Date(note?.latestUpdated).toDateString()}
-                        </span>
-                        <span className="mr-2 font-13">
-                          {new Date(note?.latestUpdated).toLocaleTimeString(
-                            "en-US"
-                          )}
-                        </span>
-                      </p>
-                      <div className="comment-above">
-                        <div>
-                          <h2 className="write-heading">Notes</h2>
-                        </div>
-                        <div>
-                          {note?.images && (
-                            <button
-                              className="image-btn"
-                              onClick={() => openImageInNewTab(note?.images)}
-                            >
-                              {" "}
-                              <i className="fa-solid fa-download"></i>
-                            </button>
-                          )}
-                        </div>
-                        <div className="d-flex">
-                          <div className="circle-image">
-                            {note?.updatedBy?.fullName.slice(0, 1)}
-                          </div>
-                          <span className="ml-1 write-heading">
-                            {note?.updatedBy?.fullName}
-                          </span>
-                        </div>
-                      </div>
-                      <div className="text-display-box">
-                        <Text>{note.message}</Text>
-                      </div>
-                      {note?.imageList?.length && (
-                        <Image.PreviewGroup
-                          preview={{
-                            onChange: (current, prev) =>
-                              console.log(
-                                `current index: ${current}, prev index: ${prev}`
-                              ),
-                          }}
-                        >
-                          {note?.imageList?.map((item) => (
-                            <Image width={100} src={item?.filePath} />
-                          ))}
-                        </Image.PreviewGroup>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              )
-            })}
-          </div>
+         <LeadComments list={notesApiData} leadid={leadid} />
         </Col>
       </Row>
       <Modal
@@ -1286,145 +836,6 @@ const LeadDetailsPage = ({ leadid }) => {
             rules={[{ required: true, message: "please enter phone number" }]}
           >
             <Input />
-          </Form.Item>
-        </Form>
-      </Modal>
-      <Modal
-        title={taskData ? "Edit task" : "Create task"}
-        open={openTaskModal}
-        onCancel={() => setOpenTaskModal(false)}
-        onClose={() => setOpenTaskModal(false)}
-        onOk={() => form2.submit()}
-        okText="Submit"
-      >
-        <Form layout="vertical" form={form2} onFinish={handleTaskFormSubmit}>
-          <Form.Item
-            label="Title"
-            name="name"
-            rules={[{ required: true, message: "please enter the title" }]}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item
-            label="Description"
-            name="description"
-            rules={[
-              { required: true, message: "please enter the description" },
-            ]}
-          >
-            <Input.TextArea autoSize={{ minRows: 2, maxRows: 4 }} />
-          </Form.Item>
-          <Form.Item
-            label="Date"
-            name="expectedDate"
-            rules={[{ required: true, message: "please select date and time" }]}
-          >
-            <DatePicker showTime style={{ width: "100%" }} />
-          </Form.Item>
-          <Form.Item
-            label="Status"
-            name="statusId"
-            rules={[{ required: true, message: "please select the status" }]}
-          >
-            <Select
-              showSearch
-              allowClear
-              options={
-                allTaskStatusData?.map((item) => ({
-                  label: item?.name,
-                  value: item?.id,
-                })) || []
-              }
-              filterOption={(input, option) =>
-                option.label.toLowerCase().includes(input.toLowerCase())
-              }
-            />
-          </Form.Item>
-        </Form>
-      </Modal>
-      <Modal
-        title="Edit product"
-        open={openProductModal}
-        onCancel={() => setOpenProductModal(false)}
-        onClose={() => setOpenProductModal(false)}
-        onOk={() => form3.submit()}
-        okText="Submit"
-      >
-        <Form layout="vertical" form={form3} onFinish={handleProductSubmit}>
-          <Form.Item
-            label="Select product category"
-            name="serviceName"
-            rules={[
-              { required: true, message: "please select product category" },
-            ]}
-          >
-            <Select
-              showSearch
-              allowClear
-              options={
-                categoryData?.map((item) => ({
-                  label: item?.categoryName,
-                  value: item?.categoryName,
-                })) || []
-              }
-              onChange={(e) => {
-                const filtData = categoryData.filter(
-                  (cat) => cat.categoryName === e && cat.products
-                )
-                setAllFilterProducts(filtData[0]?.products)
-              }}
-            />
-          </Form.Item>
-          <Form.Item
-            label="Select product"
-            name="productId"
-            rules={[{ required: true, message: "please select product" }]}
-          >
-            <Select
-              showSearch
-              allowClear
-              options={
-                allFilterProducts?.map((item) => ({
-                  label: item?.productName,
-                  value: item?.id,
-                })) || []
-              }
-              filterOption={(input, option) =>
-                option.label.toLowerCase().includes(input.toLowerCase())
-              }
-            />
-          </Form.Item>
-        </Form>
-      </Modal>
-      <Modal>
-        <Form>
-          <Form.Item
-            label="Status"
-            name="status"
-            rules={[{ required: true, message: "please enter status" }]}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item
-            label="Contact"
-            name="contact"
-            rules={[{ required: true, message: "please enter status" }]}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item
-            label="User"
-            name="user"
-            rules={[{ required: true, message: "please enter status" }]}
-          >
-            <Select />
-          </Form.Item>
-          <Form.Item
-            label="Notes"
-            name="notes"
-            rules={[{ required: true, message: "please enter status" }]}
-          >
-            <Select />
           </Form.Item>
         </Form>
       </Modal>

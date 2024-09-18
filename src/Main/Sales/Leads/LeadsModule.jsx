@@ -7,10 +7,7 @@ import TableScalaton from "../../../components/TableScalaton"
 import { CSVLink } from "react-csv"
 import {
   deleteMultipleLeads,
-  getAllContactDetails,
   getAllLeads,
-  getAllLeadUser,
-  getAllStatusData,
   getLeadNotificationCount,
   handleDeleteSingleLead,
   handleLeadassignedToSamePerson,
@@ -43,6 +40,7 @@ import OverFlowText from "../../../components/OverFlowText"
 import { BTN_ICON_HEIGHT, BTN_ICON_WIDTH } from "../../../components/Constants"
 import { playErrorSound, playSuccessSound } from "../../Common/Commons"
 import LeadDetailsPage from "../Inbox/LeadDetailsPage"
+import LeadsDetailsMainPage from "./LeadsDetailsMainPage"
 const { Text } = Typography
 const { Search } = Input
 
@@ -78,7 +76,7 @@ const LeadsModule = () => {
     setSelectedRow(rowsData)
   }
 
-  const { userid } = useParams()
+  const {userid} = useParams()
   const dispatch = useDispatch()
   const [allMultiFilterData, setAllMultiFilterData] = useState({
     userId: userid,
@@ -107,23 +105,13 @@ const LeadsModule = () => {
   })
 
   useEffect(() => {
-    dispatch(getAllUsers())
-    dispatch(getAllContactDetails())
-    dispatch(getAllStatusData())
-  }, [dispatch])
-
-  useEffect(() => {
-    dispatch(getAllLeadUser(userid))
-  }, [userid, dispatch])
-
-  useEffect(() => {
     dispatch(getAllLeads(allMultiFilterData))
   }, [filterBtnNew, allMultiFilterData, dispatch, page])
 
   const handleDeleteMutipleLeads = useCallback(() => {
     let obj = {
       leadId: selectedRowKeys,
-      updatedById: userid,
+      updatedById: Number(userid),
     }
     setLeadDelLoading("pending")
     dispatch(deleteMultipleLeads(obj))
@@ -294,23 +282,26 @@ const LeadsModule = () => {
         return 0
       },
       render: (_, data) => (
-        <Link
-          className="link-heading"
-          // to={`/erp/${userid}/sales/leads/${data?.id}`}
-          onClick={() => {
-            setLeadId(data?.id)
-            dispatch(
-              handleViewHistory({ leadId: data?.id, userid: userid })
-            ).then((resp) => {
-              if (resp.meta.requestStatus === "fulfilled") {
-                dispatch(getAllLeads(allMultiFilterData))
-              }
-            })
-            setOpenDrawer(true)
-          }}
-        >
+        // <Link
+        //   className="link-heading"
+        //   // to={`/erp/${userid}/sales/leads/${data?.id}`}
+        //   onClick={() => {
+        //     setLeadId(data?.id)
+        //     dispatch(
+        //       handleViewHistory({ leadId: data?.id, userid: userid })
+        //     ).then((resp) => {
+        //       if (resp.meta.requestStatus === "fulfilled") {
+        //         dispatch(getAllLeads(allMultiFilterData))
+        //       }
+        //     })
+        //     setOpenDrawer(true)
+        //   }}
+        // >
+        //   {data?.leadName}
+        // </Link>
+        <LeadsDetailsMainPage allMultiFilterData={allMultiFilterData} leadId={data?.id} data={data}>
           {data?.leadName}
-        </Link>
+        </LeadsDetailsMainPage>
       ),
     },
     {
@@ -587,7 +578,6 @@ const LeadsModule = () => {
   )
 
   const onSearchLead = (e, b, c) => {
-    console.log("sdksjdsjdaghsjdghdsjk", c)
     setSearchText(e)
     dispatch(searchLeads({ input: e, id: userid }))
     if (!b) {

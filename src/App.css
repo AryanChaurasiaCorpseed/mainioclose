@@ -21,13 +21,9 @@ body {
 /* common classes */
 
 * {
-  scrollbar-width:thin;
+  scrollbar-width: thin;
   scrollbar-color: #888 #f1f1f1;
 }
-
-
-
-
 
 a {
   color: var(--mainBlue);
@@ -37,8 +33,6 @@ a {
 li {
   list-style-type: none;
 }
-
-
 
 a:hover {
   color: var(--black);
@@ -971,7 +965,7 @@ select.form-control:not([size]):not([multiple]) {
   gap: 6px;
 }
 
-.flex-verti-center-hori-start{
+.flex-verti-center-hori-start {
   display: flex;
   justify-content: flex-start;
   align-items: center;
@@ -1044,7 +1038,15 @@ select.form-control:not([size]):not([multiple]) {
   width: auto;
 }
 
-.custom-avatar .ant-avatar-string{
+.custom-avatar .ant-avatar-string {
   margin-top: 2px;
   font-size: 13px;
+}
+
+.custom-list.ant-list-vertical .ant-list-item .ant-list-item-action > li {
+  padding: 0;
+}
+
+.custom-list.ant-list .ant-list-item .ant-list-item-action > li {
+  padding: 0;
 }

@@ -140,6 +140,11 @@ export const updateLeadByHr=createAsyncThunk('upDateLeadByHr',async(data)=>{
 })
 
 
+export const getAllTaskList=createAsyncThunk('getAllTaskList',async(id)=>{
+  const response =await getQuery(`/leadService/api/v1/task/getAllTaskByAssignee?assigneeId=${id}`)
+  return response.data
+})
+
 
 export const UsersSlice = createSlice({
   name: "user",
@@ -162,6 +167,7 @@ export const UsersSlice = createSlice({
     assigneeLoading: "",
     leadUserList: {},
     allRoles: [],
+    allTaskList:[]
   },
   extraReducers: (builder) => {
     builder.addCase(getAllUsers.pending, (state, action) => {
@@ -263,6 +269,17 @@ export const UsersSlice = createSlice({
       state.allRoles = action.payload
     })
     builder.addCase(getAllRoles.rejected, (state, action) => {
+      state.assigneeLoading = "rejected"
+    })
+
+    builder.addCase(getAllTaskList.pending, (state, action) => {
+      state.assigneeLoading = "pending"
+    })
+    builder.addCase(getAllTaskList.fulfilled, (state, action) => {
+      state.assigneeLoading = "success"
+      state.allTaskList = action.payload
+    })
+    builder.addCase(getAllTaskList.rejected, (state, action) => {
       state.assigneeLoading = "rejected"
     })
   },

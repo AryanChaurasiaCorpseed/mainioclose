@@ -9,10 +9,15 @@ import OverFlowText from "../../../components/OverFlowText"
 import { Icon } from "@iconify/react"
 import dayjs from "dayjs"
 import LeadDetailsPage from "../Inbox/LeadDetailsPage"
+import LeadsDetailsMainPage from "./LeadsDetailsMainPage"
+import { useDispatch } from "react-redux"
+import { getAllUsers } from "../../../Toolkit/Slices/UsersSlice"
+import { getAllContactDetails, getAllStatusData } from "../../../Toolkit/Slices/LeadSlice"
 const { Text } = Typography
 
 const GetAllTaskList = () => {
   const { userid } = useParams()
+  const dispatch=useDispatch()
   const [dateInput, setDateInput] = useState("")
   const [searchText, setSearchText] = useState("")
   const [filteredData, setFilteredData] = useState([])
@@ -21,6 +26,12 @@ const GetAllTaskList = () => {
 
   const allTasksByUser = `/leadService/api/v1/task/getAllTaskByAssignee?assigneeId=${userid}`
   const allTaskDep = [dateInput]
+
+  useEffect(() => {
+    dispatch(getAllUsers())
+    dispatch(getAllContactDetails())
+    dispatch(getAllStatusData())
+  }, [dispatch])
 
   const {
     productData: taskData,
@@ -81,15 +92,18 @@ const GetAllTaskList = () => {
       render: (_, props) => {
         return (
           // <Link className="link-heading" to={`/erp/${userid}/sales/leads/${props?.leadId}`}>{props?.name}</Link>
-          <Link
-            className="link-heading"
-            onClick={() => {
-              setLeadId(props?.leadId)
-              setOpenDrawer(true)
-            }}
-          >
+          // <Link
+          //   className="link-heading"
+          //   onClick={() => {
+          //     setLeadId(props?.leadId)
+          //     setOpenDrawer(true)
+          //   }}
+          // >
+          //   {props?.name}
+          // </Link>
+          <LeadsDetailsMainPage leadId={props?.leadId} data={props}>
             {props?.name}
-          </Link>
+          </LeadsDetailsMainPage>
         )
       },
     },
@@ -191,14 +205,14 @@ const GetAllTaskList = () => {
         )}
       </div>
 
-      <Drawer
+      {/* <Drawer
         title="Lead detail"
         open={openDrawer}
         onClose={() => setOpenDrawer(false)}
         width={'80%'}
       >
         <LeadDetailsPage leadid={leadId} />
-      </Drawer>
+      </Drawer> */}
     </div>
   )
 }

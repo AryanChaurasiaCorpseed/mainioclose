@@ -158,7 +158,7 @@ const CompanyFormModal = ({
             scontactId: editData?.scontactId,
             scontactWhatsappNo: editData?.scontactWhatsappNo,
             amount: editData?.amount,
-            comment:editData?.comment
+            comment: editData?.comment,
           })
         }
       })
@@ -291,7 +291,11 @@ const CompanyFormModal = ({
               setFormLoading("success")
               playSuccessSound()
               dispatch(
-                getAllCompanyByStatus({ id: userid, status: selectedFilter,page })
+                getAllCompanyByStatus({
+                  id: userid,
+                  status: selectedFilter,
+                  page,
+                })
               )
               notification.success({ message: "Company created successfully." })
               setOpenModal(false)
@@ -357,23 +361,13 @@ const CompanyFormModal = ({
           <Icon icon="fluent:edit-24-regular" />
         </Button>
       ) : detailView ? (
-        <Button size="small" onClick={handleButtonClick}>
-          <Icon
-            icon="fluent:add-24-filled"
-            height={18}
-            width={18}
-            color="#1677ff"
-          />
+        <Button size="small" type="primary" onClick={handleButtonClick}>
+          <Icon icon="fluent:add-24-filled" />
           Add company
         </Button>
       ) : (
         <Button type="text" size="small" onClick={handleButtonClick}>
-          <Icon
-            icon="fluent:add-24-filled"
-            height={18}
-            width={18}
-            color="#1677ff"
-          />
+          <Icon icon="fluent:add-24-filled" height={18} width={18} />
         </Button>
       )}
 
@@ -395,7 +389,11 @@ const CompanyFormModal = ({
           style={{ maxHeight: "75vh", overflow: "auto" }}
           scrollToFirstError
           onFinish={handleFinish}
-          initialValues={{ primaryContact: false, isUnit: false,secondaryContact:false }}
+          initialValues={{
+            primaryContact: false,
+            isUnit: false,
+            secondaryContact: false,
+          }}
         >
           {Object.keys(companyDetails)?.length > 0 ? (
             <Form.Item
@@ -905,13 +903,15 @@ const CompanyFormModal = ({
               </Form.Item>
             </>
           )}
-         {
-          edit && (
-            <Form.Item label='Comment' name='comment' rules={[{required:true,message:'please write the comment '}]} >
-            <Input.TextArea/>
-          </Form.Item>
-          )
-         }
+          {edit && (
+            <Form.Item
+              label="Comment"
+              name="comment"
+              rules={[{ required: true, message: "please write the comment " }]}
+            >
+              <Input.TextArea />
+            </Form.Item>
+          )}
         </Form>
       </Modal>
     </>
