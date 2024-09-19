@@ -3,6 +3,7 @@ import { postQuery } from "../../API/PostQuery"
 import { putQuery } from "../../API/PutQuery"
 import { getQuery } from "../../API/GetQuery"
 import { deleteQuery } from "../../API/DeleteQuery"
+import { deleteQueryWithData } from "../../API/DeleteQueryWithData"
 
 export const getAllLeads = createAsyncThunk("allLeadsData", async (data) => {
   const allLeads = await postQuery(
@@ -316,8 +317,7 @@ export const updateStatusById = createAsyncThunk(
 export const deleteMultipleLeads = createAsyncThunk(
   "deleteMultipleLeads",
   async (data) => {
-    console.log("sdklnvlakdjbvlkjaxb", data)
-    const response = await deleteQuery(
+    const response = await deleteQueryWithData(
       `/leadService/api/v1/lead/deleteMultiLead`,
       data
     )

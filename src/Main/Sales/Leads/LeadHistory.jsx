@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react"
 import "./LeadHistory.scss"
 import { getQuery } from "../../../API/GetQuery"
-import { useParams } from "react-router-dom"
 import TableScalaton from "../../../components/TableScalaton"
 import { toast } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
@@ -10,11 +9,9 @@ import OverFlowText from "../../../components/OverFlowText"
 import MainHeading from "../../../components/design/MainHeading"
 toast.configure()
 
-const LeadHistory = () => {
+const LeadHistory = ({leadid}) => {
   const [leadHistoryData, setLeadHistoryData] = useState([])
   const [historyScalaton, setHistoryScalaton] = useState(true)
-
-  const { leadid } = useParams()
 
   useEffect(() => {
     leadHistoryFun()

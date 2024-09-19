@@ -10,6 +10,7 @@ import {
   SIDE_BAR_ICON_HEIGHT,
   SIDE_BAR_ICON_WIDTH,
 } from "../components/Constants"
+import { getHighestPriorityRole } from "./Common/Commons"
 toast.configure()
 
 const SideBar = () => {
@@ -20,13 +21,7 @@ const SideBar = () => {
     (state) => state.auth.getDepartmentDetail
   )
   const currentUserId = useSelector((state) => state.auth?.currentUser?.id)
-  function getHighestPriorityRole(roles) {
-    if (roles?.length > 0) {
-      if (roles?.includes("ADMIN")) {
-        return "ADMIN"
-      }
-    }
-  }
+  
 
   useEffect(() => {
     if (currentUserId !== undefined) {

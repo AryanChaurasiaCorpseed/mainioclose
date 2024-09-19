@@ -7,14 +7,14 @@ import TableScalaton from "../../components/TableScalaton"
 import SomethingWrong from "../../components/usefulThings/SomethingWrong"
 import CommonTable from "../../components/CommonTable"
 
-const SingleUserHistory = ({leadid}) => {
+const SingleUserHistory = () => {
   const dispatch = useDispatch()
 
-  // const { leadid } = useParams()
+  const { leadid } = useParams()
 
-  // useEffect(() => {
-  //   dispatch(getAllHistory({ id: leadid }))
-  // }, [dispatch, leadid])
+  useEffect(() => {
+    dispatch(getAllHistory({ id: leadid }))
+  }, [dispatch, leadid])
 
   const { allHistory, historyLoading, historyError } = useSelector(
     (prev) => prev?.uhistory

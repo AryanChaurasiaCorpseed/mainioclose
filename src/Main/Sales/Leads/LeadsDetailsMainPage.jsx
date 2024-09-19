@@ -8,11 +8,11 @@ import { useDispatch } from "react-redux"
 import { Link, useParams } from "react-router-dom"
 import { Drawer, Tabs } from "antd"
 import LeadDetailsPage from "../Inbox/LeadDetailsPage"
-import SingleUserHistory from "../../DashBoard/SingleUserHistory"
 import { getAllHistory } from "../../../Toolkit/Slices/HistorySlice"
 import SingleLeadTaskList from "./SingleLeadTaskList"
 import Vendors from "./Vendors"
 import { LeadActivityPage } from "./LeadActivityPage"
+import LeadHistory from "./LeadHistory"
 
 const LeadsDetailsMainPage = ({ children,leadId, data, allMultiFilterData }) => {
   const dispatch = useDispatch()
@@ -45,7 +45,7 @@ const LeadsDetailsMainPage = ({ children,leadId, data, allMultiFilterData }) => 
       {
         label: `History`,
         key: "5",
-        children: <SingleUserHistory leadid={leadId} />,
+        children: <LeadHistory leadid={leadId} />,
       },
     ]
   }, [leadId])
