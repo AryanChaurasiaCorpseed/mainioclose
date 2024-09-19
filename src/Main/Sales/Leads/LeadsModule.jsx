@@ -887,14 +887,14 @@ const LeadsModule = () => {
         </Suspense>
       </div>
 
-      <Drawer
+      {/* <Drawer
         title="Lead detail"
         open={openDrawer}
         onClose={() => setOpenDrawer(false)}
         width={"80%"}
       >
         <LeadDetailsPage leadid={leadId} />
-      </Drawer>
+      </Drawer> */}
     </div>
   )
 }

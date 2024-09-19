@@ -13,6 +13,7 @@ import ColComp from "../../../components/small/ColComp"
 import { putQuery } from "../../../API/PutQuery"
 import CommonTable from "../../../components/CommonTable"
 import LeadCreateModel from "../../../Model/LeadCreateModel"
+import LeadsDetailsMainPage from "../Leads/LeadsDetailsMainPage"
 
 const UserListComponent = React.lazy(() =>
   import(`../../../Tables/UserListComponent`)
@@ -21,7 +22,6 @@ const UserListComponent = React.lazy(() =>
 const CompDetails = () => {
   const dispatch = useDispatch()
   const { companyId, userid } = useParams()
-
 
   const { compLeads, compLeadsError } = useSelector((prev) => prev?.company)
 
@@ -45,13 +45,16 @@ const CompDetails = () => {
       dataIndex: "leadName",
       title: "Lead name",
       render: (_, props) => (
-        <Link
-          to={`/erp/${userid}/sales/leads/${props.leadId}`}
-          onClick={() => viewHistory(props.leadId)}
-          className="link-heading"
-        >
+        // <Link
+        //   to={`/erp/${userid}/sales/leads/${props.leadId}`}
+        //   onClick={() => viewHistory(props.leadId)}
+        //   className="link-heading"
+        // >
+        //   {props?.leadName}
+        // </Link>
+        <LeadsDetailsMainPage leadId={props?.leadId} data={props} >
           {props?.leadName}
-        </Link>
+        </LeadsDetailsMainPage>
       ),
     },
     {
@@ -109,7 +112,7 @@ const CompDetails = () => {
             <CommonTable
               data={compLeads}
               columns={compLeadsCol}
-              scroll={{ y: 650, x: 1000 }}
+              scroll={{ y: 650, x: 1500 }}
             />
           </Suspense>
         )}

@@ -14,7 +14,12 @@ import Vendors from "./Vendors"
 import { LeadActivityPage } from "./LeadActivityPage"
 import LeadHistory from "./LeadHistory"
 
-const LeadsDetailsMainPage = ({ children,leadId, data, allMultiFilterData }) => {
+const LeadsDetailsMainPage = ({
+  children,
+  leadId,
+  data,
+  allMultiFilterData,
+}) => {
   const dispatch = useDispatch()
   const { userid } = useParams()
   const [openDrawer, setOpenDrawer] = useState(false)
@@ -68,13 +73,17 @@ const LeadsDetailsMainPage = ({ children,leadId, data, allMultiFilterData }) => 
       <Link
         className="link-heading"
         onClick={() => {
-          dispatch(
-            handleViewHistory({ leadId: leadId, userid: userid })
-          ).then((resp) => {
-            if (resp.meta.requestStatus === "fulfilled") {
-              dispatch(getAllLeads(allMultiFilterData))
-            }
-          })
+          if (allMultiFilterData) {
+            dispatch(
+              handleViewHistory({ leadId: leadId, userid: userid })
+            ).then((resp) => {
+              if (resp.meta.requestStatus === "fulfilled") {
+                dispatch(getAllLeads(allMultiFilterData))
+              }
+            })
+          } else {
+            dispatch(handleViewHistory({ leadId: leadId, userid: userid }))
+          }
           setOpenDrawer(true)
         }}
       >
