@@ -165,6 +165,10 @@ function App() {
             fontSizeSM: 12,
             titleMarginBottom:0
           },
+          Timeline:{
+            fontSize:12,
+            
+          }
         },
       }}
     >

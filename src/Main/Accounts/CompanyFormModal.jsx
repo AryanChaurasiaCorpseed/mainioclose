@@ -29,6 +29,7 @@ import {
 } from "../../Toolkit/Slices/CompanySlice"
 import { useParams } from "react-router-dom"
 import {
+  getHighestPriorityRole,
   playErrorSound,
   playSuccessSound,
   playWarningSound,
@@ -52,6 +53,7 @@ const CompanyFormModal = ({
   const companyDetailByUnitId = useSelector(
     (state) => state?.leads?.companyDetailByUnitId
   )
+  const currentRoles = useSelector((state) => state?.auth?.roles)
   const contactList = useSelector((state) => state?.leads?.allContactList)
   const contactDetail = useSelector((state) => state?.leads?.contactDetail)
   const companyDetail = useSelector((state) => state?.company?.companyDetail)
@@ -159,6 +161,8 @@ const CompanyFormModal = ({
             scontactWhatsappNo: editData?.scontactWhatsappNo,
             amount: editData?.amount,
             comment: editData?.comment,
+            secondaryDesignation: editData?.secondaryDesignation,
+            primaryDesignation: editData?.primaryDesignation,
           })
         }
       })
@@ -285,6 +289,10 @@ const CompanyFormModal = ({
         values.isPresent = companyDetail?.isPresent
         values.leadId = companyDetail?.lead?.id
         values.companyId = companyDetail?.companyId
+        values.assigneeId =
+          getHighestPriorityRole(currentRoles) === "ADMIN"
+            ? values?.assigneeId
+            : userid
         dispatch(updateCompanyForm(values))
           .then((response) => {
             if (response.meta.requestStatus === "fulfilled") {
@@ -473,13 +481,8 @@ const CompanyFormModal = ({
               action="/leadService/api/v1/upload/uploadimageToFileSystem"
               listType="text"
             >
-              <Button>
-                <Icon
-                  icon="fluent:arrow-upload-20-filled"
-                  height={BTN_ICON_HEIGHT}
-                  width={BTN_ICON_WIDTH}
-                />{" "}
-                Upload
+              <Button size="small">
+                <Icon icon="fluent:arrow-upload-20-filled" /> Upload
               </Button>
             </Upload>
           </Form.Item>
@@ -552,29 +555,30 @@ const CompanyFormModal = ({
             </>
           )}
 
-          {Object.keys(companyDetails)?.length === 0 && (
-            <Form.Item
-              label="Select assignee"
-              name="assigneeId"
-              rules={[{ required: true, message: "please select assignee" }]}
-            >
-              <Select
-                showSearch
-                allowClear
-                options={
-                  allUsers?.length > 0
-                    ? allUsers?.map((item) => ({
-                        label: item?.fullName,
-                        value: item?.id,
-                      }))
-                    : []
-                }
-                filterOption={(input, option) =>
-                  option.label.toLowerCase().includes(input.toLowerCase())
-                }
-              />
-            </Form.Item>
-          )}
+          {Object.keys(companyDetails)?.length === 0 &&
+            getHighestPriorityRole(currentRoles) === "ADMIN" && (
+              <Form.Item
+                label="Select assignee"
+                name="assigneeId"
+                rules={[{ required: true, message: "please select assignee" }]}
+              >
+                <Select
+                  showSearch
+                  allowClear
+                  options={
+                    allUsers?.length > 0
+                      ? allUsers?.map((item) => ({
+                          label: item?.fullName,
+                          value: item?.id,
+                        }))
+                      : []
+                  }
+                  filterOption={(input, option) =>
+                    option.label.toLowerCase().includes(input.toLowerCase())
+                  }
+                />
+              </Form.Item>
+            )}
 
           <Form.Item
             label="Pan number"
@@ -626,6 +630,18 @@ const CompanyFormModal = ({
                         {
                           required: true,
                           message: "please enter contact person name",
+                        },
+                      ]}
+                    >
+                      <Input />
+                    </Form.Item>
+                    <Form.Item
+                      label="Desigination"
+                      name="primaryDesignation"
+                      rules={[
+                        {
+                          required: true,
+                          message: "please enter desigination",
                         },
                       ]}
                     >
@@ -794,6 +810,19 @@ const CompanyFormModal = ({
                         {
                           required: true,
                           message: "please enter contact person name",
+                        },
+                      ]}
+                    >
+                      <Input />
+                    </Form.Item>
+
+                    <Form.Item
+                      label="Desigination"
+                      name="secondaryDesignation"
+                      rules={[
+                        {
+                          required: true,
+                          message: "please enter desigination",
                         },
                       ]}
                     >

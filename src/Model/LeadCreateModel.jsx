@@ -9,21 +9,20 @@ import {
   getAllLeadUsers,
   handleLoadingState,
 } from "../Toolkit/Slices/LeadSlice"
+import { getHighestPriorityRole } from "../Main/Common/Commons"
 
 const LeadCreateModel = ({ leadByCompany, companyId }) => {
   const [form] = Form.useForm()
   const dispatch = useDispatch()
   const { userid } = useParams()
   const allLeadUser = useSelector((state) => state.leads.allLeadUsers)
+  const currentRoles = useSelector((state) => state?.auth?.roles)
   const [openModal, setOpenModal] = useState(false)
-
 
   useEffect(() => {
     dispatch(getAllLeadUsers())
     dispatch(handleLoadingState(""))
   }, [dispatch])
-
-
 
   const handleFinish = useCallback(
     (values) => {
@@ -31,6 +30,9 @@ const LeadCreateModel = ({ leadByCompany, companyId }) => {
       values.createdById = userid
       values.serviceId = "1"
       values.industryId = "1"
+      values.assigneeId = getHighestPriorityRole(currentRoles)==='ADMIN'
+        ? values.assigneeId
+        : userid
       if (leadByCompany) {
         values.companyId = companyId
       }
@@ -44,7 +46,7 @@ const LeadCreateModel = ({ leadByCompany, companyId }) => {
       })
     },
 
-    [userid, dispatch, companyId, leadByCompany]
+    [userid, dispatch, companyId, leadByCompany, currentRoles]
   )
 
   return (
@@ -133,21 +135,23 @@ const LeadCreateModel = ({ leadByCompany, companyId }) => {
           <Form.Item label="Ip Address" name="ipAddress">
             <Input />
           </Form.Item>
-          <Form.Item label="Assignee user" name="assigneeId">
-            <Select
-              showSearch
-              allowClear
-              options={
-                allLeadUser?.map((item) => ({
-                  label: item?.fullName,
-                  value: item?.id,
-                })) || []
-              }
-              filterOption={(input, option) =>
-                option.label.toLowerCase().includes(input.toLowerCase())
-              }
-            />
-          </Form.Item>
+          {getHighestPriorityRole(currentRoles) === "ADMIN" && (
+            <Form.Item label="Assignee user" name="assigneeId">
+              <Select
+                showSearch
+                allowClear
+                options={
+                  allLeadUser?.map((item) => ({
+                    label: item?.fullName,
+                    value: item?.id,
+                  })) || []
+                }
+                filterOption={(input, option) =>
+                  option.label.toLowerCase().includes(input.toLowerCase())
+                }
+              />
+            </Form.Item>
+          )}
           <Form.Item
             label="Source"
             name="source"

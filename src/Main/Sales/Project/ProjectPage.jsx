@@ -70,6 +70,11 @@ const ProjectPage = () => {
       render: (_, props) => <OverFlowText>{props?.projectName}</OverFlowText>,
     },
     {
+      dataIndex: "amount",
+      title: "Amount",
+      render: (_, props) => <OverFlowText>{props?.amount}</OverFlowText>,
+    },
+    {
       dataIndex: "assigneeName",
       title: "Assignee name",
       render: (_, props) => <OverFlowText>{props?.assigneeName}</OverFlowText>,

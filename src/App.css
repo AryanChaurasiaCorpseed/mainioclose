@@ -948,7 +948,7 @@ select.form-control:not([size]):not([multiple]) {
 
 .slug-items-tooltip {
   margin: 2px 4px;
-  font-size: 14px;
+  font-size: 12px;
   /* color: #000; */
 }
 .edit-iconify {

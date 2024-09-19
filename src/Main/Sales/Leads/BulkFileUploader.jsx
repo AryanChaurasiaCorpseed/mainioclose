@@ -76,7 +76,7 @@
 //         </Upload>
 //       </div>
 //       <p>Click the button to upload or paste (Ctrl + V) documents, images, or PDFs anywhere in this box</p>
-      
+
 //       {uploadedFiles.length > 0 && (
 //         <div>
 //           <Text strong>Uploaded Files:</Text>
@@ -97,26 +97,6 @@
 
 // export default BulkFileUploader;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 import React, { useCallback, useEffect, useState } from "react"
 import { Icon } from "@iconify/react"
 import {
@@ -130,13 +110,17 @@ import {
 } from "antd"
 import "./BulkFileUpload.scss"
 import { useDispatch, useSelector } from "react-redux"
-import { createRemakWithFile, getAllRemarkAndCommnts, getSingleLeadDataByLeadID } from "../../../Toolkit/Slices/LeadSlice"
+import {
+  createRemakWithFile,
+  getAllRemarkAndCommnts,
+  getSingleLeadDataByLeadID,
+} from "../../../Toolkit/Slices/LeadSlice"
 import { useParams } from "react-router-dom"
 import { getAllComments } from "../../../Toolkit/Slices/UserRatingSlice"
 const { Dragger } = Upload
 const { Text } = Typography
 
-const BulkFileUploader = ({leadid}) => {
+const BulkFileUploader = ({ leadid }) => {
   const dispatch = useDispatch()
   const allComments = useSelector((state) => state.rating.allComments)
   const { userid } = useParams()
@@ -145,12 +129,15 @@ const BulkFileUploader = ({leadid}) => {
   const [flag, setFlag] = useState(null)
   const [inputCommentText, setInputCommentText] = useState("")
   const [apiLoading, setApiLoading] = useState("")
+  const [showUploadList,setUploadList]=useState(true)
+
   useEffect(() => {
     dispatch(getAllComments())
   }, [dispatch])
   const props = {
     name: "file",
     multiple: true,
+    showUploadList: showUploadList,
     action: "/leadService/api/v1/upload/uploadimageToFileSystem",
     defaultFileList: files,
     onChange(info) {
@@ -179,6 +166,7 @@ const BulkFileUploader = ({leadid}) => {
             setText("")
             setInputCommentText("")
             dispatch(getAllRemarkAndCommnts(leadid))
+            setUploadList(false)
           } else {
             notification.error({ message: "Something went wrong" })
             setApiLoading("error")
@@ -199,6 +187,7 @@ const BulkFileUploader = ({leadid}) => {
             setText("")
             setInputCommentText("")
             setApiLoading("success")
+            setUploadList(false)
             dispatch(getAllRemarkAndCommnts(leadid))
           } else {
             notification.error({ message: "Something went wrong" })

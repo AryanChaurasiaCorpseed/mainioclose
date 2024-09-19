@@ -19,3 +19,11 @@ export const playWarningSound = () => {
     console.log("Audio play failed:", error)
   })
 }
+
+export function getHighestPriorityRole(roles) {
+  if (roles?.length > 0) {
+    if (roles?.includes("ADMIN")) {
+      return "ADMIN"
+    }
+  }
+}

@@ -33,6 +33,7 @@ import OverFlowText from "../../components/OverFlowText"
 import ColComp from "../../components/small/ColComp"
 import CompanyFormModal from "./CompanyFormModal"
 import { getAllUsers } from "../../Toolkit/Slices/UsersSlice"
+import { getHighestPriorityRole } from "../Common/Commons"
 const { Text } = Typography
 const { Search } = Input
 
@@ -57,14 +58,6 @@ const CompanyForm = ({ role }) => {
       getAllCompanyByStatus({ id: userid, status: selectedFilter, page: page })
     )
   }, [dispatch, selectedFilter, userid, page])
-
-  function getHighestPriorityRole(roles) {
-    if (roles?.length > 0) {
-      if (roles?.includes("ADMIN")) {
-        return "ADMIN"
-      }
-    }
-  }
 
   useEffect(() => {
     dispatch(getAllUsers())
@@ -111,6 +104,11 @@ const CompanyForm = ({ role }) => {
       render: (_, data) => <ColComp data={data?.panNo} />,
     },
     {
+      title: "Amount",
+      dataIndex: "amount",
+      render: (_, data) => <ColComp data={data?.amount} />,
+    },
+    {
       title: "Gst type",
       dataIndex: "gstType",
       render: (_, data) => <ColComp data={data?.gstType} />,
@@ -125,15 +123,18 @@ const CompanyForm = ({ role }) => {
       dataIndex: "companyAge",
       render: (_, data) => <ColComp data={data?.companyAge} />,
     },
-    {
-      title: "Amount",
-      dataIndex: "amount",
-      render: (_, data) => <ColComp data={data?.amount} />,
-    },
+    
     {
       title: "Contact name",
       dataIndex: "contactName",
       render: (_, data) => <OverFlowText>{data?.contactName}</OverFlowText>,
+    },
+    {
+      title: "Desigination",
+      dataIndex: "desigination",
+      render: (_, data) => (
+        <OverFlowText>{data?.primaryDesignation}</OverFlowText>
+      ),
     },
     {
       title: "Contact number",
@@ -179,6 +180,11 @@ const CompanyForm = ({ role }) => {
       title: "SContact name",
       dataIndex: "secondaryContactName",
       render: (_, data) => <ColComp data={data?.secondaryContactName} />,
+    },
+    {
+      title: "S Desigination",
+      dataIndex: "secondarydesigination",
+      render: (_, data) => <ColComp data={data?.secondaryDesignation} />,
     },
     {
       title: "SContact number",

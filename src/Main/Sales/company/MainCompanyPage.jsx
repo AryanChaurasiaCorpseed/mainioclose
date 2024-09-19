@@ -1,4 +1,4 @@
-import React, { lazy, Suspense, useCallback, useEffect, useState } from "react"
+import React, { lazy, Suspense, useCallback, useEffect } from "react"
 import TableOutlet from "../../../components/design/TableOutlet"
 import MainHeading from "../../../components/design/MainHeading"
 import { useDispatch, useSelector } from "react-redux"
@@ -14,38 +14,33 @@ import SomethingWrong from "../../../components/usefulThings/SomethingWrong"
 import ColComp from "../../../components/small/ColComp"
 import { useParams } from "react-router-dom"
 import { getAllLeadUser } from "../../../Toolkit/Slices/LeadSlice"
-import { Input, notification, Select } from "antd"
+import { Input, notification, Select, Tag, Tooltip } from "antd"
 import OverFlowText from "../../../components/OverFlowText"
 import { Icon } from "@iconify/react"
+import { getHighestPriorityRole } from "../../Common/Commons"
+import { BTN_ICON_HEIGHT, BTN_ICON_WIDTH } from "../../../components/Constants"
 const CommonTable = lazy(() => import("../../../components/CommonTable"))
 const { Search } = Input
 
 const MainCompanyPage = () => {
   const dispatch = useDispatch()
   const { userid } = useParams()
-  const currUserId = useSelector((prev) => prev?.auth?.currentUser?.id)
+  const currUser = useSelector((prev) => prev?.auth?.currentUser)
   const leadUserNew = useSelector((state) => state.leads.getAllLeadUserData)
   const currentRoles = useSelector((state) => state?.auth?.roles)
+  const allUsers = useSelector((state) => state.user.allUsers)
   const { allCompnay, loadingCompany, errorCompany } = useSelector(
     (prev) => prev?.company
   )
   const page = useSelector((prev) => prev?.company.page)
 
   useEffect(() => {
-    dispatch(getCompanyAction({ id: currUserId, page }))
-  }, [dispatch, currUserId, page])
+    dispatch(getCompanyAction({ id: currUser?.id, page, filterUserId: 0 }))
+  }, [dispatch, currUser, page])
 
   useEffect(() => {
     dispatch(getAllLeadUser(userid))
   }, [userid, dispatch])
-
-  function getHighestPriorityRole(roles) {
-    if (roles?.length > 0) {
-      if (roles?.includes("ADMIN")) {
-        return "ADMIN"
-      }
-    }
-  }
 
   const onSearchLead = (e, b, c) => {
     dispatch(searchCompany({ inputText: e, userId: userid }))
@@ -66,17 +61,38 @@ const MainCompanyPage = () => {
             notification.success({
               message: "Assignee is updated successfully",
             })
-            dispatch(getCompanyAction({ id: currUserId }))
+            dispatch(
+              getCompanyAction({ id: currUser?.id, page, filterUserId: 0 })
+            )
           } else {
-            notification.error({ message: "Something went wrong" })
+            notification.error({ message: "Something went wrong !." })
           }
         })
         .catch(() => {
-          notification.error({ message: "Something went wrong" })
+          notification.error({ message: "Something went wrong !." })
         })
     },
-    [dispatch, currUserId]
+    [dispatch, currUser, page]
   )
+
+  const filterCompanyBasedOnUser = useCallback(
+    (filterUserId) => {
+      if (filterUserId) {
+        dispatch(getCompanyAction({ id: currUser?.id, page, filterUserId }))
+      }
+    },
+    [page, dispatch, currUser]
+  )
+
+  const tagsInTooltip = (data, type) => {
+    return data?.map((items) => {
+      return (
+        <Tag className="slug-items-tooltip">
+          {type === "lead" ? items?.leadNameame : items?.projectName}
+        </Tag>
+      )
+    })
+  }
 
   const columns = [
     {
@@ -139,6 +155,66 @@ const MainCompanyPage = () => {
         <OverFlowText>{record?.primaryContact?.name}</OverFlowText>
       ),
     },
+    {
+      dataIndex: "projects",
+      title: "Projects",
+      render: (_, data) =>
+        data?.project?.length > 0 && data?.project?.length === 1 ? (
+          <OverFlowText>{data?.project?.[0]?.projectName}</OverFlowText>
+        ) : data?.project?.length >= 2 ? (
+          <div className="flex-vert-hori-center">
+            <OverFlowText>{data?.project?.[0]?.projectName} </OverFlowText>
+            <Tooltip
+              title={tagsInTooltip(data?.project)}
+              arrow={false}
+              style={{ display: "flex", alignItems: "center", gap: "4px" }}
+              overlayStyle={{ maxWidth: 800 }}
+            >
+              <Icon
+                icon="fluent:more-circle-24-regular"
+                height={BTN_ICON_HEIGHT + 8}
+                width={BTN_ICON_WIDTH + 8}
+              />
+            </Tooltip>
+          </div>
+        ) : (
+          "N/A"
+        ),
+    },
+    {
+      dataIndex: "leads",
+      title: "Leads",
+      render: (_, data) =>
+        data?.lead?.length > 0 && data?.lead?.length === 1 ? (
+          <OverFlowText>{data?.lead?.[0]?.leadNameame}</OverFlowText>
+        ) : data?.lead?.length >= 2 ? (
+          <div className="flex-vert-hori-center">
+            <OverFlowText>{data?.lead?.[0]?.leadNameame} </OverFlowText>
+            <Tooltip
+              title={tagsInTooltip(data?.lead, "lead")}
+              arrow={false}
+              style={{ display: "flex", alignItems: "center", gap: "4px" }}
+              overlayStyle={{ maxWidth: 800 }}
+            >
+              <Icon
+                icon="fluent:more-circle-24-regular"
+                height={BTN_ICON_HEIGHT + 8}
+                width={BTN_ICON_WIDTH + 8}
+              />
+            </Tooltip>
+          </div>
+        ) : (
+          "N/A"
+        ),
+    },
+    {
+      dataIndex: "primarydesigination",
+      title: "Desigination",
+      render: (_, record) => (
+        <OverFlowText>{record?.primaryContact?.designation}</OverFlowText>
+      ),
+    },
+
     {
       dataIndex: "contactNo",
       title: "Contact no.",
@@ -220,6 +296,29 @@ const MainCompanyPage = () => {
           enterButton="search"
           prefix={<Icon icon="fluent:search-24-regular" />}
         />
+        <Select
+          showSearch
+          allowClear
+          style={{ width: "250px" }}
+          placeholder="filter out companies"
+          options={
+            allUsers?.length > 0
+              ? allUsers?.map((item) => ({
+                  label: item?.fullName,
+                  value: item?.id,
+                }))
+              : []
+          }
+          filterOption={(input, option) =>
+            option.label.toLowerCase().includes(input.toLowerCase())
+          }
+          onChange={filterCompanyBasedOnUser}
+          onClear={() =>
+            dispatch(
+              getCompanyAction({ id: currUser?.id, page, filterUserId: 0 })
+            )
+          }
+        />
       </div>
       <div className="mt-3">
         {loadingCompany && <TableScalaton />}
@@ -229,7 +328,7 @@ const MainCompanyPage = () => {
             <CommonTable
               data={allCompnay}
               columns={columns}
-              scroll={{ x: 3000, y: 520 }}
+              scroll={{ x: 3200, y: 520 }}
               rowSelection={true}
               pagination={true}
               nextDisable={allCompnay?.length < 50 ? true : false}

@@ -32,11 +32,11 @@ const LeadsDetailsMainPage = ({ children,leadId, data, allMultiFilterData }) => 
         key: "2",
         children: <LeadActivityPage leadid={leadId} />,
       },
-      {
-        label: `Vendors`,
-        key: "3",
-        children: <Vendors leadId={leadId}  />,
-      },
+      // {
+      //   label: `Vendors`,
+      //   key: "3",
+      //   children: <Vendors leadId={leadId}  />,
+      // },
       {
         label: `All task`,
         key: "4",
