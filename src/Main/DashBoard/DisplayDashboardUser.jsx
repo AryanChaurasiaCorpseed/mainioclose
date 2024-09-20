@@ -104,7 +104,7 @@ const DisplayDashboardUser = () => {
         return (
           <>
             <Link to={`${props.id}/history`}>
-              <Button>
+              <Button size="small">
                 <Icon icon="fluent:history-24-regular" /> History
               </Button>
             </Link>
@@ -122,6 +122,7 @@ const DisplayDashboardUser = () => {
               onClick={() => presentUserFun(props?.id)}
               type={props?.autoActive ? "primary" : "default"}
               danger={props?.autoActive ? false : true}
+              size="small"
             >
               {props?.autoActive ? "Present" : "Absent"}
             </Button>

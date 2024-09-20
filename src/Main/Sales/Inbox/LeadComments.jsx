@@ -5,7 +5,6 @@ import {
   Image,
   Input,
   List,
-  message,
   Modal,
   notification,
   Popconfirm,
@@ -29,6 +28,7 @@ const LeadComments = ({ list, leadid }) => {
   const { userid } = useParams()
   const dispatch = useDispatch()
   const allComments = useSelector((state) => state.rating.allComments)
+  const currentUserRoles = useSelector((state) => state?.auth?.roles)
   const [form] = Form.useForm()
   const [openModal, setOpenModal] = useState(false)
   const [remarkId, setRemarkId] = useState(null)
@@ -111,7 +111,7 @@ const LeadComments = ({ list, leadid }) => {
       <List
         className="demo-loadmore-list custom-list"
         // loading={initLoading}
-        style={{maxHeight:'45vh',overflow:'auto'}}
+        style={{ maxHeight: "45vh", overflow: "auto" }}
         size="small"
         itemLayout="vertical"
         // loadMore={loadMore}
@@ -122,18 +122,24 @@ const LeadComments = ({ list, leadid }) => {
               <Button size="small" type="text" onClick={() => handleEdit(item)}>
                 <Icon icon="fluent:edit-24-regular" />
               </Button>,
-              <Popconfirm
-                title="Delete the remark"
-                description="Are you sure to delete this remark?"
-                icon={
-                  <Icon icon="fluent:question-circle-24-regular" color="red" />
-                }
-                onConfirm={() => handleDeleteRemark(item?.id)}
-              >
-                <Button size="small" type="text" danger>
-                  <Icon icon="fluent:delete-24-regular" />
-                </Button>
-              </Popconfirm>,
+
+              currentUserRoles?.includes("ADMIN") && (
+                <Popconfirm
+                  title="Delete the remark"
+                  description="Are you sure to delete this remark?"
+                  icon={
+                    <Icon
+                      icon="fluent:question-circle-24-regular"
+                      color="red"
+                    />
+                  }
+                  onConfirm={() => handleDeleteRemark(item?.id)}
+                >
+                  <Button size="small" type="text" danger>
+                    <Icon icon="fluent:delete-24-regular" />
+                  </Button>
+                </Popconfirm>
+              ),
             ]}
             extra={
               <Image.PreviewGroup
