@@ -71,6 +71,7 @@ const VendorForm = ({ leadId, userId, serviceName, setOpenPopOver }) => {
       <Modal
         title="Vendor's details"
         open={openModal}
+        centered
         onCancel={() => setOpenModal(false)}
         onClose={() => setOpenModal(false)}
         onOk={() => form.submit()}
@@ -82,6 +83,7 @@ const VendorForm = ({ leadId, userId, serviceName, setOpenPopOver }) => {
           form={form}
           onFinish={handleFinish}
           initialValues={{ serviceName: serviceName }}
+          style={{maxHeight:'80vh',overflow:'auto'}}
         >
           <Form.Item
             label="Person name"
@@ -183,8 +185,10 @@ const Vendors = ({ leadId }) => {
   }, [leadId, userid])
 
   useEffect(() => {
-    setVendor(vendorList?.[0]?.updateHistory)
-    setVendorDetail(vendorList?.[0])
+    if (vendorList?.length > 0) {
+      setVendor(vendorList?.[0]?.updateHistory)
+      setVendorDetail(vendorList?.[0])
+    }
   }, [vendorList])
 
   const handleSelectVendor = useCallback(
@@ -195,6 +199,7 @@ const Vendors = ({ leadId }) => {
     },
     [vendorList]
   )
+
   const normFile = (e) => {
     if (Array.isArray(e)) {
       return e
@@ -222,6 +227,7 @@ const Vendors = ({ leadId }) => {
             })
             setOpenModal(false)
             form.resetFields()
+            dispatch(getVendorDetailList({ leadId, userid }))
           } else {
             notification.error({ message: "Something went wrong !." })
           }
@@ -366,6 +372,7 @@ const Vendors = ({ leadId }) => {
                       </Paragraph>
                     </Flex>
                   )}
+
                 </Flex>
               )}
             </Flex>
@@ -377,7 +384,6 @@ const Vendors = ({ leadId }) => {
                 vendor?.length > 0
                   ? vendor?.map((item) => ({
                       color: "blue",
-                      // label: `${item?.requestStatus}, ${dayjs(item?.updateDate).format("YYYY-MM-DD hh:mm a")}`,
                       label: (
                         <Flex vertical gap="2" justify="flex-end">
                           <Text>{item?.requestStatus}</Text>
@@ -399,6 +405,7 @@ const Vendors = ({ leadId }) => {
       <Modal
         title="Update status"
         open={openModal}
+        centered
         onCancel={() => setOpenModal(false)}
         onClose={() => setOpenModal(false)}
         okText="Submit"
@@ -459,6 +466,9 @@ const Vendors = ({ leadId }) => {
                 )}
               </>
             )}
+          </Form.Item>
+          <Form.Item label='Quotation amount' name='vendorSharedPrice' >
+            <Input/>
           </Form.Item>
 
           <Form.Item label="Description" name="description">

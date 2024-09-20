@@ -19,6 +19,7 @@ const LeadsDetailsMainPage = ({
   leadId,
   data,
   allMultiFilterData,
+  setSearchText
 }) => {
   const dispatch = useDispatch()
   const { userid } = useParams()
@@ -39,7 +40,7 @@ const LeadsDetailsMainPage = ({
       // {
       //   label: `Vendors`,
       //   key: "vendors",
-      //   children: <Vendors leadId={leadId}  />,
+      //   children: <Vendors leadId={leadId} />,
       // },
       {
         label: `All task`,
@@ -71,17 +72,7 @@ const LeadsDetailsMainPage = ({
       <Link
         className="link-heading"
         onClick={() => {
-          if (allMultiFilterData) {
-            dispatch(
-              handleViewHistory({ leadId: leadId, userid: userid })
-            ).then((resp) => {
-              if (resp.meta.requestStatus === "fulfilled") {
-                dispatch(getAllLeads(allMultiFilterData))
-              }
-            })
-          } else {
-            dispatch(handleViewHistory({ leadId: leadId, userid: userid }))
-          }
+          dispatch(handleViewHistory({ leadId: leadId, userid: userid }))
           setOpenDrawer(true)
         }}
       >
@@ -89,7 +80,11 @@ const LeadsDetailsMainPage = ({
       </Link>
       <Drawer
         open={openDrawer}
-        onClose={() => setOpenDrawer(false)}
+        onClose={() => {
+          setOpenDrawer(false)
+          // dispatch(getAllLeads(allMultiFilterData))
+          setSearchText('')
+        }}
         width={"80%"}
         closeIcon={null}
         bodyStyle={{ padding: 12 }}

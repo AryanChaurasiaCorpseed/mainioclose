@@ -524,7 +524,7 @@ export const LeadSlice = createSlice({
   name: "lead",
   initialState: {
     allLeads: [],
-    leadsLoading: false,
+    leadsLoading: "",
     leadsError: false,
     autoLeadUpadte: "",
     autoLeadLoading: false,
@@ -568,17 +568,17 @@ export const LeadSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(getAllLeads.pending, (state, action) => {
-      state.leadsLoading = true
+      state.leadsLoading = "pending"
       state.leadsError = false
     })
     builder.addCase(getAllLeads.fulfilled, (state, action) => {
       state.allLeads = action.payload
-      state.leadsLoading = false
+      state.leadsLoading = "success"
       state.leadsError = false
     })
     builder.addCase(getAllLeads.rejected, (state, action) => {
       state.leadsError = true
-      state.leadsLoading = false
+      state.leadsLoading = "rejected"
     })
 
     builder.addCase(updateAutoAssignnee.pending, (state, action) => {

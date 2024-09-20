@@ -141,7 +141,7 @@ const LeadDetailsPage = ({ leadid }) => {
 
   useEffect(() => {
     getSingleLeadData()
-  }, [updateOriginalName, getSingleLeadData])
+  }, [getSingleLeadData])
 
   const updateLeadNameSinglePage = useCallback(
     (e) => {
