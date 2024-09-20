@@ -1,51 +1,33 @@
 import React, { useCallback, useEffect, useState } from "react"
 import "./LeadDetailsPage.scss"
-import { Link, useParams } from "react-router-dom"
-import { getQuery } from "../../../API/GetQuery"
-import { postQuery } from "../../../API/PostQuery"
+import { useParams } from "react-router-dom"
 import { useRef } from "react"
 import { toast } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
 import EstimateDesignPage from "../Leads/EstimateDesignPage"
 import { useDispatch, useSelector } from "react-redux"
-import AllTasksPage from "./AllTasksPage"
 import {
   changeLeadAssigneeLeads,
   changeLeadStatus,
   createLeadContacts,
-  createNewLeadTask,
   deleteLeadContact,
-  deleteProduct,
-  deleteTask,
   editViewData,
-  getAllLeadUser,
-  getAllOppurtunities,
-  getAllProductData,
-  getAllProductWithCattegory,
   getAllRemarkAndCommnts,
-  getAllTaskData,
-  getAllTaskStatus,
   getSingleLeadDataByLeadID,
   handleLeadassignedToSamePerson,
   updateAutoAssignnee,
   updateLeadDescription,
-  updateLeadProducts,
   updateLeadsContact,
-  updateLeadTask,
   updateOriginalNameInLeads,
   updateSingleLeadName,
 } from "../../../Toolkit/Slices/LeadSlice"
-import { getAllUrlAction } from "../../../Toolkit/Slices/LeadUrlSlice"
 import BulkFileUploader from "../Leads/BulkFileUploader"
 import {
   Button,
   Col,
   Collapse,
-  DatePicker,
   Divider,
-  Flex,
   Form,
-  Image,
   Input,
   List,
   Modal,
@@ -55,16 +37,11 @@ import {
   Row,
   Select,
   Space,
-  Tag,
   Typography,
 } from "antd"
-import { getAllSlugList } from "../../../Toolkit/Slices/LeadSlugSlice"
 import { Icon } from "@iconify/react"
-import dayjs from "dayjs"
-import { BTN_ICON_HEIGHT, BTN_ICON_WIDTH } from "../../../components/Constants"
 import { playErrorSound, playSuccessSound } from "../../Common/Commons"
 import CompanyFormModal from "../../Accounts/CompanyFormModal"
-import Vendors from "../Leads/Vendors"
 import LeadComments from "./LeadComments"
 const { Text } = Typography
 
@@ -74,7 +51,6 @@ const LeadDetailsPage = ({ leadid }) => {
   const [form1] = Form.useForm()
   const { userid } = useParams()
   const dispatch = useDispatch()
-  const fileRef = useRef()
   const [descriptionText, setDescriptionText] = useState("")
   const currentUserRoles = useSelector((state) => state?.auth?.roles)
   const { allLeadUrl } = useSelector((prev) => prev?.leadurls)
@@ -89,23 +65,15 @@ const LeadDetailsPage = ({ leadid }) => {
   const currentUserDetail = useSelector(
     (state) => state.auth.getDepartmentDetail
   )
-
   const clientsContact = useSelector((state) => state.leads.clientsContact)
   const slugList = useSelector((state) => state.leadslug.slugList)
   const [openModal, setOpenModal] = useState(false)
   const [contactData, setContactData] = useState(null)
-  const [notes, setNotes] = useState(false)
   const [updateLeadNameToggle, setUpdateLeadNameToggle] = useState(true)
-  const [openAllTask, setOpenAllTask] = useState(false)
-  const [estimateOpenBtn, setEstimateOpenBtn] = useState(false)
   const [updateOriginalName, setUpdateOriginalName] = useState(false)
   const [updatedLeadName, setUpdatedLeadName] = useState("")
   const [showDescriptionField, setShowDescriptionField] = useState(false)
   const [assigneValue, setAssigneValue] = useState(null)
-
-  const openTasksFun = () => {
-    setOpenAllTask((prev) => !prev)
-  }
 
   const [originalData, setOriginalData] = useState({
     leadId: leadid,
@@ -149,18 +117,6 @@ const LeadDetailsPage = ({ leadid }) => {
   }, [dispatch, leadid, userid])
 
   const adminRole = currentUserRoles.includes("ADMIN")
-  const NotesRef = useRef()
-
-  const [remarkMessage, setRemarkMessage] = useState({
-    leadId: leadid,
-    userId: userid,
-    message: "",
-    file: "",
-  })
-
-  const remarkMessageFunction = (e) => {
-    setRemarkMessage((prev) => ({ ...prev, [e.target.name]: e.target.value }))
-  }
 
   const changeLeadStatusFun = (statusId) => {
     dispatch(changeLeadStatus({ leadid, userid, statusId }))
@@ -181,31 +137,6 @@ const LeadDetailsPage = ({ leadid }) => {
           message: "Something went wrong !.",
         })
       })
-  }
-
-  const createRemarkfun = (e) => {
-    e.preventDefault()
-    if (NotesRef.current.value === "") {
-      toast.error("Notes Can't be Blank")
-      return
-    }
-    const createNewRemark = async () => {
-      try {
-        const remarkData = await postQuery(
-          `/leadService/api/v1/createRemarks`,
-          remarkMessage
-        )
-        NotesRef.current.value = ""
-        fileRef.current.value = ""
-        window.location.reload()
-      } catch (err) {
-        console.log(err)
-        if (err.response.status === 500) {
-          toast.error("Something Went Wrong !.")
-        }
-      }
-    }
-    createNewRemark()
   }
 
   useEffect(() => {
@@ -504,12 +435,6 @@ const LeadDetailsPage = ({ leadid }) => {
 
   return Object.keys(singleLeadResponseData)?.length > 0 ? (
     <div className="lead-details cm-padding-one">
-      {estimateOpenBtn ? (
-        <EstimateDesignPage setEstimateOpenBtn={setEstimateOpenBtn} />
-      ) : (
-        ""
-      )}
-
       <Row gutter={16}>
         <Col span={9}>
           <div className="left-lead-section">
@@ -745,27 +670,6 @@ const LeadDetailsPage = ({ leadid }) => {
                     </Button>
                   </Space>
                 )}
-
-                {/* {currentUserDetail?.department === "Quality" ||
-              currentUserRoles?.includes("ADMIN") ? (
-                <>
-                  {
-                    showDescriptionField ? ():(
-                      <div className="description-container">
-                    <Text>{descriptionText}</Text>
-                  </div>
-                    )
-                  }
-                  
-                </>
-              ) : (
-                <div className="comp-container">
-                  <Input.TextArea
-                    value={descriptionText}
-                    onChange={(e) => setDescriptionText(e.target.value)}
-                  />
-                </div>
-              )} */}
               </>
             )}
 
@@ -786,25 +690,24 @@ const LeadDetailsPage = ({ leadid }) => {
         <Col span={15}>
           <div className="flex-justify-end">
             <div className="btn-view-container">
-            <Button size="small" onClick={() => leadAssignedToSame(leadid)}>
+              <Button size="small" onClick={() => leadAssignedToSame(leadid)}>
                 Assign to same person{" "}
               </Button>
               <CompanyFormModal
                 detailView={true}
                 data={singleLeadResponseData}
               />
-              
             </div>
           </div>
 
           <div className="lead-filter-above">
-            <div className={`notes-box mt-2 ${notes === true ? "d-none" : ""}`}>
+            <div className={`notes-box mt-2`}>
               <div className="side-notes">
                 <BulkFileUploader leadid={leadid} />
               </div>
             </div>
           </div>
-         <LeadComments list={notesApiData} leadid={leadid} />
+          <LeadComments list={notesApiData} leadid={leadid} />
         </Col>
       </Row>
       <Modal

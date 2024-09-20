@@ -1,58 +1,33 @@
-import React, { Suspense, useEffect, useState } from "react"
-import { useDispatch, useSelector } from "react-redux"
-import {
-  getCompanyLeadsAction,
-  getCompanyProjectAction,
-} from "../../../Toolkit/Slices/CompanySlice"
-import { Link, useParams } from "react-router-dom"
+import React, { Suspense } from "react"
+import { useSelector } from "react-redux"
+import { useParams } from "react-router-dom"
 import TableOutlet from "../../../components/design/TableOutlet"
 import MainHeading from "../../../components/design/MainHeading"
 import SomethingWrong from "../../../components/usefulThings/SomethingWrong"
 import TableScalaton from "../../../components/TableScalaton"
 import ColComp from "../../../components/small/ColComp"
-import { putQuery } from "../../../API/PutQuery"
-import CommonTable from "../../../components/CommonTable"
 import LeadCreateModel from "../../../Model/LeadCreateModel"
 import LeadsDetailsMainPage from "../Leads/LeadsDetailsMainPage"
 
-const UserListComponent = React.lazy(() =>
-  import(`../../../Tables/UserListComponent`)
-)
+const CommonTable = React.lazy(() => import(`../../../components/CommonTable`))
 
 const CompDetails = () => {
-  const dispatch = useDispatch()
-  const { companyId, userid } = useParams()
-
+  const { companyId } = useParams()
   const { compLeads, compLeadsError } = useSelector((prev) => prev?.company)
-
-  const viewHistory = async (leadId) => {
-    try {
-      const singlePage = await putQuery(
-        `/leadService/api/v1/lead/viewHistoryCreate?userId=${userid}&leadId=${leadId}`
-      )
-    } catch (err) {
-      console.log(err)
-    }
-  }
 
   const compLeadsCol = [
     {
       dataIndex: "leadId",
       title: "Id",
-      width: 60,
+      width: 80,
+      fixed:'left',
     },
     {
       dataIndex: "leadName",
       title: "Lead name",
+      fixed:'left',
       render: (_, props) => (
-        // <Link
-        //   to={`/erp/${userid}/sales/leads/${props.leadId}`}
-        //   onClick={() => viewHistory(props.leadId)}
-        //   className="link-heading"
-        // >
-        //   {props?.leadName}
-        // </Link>
-        <LeadsDetailsMainPage leadId={props?.leadId} data={props} >
+        <LeadsDetailsMainPage leadId={props?.leadId} data={props}>
           {props?.leadName}
         </LeadsDetailsMainPage>
       ),
@@ -100,7 +75,7 @@ const CompDetails = () => {
   return (
     <TableOutlet>
       <div className="create-user-box">
-        <MainHeading data={"All Leads"} />
+        <MainHeading data={"All leads by company"} />
         <div className="all-center">
           <LeadCreateModel leadByCompany={true} companyId={companyId} />
         </div>

@@ -182,10 +182,10 @@ const Vendors = ({ leadId }) => {
     dispatch(getVendorDetailList({ leadId, userid }))
   }, [leadId, userid])
 
-  // useEffect(()=>{
-  //   setVendor(vendorList?.[0]?.updateHistory)
-  //   setVendorDetail(vendorList?.[0])
-  // },[vendorList])
+  useEffect(() => {
+    setVendor(vendorList?.[0]?.updateHistory)
+    setVendorDetail(vendorList?.[0])
+  }, [vendorList])
 
   const handleSelectVendor = useCallback(
     (e) => {
@@ -205,6 +205,9 @@ const Vendors = ({ leadId }) => {
   const handleUpdateRequest = useCallback(
     (values) => {
       values.vendorReferenceFile = values?.vendorReferenceFile?.[0]?.response
+      values.serviceName = vendorDetail?.serviceName
+      values.companyName = vendorDetail?.clientCompanyName
+      values.contactPersonName = vendorDetail?.contactPersonName
       let obj = {
         vendorId: vendorDetail?.id,
         userId: userid,
@@ -248,6 +251,7 @@ const Vendors = ({ leadId }) => {
           showSearch
           allowClear
           size="small"
+          value={vendorDetail?.id}
           placeholder="select vendor request"
           style={{ width: "25%" }}
           options={
@@ -334,6 +338,17 @@ const Vendors = ({ leadId }) => {
                         width={BTN_ICON_WIDTH}
                       />
                       <Text>{vendorDetail?.budgetPrice}</Text>
+                    </Flex>
+                  )}
+
+                  {vendorDetail?.serviceName && (
+                    <Flex gap={6}>
+                      <Icon
+                        icon="fluent:person-settings-20-regular"
+                        height={BTN_ICON_HEIGHT}
+                        width={BTN_ICON_WIDTH}
+                      />
+                      <Text>Service name : {vendorDetail?.serviceName}</Text>
                     </Flex>
                   )}
 

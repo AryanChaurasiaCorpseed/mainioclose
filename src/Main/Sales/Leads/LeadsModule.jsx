@@ -13,7 +13,6 @@ import {
   handleLeadassignedToSamePerson,
   handleNextPagination,
   handlePrevPagination,
-  handleViewHistory,
   multiAssignedLeads,
   searchLeads,
   updateAssigneeInLeadModule,
@@ -24,7 +23,6 @@ import {
   Button,
   Checkbox,
   Divider,
-  Drawer,
   Dropdown,
   Input,
   notification,
@@ -34,12 +32,10 @@ import {
   Typography,
 } from "antd"
 import { Icon } from "@iconify/react"
-import { getAllUsers } from "../../../Toolkit/Slices/UsersSlice"
 import CompanyFormModal from "../../Accounts/CompanyFormModal"
 import OverFlowText from "../../../components/OverFlowText"
 import { BTN_ICON_HEIGHT, BTN_ICON_WIDTH } from "../../../components/Constants"
 import { playErrorSound, playSuccessSound } from "../../Common/Commons"
-import LeadDetailsPage from "../Inbox/LeadDetailsPage"
 import LeadsDetailsMainPage from "./LeadsDetailsMainPage"
 const { Text } = Typography
 const { Search } = Input
@@ -67,9 +63,6 @@ const LeadsModule = () => {
   const [selectedRow, setSelectedRow] = useState([])
   const [dropdownData, setDropdownData] = useState([])
   const [headerData, setHeaderData] = useState([])
-  const [searchText, setSearchText] = useState("")
-  const [openDrawer, setOpenDrawer] = useState(false)
-  const [leadId, setLeadId] = useState(null)
 
   const onSelectChange = (newSelectedRowKeys, rowsData) => {
     setSelectedRowKeys(newSelectedRowKeys)
@@ -282,23 +275,6 @@ const LeadsModule = () => {
         return 0
       },
       render: (_, data) => (
-        // <Link
-        //   className="link-heading"
-        //   // to={`/erp/${userid}/sales/leads/${data?.id}`}
-        //   onClick={() => {
-        //     setLeadId(data?.id)
-        //     dispatch(
-        //       handleViewHistory({ leadId: data?.id, userid: userid })
-        //     ).then((resp) => {
-        //       if (resp.meta.requestStatus === "fulfilled") {
-        //         dispatch(getAllLeads(allMultiFilterData))
-        //       }
-        //     })
-        //     setOpenDrawer(true)
-        //   }}
-        // >
-        //   {data?.leadName}
-        // </Link>
         <LeadsDetailsMainPage allMultiFilterData={allMultiFilterData} leadId={data?.id} data={data}>
           {data?.leadName}
         </LeadsDetailsMainPage>
@@ -578,7 +554,6 @@ const LeadsModule = () => {
   )
 
   const onSearchLead = (e, b, c) => {
-    setSearchText(e)
     dispatch(searchLeads({ input: e, id: userid }))
     if (!b) {
       dispatch(searchLeads({ input: "", id: userid }))
@@ -886,15 +861,6 @@ const LeadsModule = () => {
           />
         </Suspense>
       </div>
-
-      {/* <Drawer
-        title="Lead detail"
-        open={openDrawer}
-        onClose={() => setOpenDrawer(false)}
-        width={"80%"}
-      >
-        <LeadDetailsPage leadid={leadId} />
-      </Drawer> */}
     </div>
   )
 }

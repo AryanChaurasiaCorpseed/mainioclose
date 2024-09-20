@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react"
 import MainHeading from "../../../components/design/MainHeading"
 import CommonTable from "../../../components/CommonTable"
-import { Input, Tag, Typography } from "antd"
+import { Button, DatePicker, Flex, Input, Tag, Typography } from "antd"
 import OverFlowText from "../../../components/OverFlowText"
 import { Icon } from "@iconify/react"
 import dayjs from "dayjs"
@@ -12,6 +12,7 @@ const SingleLeadTaskList = () => {
   const taskData = useSelector((state) => state.leads.getSingleLeadTask)
   const [searchText, setSearchText] = useState("")
   const [filteredData, setFilteredData] = useState([])
+  const [selectedDate, setSelectedDate] = useState(null)
 
   const columns = [
     {
@@ -65,7 +66,7 @@ const SingleLeadTaskList = () => {
         return expectedDate === null || expectedDate === undefined ? (
           "NA"
         ) : (
-          <Text>{dayjs(expectedDate).format("YYYY-MM-DD HH:mm")}</Text>
+          <Text>{dayjs(expectedDate).format("YYYY-MM-DD hh:mm a")}</Text>
         )
       },
     },
@@ -87,19 +88,43 @@ const SingleLeadTaskList = () => {
     setFilteredData(filtered)
   }
 
+  const handleDateChange = (date) => {
+    setSelectedDate(date)
+    if (date) {
+      const selectedDateFormatted = dayjs(date).format("YYYY-MM-DD")
+      const filtered = taskData?.filter(
+        (item) =>
+          dayjs(item.expectedDate).format("YYYY-MM-DD") ===
+          selectedDateFormatted
+      )
+      setFilteredData(filtered)
+    } else {
+      setFilteredData(taskData) // Reset to original data if date is cleared
+    }
+  }
+
+  const handleTodayTask = () => {
+    const today = dayjs().format("YYYY-MM-DD")
+    const filtered = taskData?.filter(
+      (item) => dayjs(item.expectedDate).format("YYYY-MM-DD") === today
+    )
+    setFilteredData(filtered)
+  }
+
   return (
     <div className="lead-module small-box-padding">
       <div className="create-user-box">
-        <MainHeading data={`All tasks (${taskData?.length})`} />
-        <div>
-          <input
-            type="date"
-            className="mr-2 date-input"
-            // onChange={(e) => setDateInput(e.target.value)}
+        <MainHeading data={`Lead all tasks (${taskData?.length})`} />
+        <Flex gap={8}>
+          <DatePicker
+            value={selectedDate}
+            allowClear
+            onChange={handleDateChange}
           />
-          <button className="common-btn-one mr-2">Filter Task</button>
-          <button className="common-btn-one">Today Task</button>
-        </div>
+          <Button size="small" type="primary" onClick={handleTodayTask}>
+            Today Task
+          </Button>
+        </Flex>
       </div>
       <div className="mt-3">
         <div className="flex-verti-center-hori-start mt-2">

@@ -23,23 +23,22 @@ const LeadsDetailsMainPage = ({
   const dispatch = useDispatch()
   const { userid } = useParams()
   const [openDrawer, setOpenDrawer] = useState(false)
-  const [activeKey, setActiveKey] = useState("1")
 
   const items = useMemo(() => {
     return [
       {
         label: `Lead details`,
-        key: "1",
+        key: "leadDetail",
         children: <LeadDetailsPage leadid={leadId} />,
       },
       {
         label: `Activities `,
-        key: "2",
+        key: "activities",
         children: <LeadActivityPage leadid={leadId} />,
       },
       // {
       //   label: `Vendors`,
-      //   key: "3",
+      //   key: "vendors",
       //   children: <Vendors leadId={leadId}  />,
       // },
       {
@@ -49,7 +48,7 @@ const LeadsDetailsMainPage = ({
       },
       {
         label: `History`,
-        key: "5",
+        key: "allTask",
         children: <LeadHistory leadid={leadId} />,
       },
     ]
@@ -57,7 +56,6 @@ const LeadsDetailsMainPage = ({
 
   const handleOnChange = useCallback(
     (e) => {
-      setActiveKey(e)
       if (e === "5") {
         dispatch(getAllHistory({ id: leadId }))
       }
@@ -97,8 +95,7 @@ const LeadsDetailsMainPage = ({
         bodyStyle={{ padding: 12 }}
       >
         <Tabs
-          activeKey={activeKey}
-          defaultActiveKey="1"
+          defaultActiveKey="leadDetail"
           size="small"
           items={items}
           onChange={handleOnChange}

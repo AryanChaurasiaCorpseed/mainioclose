@@ -36,7 +36,7 @@ const CompanyPageLayout = () => {
       children: <CompanyUnits />,
     },
   ]
-  return <Tabs defaultActiveKey="projects" type="card"  centered items={items} />
+  return <Tabs defaultActiveKey="projects" size="small" items={items} />
 }
 
 export default CompanyPageLayout
