@@ -83,7 +83,7 @@ const VendorForm = ({ leadId, userId, serviceName, setOpenPopOver }) => {
           form={form}
           onFinish={handleFinish}
           initialValues={{ serviceName: serviceName }}
-          style={{maxHeight:'80vh',overflow:'auto'}}
+          style={{ maxHeight: "80vh", overflow: "auto" }}
         >
           <Form.Item
             label="Person name"
@@ -372,7 +372,6 @@ const Vendors = ({ leadId }) => {
                       </Paragraph>
                     </Flex>
                   )}
-
                 </Flex>
               )}
             </Flex>
@@ -383,7 +382,25 @@ const Vendors = ({ leadId }) => {
               items={
                 vendor?.length > 0
                   ? vendor?.map((item) => ({
-                      color: "blue",
+                      color:
+                        item?.requestStatus === "Unavailable"
+                          ? "red"
+                          : item?.requestStatus === "Finished"
+                          ? "green"
+                          : item?.requestStatus === "Processing"
+                          ? "yellow"
+                          : "blue",
+                      dot:
+                        item?.requestStatus === "Processing" ? (
+                          <Icon icon="fluent:clock-24-regular" color="yellow" />
+                        ) : item?.requestStatus === "Finished" ? (
+                          <Icon
+                            icon="fluent:checkmark-24-filled"
+                            color="green"
+                          />
+                        ) : (
+                          ""
+                        ),
                       label: (
                         <Flex vertical gap="2" justify="flex-end">
                           <Text>{item?.requestStatus}</Text>
@@ -467,8 +484,8 @@ const Vendors = ({ leadId }) => {
               </>
             )}
           </Form.Item>
-          <Form.Item label='Quotation amount' name='vendorSharedPrice' >
-            <Input/>
+          <Form.Item label="Quotation amount" name="vendorSharedPrice">
+            <Input />
           </Form.Item>
 
           <Form.Item label="Description" name="description">

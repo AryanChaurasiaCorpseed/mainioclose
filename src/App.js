@@ -167,7 +167,7 @@ function App() {
           },
           Timeline:{
             fontSize:12,
-            
+            itemPaddingBottom:32
           }
         },
       }}

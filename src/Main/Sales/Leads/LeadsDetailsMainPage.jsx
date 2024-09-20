@@ -19,7 +19,7 @@ const LeadsDetailsMainPage = ({
   leadId,
   data,
   allMultiFilterData,
-  setSearchText
+  setSearchText,
 }) => {
   const dispatch = useDispatch()
   const { userid } = useParams()
@@ -67,6 +67,14 @@ const LeadsDetailsMainPage = ({
     [dispatch, leadId]
   )
 
+  const handleCloseDrawer = useCallback(() => {
+    setOpenDrawer(false)
+    // dispatch(getAllLeads(allMultiFilterData))
+    if (typeof setSearchText === "function") {
+      setSearchText((prev) => "")
+    }
+  }, [setSearchText])
+
   return (
     <>
       <Link
@@ -80,11 +88,7 @@ const LeadsDetailsMainPage = ({
       </Link>
       <Drawer
         open={openDrawer}
-        onClose={() => {
-          setOpenDrawer(false)
-          // dispatch(getAllLeads(allMultiFilterData))
-          setSearchText('')
-        }}
+        onClose={handleCloseDrawer}
         width={"80%"}
         closeIcon={null}
         bodyStyle={{ padding: 12 }}
