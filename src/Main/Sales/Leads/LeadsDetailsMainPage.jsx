@@ -37,11 +37,11 @@ const LeadsDetailsMainPage = ({
         key: "activities",
         children: <LeadActivityPage leadid={leadId} />,
       },
-      {
-        label: `Vendors`,
-        key: "vendors",
-        children: <Vendors leadId={leadId} />,
-      },
+      // {
+      //   label: `Vendors`,
+      //   key: "vendors",
+      //   children: <Vendors leadId={leadId} />,
+      // },
       {
         label: `All task`,
         key: "4",
