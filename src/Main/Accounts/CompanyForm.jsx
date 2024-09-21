@@ -99,6 +99,11 @@ const CompanyForm = ({ role }) => {
       render: (_, value) => <OverFlowText>{value?.companyName}</OverFlowText>,
     },
     {
+      title: "Lead name",
+      dataIndex: "leads",
+      render: (_, data) => <OverFlowText>{data?.lead?.leadName}</OverFlowText>,
+    },
+    {
       title: "Pan number",
       dataIndex: "panNo",
       render: (_, data) => <ColComp data={data?.panNo} />,
@@ -123,7 +128,7 @@ const CompanyForm = ({ role }) => {
       dataIndex: "companyAge",
       render: (_, data) => <ColComp data={data?.companyAge} />,
     },
-    
+
     {
       title: "Contact name",
       dataIndex: "contactName",
