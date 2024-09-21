@@ -19,6 +19,8 @@ const CompanyPageLayout = () => {
     dispatch(getCompanyProjectAction({ id: companyId }))
     dispatch(getAllCompanyUnits(companyId))
   }, [companyId, dispatch])
+
+
   const items = [
     {
       label: "Projects",

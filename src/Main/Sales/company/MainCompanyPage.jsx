@@ -1,4 +1,4 @@
-import React, { lazy, Suspense, useCallback, useEffect } from "react"
+import React, { lazy, Suspense, useCallback, useEffect, useState } from "react"
 import TableOutlet from "../../../components/design/TableOutlet"
 import MainHeading from "../../../components/design/MainHeading"
 import { useDispatch, useSelector } from "react-redux"
@@ -8,19 +8,29 @@ import {
   handlePrevPagination,
   searchCompany,
   updateCompanyAssignee,
+  updateMultiCompanyAssignee,
 } from "../../../Toolkit/Slices/CompanySlice"
 import TableScalaton from "../../../components/TableScalaton"
 import SomethingWrong from "../../../components/usefulThings/SomethingWrong"
 import ColComp from "../../../components/small/ColComp"
 import { useParams } from "react-router-dom"
 import { getAllLeadUser } from "../../../Toolkit/Slices/LeadSlice"
-import { Input, notification, Select, Tag, Tooltip } from "antd"
+import {
+  Button,
+  Input,
+  notification,
+  Select,
+  Tag,
+  Tooltip,
+  Typography,
+} from "antd"
 import OverFlowText from "../../../components/OverFlowText"
 import { Icon } from "@iconify/react"
 import { getHighestPriorityRole } from "../../Common/Commons"
 import { BTN_ICON_HEIGHT, BTN_ICON_WIDTH } from "../../../components/Constants"
 const CommonTable = lazy(() => import("../../../components/CommonTable"))
 const { Search } = Input
+const { Text } = Typography
 
 const MainCompanyPage = () => {
   const dispatch = useDispatch()
@@ -28,11 +38,15 @@ const MainCompanyPage = () => {
   const currUser = useSelector((prev) => prev?.auth?.currentUser)
   const leadUserNew = useSelector((state) => state.leads.getAllLeadUserData)
   const currentRoles = useSelector((state) => state?.auth?.roles)
+  const getAllStatus = useSelector((state) => state.leads.getAllStatus)
   const allUsers = useSelector((state) => state.user.allUsers)
   const { allCompnay, loadingCompany, errorCompany } = useSelector(
     (prev) => prev?.company
   )
   const page = useSelector((prev) => prev?.company.page)
+  const [selectedRowKeys, setSelectedRowKeys] = useState([])
+  const [assigneeId, setAssigneeId] = useState(null)
+  const [assignedProcessing, setAssignedProcessing] = useState("")
 
   useEffect(() => {
     dispatch(getCompanyAction({ id: currUser?.id, page, filterUserId: 0 }))
@@ -41,6 +55,10 @@ const MainCompanyPage = () => {
   useEffect(() => {
     dispatch(getAllLeadUser(userid))
   }, [userid, dispatch])
+
+  const onSelectChange = (newSelectedRowKeys, rowsData) => {
+    setSelectedRowKeys(newSelectedRowKeys)
+  }
 
   const onSearchLead = (e, b, c) => {
     dispatch(searchCompany({ inputText: e, userId: userid }))
@@ -239,7 +257,7 @@ const MainCompanyPage = () => {
     {
       dataIndex: "address",
       title: "Address",
-      render: (_, props) => <ColComp data={props?.address} />,
+      render: (_, props) => <OverFlowText>{props?.address}</OverFlowText>,
     },
     {
       dataIndex: "city",
@@ -260,7 +278,7 @@ const MainCompanyPage = () => {
     {
       dataIndex: "secAddress",
       title: "Secondary address",
-      render: (_, props) => <ColComp data={props?.secAddress} />,
+      render: (_, props) => <OverFlowText>{props?.secAddress}</OverFlowText>,
     },
     {
       dataIndex: "secCity",
@@ -278,6 +296,37 @@ const MainCompanyPage = () => {
       render: (_, props) => <ColComp data={props?.seCountry} />,
     },
   ]
+
+  const updateMultiAssigneeForCompanies = useCallback(() => {
+    setAssignedProcessing("pending")
+    dispatch(
+      updateMultiCompanyAssignee({
+        companyId: selectedRowKeys,
+        currentUserId: userid,
+        assigneeId: assigneeId,
+      })
+    )
+      .then((resp) => {
+        if (resp.meta.requestStatus === "fulfilled") {
+          setAssignedProcessing("success")
+          notification.success({
+            message: "Companies assigned to user successfully",
+          })
+          setSelectedRowKeys([])
+          setAssigneeId(null)
+        } else {
+          setAssignedProcessing("error")
+          notification.error({ message: "Something went wrong !." })
+        }
+      })
+      .catch(() => {
+        setAssignedProcessing("error")
+        notification.error({ message: "Something went wrong !." })
+      })
+  }, [selectedRowKeys, assigneeId, dispatch, userid])
+
+
+  console.log('sdkjasjdbvsdjjb',assigneeId)
 
   return (
     <TableOutlet>
@@ -302,6 +351,7 @@ const MainCompanyPage = () => {
             allowClear
             style={{ width: "250px" }}
             placeholder="Filter out companies"
+            value={assigneeId}
             options={
               allUsers?.length > 0
                 ? allUsers?.map((item) => ({
@@ -330,13 +380,68 @@ const MainCompanyPage = () => {
             <CommonTable
               data={allCompnay}
               columns={columns}
-              scroll={{ x: 3200, y: 520 }}
+              scroll={{ x: 3300, y: 520 }}
               rowSelection={true}
+              onRowSelection={onSelectChange}
+              selectedRowKeys={selectedRowKeys}
+              rowKey={(record) => record?.companyId}
               pagination={true}
               nextDisable={allCompnay?.length < 50 ? true : false}
               prevDisable={page === 0 ? true : false}
               nextPage={handleNextPagination}
               prevPage={handlePrevPagination}
+              footerContent={
+                <div className={`bottom-line`}>
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "center",
+                      gap: 12,
+                    }}
+                  >
+                    <div>
+                      <Select
+                        showSearch
+                        allowClear
+                        size="small"
+                        style={{ width: 200 }}
+                        placeholder="select user"
+                        options={
+                          leadUserNew?.length > 0
+                            ? leadUserNew?.map((ele) => ({
+                                label: ele?.fullName,
+                                value: ele?.id,
+                              }))
+                            : []
+                        }
+                        onChange={(e) => setAssigneeId(e)}
+                        filterOption={(input, option) =>
+                          option.label
+                            .toLowerCase()
+                            .includes(input.toLowerCase())
+                        }
+                      />
+                    </div>
+                    <div>
+                      <Button
+                        type="primary"
+                        disabled={
+                          selectedRowKeys?.length === 0 && !assigneeId
+                            ? true
+                            : false
+                        }
+                        onClick={updateMultiAssigneeForCompanies}
+                        size="small"
+                      >
+                        {assignedProcessing === "pending"
+                          ? "Loading..."
+                          : "Send"}
+                      </Button>
+                    </div>
+                    <Text>Selected rows: {selectedRowKeys?.length}</Text>
+                  </div>
+                </div>
+              }
             />
           </Suspense>
         )}

@@ -69,6 +69,7 @@ import Industries from "./Main/Industry/Industries/Industries"
 import HomePageFile from "./Home/HomePageFile"
 import LandingPage from "./Home/LandingPage"
 import IpAddress from "./Main/Setting/IpAddress/IpAddress"
+import VendorsList from "./Main/Vendors/VendorsList"
 
 const SpinLoading = lazy(() => import("./components/SpinLoading"))
 
@@ -163,12 +164,12 @@ function App() {
             descriptionFontSize: 12,
             fontSize: 12,
             fontSizeSM: 12,
-            titleMarginBottom:0
+            titleMarginBottom: 0,
           },
-          Timeline:{
-            fontSize:12,
-            itemPaddingBottom:32
-          }
+          Timeline: {
+            fontSize: 12,
+            itemPaddingBottom: 32,
+          },
         },
       }}
     >
@@ -406,6 +407,11 @@ function App() {
                 <Route path="subsubindustry" element={<SubsubIndustry />} />
                 <Route path="industry" element={<Industries />} />
               </Route>
+
+              {/* end */}
+
+              {/* Vebdors Url */}
+              <Route path="/erp/:userid/vendors" element={<VendorsList />} />
 
               {/* end */}
 

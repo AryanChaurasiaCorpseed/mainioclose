@@ -18,6 +18,7 @@ const CommonTable = ({
   selectedRowKeys,
   rowClassName,
   footerContent,
+  rowKey
 }) => {
   const dispatch = useDispatch();
   const tableContainerRef = useRef(null);
@@ -114,7 +115,7 @@ const CommonTable = ({
         dataSource={data}
         pagination={false}
         scroll={scroll}
-        rowKey={(record) => record?.id}
+        rowKey={rowKey}
         rowClassName={rowClassName}
         rowSelection={
           rowSelection && {

@@ -21,7 +21,6 @@ const SideBar = () => {
     (state) => state.auth.getDepartmentDetail
   )
   const currentUserId = useSelector((state) => state.auth?.currentUser?.id)
-  
 
   useEffect(() => {
     if (currentUserId !== undefined) {
@@ -463,6 +462,22 @@ const SideBar = () => {
                 key: "subsubindustry",
               },
             ],
+          },
+        ]
+      : []),
+
+    ...(getHighestPriorityRole(currentRoles) === "ADMIN"
+      ? [
+          {
+            label: <Link to={`/erp/${userid}/vendors`}>Vendor's request</Link>,
+            key: "vendors",
+            icon: (
+              <Icon
+                icon="fluent:people-community-24-regular"
+                height={SIDE_BAR_ICON_HEIGHT}
+                width={SIDE_BAR_ICON_WIDTH}
+              />
+            ),
           },
         ]
       : []),

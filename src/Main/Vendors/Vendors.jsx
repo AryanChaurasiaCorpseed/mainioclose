@@ -21,10 +21,10 @@ import {
   getVendorDetailList,
   sendVendorsProposal,
   updateVendorStatus,
-} from "../../../Toolkit/Slices/LeadSlice"
+} from "../../Toolkit/Slices/LeadSlice"
 import { useParams } from "react-router-dom"
 import dayjs from "dayjs"
-import { BTN_ICON_HEIGHT, BTN_ICON_WIDTH } from "../../../components/Constants"
+import { BTN_ICON_HEIGHT, BTN_ICON_WIDTH } from "../../components/Constants"
 const { Text, Paragraph } = Typography
 
 const VendorForm = ({ leadId, userId, serviceName, setOpenPopOver }) => {

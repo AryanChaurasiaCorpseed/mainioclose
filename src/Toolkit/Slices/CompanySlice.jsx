@@ -165,6 +165,11 @@ export const addCommentCompanyForm = createAsyncThunk(
   }
 )
 
+export const updateMultiCompanyAssignee=createAsyncThunk('updateMultiAssignee',async(data)=>{
+  const response=putQuery(`/leadService/api/v1/company/updateMultiCompanyAssignee`,data)
+  return response.data
+})
+
 const CompnaySlice = createSlice({
   name: "company",
   initialState: {

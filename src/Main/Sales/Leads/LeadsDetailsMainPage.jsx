@@ -10,9 +10,9 @@ import { Drawer, Tabs } from "antd"
 import LeadDetailsPage from "../Inbox/LeadDetailsPage"
 import { getAllHistory } from "../../../Toolkit/Slices/HistorySlice"
 import SingleLeadTaskList from "./SingleLeadTaskList"
-import Vendors from "./Vendors"
 import { LeadActivityPage } from "./LeadActivityPage"
 import LeadHistory from "./LeadHistory"
+import Vendors from "../../Vendors/Vendors"
 
 const LeadsDetailsMainPage = ({
   children,
@@ -37,11 +37,11 @@ const LeadsDetailsMainPage = ({
         key: "activities",
         children: <LeadActivityPage leadid={leadId} />,
       },
-      // {
-      //   label: `Vendors`,
-      //   key: "vendors",
-      //   children: <Vendors leadId={leadId} />,
-      // },
+      {
+        label: `Vendors`,
+        key: "vendors",
+        children: <Vendors leadId={leadId} />,
+      },
       {
         label: `All task`,
         key: "4",

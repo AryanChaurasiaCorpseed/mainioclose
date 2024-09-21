@@ -531,6 +531,11 @@ export const sendVendorsProposal = createAsyncThunk(
   }
 )
 
+export const getAllVendorsRequest=createAsyncThunk('getAllVendorsRequest',async(id)=>{
+  const response=await getQuery(`/leadService/api/v1/vendor/find-all-vendor-request?userId=${id}`)
+  return response.data
+})
+
 export const LeadSlice = createSlice({
   name: "lead",
   initialState: {
@@ -565,6 +570,7 @@ export const LeadSlice = createSlice({
     remarkData: [],
     navigateLeadId: null,
     vendorsList: [],
+    allVendorsRequestList:[]
   },
   reducers: {
     handleLoadingState: (state, action) => {
@@ -823,6 +829,19 @@ export const LeadSlice = createSlice({
       state.vendorsList = action?.payload
     })
     builder.addCase(getVendorDetailList.rejected, (state, action) => {
+      state.loading = "rejected"
+    })
+
+
+
+    builder.addCase(getAllVendorsRequest.pending, (state, action) => {
+      state.loading = "pending"
+    })
+    builder.addCase(getAllVendorsRequest.fulfilled, (state, action) => {
+      state.loading = "success"
+      state.allVendorsRequestList = action?.payload
+    })
+    builder.addCase(getAllVendorsRequest.rejected, (state, action) => {
       state.loading = "rejected"
     })
   },
