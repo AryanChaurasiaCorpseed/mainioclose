@@ -296,29 +296,31 @@ const MainCompanyPage = () => {
           enterButton="search"
           prefix={<Icon icon="fluent:search-24-regular" />}
         />
-        <Select
-          showSearch
-          allowClear
-          style={{ width: "250px" }}
-          placeholder="filter out companies"
-          options={
-            allUsers?.length > 0
-              ? allUsers?.map((item) => ({
-                  label: item?.fullName,
-                  value: item?.id,
-                }))
-              : []
-          }
-          filterOption={(input, option) =>
-            option.label.toLowerCase().includes(input.toLowerCase())
-          }
-          onChange={filterCompanyBasedOnUser}
-          onClear={() =>
-            dispatch(
-              getCompanyAction({ id: currUser?.id, page, filterUserId: 0 })
-            )
-          }
-        />
+        {getHighestPriorityRole(currentRoles) === "ADMIN" && (
+          <Select
+            showSearch
+            allowClear
+            style={{ width: "250px" }}
+            placeholder="filter out companies"
+            options={
+              allUsers?.length > 0
+                ? allUsers?.map((item) => ({
+                    label: item?.fullName,
+                    value: item?.id,
+                  }))
+                : []
+            }
+            filterOption={(input, option) =>
+              option.label.toLowerCase().includes(input.toLowerCase())
+            }
+            onChange={filterCompanyBasedOnUser}
+            onClear={() =>
+              dispatch(
+                getCompanyAction({ id: currUser?.id, page, filterUserId: 0 })
+              )
+            }
+          />
+        )}
       </div>
       <div className="mt-3">
         {loadingCompany && <TableScalaton />}

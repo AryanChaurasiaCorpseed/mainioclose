@@ -561,10 +561,14 @@ const LeadsModule = () => {
   )
 
   const onSearchLead = (e, b, c) => {
-    setSearchText(e)
-    dispatch(searchLeads({ input: e, id: userid }))
+    if (e) {
+      setSearchText(e)
+      dispatch(searchLeads({ input: e, id: userid }))
+    }
     if (!b) {
-      dispatch(searchLeads({ input: "", id: userid }))
+      // dispatch(searchLeads({ input: "", id: userid }))
+      dispatch(getAllLeads(allMultiFilterData))
+      setSearchText("")
     }
   }
 
@@ -748,8 +752,10 @@ const LeadsModule = () => {
           onSearch={onSearchLead}
           onChange={(e) => {
             setSearchText(e.target.value)
-            if (!e.target.value) {
-              dispatch(searchLeads({ input: "", id: userid }))
+            if (!e.target.value && !e.target.value.trim()) {
+              // dispatch(searchLeads({ input: "", id: userid }))
+              dispatch(getAllLeads(allMultiFilterData))
+              setSearchText("")
             }
           }}
           enterButton="search"

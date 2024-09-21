@@ -70,10 +70,10 @@ const LeadsDetailsMainPage = ({
   const handleCloseDrawer = useCallback(() => {
     setOpenDrawer(false)
     // dispatch(getAllLeads(allMultiFilterData))
-    if (typeof setSearchText === "function") {
-      setSearchText((prev) => "")
-    }
-  }, [setSearchText])
+    // if (typeof setSearchText === "function") {
+    //   setSearchText((prev) => "")
+    // }
+  }, [])
 
   return (
     <>
