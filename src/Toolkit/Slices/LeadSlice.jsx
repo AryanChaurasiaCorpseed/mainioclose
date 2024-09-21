@@ -520,6 +520,17 @@ export const updateVendorStatus = createAsyncThunk(
   }
 )
 
+export const sendVendorsProposal = createAsyncThunk(
+  "vendorsProposal",
+  async (data) => {
+    const response = await postQuery(
+      `/leadService/api/v1/vendor/send-quotation?leadId=${data?.leadId}&userId=${data?.userId}&vendorRequestId=${data?.vendorRequestId}`,
+      data?.data
+    )
+    return response.data
+  }
+)
+
 export const LeadSlice = createSlice({
   name: "lead",
   initialState: {

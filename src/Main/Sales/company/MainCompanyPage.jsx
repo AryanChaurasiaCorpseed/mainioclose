@@ -301,7 +301,7 @@ const MainCompanyPage = () => {
             showSearch
             allowClear
             style={{ width: "250px" }}
-            placeholder="filter out companies"
+            placeholder="Filter out companies"
             options={
               allUsers?.length > 0
                 ? allUsers?.map((item) => ({

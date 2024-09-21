@@ -490,6 +490,10 @@ const LeadsModule = () => {
           dispatch(getAllLeads(allMultiFilterData))
           setMultibtn("success")
           setSelectedRowKeys([])
+          setAssignedLeadInfo({
+            statusId: null,
+            assigneId: null,
+          })
         } else {
           notification.error({ message: "Something went wrong !." })
           // playErrorSound()

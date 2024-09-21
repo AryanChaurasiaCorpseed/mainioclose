@@ -37,11 +37,11 @@ const LeadsDetailsMainPage = ({
         key: "activities",
         children: <LeadActivityPage leadid={leadId} />,
       },
-      // {
-      //   label: `Vendors`,
-      //   key: "vendors",
-      //   children: <Vendors leadId={leadId} />,
-      // },
+      {
+        label: `Vendors`,
+        key: "vendors",
+        children: <Vendors leadId={leadId} />,
+      },
       {
         label: `All task`,
         key: "4",
@@ -80,7 +80,17 @@ const LeadsDetailsMainPage = ({
       <Link
         className="link-heading"
         onClick={() => {
-          dispatch(handleViewHistory({ leadId: leadId, userid: userid }))
+          if (allMultiFilterData) {
+            dispatch(
+              handleViewHistory({ leadId: leadId, userid: userid })
+            ).then((resp) => {
+              if (resp.meta.requestStatus === "fulfilled") {
+                // dispatch(getAllLeads(allMultiFilterData))
+              }
+            })
+          } else {
+            dispatch(handleViewHistory({ leadId: leadId, userid: userid }))
+          }
           setOpenDrawer(true)
         }}
       >

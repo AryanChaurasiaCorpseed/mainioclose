@@ -283,16 +283,16 @@ const CompanyFormModal = ({
   const handleFinish = useCallback(
     (values) => {
       values.gstDocuments = values.gstDocuments?.[0]?.response
+      values.assigneeId =
+          getHighestPriorityRole(currentRoles) === "ADMIN"
+            ? values?.assigneeId
+            : userid
       setFormLoading("pending")
       if (edit) {
         values.companyFormId = companyDetail?.id
         values.isPresent = companyDetail?.isPresent
         values.leadId = companyDetail?.lead?.id
         values.companyId = companyDetail?.companyId
-        values.assigneeId =
-          getHighestPriorityRole(currentRoles) === "ADMIN"
-            ? values?.assigneeId
-            : userid
         dispatch(updateCompanyForm(values))
           .then((response) => {
             if (response.meta.requestStatus === "fulfilled") {
@@ -311,6 +311,7 @@ const CompanyFormModal = ({
               setFormLoading("rejected")
               playErrorSound()
               notification.error({ message: "Something went wrong !." })
+              form.resetFields()
             }
           })
           .catch(() => {
@@ -337,6 +338,7 @@ const CompanyFormModal = ({
               notification.success({ message: "Company created successfully." })
               playSuccessSound()
               setOpenModal(false)
+              form.resetFields()
             } else {
               setFormLoading("rejected")
               playErrorSound()

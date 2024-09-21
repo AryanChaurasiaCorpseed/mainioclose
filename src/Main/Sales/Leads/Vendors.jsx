@@ -19,6 +19,7 @@ import { useDispatch, useSelector } from "react-redux"
 import {
   addVendorsDetail,
   getVendorDetailList,
+  sendVendorsProposal,
   updateVendorStatus,
 } from "../../../Toolkit/Slices/LeadSlice"
 import { useParams } from "react-router-dom"
@@ -39,7 +40,7 @@ const VendorForm = ({ leadId, userId, serviceName, setOpenPopOver }) => {
   }
   const handleFinish = useCallback(
     (data) => {
-      data.vendorReferenceFile = data?.vendorReferenceFile?.[0]?.response
+      data.saleTeamAttachmentReference = data?.saleTeamAttachmentReference?.[0]?.response
       let temData = {
         leadId,
         userId,
@@ -52,6 +53,7 @@ const VendorForm = ({ leadId, userId, serviceName, setOpenPopOver }) => {
               message: "Vendor's details added successfully",
             })
             setOpenModal(false)
+            dispatch(getVendorDetailList({ leadId, userid: userId }))
             form.resetFields()
           } else {
             notification.error({ message: "Something went wrong !." })
@@ -87,7 +89,7 @@ const VendorForm = ({ leadId, userId, serviceName, setOpenPopOver }) => {
         >
           <Form.Item
             label="Person name"
-            name="contactPersonName"
+            name="clientName"
             rules={[
               { required: true, message: "please enter the person name" },
             ]}
@@ -96,7 +98,7 @@ const VendorForm = ({ leadId, userId, serviceName, setOpenPopOver }) => {
           </Form.Item>
           <Form.Item
             label="Email"
-            name="concernPersonMailId"
+            name="clientMailId"
             rules={[
               {
                 required: true,
@@ -131,7 +133,7 @@ const VendorForm = ({ leadId, userId, serviceName, setOpenPopOver }) => {
           </Form.Item>
           <Form.Item
             label="Reference attachement"
-            name="vendorReferenceFile"
+            name="saleTeamAttachmentReference"
             getValueFromEvent={normFile}
             valuePropName="fileList"
           >
@@ -147,12 +149,12 @@ const VendorForm = ({ leadId, userId, serviceName, setOpenPopOver }) => {
           </Form.Item>
           <Form.Item
             label="Contact number"
-            name="contactNumber"
+            name="clientMobileNumber"
             rules={[{ required: true, message: "please give contact number" }]}
           >
             <Input maxLength={10} />
           </Form.Item>
-          <Form.Item label="Budget price" name="budgetPrice">
+          <Form.Item label="Budget price" name="clientBudgetPrice">
             <Input />
           </Form.Item>
           <Form.Item
@@ -180,7 +182,7 @@ const Vendors = ({ leadId }) => {
   const [vendorDetail, setVendorDetail] = useState({})
   const [openModal, setOpenModal] = useState(false)
 
-  useState(() => {
+  useEffect(() => {
     dispatch(getVendorDetailList({ leadId, userid }))
   }, [leadId, userid])
 
@@ -227,6 +229,37 @@ const Vendors = ({ leadId }) => {
             })
             setOpenModal(false)
             form.resetFields()
+            if (values?.status === "Finished") {
+              dispatch(
+                sendVendorsProposal({
+                  userId: userid,
+                  leadId: leadId,
+                  vendorRequestId: vendorDetail?.id,
+                  data: {
+                    attachmentPath: values?.vendorReferenceFile,
+                    clientMailId: vendorDetail?.clientEmailId,
+                    comment: values?.description,
+                    clientName: vendorDetail?.contactPersonName,
+                    serviceName: vendorDetail?.serviceName,
+                  },
+                })
+              )
+                .then((resp) => {
+                  if (resp.meta.requestStatus === "fulfilled") {
+                    notification.success({ message: "Proposal send to client." })
+                  } else {
+                    notification.error({
+                      message:
+                        "Something went wrong to proposal send to client !.",
+                    })
+                  }
+                })
+                .catch(() =>
+                  notification.error({
+                    message: "Something went wrong to proposal send to client !.",
+                  })
+                )
+            }
             dispatch(getVendorDetailList({ leadId, userid }))
           } else {
             notification.error({ message: "Something went wrong !." })
@@ -294,13 +327,15 @@ const Vendors = ({ leadId }) => {
         <Row>
           <Col span={6}>
             <Flex style={{ width: "100%" }} gap={8} vertical>
-              <Text className="heading-text" type="secondary">
-                {" "}
-                Vendor's detail{" "}
-                {dayjs(vendorDetail?.updatedDate).format(
-                  "YYYY-MM-DD , hh:mm a"
-                )}{" "}
-              </Text>
+              {vendorDetail?.updatedDate && (
+                <Text className="heading-text" type="secondary">
+                  {" "}
+                  Vendor's detail{" "}
+                  {dayjs(vendorDetail?.updatedDate).format(
+                    "YYYY-MM-DD , hh:mm a"
+                  )}{" "}
+                </Text>
+              )}
               {Object.keys(vendorDetail)?.length > 0 && (
                 <Flex vertical gap={12}>
                   {vendorDetail?.contactPersonName && (
