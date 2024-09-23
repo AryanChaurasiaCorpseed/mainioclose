@@ -44,7 +44,6 @@ const SingleVendorRequestDetails = ({ data }) => {
     return e?.fileList
   }
 
-
   const handleOpenDrawer = useCallback(() => {
     setOpenDrawer(true)
     dispatch(
@@ -54,11 +53,11 @@ const SingleVendorRequestDetails = ({ data }) => {
         vendorRequestId: data?.id,
       })
     )
-  }, [dispatch, data,userid])
+  }, [dispatch, data, userid])
 
   const handleUpdateRequest = useCallback(
     (values) => {
-      values.vendorReferenceFile = values?.vendorReferenceFile?.[0]?.response
+      values.quotationFilePath = values?.quotationFilePath?.[0]?.response
       values.serviceName = data?.serviceName
       values.companyName = data?.clientCompanyName
       values.contactPersonName = data?.contactPersonName
@@ -83,7 +82,7 @@ const SingleVendorRequestDetails = ({ data }) => {
                   leadId: data?.leadId,
                   vendorRequestId: data?.id,
                   data: {
-                    attachmentPath: values?.vendorReferenceFile,
+                    attachmentPath: values?.quotationFilePath,
                     clientMailId: data?.clientEmailId,
                     comment: values?.description,
                     clientName: data?.clientName,
@@ -110,7 +109,13 @@ const SingleVendorRequestDetails = ({ data }) => {
                   })
                 )
             }
-            dispatch(getAllVendorsRequest(userid))
+            dispatch(
+              getvendorHistoryByLeadId({
+                userId: userid,
+                leadId: data?.leadId,
+                vendorRequestId: data?.id,
+              })
+            )
           } else {
             notification.error({ message: "Something went wrong !." })
           }
@@ -264,7 +269,7 @@ const SingleVendorRequestDetails = ({ data }) => {
                           <Text strong>
                             Price give by vendor : {item?.externalVendorPrice}
                           </Text>
-                          <Text strong >
+                          <Text strong>
                             Price given to vendor : {item?.internalVendorPrices}
                           </Text>
                           <Text> {item?.updateDescription}</Text>
@@ -322,27 +327,40 @@ const SingleVendorRequestDetails = ({ data }) => {
             {({ getFieldValue }) => (
               <>
                 {getFieldValue("status") === "Finished" && (
-                  <Form.Item
-                    label="Reference attachement"
-                    name="vendorReferenceFile"
-                    getValueFromEvent={normFile}
-                    valuePropName="fileList"
-                  >
-                    <Upload
-                      action="/leadService/api/v1/upload/uploadimageToFileSystem"
-                      listType="text"
+                  <>
+                    <Form.Item
+                      label="Reference attachement"
+                      name="quotationFilePath"
+                      getValueFromEvent={normFile}
+                      valuePropName="fileList"
                     >
-                      <Button size="small">
-                        <Icon icon="fluent:arrow-upload-20-filled" />
-                        Upload
-                      </Button>
-                    </Upload>
-                  </Form.Item>
+                      <Upload
+                        action="/leadService/api/v1/upload/uploadimageToFileSystem"
+                        listType="text"
+                      >
+                        <Button size="small">
+                          <Icon icon="fluent:arrow-upload-20-filled" />
+                          Upload
+                        </Button>
+                      </Upload>
+                    </Form.Item>
+
+                    <Form.Item
+                      label="Quotation amount"
+                      name="vendorSharedPrice"
+                    >
+                      <Input />
+                    </Form.Item>
+                  </>
                 )}
               </>
             )}
           </Form.Item>
-          <Form.Item label="Quotation amount" name="vendorSharedPrice">
+
+          <Form.Item label="Amount given to vendor" name="internalVendorPrices">
+            <Input />
+          </Form.Item>
+          <Form.Item label="Amount given by vendor" name="externalVendorPrice">
             <Input />
           </Form.Item>
 

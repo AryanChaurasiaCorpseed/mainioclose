@@ -53,11 +53,12 @@ const ProjectPage = () => {
       fixed: "left",
     },
     {
-      dataIndex: "client",
-      title: "Client",
+      dataIndex: "projectName",
+      title: "Project name",
       fixed: "left",
-      render: (_, props) => <OverFlowText>{props?.client}</OverFlowText>,
+      render: (_, props) => <OverFlowText>{props?.projectName}</OverFlowText>,
     },
+
     {
       dataIndex: "leadNane",
       title: "Lead name",
@@ -65,10 +66,11 @@ const ProjectPage = () => {
       render: (_, props) => <OverFlowText>{props?.leadName}</OverFlowText>,
     },
     {
-      dataIndex: "projectName",
-      title: "Project name",
-      render: (_, props) => <OverFlowText>{props?.projectName}</OverFlowText>,
+      dataIndex: "client",
+      title: "Client",
+      render: (_, props) => <OverFlowText>{props?.client}</OverFlowText>,
     },
+
     {
       dataIndex: "amount",
       title: "Amount",
