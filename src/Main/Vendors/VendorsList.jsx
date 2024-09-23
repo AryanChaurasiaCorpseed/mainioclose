@@ -10,11 +10,11 @@ import SingleVendorRequestDetails from "./SingleVendorRequestDetails"
 
 const VendorsList = () => {
   const dispatch = useDispatch()
-
+  const loading = useSelector((state) => state.leads.loading)
   const { userid } = useParams()
 
   useEffect(() => {
-    dispatch(getAllVendorsRequest(userid))
+    dispatch(getAllVendorsRequest({ id: userid, page: 0 }))
   }, [dispatch, userid])
 
   const allVendorsRequestList = useSelector(
@@ -49,7 +49,9 @@ const VendorsList = () => {
     {
       dataIndex: "vendorComment",
       title: "Comment",
-      render: (info) => <OverFlowText>{info}</OverFlowText>,
+      render: (_, info) => (
+        <OverFlowText>{info?.requirementDescription}</OverFlowText>
+      ),
     },
     {
       dataIndex: "requestStatus",
@@ -63,15 +65,14 @@ const VendorsList = () => {
       <div className="create-user-box">
         <MainHeading data={`Vendors request list`} />
       </div>
-
-      {allVendorsRequestList?.length > 0 ? (
+      {loading === "pending" ? (
+        <TableScalaton />
+      ) : (
         <CommonTable
           data={allVendorsRequestList}
           columns={columns}
           scroll={{ y: 520 }}
         />
-      ) : (
-        <TableScalaton />
       )}
     </>
   )

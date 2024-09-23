@@ -28,6 +28,7 @@ import OverFlowText from "../../../components/OverFlowText"
 import { Icon } from "@iconify/react"
 import { getHighestPriorityRole } from "../../Common/Commons"
 import { BTN_ICON_HEIGHT, BTN_ICON_WIDTH } from "../../../components/Constants"
+import CompanyHistory from "./CompanyHistory"
 const CommonTable = lazy(() => import("../../../components/CommonTable"))
 const { Search } = Input
 const { Text } = Typography
@@ -294,6 +295,11 @@ const MainCompanyPage = () => {
       dataIndex: "seCountry",
       title: "Secondary country",
       render: (_, props) => <ColComp data={props?.seCountry} />,
+    },
+    {
+      dataIndex: "History",
+      title: "Company history",
+      render: (_, props) => <CompanyHistory  companyId={props.companyId}    />,
     },
   ]
 

@@ -313,7 +313,7 @@ const CompanyForm = ({ role }) => {
                   </Button>
                   {/* <Tooltip title="Approved" arrow={false}>
                     <Button
-                      size="small"
+                      size="small" 
                       type="text"
                       disabled={value?.status === "approved"}
                       onClick={() => {

@@ -5,7 +5,7 @@ import { putQuery } from "../../API/PutQuery"
 
 export const getCompanyAction = createAsyncThunk(
   "getallCompanyData",
-  async ({ id, page,filterUserId }) => {
+  async ({ id, page, filterUserId }) => {
     const getCompanyData = await getQuery(
       `/leadService/api/v1/company/getAllCompany?userId=${id}&filterUserId=${filterUserId}&page=${page}&size=50`
     )
@@ -104,7 +104,7 @@ export const updateCompanyAssignee = createAsyncThunk(
   "updateCompanyAssignee",
   async (data) => {
     const response = await putQuery(
-      `/leadService/api/v1/company/updateCompanyAssignee?companyId=${data?.companyId}&assigneeId=${data?.assigneeId}`
+      `/leadService/api/v1/company/updateCompanyAssignee?companyId=${data?.companyId}&assigneeId=${data?.assigneeId}&currentUserId=${data?.currentUserId}`
     )
     return response.data
   }
@@ -165,10 +165,26 @@ export const addCommentCompanyForm = createAsyncThunk(
   }
 )
 
-export const updateMultiCompanyAssignee=createAsyncThunk('updateMultiAssignee',async(data)=>{
-  const response=putQuery(`/leadService/api/v1/company/updateMultiCompanyAssignee`,data)
-  return response.data
-})
+export const updateMultiCompanyAssignee = createAsyncThunk(
+  "updateMultiAssignee",
+  async (data) => {
+    const response = putQuery(
+      `/leadService/api/v1/company/updateMultiCompanyAssignee`,
+      data
+    )
+    return response.data
+  }
+)
+
+export const getHistoryByCompanyId = createAsyncThunk(
+  "getCompanyByHistoryId",
+  async (id) => {
+    const response = await getQuery(
+      `/leadService/api/v1/companyHistory/getAllCompanyHistory?companyId=${id}`
+    )
+    return response.data
+  }
+)
 
 const CompnaySlice = createSlice({
   name: "company",
@@ -189,6 +205,7 @@ const CompnaySlice = createSlice({
     allCompanyUnits: [],
     companyDetail: {},
     page: 0,
+    companyHistoryList: [],
   },
   reducers: {
     handleNextPagination: (state, action) => {
@@ -326,6 +343,17 @@ const CompnaySlice = createSlice({
       state.loading = "success"
     })
     builder.addCase(searchCompanyForm.rejected, (state, action) => {
+      state.loading = "rejected"
+    })
+
+    builder.addCase(getHistoryByCompanyId.pending, (state, action) => {
+      state.loading = "pending"
+    })
+    builder.addCase(getHistoryByCompanyId.fulfilled, (state, action) => {
+      state.companyHistoryList = action.payload
+      state.loading = "success"
+    })
+    builder.addCase(getHistoryByCompanyId.rejected, (state, action) => {
       state.loading = "rejected"
     })
   },

@@ -531,8 +531,8 @@ export const sendVendorsProposal = createAsyncThunk(
   }
 )
 
-export const getAllVendorsRequest=createAsyncThunk('getAllVendorsRequest',async(id)=>{
-  const response=await getQuery(`/leadService/api/v1/vendor/find-all-vendor-request?userId=${id}`)
+export const getAllVendorsRequest=createAsyncThunk('getAllVendorsRequest',async({id,page})=>{
+  const response=await getQuery(`/leadService/api/v1/vendor/find-all-vendor-request?userId=${id}&page=${page}&size=50`)
   return response.data
 })
 

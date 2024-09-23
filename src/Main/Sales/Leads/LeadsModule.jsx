@@ -769,9 +769,9 @@ const LeadsModule = () => {
       </div>
       <div className="table-arrow">
         <Suspense fallback={<TableScalaton />}>
-          {leadsLoading === "pending" ? (
+          {/* {leadsLoading === "pending" ? (
             <TableScalaton />
-          ) : (
+          ) : ( */}
             <CommonTable
               data={allLeadData}
               columns={columns}
@@ -888,7 +888,7 @@ const LeadsModule = () => {
                 )
               }
             />
-          )}
+          {/* )} */}
         </Suspense>
       </div>
     </div>

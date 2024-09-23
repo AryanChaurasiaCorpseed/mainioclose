@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from "react"
+import React, { useCallback, useEffect, useMemo, useState } from "react"
 import {
   getAllLeads,
   getAllTaskData,
@@ -24,23 +24,28 @@ const LeadsDetailsMainPage = ({
   const dispatch = useDispatch()
   const { userid } = useParams()
   const [openDrawer, setOpenDrawer] = useState(false)
+  const [currLeadId, setCurrLeadId] = useState(null)
 
-  const items = useMemo(() => {
+  useEffect(() => {
+    setCurrLeadId(leadId)
+  }, [leadId])
+
+  const items = useCallback(() => {
     return [
       {
         label: `Lead details`,
         key: "leadDetail",
-        children: <LeadDetailsPage leadid={leadId} />,
+        children: <LeadDetailsPage leadid={currLeadId} />,
       },
       {
         label: `Activities `,
         key: "activities",
-        children: <LeadActivityPage leadid={leadId} />,
+        children: <LeadActivityPage leadid={currLeadId} />,
       },
       {
         label: `Vendors`,
         key: "vendors",
-        children: <Vendors leadId={leadId} />,
+        children: <Vendors leadId={currLeadId} />,
       },
       {
         label: `All task`,
@@ -50,26 +55,29 @@ const LeadsDetailsMainPage = ({
       {
         label: `History`,
         key: "allTask",
-        children: <LeadHistory leadid={leadId} />,
+        children: <LeadHistory leadid={currLeadId} />,
       },
     ]
-  }, [leadId])
+  }, [currLeadId])
 
   const handleOnChange = useCallback(
     (e) => {
       if (e === "5") {
-        dispatch(getAllHistory({ id: leadId }))
+        dispatch(getAllHistory({ id: currLeadId }))
       }
       if (e === "4") {
-        dispatch(getAllTaskData(leadId))
+        dispatch(getAllTaskData(currLeadId))
       }
     },
-    [dispatch, leadId]
+    [dispatch, currLeadId]
   )
 
   const handleCloseDrawer = useCallback(() => {
     setOpenDrawer(false)
-    // dispatch(getAllLeads(allMultiFilterData))
+    setCurrLeadId(null)
+    // if (allMultiFilterData) {
+    //   dispatch(getAllLeads(allMultiFilterData))
+    // }
     // if (typeof setSearchText === "function") {
     //   setSearchText((prev) => "")
     // }
@@ -85,12 +93,13 @@ const LeadsDetailsMainPage = ({
               handleViewHistory({ leadId: leadId, userid: userid })
             ).then((resp) => {
               if (resp.meta.requestStatus === "fulfilled") {
-                // dispatch(getAllLeads(allMultiFilterData))
+                dispatch(getAllLeads(allMultiFilterData))
               }
             })
           } else {
             dispatch(handleViewHistory({ leadId: leadId, userid: userid }))
           }
+          setCurrLeadId(leadId)
           setOpenDrawer(true)
         }}
       >
@@ -106,7 +115,7 @@ const LeadsDetailsMainPage = ({
         <Tabs
           defaultActiveKey="leadDetail"
           size="small"
-          items={items}
+          items={items()}
           onChange={handleOnChange}
         />
       </Drawer>

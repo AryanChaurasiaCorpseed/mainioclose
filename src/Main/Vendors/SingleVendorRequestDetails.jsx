@@ -49,7 +49,7 @@ const SingleVendorRequestDetails = ({ data }) => {
       let obj = {
         vendorId: data?.id,
         userId: userid,
-        // leadId: leadId,
+        leadId: data?.leadId,
         data: values,
       }
       dispatch(updateVendorStatus(obj))
@@ -64,7 +64,7 @@ const SingleVendorRequestDetails = ({ data }) => {
               dispatch(
                 sendVendorsProposal({
                   userId: userid,
-                //   leadId: leadId,
+                  leadId: data?.leadId,
                   vendorRequestId: data?.id,
                   data: {
                     attachmentPath: values?.vendorReferenceFile,
