@@ -176,6 +176,17 @@ const SingleVendorRequestDetails = ({ data }) => {
                       <Text>{data?.clientEmailId}</Text>
                     </Flex>
                   )}
+                  
+                  {data?.contactNumber && (
+                    <Flex gap={6}>
+                      <Icon
+                        icon="fluent:call-24-regular"
+                        height={BTN_ICON_HEIGHT}
+                        width={BTN_ICON_WIDTH}
+                      />
+                      <Text>{data?.contactNumber}</Text>
+                    </Flex>
+                  )}
 
                   {data?.clientCompanyName && (
                     <Flex gap={6}>

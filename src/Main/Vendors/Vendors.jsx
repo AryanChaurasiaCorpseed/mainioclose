@@ -364,6 +364,17 @@ const Vendors = ({ leadId }) => {
                     </Flex>
                   )}
 
+                  {vendorDetail?.contactNumber && (
+                    <Flex gap={6}>
+                      <Icon
+                        icon="fluent:call-24-regular"
+                        height={BTN_ICON_HEIGHT}
+                        width={BTN_ICON_WIDTH}
+                      />
+                      <Text>{vendorDetail?.contactNumber}</Text>
+                    </Flex>
+                  )}
+
                   {vendorDetail?.clientCompanyName && (
                     <Flex gap={6}>
                       <Icon
