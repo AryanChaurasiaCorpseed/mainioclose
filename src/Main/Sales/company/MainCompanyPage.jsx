@@ -73,6 +73,7 @@ const MainCompanyPage = () => {
       let data = {
         companyId: companyId,
         assigneeId: assigneeId,
+        currentUserId:userid
       }
       dispatch(updateCompanyAssignee(data))
         .then((response) => {
@@ -100,7 +101,7 @@ const MainCompanyPage = () => {
         dispatch(getCompanyAction({ id: currUser?.id, page, filterUserId }))
       }
     },
-    [page, dispatch, currUser]
+    [page, dispatch, currUser,userid]
   )
 
   const tagsInTooltip = (data, type) => {
