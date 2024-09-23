@@ -531,10 +531,25 @@ export const sendVendorsProposal = createAsyncThunk(
   }
 )
 
-export const getAllVendorsRequest=createAsyncThunk('getAllVendorsRequest',async({id,page})=>{
-  const response=await getQuery(`/leadService/api/v1/vendor/find-all-vendor-request?userId=${id}&page=${page}&size=50`)
-  return response.data
-})
+export const getAllVendorsRequest = createAsyncThunk(
+  "getAllVendorsRequest",
+  async ({ id, page }) => {
+    const response = await getQuery(
+      `/leadService/api/v1/vendor/find-all-vendor-request?userId=${id}&page=${page}&size=50`
+    )
+    return response.data
+  }
+)
+
+export const getvendorHistoryByLeadId = createAsyncThunk(
+  "getvendorHistoryByLeadId",
+  async (data) => {
+    const response = await getQuery(
+      `/leadService/api/v1/vendor/find-update-request-history?userId=${data?.userId}&leadId=${data?.leadId}&vendorRequestId=${data?.vendorRequestId}`
+    )
+    return response.data
+  }
+)
 
 export const LeadSlice = createSlice({
   name: "lead",
@@ -570,7 +585,9 @@ export const LeadSlice = createSlice({
     remarkData: [],
     navigateLeadId: null,
     vendorsList: [],
-    allVendorsRequestList:[]
+    allVendorsRequestList: [],
+    singleVendorHistoryList:[],
+    historyLoading:''
   },
   reducers: {
     handleLoadingState: (state, action) => {
@@ -832,8 +849,6 @@ export const LeadSlice = createSlice({
       state.loading = "rejected"
     })
 
-
-
     builder.addCase(getAllVendorsRequest.pending, (state, action) => {
       state.loading = "pending"
     })
@@ -843,6 +858,17 @@ export const LeadSlice = createSlice({
     })
     builder.addCase(getAllVendorsRequest.rejected, (state, action) => {
       state.loading = "rejected"
+    })
+
+    builder.addCase(getvendorHistoryByLeadId.pending, (state, action) => {
+      state.historyLoading = "pending"
+    })
+    builder.addCase(getvendorHistoryByLeadId.fulfilled, (state, action) => {
+      state.historyLoading = "success"
+      state.singleVendorHistoryList = action?.payload
+    })
+    builder.addCase(getvendorHistoryByLeadId.rejected, (state, action) => {
+      state.historyLoading = "rejected"
     })
   },
 })

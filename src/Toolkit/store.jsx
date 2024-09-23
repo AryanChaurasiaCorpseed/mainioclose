@@ -61,7 +61,7 @@ export const store = configureStore({
   reducer: persistedReducer,
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
-      serializableCheck: false, // Disable serialization check
+      serializableCheck: false,
     }),
 })
 

@@ -62,7 +62,7 @@ const ProjectPage = () => {
       dataIndex: "leadNane",
       title: "Lead name",
       fixed: "left",
-      render: (_, props) => <OverFlowText>{props?.leadNane}</OverFlowText>,
+      render: (_, props) => <OverFlowText>{props?.leadName}</OverFlowText>,
     },
     {
       dataIndex: "projectName",

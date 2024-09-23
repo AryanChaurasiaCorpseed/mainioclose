@@ -17,9 +17,10 @@ import React, { useCallback, useState } from "react"
 import { Icon } from "@iconify/react"
 import { BTN_ICON_HEIGHT, BTN_ICON_WIDTH } from "../../components/Constants"
 import dayjs from "dayjs"
-import { useDispatch } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import {
   getAllVendorsRequest,
+  getvendorHistoryByLeadId,
   sendVendorsProposal,
   updateVendorStatus,
 } from "../../Toolkit/Slices/LeadSlice"
@@ -29,6 +30,9 @@ const { Text, Paragraph } = Typography
 const SingleVendorRequestDetails = ({ data }) => {
   const { userid } = useParams()
   const dispatch = useDispatch()
+  const historyList = useSelector(
+    (state) => state.leads.singleVendorHistoryList
+  )
   const [openDrawer, setOpenDrawer] = useState(false)
   const [openModal, setOpenModal] = useState(false)
   const [form] = Form.useForm()
@@ -39,6 +43,18 @@ const SingleVendorRequestDetails = ({ data }) => {
     }
     return e?.fileList
   }
+
+
+  const handleOpenDrawer = useCallback(() => {
+    setOpenDrawer(true)
+    dispatch(
+      getvendorHistoryByLeadId({
+        userId: userid,
+        leadId: data?.leadId,
+        vendorRequestId: data?.id,
+      })
+    )
+  }, [dispatch, data,userid])
 
   const handleUpdateRequest = useCallback(
     (values) => {
@@ -107,12 +123,12 @@ const SingleVendorRequestDetails = ({ data }) => {
   )
   return (
     <>
-      <Button size="small" shape="round" onClick={() => setOpenDrawer(true)}>
+      <Button size="small" shape="round" onClick={handleOpenDrawer}>
         Status
       </Button>
       <Drawer
         open={openDrawer}
-        width={'80%'}
+        width={"80%"}
         closeIcon={null}
         onClose={() => setOpenDrawer(false)}
       >
@@ -209,8 +225,8 @@ const SingleVendorRequestDetails = ({ data }) => {
             <Timeline
               mode="left"
               items={
-                data?.vendorUpdateHistoryAllResponseList?.length > 0
-                  ? data?.vendorUpdateHistoryAllResponseList?.map((item) => ({
+                historyList?.length > 0
+                  ? historyList?.map((item) => ({
                       color:
                         item?.requestStatus === "Unavailable"
                           ? "red"
@@ -234,13 +250,26 @@ const SingleVendorRequestDetails = ({ data }) => {
                         <Flex vertical gap="2" justify="flex-end">
                           <Text>{item?.requestStatus}</Text>
                           <Text type="secondary">
+                            by {item?.user?.fullName}
+                          </Text>
+                          <Text type="secondary">
                             {dayjs(item?.updateDate).format(
                               "YYYY-MM-DD , hh:mm a"
                             )}
                           </Text>
                         </Flex>
                       ),
-                      children: item?.updateDescription,
+                      children: (
+                        <Flex vertical gap={2}>
+                          <Text strong>
+                            Price give by vendor : {item?.externalVendorPrice}
+                          </Text>
+                          <Text strong >
+                            Price given to vendor : {item?.internalVendorPrices}
+                          </Text>
+                          <Text> {item?.updateDescription}</Text>
+                        </Flex>
+                      ),
                     }))
                   : []
               }

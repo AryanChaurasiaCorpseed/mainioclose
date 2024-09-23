@@ -40,7 +40,8 @@ const VendorForm = ({ leadId, userId, serviceName, setOpenPopOver }) => {
   }
   const handleFinish = useCallback(
     (data) => {
-      data.saleTeamAttachmentReference = data?.saleTeamAttachmentReference?.[0]?.response
+      data.saleTeamAttachmentReference =
+        data?.saleTeamAttachmentReference?.[0]?.response
       let temData = {
         leadId,
         userId,
@@ -246,7 +247,9 @@ const Vendors = ({ leadId }) => {
               )
                 .then((resp) => {
                   if (resp.meta.requestStatus === "fulfilled") {
-                    notification.success({ message: "Proposal send to client." })
+                    notification.success({
+                      message: "Proposal send to client.",
+                    })
                   } else {
                     notification.error({
                       message:
@@ -256,7 +259,8 @@ const Vendors = ({ leadId }) => {
                 })
                 .catch(() =>
                   notification.error({
-                    message: "Something went wrong to proposal send to client !.",
+                    message:
+                      "Something went wrong to proposal send to client !.",
                   })
                 )
             }
@@ -320,9 +324,9 @@ const Vendors = ({ leadId }) => {
       <div style={{ marginTop: "12px" }}>
         <Flex justify="space-between">
           <Text className="heading-text">Vendor's request status</Text>
-          <Button size="small" onClick={() => setOpenModal(true)}>
+          {/* <Button size="small" onClick={() => setOpenModal(true)}>
             Update status
-          </Button>
+          </Button> */}
         </Flex>
         <Row>
           <Col span={6}>
@@ -439,6 +443,7 @@ const Vendors = ({ leadId }) => {
                       label: (
                         <Flex vertical gap="2" justify="flex-end">
                           <Text>{item?.requestStatus}</Text>
+
                           <Text type="secondary">
                             {dayjs(item?.updateDate).format(
                               "YYYY-MM-DD , hh:mm a"
@@ -446,7 +451,14 @@ const Vendors = ({ leadId }) => {
                           </Text>
                         </Flex>
                       ),
-                      children: item?.updateDescription,
+                      children: (
+                        <Flex vertical gap={2}>
+                          {item?.quotationAmount && (
+                            <Text strong>{item?.quotationAmount}</Text>
+                          )}
+                          <Text>{item?.updateDescription}</Text>
+                        </Flex>
+                      ),
                     }))
                   : []
               }

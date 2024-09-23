@@ -308,7 +308,7 @@ const CompnaySlice = createSlice({
     builder.addCase(getAllCompanyUnits.fulfilled, (state, action) => {
       state.allCompanyUnits = action.payload
       state.loading = "success"
-    })
+    }       )
     builder.addCase(getAllCompanyUnits.rejected, (state, action) => {
       state.loading = "rejected"
     })
