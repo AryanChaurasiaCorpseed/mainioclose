@@ -332,13 +332,13 @@ const SingleVendorRequestDetails = ({ data }) => {
 
           <Form.Item
             shouldUpdate={(prevValues, currentValues) =>
-              prevValues.status !== currentValues.status
+              prevValues.requestStatus !== currentValues.requestStatus
             }
             noStyle
           >
             {({ getFieldValue }) => (
               <>
-                {getFieldValue("status") === "Finished" && (
+                {getFieldValue("requestStatus") === "Finished" && (
                   <>
                     <Form.Item
                       label="Reference attachement"
