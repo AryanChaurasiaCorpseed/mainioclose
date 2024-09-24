@@ -304,7 +304,7 @@ const SingleVendorRequestDetails = ({ data }) => {
         onOk={() => form.submit()}
       >
         <Form layout="vertical" onFinish={handleUpdateRequest} form={form}>
-          <Form.Item label="Status" name="status">
+          <Form.Item label="Status" name="requestStatus">
             <Select
               options={[
                 {
@@ -381,7 +381,7 @@ const SingleVendorRequestDetails = ({ data }) => {
             <Input />
           </Form.Item>
 
-          <Form.Item label="Description" name="description">
+          <Form.Item label="Description" name="comment">
             <Input.TextArea />
           </Form.Item>
         </Form>
