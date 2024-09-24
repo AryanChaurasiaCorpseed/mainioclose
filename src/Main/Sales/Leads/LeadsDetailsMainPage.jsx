@@ -93,7 +93,7 @@ const LeadsDetailsMainPage = ({
               handleViewHistory({ leadId: leadId, userid: userid })
             ).then((resp) => {
               if (resp.meta.requestStatus === "fulfilled") {
-                dispatch(getAllLeads(allMultiFilterData))
+                // dispatch(getAllLeads(allMultiFilterData))
               }
             })
           } else {

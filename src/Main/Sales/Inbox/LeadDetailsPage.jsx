@@ -86,7 +86,9 @@ const LeadDetailsPage = ({ leadid }) => {
   }, [singleLeadResponseData])
 
   const getSingleLeadData = useCallback(() => {
-    dispatch(getSingleLeadDataByLeadID({ leadid, userid }))
+    if (leadid) {
+      dispatch(getSingleLeadDataByLeadID({ leadid, userid }))
+    }
   }, [leadid, dispatch])
 
   const updateOriginalNameFun = useCallback(() => {
@@ -112,9 +114,11 @@ const LeadDetailsPage = ({ leadid }) => {
   }, [originalData, dispatch, getSingleLeadData])
 
   useEffect(() => {
-    dispatch(editViewData(leadid))
-    dispatch(getAllRemarkAndCommnts(leadid))
-  }, [dispatch, leadid, userid])
+    if (leadid) {
+      dispatch(editViewData(leadid))
+      dispatch(getAllRemarkAndCommnts(leadid))
+    }
+  }, [dispatch, leadid])
 
   const adminRole = currentUserRoles.includes("ADMIN")
 
