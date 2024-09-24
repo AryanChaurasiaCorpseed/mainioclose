@@ -75,7 +75,7 @@ const SingleVendorRequestDetails = ({ data }) => {
             })
             setOpenModal(false)
             form.resetFields()
-            if (values?.status === "Finished") {
+            if (values?.requestStatus === "Finished") {
               dispatch(
                 sendVendorsProposal({
                   userId: userid,
