@@ -82,11 +82,11 @@ const SingleVendorRequestDetails = ({ data }) => {
                   leadId: data?.leadId,
                   vendorRequestId: data?.id,
                   data: {
-                    attachmentPath: values?.quotationFilePath,
                     clientMailId: data?.clientEmailId,
-                    comment: values?.description,
                     clientName: data?.clientName,
                     serviceName: data?.serviceName,
+                    budgetPrice: data?.budgetPrice,
+                    ...values,
                   },
                 })
               )
@@ -176,7 +176,7 @@ const SingleVendorRequestDetails = ({ data }) => {
                       <Text>{data?.clientEmailId}</Text>
                     </Flex>
                   )}
-                  
+
                   {data?.contactNumber && (
                     <Flex gap={6}>
                       <Icon
@@ -359,6 +359,14 @@ const SingleVendorRequestDetails = ({ data }) => {
                     <Form.Item
                       label="Quotation amount"
                       name="vendorSharedPrice"
+                    >
+                      <Input />
+                    </Form.Item>
+
+                    <Form.Item
+                      label="Additional email"
+                      name="additionalMailId"
+                      rules={[{ type: "email" }]}
                     >
                       <Input />
                     </Form.Item>

@@ -7,6 +7,9 @@ import CommonTable from "../../components/CommonTable"
 import TableScalaton from "../../components/TableScalaton"
 import MainHeading from "../../components/design/MainHeading"
 import SingleVendorRequestDetails from "./SingleVendorRequestDetails"
+import { Icon } from "@iconify/react"
+import { Flex, Typography } from "antd"
+const { Text } = Typography
 
 const VendorsList = () => {
   const dispatch = useDispatch()
@@ -25,6 +28,16 @@ const VendorsList = () => {
     {
       dataIndex: "id",
       title: "Id",
+      width: 90,
+      render: (_, data) => (
+        <Flex gap={4} align='center'>
+          <Text>{data?.id}</Text>
+          <Icon
+            icon="fluent:circle-16-filled"
+            color={data?.proposalSentStatus ? "green" : "red"}
+          />
+        </Flex>
+      ),
     },
     {
       dataIndex: "clientName",
@@ -39,12 +52,8 @@ const VendorsList = () => {
       title: "Client contact",
     },
     {
-      dataIndex: "clientBudget",
+      dataIndex: "budgetPrice",
       title: "Client budget",
-    },
-    {
-      dataIndex: "vendorSharedPrice",
-      title: "Vendor shared price",
     },
     {
       dataIndex: "vendorComment",
