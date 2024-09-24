@@ -85,6 +85,7 @@ const SingleVendorRequestDetails = ({ data }) => {
                     clientMailId: data?.clientEmailId,
                     clientName: data?.clientName,
                     serviceName: data?.serviceName,
+                    clientContactNumber: data?.clientMobileNumber,
                     budgetPrice: data?.budgetPrice,
                     ...values,
                   },
@@ -356,10 +357,7 @@ const SingleVendorRequestDetails = ({ data }) => {
                       </Upload>
                     </Form.Item>
 
-                    <Form.Item
-                      label="Quotation amount"
-                      name="vendorSharedPrice"
-                    >
+                    <Form.Item label="Quotation amount" name="quotationAmount">
                       <Input />
                     </Form.Item>
 
