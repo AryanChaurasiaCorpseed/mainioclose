@@ -292,6 +292,11 @@ const LeadsModule = () => {
       dataIndex: "count",
     },
     {
+      title: "Mobile no.",
+      dataIndex: "mobileNo",
+      checked: true,
+    },
+    {
       title: "Missed task",
       dataIndex: "missedTaskDate",
       checked: true,
@@ -339,11 +344,7 @@ const LeadsModule = () => {
         </OverFlowText>
       ),
     },
-    {
-      title: "Mobile no.",
-      dataIndex: "mobileNo",
-      checked: true,
-    },
+    
     {
       title: "Email",
       dataIndex: "email",
@@ -770,13 +771,10 @@ const LeadsModule = () => {
       </div>
       <div className="table-arrow">
         <Suspense fallback={<TableScalaton />}>
-          {/* {leadsLoading === "pending" ? (
-            <TableScalaton />
-          ) : ( */}
             <CommonTable
               data={allLeadData}
               columns={columns}
-              scroll={{ y: 490, x: adminRole ? 2500 : 1500 }}
+              scroll={{ y: 520, x: adminRole ? 2500 : 1500 }}
               rowSelection={true}
               onRowSelection={onSelectChange}
               selectedRowKeys={selectedRowKeys}
@@ -889,7 +887,6 @@ const LeadsModule = () => {
                 )
               }
             />
-          {/* )} */}
         </Suspense>
       </div>
     </div>

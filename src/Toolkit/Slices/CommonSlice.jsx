@@ -24,12 +24,18 @@ export const getManagerById = createAsyncThunk("getManagerById", async (id) => {
   return response.data
 })
 
+export const getProcurementAssigneeList=createAsyncThunk('getProcurementAssigneeList',async(id)=>{
+  const response=await getQuery(`/leadService/api/v1/users/fetchProcurementUsers?userId=${id}`)
+  return response.data
+})
+
 const CommonSlice = createSlice({
   name: "common",
   initialState: {
     desiginationListById: [],
     loading: "",
     managerListById: [],
+    procurementAssigneeList:[]
   },
   extraReducers: (builder) => {
     builder.addCase(getDesiginationById.pending, (state, action) => {
@@ -52,6 +58,19 @@ const CommonSlice = createSlice({
     builder.addCase(getManagerById.rejected, (state, action) => {
       state.loading = "rejected"
     })
+
+    builder.addCase(getProcurementAssigneeList.pending, (state, action) => {
+      state.loading = "pending"
+    })
+    builder.addCase(getProcurementAssigneeList.fulfilled, (state, action) => {
+      state.loading = "success"
+      state.procurementAssigneeList = action.payload
+    })
+    builder.addCase(getProcurementAssigneeList.rejected, (state, action) => {
+      state.loading = "rejected"
+    })
+
+
   },
 })
 

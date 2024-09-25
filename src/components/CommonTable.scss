@@ -39,27 +39,27 @@
 
 .table-container {
   .ant-table-body {
-    max-height: 70vh; 
+    max-height: 80vh; 
   }
 
 
   @media (max-width: 1366px) {
     .ant-table-body {
-      max-height: 40vh; 
+      max-height: 50vh; 
     }
   }
 
  
   @media (min-width: 1367px) and (max-width: 1920px) {
     .ant-table-body {
-      max-height: 70vh; 
+      max-height: 80vh; 
     }
   }
 
 
   @media (min-width: 1921px) {
     .ant-table-body {
-      max-height: 70vh; 
+      max-height: 80vh; 
     }
   }
 }

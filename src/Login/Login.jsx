@@ -4,7 +4,11 @@ import { Link, useNavigate } from "react-router-dom"
 import { useDispatch } from "react-redux"
 import { toast } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
-import { getCurrentUser, handleLoadingState } from "../Toolkit/Slices/AuthSlice"
+import {
+  getCurrentUser,
+  getDepartmentOfUser,
+  handleLoadingState,
+} from "../Toolkit/Slices/AuthSlice"
 import { Button, Checkbox, Form, Input, notification, Typography } from "antd"
 import { Icon } from "@iconify/react"
 const { Text } = Typography
@@ -27,8 +31,16 @@ const Login = () => {
           if (resp.meta.requestStatus === "fulfilled") {
             if (resp?.payload?.id !== undefined) {
               setLoading("fulfilled")
-              notification.success({ message: "User logged in successfully" })
-              navigate(`/erp/${resp?.payload?.id}/sales/leads`)
+              dispatch(getDepartmentOfUser(resp?.payload?.id)).then(
+                (response) => {
+                  if (response.payload?.department === "Procurement") {
+                    navigate(`/erp/${resp?.payload?.id}/vendors`)
+                  } else {
+                    navigate(`/erp/${resp?.payload?.id}/sales/leads`)
+                  }
+                }
+              )
+              notification.success({ message: "User logged in successfully." })
             } else {
               setLoading("ipRestricted")
               notification.error({ message: "Ip address restricted ." })
@@ -44,14 +56,17 @@ const Login = () => {
           notification.error({ message: "Something went wrong !." })
         })
     },
-    [dispatch,navigate]
+    [dispatch, navigate]
   )
 
   return (
     <div className="cm-box bg-g-light container">
       <div className="sm-box">
         <div>
-          <img src="https://www.corpseed.com/assets/img/brands/CORPSEED.webp" alt="corpseed logo" />
+          <img
+            src="https://www.corpseed.com/assets/img/brands/CORPSEED.webp"
+            alt="corpseed logo"
+          />
           <h3
             style={{
               margin: "4px 0px 4px 14px",
@@ -71,7 +86,7 @@ const Login = () => {
           <Form.Item
             label="Email"
             name="email"
-            rules={[{ required: true, message: "please enter your email" }]}
+            rules={[{ required: true, message: "please enter your email." }]}
           >
             <Input
               prefix={
@@ -84,7 +99,7 @@ const Login = () => {
           <Form.Item
             label="Password"
             name="password"
-            rules={[{ required: true, message: "please enter your password" }]}
+            rules={[{ required: true, message: "please enter your password." }]}
           >
             <Input.Password
               prefix={

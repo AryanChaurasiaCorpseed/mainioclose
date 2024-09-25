@@ -28,6 +28,8 @@ const SideBar = () => {
     }
   }, [dispatch, currentUserId])
 
+  console.log("sdklgfksdjhflkjasdlkfjhg", currentUserDetail)
+
   const items = [
     {
       label: "Dashboard",
@@ -466,7 +468,8 @@ const SideBar = () => {
         ]
       : []),
 
-    ...(getHighestPriorityRole(currentRoles) === "ADMIN"
+    ...(getHighestPriorityRole(currentRoles) === "ADMIN" ||
+    currentUserDetail?.department === "Procurement"
       ? [
           {
             label: <Link to={`/erp/${userid}/vendors`}>Vendor's request</Link>,

@@ -551,6 +551,16 @@ export const getvendorHistoryByLeadId = createAsyncThunk(
   }
 )
 
+export const changeProcurementAssignee = createAsyncThunk(
+  "changeProcurementAssignee",
+  async (data) => {
+    const response = await putQuery(
+      `/leadService/api/v1/vendor/edit-vendor-details-request?vendorId=${data?.vendorId}&updatedById=${data?.updatedById}&assigneeToId=${data?.assigneeToId}`
+    )
+    return response.data
+  }
+)
+
 export const LeadSlice = createSlice({
   name: "lead",
   initialState: {
@@ -586,8 +596,8 @@ export const LeadSlice = createSlice({
     navigateLeadId: null,
     vendorsList: [],
     allVendorsRequestList: [],
-    singleVendorHistoryList:[],
-    historyLoading:''
+    singleVendorHistoryList: [],
+    historyLoading: "",
   },
   reducers: {
     handleLoadingState: (state, action) => {

@@ -1,14 +1,18 @@
-import React, { useEffect } from "react"
+import React, { useCallback, useEffect } from "react"
 import { useParams } from "react-router-dom"
 import { useDispatch, useSelector } from "react-redux"
-import { getAllVendorsRequest } from "../../Toolkit/Slices/LeadSlice"
+import {
+  changeProcurementAssignee,
+  getAllVendorsRequest,
+} from "../../Toolkit/Slices/LeadSlice"
 import OverFlowText from "../../components/OverFlowText"
 import CommonTable from "../../components/CommonTable"
 import TableScalaton from "../../components/TableScalaton"
 import MainHeading from "../../components/design/MainHeading"
 import SingleVendorRequestDetails from "./SingleVendorRequestDetails"
 import { Icon } from "@iconify/react"
-import { Flex, Typography } from "antd"
+import { Flex, notification, Select, Typography } from "antd"
+import { getProcurementAssigneeList } from "../../Toolkit/Slices/CommonSlice"
 const { Text } = Typography
 
 const VendorsList = () => {
@@ -20,8 +24,38 @@ const VendorsList = () => {
     dispatch(getAllVendorsRequest({ id: userid, page: 0 }))
   }, [dispatch, userid])
 
+  useEffect(() => {
+    dispatch(getProcurementAssigneeList(userid))
+  }, [userid])
+
   const allVendorsRequestList = useSelector(
     (prev) => prev?.leads.allVendorsRequestList
+  )
+
+  const procurementAssigneeList = useSelector(
+    (state) => state.common.procurementAssigneeList
+  )
+
+  const handleChangeAssignee = useCallback(
+    (e, id) => {
+      dispatch(
+        changeProcurementAssignee({
+          vendorId: id,
+          updatedById: userid,
+          assigneeToId: e,
+        })
+      )
+        .then((resp) => {
+          if (resp.meta.requestStatus === "fulfilled") {
+            notification.success({ message: "Assignee updated successfully" })
+            dispatch(getAllVendorsRequest({ id: userid, page: 0 }))
+          } else {
+            notification.error({ message: "Something went wrong !." })
+          }
+        })
+        .catch(() => notification.error({ message: "Something went wrong !." }))
+    },
+    [dispatch, userid]
   )
 
   const columns = [
@@ -29,8 +63,9 @@ const VendorsList = () => {
       dataIndex: "id",
       title: "Id",
       width: 90,
+      fixed: "left",
       render: (_, data) => (
-        <Flex gap={4} align='center'>
+        <Flex gap={4} align="center">
           <Text>{data?.id}</Text>
           <Icon
             icon="fluent:circle-16-filled"
@@ -42,10 +77,31 @@ const VendorsList = () => {
     {
       dataIndex: "clientName",
       title: "Client name",
+      fixed: "left",
     },
     {
       dataIndex: "clientCompanyName",
       title: "Client company name",
+    },
+    {
+      dataIndex: "assignedTo",
+      title: "Assigned to",
+      render: (_, data) => (
+        <Select
+          placeholder="Select assignee"
+          style={{ width: "95%" }}
+          value={data?.assigneeId}
+          options={
+            procurementAssigneeList?.length > 0
+              ? procurementAssigneeList?.map((item) => ({
+                  label: item?.fullName,
+                  value: item?.id,
+                }))
+              : []
+          }
+          onChange={(e) => handleChangeAssignee(e, data?.id)}
+        />
+      ),
     },
     {
       dataIndex: "clientMobileNumber",
@@ -80,7 +136,7 @@ const VendorsList = () => {
         <CommonTable
           data={allVendorsRequestList}
           columns={columns}
-          scroll={{ y: 520 }}
+          scroll={{ y: 520, x: 1500 }}
         />
       )}
     </>
