@@ -5,6 +5,7 @@ import MainHeading from "../../../components/design/MainHeading"
 import CommonTable from "../../../components/CommonTable"
 import { useDispatch, useSelector } from "react-redux"
 import { getAllNotification } from "../../../Toolkit/Slices/NotificationSlice"
+import LeadsDetailsMainPage from "../Leads/LeadsDetailsMainPage"
 
 const InboxPage = () => {
   const { userid } = useParams()
@@ -29,7 +30,14 @@ const InboxPage = () => {
       title: "Message",
       render: (_, props) => {
         const notify = props?.view
-        return (
+        return props?.type === "lead" ? (
+          <LeadsDetailsMainPage
+            leadId={props?.leadId}
+            data={props}
+          >
+            {props?.message}
+          </LeadsDetailsMainPage>
+        ) : (
           <p className={`mb-0 ${!notify ? "noti-view" : ""}`}>
             {props?.message}
           </p>
