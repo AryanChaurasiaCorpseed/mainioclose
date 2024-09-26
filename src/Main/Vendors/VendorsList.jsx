@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from "react"
+import React, { useCallback, useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 import { useDispatch, useSelector } from "react-redux"
 import {
@@ -11,7 +11,7 @@ import TableScalaton from "../../components/TableScalaton"
 import MainHeading from "../../components/design/MainHeading"
 import SingleVendorRequestDetails from "./SingleVendorRequestDetails"
 import { Icon } from "@iconify/react"
-import { Flex, notification, Select, Typography } from "antd"
+import { Button, Flex, notification, Select, Typography } from "antd"
 import { getProcurementAssigneeList } from "../../Toolkit/Slices/CommonSlice"
 const { Text } = Typography
 
@@ -36,11 +36,18 @@ const VendorsList = () => {
     (state) => state.common.procurementAssigneeList
   )
 
+  const [selectedRowKeys, setSelectedRowKeys] = useState([])
+  const [assigneeId, setAssigneeId] = useState(null)
+
+  const onSelectChange = (newSelectedRowKeys, rowsData) => {
+    setSelectedRowKeys(newSelectedRowKeys)
+  }
+
   const handleChangeAssignee = useCallback(
     (e, id) => {
       dispatch(
         changeProcurementAssignee({
-          vendorId: id,
+          data: id,
           updatedById: userid,
           assigneeToId: e,
         })
@@ -49,6 +56,8 @@ const VendorsList = () => {
           if (resp.meta.requestStatus === "fulfilled") {
             notification.success({ message: "Assignee updated successfully" })
             dispatch(getAllVendorsRequest({ id: userid, page: 0 }))
+            setSelectedRowKeys([])
+            setAssigneeId(null)
           } else {
             notification.error({ message: "Something went wrong !." })
           }
@@ -99,7 +108,7 @@ const VendorsList = () => {
                 }))
               : []
           }
-          onChange={(e) => handleChangeAssignee(e, data?.id)}
+          onChange={(e) => handleChangeAssignee(e, [data?.id])}
         />
       ),
     },
@@ -137,6 +146,57 @@ const VendorsList = () => {
           data={allVendorsRequestList}
           columns={columns}
           scroll={{ y: 520, x: 1500 }}
+          rowSelection={true}
+          onRowSelection={onSelectChange}
+          selectedRowKeys={selectedRowKeys}
+          rowKey={(record) => record?.id}
+          pagination={true}
+          footerContent={
+            <div className={`bottom-line`}>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  gap: 12,
+                }}
+              >
+                <Select
+                  allowClear
+                  showSearch
+                  value={assigneeId}
+                  size="small"
+                  style={{ width: 200 }}
+                  placeholder="Select status"
+                  options={
+                    procurementAssigneeList?.length > 0
+                      ? procurementAssigneeList?.map((item) => ({
+                          label: item?.fullName,
+                          value: item?.id,
+                        }))
+                      : []
+                  }
+                  onChange={(e) => setAssigneeId(e)}
+                  filterOption={(input, option) =>
+                    option.label.toLowerCase().includes(input.toLowerCase())
+                  }
+                />
+                <div>
+                  <Button
+                    type="primary"
+                    disabled={selectedRowKeys?.length === 0 ? true : false}
+                    onClick={() =>
+                      handleChangeAssignee(assigneeId, selectedRowKeys)
+                    }
+                    size="small"
+                  >
+                    Send
+                  </Button>
+                </div>
+                <Text>Selected rows: {selectedRowKeys?.length}</Text>
+              </div>
+            </div>
+          }
         />
       )}
     </>

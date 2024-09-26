@@ -4,6 +4,7 @@ import { putQuery } from "../../API/PutQuery"
 import { getQuery } from "../../API/GetQuery"
 import { deleteQuery } from "../../API/DeleteQuery"
 import { deleteQueryWithData } from "../../API/DeleteQueryWithData"
+import { putQueryWithoutDestructuring } from "../../API/PutRequestwithoutDestructure"
 
 export const getAllLeads = createAsyncThunk("allLeadsData", async (data) => {
   const allLeads = await postQuery(
@@ -554,8 +555,10 @@ export const getvendorHistoryByLeadId = createAsyncThunk(
 export const changeProcurementAssignee = createAsyncThunk(
   "changeProcurementAssignee",
   async (data) => {
-    const response = await putQuery(
-      `/leadService/api/v1/vendor/edit-vendor-details-request?vendorId=${data?.vendorId}&updatedById=${data?.updatedById}&assigneeToId=${data?.assigneeToId}`
+    console.log('xkbvjsadbcvljkasbcjh',data?.data)
+    const response = await putQueryWithoutDestructuring(
+      `/leadService/api/v1/vendor/edit-vendor-details-request?updatedById=${data?.updatedById}&assigneeToId=${data?.assigneeToId}`,
+      data?.data
     )
     return response.data
   }
