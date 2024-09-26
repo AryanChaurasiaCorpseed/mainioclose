@@ -7,6 +7,7 @@ import {
 } from "../../../Toolkit/Slices/NotificationSlice"
 import MainHeading from "../../../components/design/MainHeading"
 import CommonTable from "../../../components/CommonTable"
+import LeadsDetailsMainPage from "./LeadsDetailsMainPage"
 
 const AllNotificationPage = () => {
   const { userid } = useParams()
@@ -33,7 +34,11 @@ const AllNotificationPage = () => {
       title: "Message",
       render: (_, props) => {
         const notify = props?.view
-        return (
+        return props?.type === "lead" ? (
+          <LeadsDetailsMainPage leadId={props?.leadId} data={props}>
+            {props?.message}
+          </LeadsDetailsMainPage>
+        ) : (
           <p className={`mb-0 ${!notify ? "noti-view" : ""}`}>
             {props?.message}
           </p>
@@ -61,7 +66,7 @@ const AllNotificationPage = () => {
   return (
     <div className="small-box-padding">
       <>
-        <MainHeading data={`All Notification`} />
+        <MainHeading data={`All notification`} />
         <div>
           <CommonTable
             data={allNotifications}

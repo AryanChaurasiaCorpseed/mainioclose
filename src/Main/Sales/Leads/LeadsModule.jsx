@@ -578,6 +578,9 @@ const LeadsModule = () => {
     }
   }
 
+
+  console.log('skhbqsucbqwschbuybcsah',assignedLeadInfo)
+
   return (
     <div className="lead-module small-box-padding">
       <div className="create-user-box">
@@ -818,6 +821,7 @@ const LeadsModule = () => {
                       <Select
                         allowClear
                         showSearch
+                        value={assignedLeadInfo?.statusId}
                         size="small"
                         style={{ width: 200 }}
                         placeholder="Select status"
@@ -847,6 +851,7 @@ const LeadsModule = () => {
                         showSearch
                         allowClear
                         size="small"
+                        value={assignedLeadInfo?.assigneId}
                         style={{ width: 200 }}
                         placeholder="select user"
                         options={
