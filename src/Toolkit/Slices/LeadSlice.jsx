@@ -805,6 +805,7 @@ export const LeadSlice = createSlice({
     builder.addCase(getAllTaskData.rejected, (state, action) => {
       state.loading = "rejected"
     })
+    
     builder.addCase(getSingleLeadDataByLeadID.pending, (state, action) => {
       state.loading = "pending"
     })
@@ -867,7 +868,7 @@ export const LeadSlice = createSlice({
     })
     builder.addCase(getAllVendorsRequest.fulfilled, (state, action) => {
       state.loading = "success"
-      state.allVendorsRequestList = action?.payload
+      state.allVendorsRequestList = action?.payload?.vendorsRequests
     })
     builder.addCase(getAllVendorsRequest.rejected, (state, action) => {
       state.loading = "rejected"

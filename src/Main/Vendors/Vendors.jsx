@@ -72,7 +72,7 @@ const VendorForm = ({ leadId, userId, serviceName, setOpenPopOver }) => {
         Add vendor's request
       </Button>
       <Modal
-        title="Vendor's details"
+        title="Client details"
         open={openModal}
         centered
         onCancel={() => setOpenModal(false)}
@@ -89,7 +89,7 @@ const VendorForm = ({ leadId, userId, serviceName, setOpenPopOver }) => {
           style={{ maxHeight: "80vh", overflow: "auto" }}
         >
           <Form.Item
-            label="Person name"
+            label="Client name"
             name="clientName"
             rules={[
               { required: true, message: "please enter the person name" },
@@ -155,7 +155,7 @@ const VendorForm = ({ leadId, userId, serviceName, setOpenPopOver }) => {
           >
             <Input maxLength={10} />
           </Form.Item>
-          <Form.Item label="Budget price" name="clientBudgetPrice">
+          <Form.Item label="Client budget price" name="clientBudgetPrice">
             <Input />
           </Form.Item>
           <Form.Item
@@ -322,8 +322,8 @@ const Vendors = ({ leadId }) => {
       </div>
 
       <div style={{ marginTop: "12px" }}>
-        <Flex justify="space-between">
-          <Text className="heading-text">Vendor's request status</Text>
+        <Flex justify="space-between" style={{ margin: "8px 0px" }}>
+          <Text className="heading-text">Client request status</Text>
           {/* <Button size="small" onClick={() => setOpenModal(true)}>
             Update status
           </Button> */}
@@ -334,7 +334,7 @@ const Vendors = ({ leadId }) => {
               {vendorDetail?.updatedDate && (
                 <Text className="heading-text" type="secondary">
                   {" "}
-                  Vendor's detail{" "}
+                  Client's detail{" "}
                   {dayjs(vendorDetail?.updatedDate).format(
                     "YYYY-MM-DD , hh:mm a"
                   )}{" "}
@@ -464,8 +464,24 @@ const Vendors = ({ leadId }) => {
                       ),
                       children: (
                         <Flex vertical gap={2}>
+                          {item?.externalVendorPrice && (
+                            <Text strong>
+                              Price give by vendor : {item?.externalVendorPrice}
+                            </Text>
+                          )}
+
+                          {item?.internalVendorPrices && (
+                            <Text strong>
+                              Price given to vendor :{" "}
+                              {item?.internalVendorPrices}
+                            </Text>
+                          )}
+
                           {item?.quotationAmount && (
-                            <Text strong>{item?.quotationAmount}</Text>
+                            <Text strong>
+                              {" "}
+                              Quotation amount : {item?.quotationAmount}
+                            </Text>
                           )}
                           <Text>{item?.updateDescription}</Text>
                         </Flex>

@@ -390,6 +390,7 @@ const SingleVendorRequestDetails = ({ data }) => {
           <Form.Item label="Amount given to vendor" name="internalVendorPrices">
             <Input />
           </Form.Item>
+          
           <Form.Item label="Amount given by vendor" name="externalVendorPrice">
             <Input />
           </Form.Item>
