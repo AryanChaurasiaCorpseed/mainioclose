@@ -54,7 +54,7 @@ const VendorsList = () => {
       )
         .then((resp) => {
           if (resp.meta.requestStatus === "fulfilled") {
-            notification.success({ message: "Assignee updated successfully" })
+            notification.success({ message: "Assignee updated successfully." })
             dispatch(getAllVendorsRequest({ id: userid, page: 0 }))
             setSelectedRowKeys([])
             setAssigneeId(null)

@@ -1,8 +1,8 @@
-import { Button, Space, Table, Tooltip } from "antd";
-import React, { useEffect, useRef, useState } from "react";
-import { Icon } from "@iconify/react";
-import { useDispatch } from "react-redux";
-import "./CommonTable.scss";
+import { Button, Space, Table, Tooltip } from "antd"
+import React, { useEffect, useRef, useState } from "react"
+import { Icon } from "@iconify/react"
+import { useDispatch } from "react-redux"
+import "./CommonTable.scss"
 
 const CommonTable = ({
   data,
@@ -18,71 +18,74 @@ const CommonTable = ({
   selectedRowKeys,
   rowClassName,
   footerContent,
-  rowKey
+  rowKey,
 }) => {
-  const dispatch = useDispatch();
-  const tableContainerRef = useRef(null);
-  const scrollIntervalRef = useRef(null);
-  const [canScrollLeft, setCanScrollLeft] = useState(false);
-  const [canScrollRight, setCanScrollRight] = useState(false);
+  const dispatch = useDispatch()
+  const tableContainerRef = useRef(null)
+  const scrollIntervalRef = useRef(null)
+  const [canScrollLeft, setCanScrollLeft] = useState(false)
+  const [canScrollRight, setCanScrollRight] = useState(false)
 
   const scrollTable = (direction) => {
     if (tableContainerRef.current) {
-      const scrollAmount = 150;
-      const currentScrollLeft = tableContainerRef.current.scrollLeft;
+      const scrollAmount = 150
+      const currentScrollLeft = tableContainerRef.current.scrollLeft
       const maxScrollLeft =
         tableContainerRef.current.scrollWidth -
-        tableContainerRef.current.clientWidth;
+        tableContainerRef.current.clientWidth
 
       if (direction === "left") {
-        const newScrollLeft = Math.max(0, currentScrollLeft - scrollAmount);
-        tableContainerRef.current.scrollLeft = newScrollLeft;
+        const newScrollLeft = Math.max(0, currentScrollLeft - scrollAmount)
+        tableContainerRef.current.scrollLeft = newScrollLeft
       } else if (direction === "right") {
-        const newScrollLeft = Math.min(maxScrollLeft, currentScrollLeft + scrollAmount);
-        tableContainerRef.current.scrollLeft = newScrollLeft;
+        const newScrollLeft = Math.min(
+          maxScrollLeft,
+          currentScrollLeft + scrollAmount
+        )
+        tableContainerRef.current.scrollLeft = newScrollLeft
       }
 
-      checkScrollButtons();
+      checkScrollButtons()
     }
-  };
+  }
 
   const checkScrollButtons = () => {
     if (tableContainerRef.current) {
-      const { scrollLeft, scrollWidth, clientWidth } = tableContainerRef.current;
-      setCanScrollLeft(scrollLeft > 0);
-      setCanScrollRight(scrollLeft + clientWidth < scrollWidth);
+      const { scrollLeft, scrollWidth, clientWidth } = tableContainerRef.current
+      setCanScrollLeft(scrollLeft > 0)
+      setCanScrollRight(scrollLeft + clientWidth < scrollWidth)
     }
-  };
+  }
 
   const startScrolling = (direction) => {
-    stopScrolling();
+    stopScrolling()
     scrollIntervalRef.current = setInterval(() => {
-      scrollTable(direction);
-    }, 50);
-  };
+      scrollTable(direction)
+    }, 50)
+  }
 
   const stopScrolling = () => {
     if (scrollIntervalRef.current) {
-      clearInterval(scrollIntervalRef.current);
-      scrollIntervalRef.current = null;
+      clearInterval(scrollIntervalRef.current)
+      scrollIntervalRef.current = null
     }
-  };
+  }
 
   useEffect(() => {
-    const tableBody = document.querySelector(".ant-table-body");
+    const tableBody = document.querySelector(".ant-table-body")
     if (tableBody) {
-      tableContainerRef.current = tableBody;
-      checkScrollButtons();
-      tableBody.addEventListener("scroll", checkScrollButtons);
+      tableContainerRef.current = tableBody
+      checkScrollButtons()
+      tableBody.addEventListener("scroll", checkScrollButtons)
     }
 
     return () => {
       if (tableBody) {
-        tableBody.removeEventListener("scroll", checkScrollButtons);
+        tableBody.removeEventListener("scroll", checkScrollButtons)
       }
-      stopScrolling();
-    };
-  }, [data, columns]);
+      stopScrolling()
+    }
+  }, [data, columns])
 
   return (
     <div className="table-container">
@@ -129,33 +132,35 @@ const CommonTable = ({
             ? () => (
                 <div className="table-footer">
                   <div>{footerContent}</div>
-                  <Space>
-                    <Tooltip title="Prev page" arrow={false}>
-                      <Button
-                        size="small"
-                        disabled={prevDisable}
-                        onClick={() => dispatch(prevPage())}
-                      >
-                        <Icon icon="fluent:chevron-left-20-regular" />
-                      </Button>
-                    </Tooltip>
-                    <Tooltip title="Next page" arrow={false}>
-                      <Button
-                        size="small"
-                        disabled={nextDisable}
-                        onClick={() => dispatch(nextPage())}
-                      >
-                        <Icon icon="fluent:chevron-right-20-regular" />
-                      </Button>
-                    </Tooltip>
-                  </Space>
+                  {nextPage && prevPage && (
+                    <Space>
+                      <Tooltip title="Prev page" arrow={false}>
+                        <Button
+                          size="small"
+                          disabled={prevDisable}
+                          onClick={() => dispatch(prevPage())}
+                        >
+                          <Icon icon="fluent:chevron-left-20-regular" />
+                        </Button>
+                      </Tooltip>
+                      <Tooltip title="Next page" arrow={false}>
+                        <Button
+                          size="small"
+                          disabled={nextDisable}
+                          onClick={() => dispatch(nextPage())}
+                        >
+                          <Icon icon="fluent:chevron-right-20-regular" />
+                        </Button>
+                      </Tooltip>
+                    </Space>
+                  )}
                 </div>
               )
             : null
         }
       />
     </div>
-  );
-};
+  )
+}
 
-export default CommonTable;
+export default CommonTable

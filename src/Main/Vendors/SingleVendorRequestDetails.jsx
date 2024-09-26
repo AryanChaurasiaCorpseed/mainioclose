@@ -278,12 +278,25 @@ const SingleVendorRequestDetails = ({ data }) => {
                       ),
                       children: (
                         <Flex vertical gap={2}>
-                          <Text strong>
-                            Price give by vendor : {item?.externalVendorPrice}
-                          </Text>
-                          <Text strong>
-                            Price given to vendor : {item?.internalVendorPrices}
-                          </Text>
+                          {item?.externalVendorPrice && (
+                            <Text strong>
+                              Price give by vendor : {item?.externalVendorPrice}
+                            </Text>
+                          )}
+
+                          {item?.internalVendorPrices && (
+                            <Text strong>
+                              Price given to vendor :{" "}
+                              {item?.internalVendorPrices}
+                            </Text>
+                          )}
+
+                          {item?.quotationAmount && (
+                            <Text strong>
+                              Quotation amount : {item?.quotationAmount}
+                            </Text>
+                          )}
+
                           <Text> {item?.updateDescription}</Text>
                         </Flex>
                       ),
