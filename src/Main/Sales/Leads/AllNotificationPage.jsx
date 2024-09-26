@@ -25,8 +25,8 @@ const AllNotificationPage = () => {
       title: "S.No",
       width: 60,
       filterable: false,
-      render: (_, props) => {
-        return <p className="mb-0">{props?.id}</p>
+      render: (_, props, index) => {
+        return <p className="mb-0">{index + 1}</p>
       },
     },
     {
