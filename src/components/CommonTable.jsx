@@ -1,4 +1,4 @@
-import { Button, Space, Table, Tooltip, Typography } from "antd"
+import { Button, Pagination, Space, Table, Tooltip, Typography } from "antd"
 import React, { useEffect, useRef, useState } from "react"
 import { Icon } from "@iconify/react"
 import { useDispatch } from "react-redux"
@@ -21,6 +21,7 @@ const CommonTable = ({
   footerContent,
   rowKey,
   page,
+  handlePagination,
 }) => {
   const dispatch = useDispatch()
   const tableContainerRef = useRef(null)
@@ -135,27 +136,35 @@ const CommonTable = ({
                 <div className="table-footer">
                   <div>{footerContent}</div>
                   {nextPage && prevPage && (
-                    <Space>
-                      <Tooltip title="Prev page" arrow={false}>
-                        <Button
-                          size="small"
-                          disabled={prevDisable}
-                          onClick={() => dispatch(prevPage())}
-                        >
-                          <Icon icon="fluent:chevron-left-20-regular" />
-                        </Button>
-                      </Tooltip>
-                      {page && <Text>{page}</Text>}
-                      <Tooltip title="Next page" arrow={false}>
-                        <Button
-                          size="small"
-                          disabled={nextDisable}
-                          onClick={() => dispatch(nextPage())}
-                        >
-                          <Icon icon="fluent:chevron-right-20-regular" />
-                        </Button>
-                      </Tooltip>
-                    </Space>
+                    // <Space>
+                    //   <Tooltip title="Prev page" arrow={false}>
+                    //     <Button
+                    //       size="small"
+                    //       disabled={prevDisable}
+                    //       onClick={() => dispatch(prevPage())}
+                    //     >
+                    //       <Icon icon="fluent:chevron-left-20-regular" />
+                    //     </Button>
+                    //   </Tooltip>
+                    //   {page && <Text>{page}</Text>}
+                    //   <Tooltip title="Next page" arrow={false}>
+                    //     <Button
+                    //       size="small"
+                    //       disabled={nextDisable}
+                    //       onClick={() => dispatch(nextPage())}
+                    //     >
+                    //       <Icon icon="fluent:chevron-right-20-regular" />
+                    //     </Button>
+                    //   </Tooltip>
+                    // </Space>
+                    <Pagination
+                      current={page}
+                      defaultPageSize={50}
+                      pageSizeOptions={[50]}
+                      showSizeChanger={false}
+                      total={500}
+                      onChange={(e) => handlePagination(e)}
+                    />
                   )}
                 </div>
               )

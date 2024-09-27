@@ -555,7 +555,7 @@ export const getvendorHistoryByLeadId = createAsyncThunk(
 export const changeProcurementAssignee = createAsyncThunk(
   "changeProcurementAssignee",
   async (data) => {
-    console.log('xkbvjsadbcvljkasbcjh',data?.data)
+    console.log("xkbvjsadbcvljkasbcjh", data?.data)
     const response = await putQueryWithoutDestructuring(
       `/leadService/api/v1/vendor/edit-vendor-details-request?updatedById=${data?.updatedById}&assigneeToId=${data?.assigneeToId}`,
       data?.data
@@ -594,7 +594,7 @@ export const LeadSlice = createSlice({
     allProductsList: [],
     clientsContact: [],
     notificationCount: 0,
-    page: 0,
+    page: 1,
     remarkData: [],
     navigateLeadId: null,
     vendorsList: [],
@@ -611,6 +611,9 @@ export const LeadSlice = createSlice({
     },
     handlePrevPagination: (state, action) => {
       state.page = state.page >= 0 ? state.page - 1 : 0
+    },
+    handlePagination: (state, action) => {
+      state.page = action?.payload
     },
   },
   extraReducers: (builder) => {
@@ -805,7 +808,7 @@ export const LeadSlice = createSlice({
     builder.addCase(getAllTaskData.rejected, (state, action) => {
       state.loading = "rejected"
     })
-    
+
     builder.addCase(getSingleLeadDataByLeadID.pending, (state, action) => {
       state.loading = "pending"
     })
@@ -890,5 +893,6 @@ export const {
   handleLoadingState,
   handleNextPagination,
   handlePrevPagination,
+  handlePagination
 } = LeadSlice.actions
 export default LeadSlice.reducer

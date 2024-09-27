@@ -186,7 +186,7 @@ const LeadComments = ({ list, leadid }) => {
             rules={[{ required: true, message: "please select the comment" }]}
           >
             <Select
-              placeholder="select comment..."
+              placeholder="Select comment..."
               showSearch
               allowClear
               options={

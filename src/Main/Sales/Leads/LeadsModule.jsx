@@ -12,6 +12,7 @@ import {
   handleDeleteSingleLead,
   handleLeadassignedToSamePerson,
   handleNextPagination,
+  // handlePagination,
   handlePrevPagination,
   multiAssignedLeads,
   searchLeads,
@@ -50,14 +51,10 @@ const LeadsModule = () => {
   const notificationCount = useSelector(
     (state) => state.leads.notificationCount
   )
-  const page = useSelector((state) => state.leads.page)
-  const [toDate, setToDate] = useState("")
-  const [fromDate, setFromDate] = useState("")
+  // const page = useSelector((state) => state.leads.page)
   const [multibtn, setMultibtn] = useState("")
   const [leadDelLoading, setLeadDelLoading] = useState("")
   const [hideMUltiFilter, setHideMUltiFilter] = useState(false)
-  const [allStatusMulti, setAllStatusMulti] = useState([1])
-  const [allUserMulti, setAllUserMulti] = useState([])
   const [filterBtnNew, setFilterBtnNew] = useState(false)
   const [openDropdown, setOpenDropdown] = useState(false)
   const [selectedRowKeys, setSelectedRowKeys] = useState([])
@@ -75,24 +72,12 @@ const LeadsModule = () => {
   const dispatch = useDispatch()
   const [allMultiFilterData, setAllMultiFilterData] = useState({
     userId: userid,
-    userIdFilter: allUserMulti,
-    statusId: allStatusMulti,
-    toDate: toDate,
-    fromDate: fromDate,
-    page,
+    userIdFilter: [],
+    statusId: [1],
+    toDate: "",
+    fromDate: "",
+    page: 1,
   })
-
-  useEffect(() => {
-    setAllMultiFilterData((prev) => ({
-      ...prev,
-      userId: userid,
-      userIdFilter: allUserMulti,
-      statusId: allStatusMulti,
-      toDate: toDate,
-      fromDate: fromDate,
-      page,
-    }))
-  }, [allUserMulti, allStatusMulti, toDate, fromDate, userid, page])
 
   const [assignedLeadInfo, setAssignedLeadInfo] = useState({
     statusId: null,
@@ -100,8 +85,18 @@ const LeadsModule = () => {
   })
 
   useEffect(() => {
+    console.log('dvblkdjbvljdbvljdb     out')
     dispatch(getAllLeads(allMultiFilterData))
-  }, [filterBtnNew, allMultiFilterData, dispatch, page])
+  }, [filterBtnNew, dispatch])
+
+  const handlePagination = useCallback(
+    (dataPage) => {
+      console.log('dvblkdjbvljdbvljdb     fun',dataPage)
+      dispatch(getAllLeads({...allMultiFilterData,page: dataPage}))
+      setAllMultiFilterData((prev) => ({ ...prev, page: dataPage }))
+    },
+    [allMultiFilterData]
+  )
 
   const handleDeleteMutipleLeads = useCallback(() => {
     let obj = {
@@ -344,7 +339,7 @@ const LeadsModule = () => {
         </OverFlowText>
       ),
     },
-    
+
     {
       title: "Email",
       dataIndex: "email",
@@ -578,8 +573,7 @@ const LeadsModule = () => {
     }
   }
 
-
-  console.log('skhbqsucbqwschbuybcsah',assignedLeadInfo)
+  console.log("skhbqsucbqwschbuybcsah", assignedLeadInfo)
 
   return (
     <div className="lead-module small-box-padding">
@@ -687,9 +681,11 @@ const LeadsModule = () => {
               allowClear
               showSearch
               style={{ width: "45%" }}
-              value={allUserMulti}
+              value={allMultiFilterData?.userIdFilter}
               placeholder="Select users"
-              onChange={(e) => setAllUserMulti(e)}
+              onChange={(e) =>
+                setAllMultiFilterData((prev) => ({ ...prev, allUserMulti: e }))
+              }
               options={
                 leadUserNew?.length > 0
                   ? leadUserNew?.map((item) => ({
@@ -708,7 +704,7 @@ const LeadsModule = () => {
             maxTagCount="responsive"
             size="small"
             style={{ width: "45%" }}
-            value={allStatusMulti}
+            value={allMultiFilterData?.statusId}
             allowClear
             showSearch
             placeholder="Select Status"
@@ -720,7 +716,9 @@ const LeadsModule = () => {
                   }))
                 : []
             }
-            onChange={(e) => setAllStatusMulti(e)}
+            onChange={(e) =>
+              setAllMultiFilterData((prev) => ({ ...prev, statusId: e }))
+            }
             filterOption={(input, option) =>
               option.label.toLowerCase().includes(input.toLowerCase())
             }
@@ -730,12 +728,22 @@ const LeadsModule = () => {
         <div className="filter-right-container">
           <input
             className="mr-2 date-input"
-            onChange={(e) => setToDate(e.target.value)}
+            onChange={(e) =>
+              setAllMultiFilterData((prev) => ({
+                ...prev,
+                toDate: e.target.value,
+              }))
+            }
             type="date"
           />
           <input
             className="mr-2 date-input"
-            onChange={(e) => setFromDate(e.target.value)}
+            onChange={(e) =>
+              setAllMultiFilterData((prev) => ({
+                ...prev,
+                fromDate: e.target.value,
+              }))
+            }
             type="date"
           />
           <button
@@ -774,125 +782,120 @@ const LeadsModule = () => {
       </div>
       <div className="table-arrow">
         <Suspense fallback={<TableScalaton />}>
-            <CommonTable
-              data={allLeadData}
-              columns={columns}
-              scroll={{ y: 520, x: adminRole ? 2500 : 1500 }}
-              rowSelection={true}
-              onRowSelection={onSelectChange}
-              selectedRowKeys={selectedRowKeys}
-              rowClassName={(record) => (!record.view ? "light-gray-row" : "")}
-              rowKey={(record) => record?.id}
-              pagination={true}
-              page={page}
-              nextDisable={allLeadData?.length < 50 ? true : false}
-              prevDisable={page === 0 ? true : false}
-              nextPage={handleNextPagination}
-              prevPage={handlePrevPagination}
-              footerContent={
-                adminRole ? (
-                  <div className={`bottom-line`}>
-                    <div
-                      style={{
-                        display: "flex",
-                        justifyContent: "center",
-                        gap: 12,
-                      }}
+          <CommonTable
+            data={allLeadData}
+            columns={columns}
+            scroll={{ y: 520, x: adminRole ? 2500 : 1500 }}
+            rowSelection={true}
+            onRowSelection={onSelectChange}
+            selectedRowKeys={selectedRowKeys}
+            rowClassName={(record) => (!record.view ? "light-gray-row" : "")}
+            rowKey={(record) => record?.id}
+            pagination={true}
+            page={allMultiFilterData?.page}
+            nextDisable={allLeadData?.length < 50 ? true : false}
+            prevDisable={allMultiFilterData?.page === 0 ? true : false}
+            nextPage={handleNextPagination}
+            prevPage={handlePrevPagination}
+            handlePagination={handlePagination}
+            footerContent={
+              adminRole ? (
+                <div className={`bottom-line`}>
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "center",
+                      gap: 12,
+                    }}
+                  >
+                    <Popconfirm
+                      title="Delete the leads"
+                      description="Are you sure to delete these leads ?."
+                      okText="Yes"
+                      cancelText="No"
+                      onConfirm={handleDeleteMutipleLeads}
                     >
-                      <Popconfirm
-                        title="Delete the leads"
-                        description="Are you sure to delete these leads ?."
-                        okText="Yes"
-                        cancelText="No"
-                        onConfirm={handleDeleteMutipleLeads}
-                      >
-                        <Button
-                          danger
-                          disabled={
-                            selectedRowKeys?.length === 0 ? true : false
-                          }
-                          size="small"
-                        >
-                          {leadDelLoading === "pending"
-                            ? "Please wait..."
-                            : "Delete"}
-                        </Button>
-                      </Popconfirm>
-
-                      <Select
-                        allowClear
-                        showSearch
-                        value={assignedLeadInfo?.statusId}
-                        size="small"
-                        style={{ width: 200 }}
-                        placeholder="Select status"
-                        options={
-                          getAllStatus?.length > 0
-                            ? getAllStatus?.map((item) => ({
-                                label: item?.name,
-                                value: item?.id,
-                              }))
-                            : []
-                        }
-                        onChange={(e) =>
-                          setAssignedLeadInfo((prev) => ({
-                            ...prev,
-                            statusId: e,
-                          }))
-                        }
-                        filterOption={(input, option) =>
-                          option.label
-                            .toLowerCase()
-                            .includes(input.toLowerCase())
-                        }
-                      />
-                    </div>
-                    <div>
-                      <Select
-                        showSearch
-                        allowClear
-                        size="small"
-                        value={assignedLeadInfo?.assigneId}
-                        style={{ width: 200 }}
-                        placeholder="select user"
-                        options={
-                          leadUserNew?.length > 0
-                            ? leadUserNew?.map((ele) => ({
-                                label: ele?.fullName,
-                                value: ele?.id,
-                              }))
-                            : []
-                        }
-                        onChange={(e) =>
-                          setAssignedLeadInfo((prev) => ({
-                            ...prev,
-                            assigneId: e,
-                          }))
-                        }
-                        filterOption={(input, option) =>
-                          option.label
-                            .toLowerCase()
-                            .includes(input.toLowerCase())
-                        }
-                      />
-                    </div>
-                    <div>
                       <Button
-                        type="primary"
+                        danger
                         disabled={selectedRowKeys?.length === 0 ? true : false}
-                        onClick={handleMultipleAssignedLeads}
                         size="small"
                       >
-                        {multibtn === "pending" ? "Loading..." : "Send"}
+                        {leadDelLoading === "pending"
+                          ? "Please wait..."
+                          : "Delete"}
                       </Button>
-                    </div>
-                    <Text>Selected rows: {selectedRowKeys?.length}</Text>
+                    </Popconfirm>
+
+                    <Select
+                      allowClear
+                      showSearch
+                      value={assignedLeadInfo?.statusId}
+                      size="small"
+                      style={{ width: 200 }}
+                      placeholder="Select status"
+                      options={
+                        getAllStatus?.length > 0
+                          ? getAllStatus?.map((item) => ({
+                              label: item?.name,
+                              value: item?.id,
+                            }))
+                          : []
+                      }
+                      onChange={(e) =>
+                        setAssignedLeadInfo((prev) => ({
+                          ...prev,
+                          statusId: e,
+                        }))
+                      }
+                      filterOption={(input, option) =>
+                        option.label.toLowerCase().includes(input.toLowerCase())
+                      }
+                    />
                   </div>
-                ) : (
-                  ""
-                )
-              }
-            />
+                  <div>
+                    <Select
+                      showSearch
+                      allowClear
+                      size="small"
+                      value={assignedLeadInfo?.assigneId}
+                      style={{ width: 200 }}
+                      placeholder="select user"
+                      options={
+                        leadUserNew?.length > 0
+                          ? leadUserNew?.map((ele) => ({
+                              label: ele?.fullName,
+                              value: ele?.id,
+                            }))
+                          : []
+                      }
+                      onChange={(e) =>
+                        setAssignedLeadInfo((prev) => ({
+                          ...prev,
+                          assigneId: e,
+                        }))
+                      }
+                      filterOption={(input, option) =>
+                        option.label.toLowerCase().includes(input.toLowerCase())
+                      }
+                    />
+                  </div>
+                  <div>
+                    <Button
+                      type="primary"
+                      disabled={selectedRowKeys?.length === 0 ? true : false}
+                      onClick={handleMultipleAssignedLeads}
+                      size="small"
+                    >
+                      {multibtn === "pending" ? "Loading..." : "Send"}
+                    </Button>
+                  </div>
+                  <Text>Selected rows: {selectedRowKeys?.length}</Text>
+                </div>
+              ) : (
+                ""
+              )
+            }
+          />
         </Suspense>
       </div>
     </div>
