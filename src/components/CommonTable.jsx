@@ -1,19 +1,13 @@
-import { Button, Pagination, Space, Table, Tooltip, Typography } from "antd"
+import { Button, Pagination, Table } from "antd"
 import React, { useEffect, useRef, useState } from "react"
 import { Icon } from "@iconify/react"
-import { useDispatch } from "react-redux"
 import "./CommonTable.scss"
-const { Text } = Typography
 
 const CommonTable = ({
   data,
   columns,
   scroll,
-  nextPage,
-  prevPage,
   pagination,
-  prevDisable,
-  nextDisable,
   rowSelection,
   onRowSelection,
   selectedRowKeys,
@@ -22,8 +16,9 @@ const CommonTable = ({
   rowKey,
   page,
   handlePagination,
+  totalCount,
+  pageSize,
 }) => {
-  const dispatch = useDispatch()
   const tableContainerRef = useRef(null)
   const scrollIntervalRef = useRef(null)
   const [canScrollLeft, setCanScrollLeft] = useState(false)
@@ -130,46 +125,25 @@ const CommonTable = ({
             onChange: onRowSelection,
           }
         }
-        footer={
-          pagination
-            ? () => (
-                <div className="table-footer">
-                  <div>{footerContent}</div>
-                  {nextPage && prevPage && (
-                    // <Space>
-                    //   <Tooltip title="Prev page" arrow={false}>
-                    //     <Button
-                    //       size="small"
-                    //       disabled={prevDisable}
-                    //       onClick={() => dispatch(prevPage())}
-                    //     >
-                    //       <Icon icon="fluent:chevron-left-20-regular" />
-                    //     </Button>
-                    //   </Tooltip>
-                    //   {page && <Text>{page}</Text>}
-                    //   <Tooltip title="Next page" arrow={false}>
-                    //     <Button
-                    //       size="small"
-                    //       disabled={nextDisable}
-                    //       onClick={() => dispatch(nextPage())}
-                    //     >
-                    //       <Icon icon="fluent:chevron-right-20-regular" />
-                    //     </Button>
-                    //   </Tooltip>
-                    // </Space>
-                    <Pagination
-                      current={page}
-                      defaultPageSize={50}
-                      pageSizeOptions={[50]}
-                      showSizeChanger={false}
-                      total={500}
-                      onChange={(e) => handlePagination(e)}
-                    />
-                  )}
-                </div>
-              )
-            : null
-        }
+        footer={() => (
+          <div className="table-footer">
+            <div>{footerContent}</div>
+            {pagination && (
+              <Pagination
+                style={{ fontSize: 12 }}
+                size="small"
+                responsive={true}
+                showLessItems={true}
+                current={page}
+                pageSize={pageSize}
+                defaultPageSize={50}
+                pageSizeOptions={[50, 100, 150]}
+                total={totalCount}
+                onChange={(e, x) => handlePagination(e, x)}
+              />
+            )}
+          </div>
+        )}
       />
     </div>
   )

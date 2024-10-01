@@ -7,13 +7,11 @@ import TableScalaton from "../../../components/TableScalaton"
 import { CSVLink } from "react-csv"
 import {
   deleteMultipleLeads,
+  getAllLeadCount,
   getAllLeads,
   getLeadNotificationCount,
   handleDeleteSingleLead,
   handleLeadassignedToSamePerson,
-  handleNextPagination,
-  // handlePagination,
-  handlePrevPagination,
   multiAssignedLeads,
   searchLeads,
   updateAssigneeInLeadModule,
@@ -51,7 +49,7 @@ const LeadsModule = () => {
   const notificationCount = useSelector(
     (state) => state.leads.notificationCount
   )
-  // const page = useSelector((state) => state.leads.page)
+  const totalCount = useSelector((state) => state.leads.totalCount)
   const [multibtn, setMultibtn] = useState("")
   const [leadDelLoading, setLeadDelLoading] = useState("")
   const [hideMUltiFilter, setHideMUltiFilter] = useState(false)
@@ -77,6 +75,7 @@ const LeadsModule = () => {
     toDate: "",
     fromDate: "",
     page: 1,
+    size: 50,
   })
 
   const [assignedLeadInfo, setAssignedLeadInfo] = useState({
@@ -85,17 +84,16 @@ const LeadsModule = () => {
   })
 
   useEffect(() => {
-    console.log('dvblkdjbvljdbvljdb     out')
     dispatch(getAllLeads(allMultiFilterData))
+    dispatch(getAllLeadCount(allMultiFilterData))
   }, [filterBtnNew, dispatch])
 
   const handlePagination = useCallback(
-    (dataPage) => {
-      console.log('dvblkdjbvljdbvljdb     fun',dataPage)
-      dispatch(getAllLeads({...allMultiFilterData,page: dataPage}))
-      setAllMultiFilterData((prev) => ({ ...prev, page: dataPage }))
+    (dataPage, size) => {
+      dispatch(getAllLeads({ ...allMultiFilterData, page: dataPage, size }))
+      setAllMultiFilterData((prev) => ({ ...prev, page: dataPage, size }))
     },
-    [allMultiFilterData]
+    [allMultiFilterData,dispatch]
   )
 
   const handleDeleteMutipleLeads = useCallback(() => {
@@ -124,7 +122,7 @@ const LeadsModule = () => {
         // playErrorSound()
       })
   }, [selectedRowKeys, userid, dispatch, allMultiFilterData])
-
+            
   const currentUserRoles = useSelector((state) => state?.auth?.roles)
   const adminRole = currentUserRoles.includes("ADMIN")
   const allUsers = useSelector((state) => state.user.allUsers)
@@ -578,7 +576,7 @@ const LeadsModule = () => {
   return (
     <div className="lead-module small-box-padding">
       <div className="create-user-box">
-        <MainHeading data={`Leads (${allLeadData?.length})`} />
+        <MainHeading data={`Leads (${totalCount})`} />
         <div className="all-center">
           <Link to={`allTask`}>
             <Button className="mr-2" size="small" type="primary">
@@ -793,10 +791,8 @@ const LeadsModule = () => {
             rowKey={(record) => record?.id}
             pagination={true}
             page={allMultiFilterData?.page}
-            nextDisable={allLeadData?.length < 50 ? true : false}
-            prevDisable={allMultiFilterData?.page === 0 ? true : false}
-            nextPage={handleNextPagination}
-            prevPage={handlePrevPagination}
+            pageSize={allMultiFilterData?.size}
+            totalCount={totalCount}
             handlePagination={handlePagination}
             footerContent={
               adminRole ? (

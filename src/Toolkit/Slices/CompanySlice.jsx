@@ -5,9 +5,9 @@ import { putQuery } from "../../API/PutQuery"
 
 export const getCompanyAction = createAsyncThunk(
   "getallCompanyData",
-  async ({ id, page, filterUserId }) => {
+  async ({ id, page, filterUserId, size }) => {
     const getCompanyData = await getQuery(
-      `/leadService/api/v1/company/getAllCompany?userId=${id}&filterUserId=${filterUserId}&page=${page}&size=50`
+      `/leadService/api/v1/company/getAllCompany?userId=${id}&filterUserId=${filterUserId}&page=${page}&size=${size}`
     )
     return getCompanyData?.data
   }
@@ -82,9 +82,7 @@ export const getAllCompanyByStatus = createAsyncThunk(
   "getCompaniesByStatus",
   async (data) => {
     const response = await getQuery(
-      `/leadService/api/v1/company/getAllCompanyFormByStatus?status=${
-        data.status
-      }&userId=${data?.id}&page=${data?.page}&size=${50}`
+      `/leadService/api/v1/company/getAllCompanyFormByStatus?status=${data.status}&userId=${data?.id}&page=${data?.page}&size=${data?.size}`
     )
     return response.data
   }
@@ -135,7 +133,7 @@ export const searchCompanyForm = createAsyncThunk(
   "searchCompanyForm",
   async (data) => {
     const response = await getQuery(
-      `/leadService/api/v1/company/searchCompanyByStatus?searchNameAndGSt=${data?.inputText}&userId=${data?.userId}&status=${data?.status}&page=${data?.page}&size=50`
+      `/leadService/api/v1/company/searchCompanyByStatus?searchNameAndGSt=${data?.inputText}&userId=${data?.userId}&status=${data?.status}&page=${data?.page}&size=${data?.size}`
     )
     return response.data
   }
@@ -308,7 +306,7 @@ const CompnaySlice = createSlice({
     builder.addCase(getAllCompanyUnits.fulfilled, (state, action) => {
       state.allCompanyUnits = action.payload
       state.loading = "success"
-    }       )
+    })
     builder.addCase(getAllCompanyUnits.rejected, (state, action) => {
       state.loading = "rejected"
     })

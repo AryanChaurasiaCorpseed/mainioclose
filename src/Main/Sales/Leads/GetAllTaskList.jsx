@@ -196,7 +196,6 @@ const GetAllTaskList = () => {
           />
         </div>
         {taskData && !taskLoading && !taskError && (
-          // <UserLeadComponent row={taskData} columns={columns} />
           <CommonTable
             data={filteredData}
             columns={columns}
@@ -204,15 +203,6 @@ const GetAllTaskList = () => {
           />
         )}
       </div>
-
-      {/* <Drawer
-        title="Lead detail"
-        open={openDrawer}
-        onClose={() => setOpenDrawer(false)}
-        width={'80%'}
-      >
-        <LeadDetailsPage leadid={leadId} />
-      </Drawer> */}
     </div>
   )
 }

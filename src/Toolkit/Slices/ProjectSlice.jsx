@@ -3,18 +3,23 @@ import { getQuery } from "../../API/GetQuery"
 
 export const getProjectAction = createAsyncThunk(
   "getallProjectData",
-  async ({ id,page }) => {
+  async ({ id, page, size }) => {
     const getProjectData = await getQuery(
-      `/leadService/api/v1/project/getAllProject?userId=${id}&page=${page}&size=50`
+      `/leadService/api/v1/project/getAllProject?userId=${id}&page=${page}&size=${size}`
     )
     return getProjectData?.data
   }
 )
 
-export const getAllProjectList=createAsyncThunk('getAllProjectList',async()=>{
-  const response = await getQuery(`/leadService/api/v1/project/getAllProjectNameAndId`)
-  return response.data
-})
+export const getAllProjectList = createAsyncThunk(
+  "getAllProjectList",
+  async () => {
+    const response = await getQuery(
+      `/leadService/api/v1/project/getAllProjectNameAndId`
+    )
+    return response.data
+  }
+)
 
 const ProjectSlice = createSlice({
   name: "project",
@@ -22,16 +27,16 @@ const ProjectSlice = createSlice({
     allProject: [],
     loadingProject: false,
     errorProject: false,
-    allProjectList:[],
-    page:0
+    allProjectList: [],
+    page: 0,
   },
-  reducers:{
-    handleNext:(state,action)=>{
+  reducers: {
+    handleNext: (state, action) => {
       state.page = state.page + 1
     },
-    handlePrev:(state,action)=>{
+    handlePrev: (state, action) => {
       state.page = state.page - 1
-    }
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(getProjectAction.pending, (state, action) => {
@@ -64,6 +69,6 @@ const ProjectSlice = createSlice({
   },
 })
 
-export const {handleNext,handlePrev}=ProjectSlice.actions
+export const { handleNext, handlePrev } = ProjectSlice.actions
 
 export default ProjectSlice.reducer

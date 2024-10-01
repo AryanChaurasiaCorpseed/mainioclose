@@ -52,24 +52,49 @@ const CompanyForm = ({ role }) => {
   const [selectedFilter, setSelectedFilter] = useState("initiated")
   const [openModal, setOpenModal] = useState(false)
   const [formId, setFormId] = useState(null)
+  const [paginationData, setPaginationData] = useState({
+    page: 1,
+    size: 50,
+  })
 
   useEffect(() => {
     dispatch(
-      getAllCompanyByStatus({ id: userid, status: selectedFilter, page: page })
+      getAllCompanyByStatus({
+        id: userid,
+        status: selectedFilter,
+        page: paginationData?.page,
+        size: paginationData?.size,
+      })
     )
-  }, [dispatch, selectedFilter, userid, page])
+  }, [dispatch, selectedFilter, userid])
 
   useEffect(() => {
     dispatch(getAllUsers())
     dispatch(getAllContactDetails())
   }, [dispatch])
 
+  const handlePagination = useCallback(
+    (dataPage, size) => {
+      dispatch(
+        getAllCompanyByStatus({
+          id: userid,
+          status: selectedFilter,
+          page: dataPage,
+          size: size,
+        })
+      )
+      setPaginationData({ size: size, page: dataPage })
+    },
+    [userid,selectedFilter, dispatch]
+  )
+
   const onSearchLead = (e, b, c) => {
     dispatch(
       searchCompanyForm({
         inputText: e,
         userId: userid,
-        page,
+        page: paginationData?.page,
+        size: paginationData?.size,
         status: selectedFilter,
       })
     )
@@ -78,7 +103,8 @@ const CompanyForm = ({ role }) => {
         searchCompanyForm({
           inputText: "",
           userId: userid,
-          page,
+          page: paginationData?.page,
+          size: paginationData?.size,
           status: selectedFilter,
         })
       )
@@ -468,7 +494,8 @@ const CompanyForm = ({ role }) => {
                     searchCompanyForm({
                       inputText: "",
                       userId: userid,
-                      page,
+                      page: paginationData?.page,
+                      size: paginationData?.size,
                       status: selectedFilter,
                     })
                   )
@@ -495,11 +522,11 @@ const CompanyForm = ({ role }) => {
           columns={columns}
           scroll={{ x: 5000, y: 540 }}
           rowSelection={true}
+          page={paginationData?.page}
+          pageSize={paginationData?.size}
           pagination={true}
-          nextPage={handleNextPagination}
-          prevPage={handlePrevPagination}
-          prevDisable={page === 0 && true}
-          nextDisable={leadCompanyList?.length < 50 && true}
+          totalCount={leadCompanyList?.[0]?.totalLeadFor}
+          handlePagination={handlePagination}
         />
       </div>
       <Modal

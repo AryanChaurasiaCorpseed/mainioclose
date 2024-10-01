@@ -100,7 +100,6 @@ const ProjectsComp = () => {
     },
   ]
 
-  console.log("sdkcbksjdckjs", compProject)
 
   return (
     <TableOutlet>

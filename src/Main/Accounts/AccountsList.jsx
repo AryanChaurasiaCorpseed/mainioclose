@@ -26,7 +26,7 @@ export const AccountsList = () => {
 
   useEffect(() => {
     if (userid !== undefined && userid !== null) {
-      dispatch(getAllComapany(userid))
+      // dispatch(getAllComapany(userid))
     }
     dispatch(getAllLeadsWithLabelId())
     dispatch(getAllProjectList())

@@ -21,7 +21,7 @@ const LeadCreateModel = ({ leadByCompany, companyId }) => {
 
   useEffect(() => {
     dispatch(getAllLeadUsers())
-    dispatch(handleLoadingState(""))
+    dispatch(handleLoadingState())
   }, [dispatch])
 
   const handleFinish = useCallback(

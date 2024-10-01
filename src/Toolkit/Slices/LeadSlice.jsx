@@ -8,7 +8,7 @@ import { putQueryWithoutDestructuring } from "../../API/PutRequestwithoutDestruc
 
 export const getAllLeads = createAsyncThunk("allLeadsData", async (data) => {
   const allLeads = await postQuery(
-    `/leadService/api/v1/lead/getAllLead?page=${data?.page}&size=50`,
+    `/leadService/api/v1/lead/getAllLead?page=${data?.page}&size=${data?.size}`,
     data
   )
   return allLeads?.data
@@ -534,9 +534,9 @@ export const sendVendorsProposal = createAsyncThunk(
 
 export const getAllVendorsRequest = createAsyncThunk(
   "getAllVendorsRequest",
-  async ({ id, page }) => {
+  async ({ id, page, size }) => {
     const response = await getQuery(
-      `/leadService/api/v1/vendor/find-all-vendor-request?userId=${id}&page=${page}&size=50`
+      `/leadService/api/v1/vendor/find-all-vendor-request?userId=${id}&page=${page}&size=${size}`
     )
     return response.data
   }
@@ -555,10 +555,20 @@ export const getvendorHistoryByLeadId = createAsyncThunk(
 export const changeProcurementAssignee = createAsyncThunk(
   "changeProcurementAssignee",
   async (data) => {
-    console.log("xkbvjsadbcvljkasbcjh", data?.data)
     const response = await putQueryWithoutDestructuring(
       `/leadService/api/v1/vendor/edit-vendor-details-request?updatedById=${data?.updatedById}&assigneeToId=${data?.assigneeToId}`,
       data?.data
+    )
+    return response.data
+  }
+)
+
+export const getAllLeadCount = createAsyncThunk(
+  "getAllLeadCount",
+  async (data) => {
+    const response = await postQuery(
+      `/leadService/api/v1/lead/getAllLeadCount`,
+      data
     )
     return response.data
   }
@@ -594,27 +604,19 @@ export const LeadSlice = createSlice({
     allProductsList: [],
     clientsContact: [],
     notificationCount: 0,
-    page: 1,
     remarkData: [],
     navigateLeadId: null,
     vendorsList: [],
     allVendorsRequestList: [],
     singleVendorHistoryList: [],
     historyLoading: "",
+    totalCount: 0,
   },
   reducers: {
     handleLoadingState: (state, action) => {
       state.loading = action.payload
     },
-    handleNextPagination: (state, action) => {
-      state.page = state.page + 1
-    },
-    handlePrevPagination: (state, action) => {
-      state.page = state.page >= 0 ? state.page - 1 : 0
-    },
-    handlePagination: (state, action) => {
-      state.page = action?.payload
-    },
+    
   },
   extraReducers: (builder) => {
     builder.addCase(getAllLeads.pending, (state, action) => {
@@ -887,12 +889,23 @@ export const LeadSlice = createSlice({
     builder.addCase(getvendorHistoryByLeadId.rejected, (state, action) => {
       state.historyLoading = "rejected"
     })
+
+    builder.addCase(getAllLeadCount.pending, (state, action) => {
+      state.historyLoading = "pending"
+    })
+    builder.addCase(getAllLeadCount.fulfilled, (state, action) => {
+      state.historyLoading = "success"
+      state.totalCount = action?.payload
+    })
+    builder.addCase(getAllLeadCount.rejected, (state, action) => {
+      state.historyLoading = "rejected"
+    })
   },
 })
 export const {
   handleLoadingState,
   handleNextPagination,
   handlePrevPagination,
-  handlePagination
+  handlePagination,
 } = LeadSlice.actions
 export default LeadSlice.reducer

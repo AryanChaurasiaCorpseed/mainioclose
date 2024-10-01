@@ -19,27 +19,49 @@ const VendorsList = () => {
   const dispatch = useDispatch()
   const loading = useSelector((state) => state.leads.loading)
   const { userid } = useParams()
-
-  useEffect(() => {
-    dispatch(getAllVendorsRequest({ id: userid, page: 0 }))
-  }, [dispatch, userid])
-
-  useEffect(() => {
-    dispatch(getProcurementAssigneeList(userid))
-  }, [userid])
-
   const allVendorsRequestList = useSelector(
     (prev) => prev?.leads.allVendorsRequestList
   )
-
   const procurementAssigneeList = useSelector(
     (state) => state.common.procurementAssigneeList
   )
 
   const [selectedRowKeys, setSelectedRowKeys] = useState([])
   const [assigneeId, setAssigneeId] = useState(null)
+  const [paginationData, setPaginationData] = useState({
+    page: 1,
+    size: 50,
+  })
 
-  const onSelectChange = (newSelectedRowKeys, rowsData) => {
+  useEffect(() => {
+    dispatch(
+      getAllVendorsRequest({
+        id: userid,
+        page: paginationData?.page,
+        size: paginationData?.size,
+      })
+    )
+  }, [dispatch, userid])
+
+  useEffect(() => {
+    dispatch(getProcurementAssigneeList(userid))
+  }, [userid,dispatch])
+
+  const handlePagination = useCallback(
+    (dataPage, size) => {
+      dispatch(
+        getAllVendorsRequest({
+          id: userid,
+          page: dataPage,
+          size: size,
+        })
+      )
+      setPaginationData({ size: size, page: dataPage })
+    },
+    [userid, dispatch]
+  )
+
+  const onSelectChange = (newSelectedRowKeys) => {
     setSelectedRowKeys(newSelectedRowKeys)
   }
 
@@ -151,6 +173,10 @@ const VendorsList = () => {
           selectedRowKeys={selectedRowKeys}
           rowKey={(record) => record?.id}
           pagination={true}
+          page={paginationData?.page}
+          pageSize={paginationData?.size}
+          // totalCount={filteredData?.[0]?.totalProject}
+          handlePagination={handlePagination}
           footerContent={
             <div className={`bottom-line`}>
               <div

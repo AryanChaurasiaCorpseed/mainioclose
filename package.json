@@ -4,6 +4,7 @@
   "private": true,
   "proxy": "http://localhost:9004",
   "dependencies": {
+    "@ant-design/plots": "^2.3.2",
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@mui/material": "^5.14.10",
@@ -12,7 +13,7 @@
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
-    "antd": "^5.18.1",
+    "antd": "^5.21.1",
     "antd-img-crop": "^4.22.0",
     "axios": "^1.4.0",
     "dayjs": "^1.11.11",

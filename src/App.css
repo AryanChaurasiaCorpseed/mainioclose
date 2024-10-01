@@ -1050,3 +1050,7 @@ select.form-control:not([size]):not([multiple]) {
 .custom-list.ant-list .ant-list-item .ant-list-item-action > li {
   padding: 0;
 }
+
+.ant-pagination {
+  font-size: 12;
+}

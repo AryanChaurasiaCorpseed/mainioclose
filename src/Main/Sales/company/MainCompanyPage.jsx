@@ -4,8 +4,6 @@ import MainHeading from "../../../components/design/MainHeading"
 import { useDispatch, useSelector } from "react-redux"
 import {
   getCompanyAction,
-  handleNextPagination,
-  handlePrevPagination,
   searchCompany,
   updateCompanyAssignee,
   updateMultiCompanyAssignee,
@@ -39,19 +37,28 @@ const MainCompanyPage = () => {
   const currUser = useSelector((prev) => prev?.auth?.currentUser)
   const leadUserNew = useSelector((state) => state.leads.getAllLeadUserData)
   const currentRoles = useSelector((state) => state?.auth?.roles)
-  const getAllStatus = useSelector((state) => state.leads.getAllStatus)
   const allUsers = useSelector((state) => state.user.allUsers)
   const { allCompnay, loadingCompany, errorCompany } = useSelector(
     (prev) => prev?.company
   )
-  const page = useSelector((prev) => prev?.company.page)
   const [selectedRowKeys, setSelectedRowKeys] = useState([])
   const [assigneeId, setAssigneeId] = useState(null)
   const [assignedProcessing, setAssignedProcessing] = useState("")
+  const [paginationData, setPaginationData] = useState({
+    page: 1,
+    size: 50,
+  })
 
   useEffect(() => {
-    dispatch(getCompanyAction({ id: currUser?.id, page, filterUserId: 0 }))
-  }, [dispatch, currUser, page])
+    dispatch(
+      getCompanyAction({
+        id: currUser?.id,
+        page: paginationData?.page,
+        size: paginationData?.size,
+        filterUserId: 0,
+      })
+    )
+  }, [dispatch, currUser])
 
   useEffect(() => {
     dispatch(getAllLeadUser(userid))
@@ -68,12 +75,27 @@ const MainCompanyPage = () => {
     }
   }
 
+  const handlePagination = useCallback(
+    (dataPage, size) => {
+      dispatch(
+        getCompanyAction({
+          id: currUser?.id,
+          page: dataPage,
+          size: size,
+          filterUserId: 0,
+        })
+      )
+      setPaginationData({ size: size, page: dataPage })
+    },
+    [currUser, dispatch]
+  )
+
   const handleUpdateAssignee = useCallback(
     (assigneeId, companyId) => {
       let data = {
         companyId: companyId,
         assigneeId: assigneeId,
-        currentUserId:userid
+        currentUserId: userid,
       }
       dispatch(updateCompanyAssignee(data))
         .then((response) => {
@@ -82,7 +104,12 @@ const MainCompanyPage = () => {
               message: "Assignee is updated successfully",
             })
             dispatch(
-              getCompanyAction({ id: currUser?.id, page, filterUserId: 0 })
+              getCompanyAction({
+                id: currUser?.id,
+                page: paginationData?.page,
+                size: paginationData?.size,
+                filterUserId: 0,
+              })
             )
           } else {
             notification.error({ message: "Something went wrong !." })
@@ -92,16 +119,23 @@ const MainCompanyPage = () => {
           notification.error({ message: "Something went wrong !." })
         })
     },
-    [dispatch, currUser, page]
+    [dispatch, currUser, paginationData]
   )
 
   const filterCompanyBasedOnUser = useCallback(
     (filterUserId) => {
       if (filterUserId) {
-        dispatch(getCompanyAction({ id: currUser?.id, page, filterUserId }))
+        dispatch(
+          getCompanyAction({
+            id: currUser?.id,
+            page: paginationData?.page,
+            size: paginationData?.size,
+            filterUserId,
+          })
+        )
       }
     },
-    [page, dispatch, currUser,userid]
+    [paginationData, dispatch, currUser]
   )
 
   const tagsInTooltip = (data, type) => {
@@ -300,7 +334,7 @@ const MainCompanyPage = () => {
     {
       dataIndex: "History",
       title: "Company history",
-      render: (_, props) => <CompanyHistory  companyId={props.companyId}    />,
+      render: (_, props) => <CompanyHistory companyId={props.companyId} />,
     },
   ]
 
@@ -332,8 +366,7 @@ const MainCompanyPage = () => {
       })
   }, [selectedRowKeys, assigneeId, dispatch, userid])
 
-
-  console.log('sdkjasjdbvsdjjb',assigneeId)
+  console.log("sdkjasjdbvsdjjb", assigneeId)
 
   return (
     <TableOutlet>
@@ -373,7 +406,12 @@ const MainCompanyPage = () => {
             onChange={filterCompanyBasedOnUser}
             onClear={() =>
               dispatch(
-                getCompanyAction({ id: currUser?.id, page, filterUserId: 0 })
+                getCompanyAction({
+                  id: currUser?.id,
+                  page: paginationData?.page,
+                  size: paginationData?.size,
+                  filterUserId: 0,
+                })
               )
             }
           />
@@ -393,10 +431,10 @@ const MainCompanyPage = () => {
               selectedRowKeys={selectedRowKeys}
               rowKey={(record) => record?.companyId}
               pagination={true}
-              nextDisable={allCompnay?.length < 50 ? true : false}
-              prevDisable={page === 0 ? true : false}
-              nextPage={handleNextPagination}
-              prevPage={handlePrevPagination}
+              page={paginationData?.page}
+              pageSize={paginationData?.size}
+              totalCount={allCompnay?.[0]?.total}
+              handlePagination={handlePagination}
               footerContent={
                 <div className={`bottom-line`}>
                   <div

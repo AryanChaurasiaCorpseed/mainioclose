@@ -322,14 +322,14 @@ const SideBar = () => {
               />
             ),
             children: [
-              {
-                label: (
-                  <Link to={`/erp/${userid}/account/accountlist`}>
-                    Accounts list
-                  </Link>
-                ),
-                key: "accountlist",
-              },
+              // {
+              //   label: (
+              //     <Link to={`/erp/${userid}/account/accountlist`}>
+              //       Accounts list
+              //     </Link>
+              //   ),
+              //   key: "accountlist",
+              // },
               {
                 label: (
                   <Link to={`/erp/${userid}/account/companyForm`}>
@@ -355,14 +355,14 @@ const SideBar = () => {
               />
             ),
             children: [
-              {
-                label: (
-                  <Link to={`/erp/${userid}/account/accountlist`}>
-                    Accounts list
-                  </Link>
-                ),
-                key: "accountlist",
-              },
+              // {
+              //   label: (
+              //     <Link to={`/erp/${userid}/account/accountlist`}>
+              //       Accounts list
+              //     </Link>
+              //   ),
+              //   key: "accountlist",
+              // },
               {
                 label: (
                   <Link to={`/erp/${userid}/account/companyForm`}>

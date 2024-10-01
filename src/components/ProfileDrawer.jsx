@@ -42,7 +42,7 @@ const ProfileDrawer = () => {
         setFileList(newFileList)
       }
     },
-    [currentUserId,dispatch]
+    [currentUserId, dispatch]
   )
 
   useEffect(() => {
@@ -135,8 +135,8 @@ const ProfileDrawer = () => {
             </Text>
             <Text type="secondary">User Id: ERP00{currentUserProfile?.id}</Text>
 
-            {currentUserProfile?.roles?.map((item) => (
-              <Text>{`${item}, `}</Text>
+            {currentUserProfile?.roles?.map((item, idx) => (
+              <Text key={`profiles${idx}`}>{`${item}, `}</Text>
             ))}
           </Space>
         </div>

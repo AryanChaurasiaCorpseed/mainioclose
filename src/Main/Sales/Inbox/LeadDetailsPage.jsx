@@ -1,10 +1,8 @@
 import React, { useCallback, useEffect, useState } from "react"
 import "./LeadDetailsPage.scss"
 import { useParams } from "react-router-dom"
-import { useRef } from "react"
 import { toast } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
-import EstimateDesignPage from "../Leads/EstimateDesignPage"
 import { useDispatch, useSelector } from "react-redux"
 import {
   changeLeadAssigneeLeads,
@@ -89,7 +87,7 @@ const LeadDetailsPage = ({ leadid }) => {
     if (leadid) {
       dispatch(getSingleLeadDataByLeadID({ leadid, userid }))
     }
-  }, [leadid, dispatch])
+  }, [leadid,userid, dispatch])
 
   const updateOriginalNameFun = useCallback(() => {
     dispatch(updateOriginalNameInLeads(originalData))
@@ -224,9 +222,6 @@ const LeadDetailsPage = ({ leadid }) => {
     [leadid, userid, dispatch, getSingleLeadData]
   )
 
-  const openImageInNewTab = (imageUrl) => {
-    window.open(imageUrl, "_blank")
-  }
 
   const sameAssigneePresonFun = async () => {
     if (window.confirm("Aree you Want to Sure")) {
@@ -668,6 +663,7 @@ const LeadDetailsPage = ({ leadid }) => {
                     <Button
                       type="primary"
                       size="small"
+                      disabled={!showDescriptionField}
                       onClick={handleUpdateLeadDescription}
                     >
                       Submit

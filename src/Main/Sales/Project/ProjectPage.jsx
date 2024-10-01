@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useCallback, useEffect, useState } from "react"
 import TableOutlet from "../../../components/design/TableOutlet"
 import MainHeading from "../../../components/design/MainHeading"
 import TableScalaton from "../../../components/TableScalaton"
@@ -6,8 +6,6 @@ import SomethingWrong from "../../../components/usefulThings/SomethingWrong"
 import { useDispatch, useSelector } from "react-redux"
 import {
   getProjectAction,
-  handleNext,
-  handlePrev,
 } from "../../../Toolkit/Slices/ProjectSlice"
 import ColComp from "../../../components/small/ColComp"
 import CommonTable from "../../../components/CommonTable"
@@ -17,22 +15,39 @@ import { Input } from "antd"
 
 const ProjectPage = () => {
   const dispatch = useDispatch()
-
   const currUserId = useSelector((prev) => prev?.auth?.currentUser?.id)
-  const { allProject, loadingProject, errorProject, page } = useSelector(
+  const { allProject, loadingProject, errorProject } = useSelector(
     (prev) => prev?.project
   )
 
-  useEffect(() => {
-    dispatch(getProjectAction({ id: currUserId, page }))
-  }, [currUserId, dispatch, page])
-
   const [searchText, setSearchText] = useState("")
   const [filteredData, setFilteredData] = useState([])
+  const [paginationData, setPaginationData] = useState({
+    page: 1,
+    size: 50,
+  })
+
+  useEffect(() => {
+    dispatch(
+      getProjectAction({
+        id: currUserId,
+        page: paginationData?.page,
+        size: paginationData?.size,
+      })
+    )
+  }, [currUserId, dispatch])
 
   useEffect(() => {
     setFilteredData(allProject)
   }, [allProject])
+
+  const handlePagination = useCallback(
+    (dataPage, size) => {
+      dispatch(getProjectAction({ id: currUserId, page: dataPage, size }))
+      setPaginationData({ size: size, page: dataPage })
+    },
+    [currUserId, dispatch]
+  )
 
   const handleSearch = (e) => {
     const value = e.target.value
@@ -158,11 +173,11 @@ const ProjectPage = () => {
             data={filteredData}
             columns={columns}
             scroll={{ y: 500, x: 2500 }}
+            page={paginationData?.page}
+            pageSize={paginationData?.size}
             pagination={true}
-            nextPage={handleNext}
-            prevPage={handlePrev}
-            nextDisable={allProject?.length < 50 ? true : false}
-            prevDisable={page === 0 ? true : false}
+            totalCount={filteredData?.[0]?.totalProject}
+            handlePagination={handlePagination}
           />
         )}
       </div>

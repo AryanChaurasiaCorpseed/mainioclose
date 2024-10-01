@@ -70,6 +70,8 @@ import HomePageFile from "./Home/HomePageFile"
 import LandingPage from "./Home/LandingPage"
 import IpAddress from "./Main/Setting/IpAddress/IpAddress"
 import VendorsList from "./Main/Vendors/VendorsList"
+import ProjectGraph from "./Main/GraphDashboard/ProjectGraph"
+import MainGraphPage from "./Main/GraphDashboard/MainGraphPage"
 
 const SpinLoading = lazy(() => import("./components/SpinLoading"))
 
@@ -170,6 +172,10 @@ function App() {
             fontSize: 12,
             itemPaddingBottom: 32,
           },
+          Pagination:{
+            fontSizeSM:12,
+            itemSizeSM:22
+          }
         },
       }}
     >
@@ -223,7 +229,11 @@ function App() {
                   path="users/deactivateUser"
                   element={<AllDeactivateUser />}
                 />
+                <Route path="graphDashboard" element={<MainGraphPage />} />
               </Route>
+
+
+
               {/* hr module routes */}
               <Route path="/erp/:userid/hr" element={<HRMod />}>
                 <Route path="userlist" element={<HrUserList />} />
@@ -272,7 +282,7 @@ function App() {
               {/* end */}
               {/* accounts module routes */}
               <Route path="/erp/:userid/account" element={<Accounts />}>
-                <Route path="accountlist" element={<AccountsList />} />
+                {/* <Route path="accountlist" element={<AccountsList />} /> */}
                 <Route path="companyForm" element={<CompanyForm />} />
                 <Route
                   path="accounttwo"
