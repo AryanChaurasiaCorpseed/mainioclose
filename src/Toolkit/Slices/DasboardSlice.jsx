@@ -1,7 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 import { postQuery } from "../../API/PostQuery"
-import { getQuery } from "../../API/GetQuery"
-import { getQueryWithBody } from "../../API/GetQueryWithBody"
 
 export const projectGraphData = createAsyncThunk(
   "projectGraph",
@@ -37,6 +35,12 @@ export const getAllCompanyAmountGrapgh = createAsyncThunk(
 )
 
 
+export const getGraphDataByUser=createAsyncThunk('getGraphDataByUser',async(data)=>{
+  const response=await postQuery(`/leadService/api/v1/salesDashboard/getAllAmountUserWise`,data)
+  return response.data
+})
+
+
 
 const DashboardSlice = createSlice({
   name: "dashboard",
@@ -45,6 +49,7 @@ const DashboardSlice = createSlice({
     loading: "",
     projectAmountList: [],
     companyAmountList: [],
+    userGraphList:[]
   },
   extraReducers: (builders) => {
     builders.addCase(projectGraphData.pending, (state, action) => {
@@ -77,6 +82,17 @@ const DashboardSlice = createSlice({
       state.companyAmountList = action.payload
     })
     builders.addCase(getAllCompanyAmountGrapgh.rejected, (state, action) => {
+      state.loading = "error"
+    })
+
+    builders.addCase(getGraphDataByUser.pending, (state, action) => {
+      state.loading = "pending"
+    })
+    builders.addCase(getGraphDataByUser.fulfilled, (state, action) => {
+      state.loading = "success"
+      state.userGraphList = action.payload
+    })
+    builders.addCase(getGraphDataByUser.rejected, (state, action) => {
       state.loading = "error"
     })
   },

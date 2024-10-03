@@ -15,9 +15,9 @@ export const leadSlugAction = createAsyncThunk(
 
 export const getAllSlugAction = createAsyncThunk(
   "showLeadSlugData",
-  async (pageNo) => {
+  async ({page,size}) => {
     const showLeadSlug = await getQuery(
-      `/leadService/api/v1/slug/getSlug?pageSize=${50}&pageNo=${pageNo}`
+      `/leadService/api/v1/slug/getSlug?pageSize=${size}&pageNo=${page}`
     )
     return showLeadSlug?.data
   }
@@ -35,6 +35,11 @@ export const getAllSlugList=createAsyncThunk('getSlugList',async()=>{
   return response.data
 })
 
+export const getAllSlugCount=createAsyncThunk('allTotalSlugCount',async()=>{
+  const response=await getQuery(`/leadService/api/v1/urls/getTotalSlugCount`)
+  return response.data
+})
+
 export const LeadSlugSlice = createSlice({
   name: "leadslug",
   initialState: {
@@ -45,7 +50,8 @@ export const LeadSlugSlice = createSlice({
     allLeadSlugLoading: false,
     allLeadSlugError: false,
     page: 0,
-    slugList:[]
+    slugList:[],
+    totalSlugCount:0,
   },
   reducers: {
     handleNextPagination: (state, action) => {
@@ -113,6 +119,20 @@ export const LeadSlugSlice = createSlice({
       state.allLeadSlugError = false
     })
     builder.addCase(getAllSlugList.rejected, (state, action) => {
+      state.allLeadSlugError = true
+      state.allLeadSlugLoading = false
+    })
+     
+    builder.addCase(getAllSlugCount.pending, (state, action) => {
+      state.allLeadSlugLoading = true
+      state.allLeadSlugError = false
+    })
+    builder.addCase(getAllSlugCount.fulfilled, (state, action) => {
+      state.totalSlugCount = action.payload
+      state.allLeadSlugLoading = false
+      state.allLeadSlugError = false
+    })
+    builder.addCase(getAllSlugCount.rejected, (state, action) => {
       state.allLeadSlugError = true
       state.allLeadSlugLoading = false
     })

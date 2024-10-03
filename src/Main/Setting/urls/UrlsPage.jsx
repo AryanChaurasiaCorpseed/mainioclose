@@ -4,13 +4,10 @@ import {
   convertUrlsToProduct,
   createAllUrlAction,
   getAllUrlAction,
-  handleNextPagination,
-  handlePrevPagination,
+  getAllUrlCount,
 } from "../../../Toolkit/Slices/LeadUrlSlice"
 import MainHeading from "../../../components/design/MainHeading"
 import { getAllSlugAction } from "../../../Toolkit/Slices/LeadSlugSlice"
-import { toast } from "react-toastify"
-import "react-toastify/dist/ReactToastify.css"
 import {
   Button,
   Form,
@@ -28,28 +25,46 @@ import OverFlowText from "../../../components/OverFlowText"
 import { Icon } from "@iconify/react"
 import { BTN_ICON_HEIGHT, BTN_ICON_WIDTH } from "../../../components/Constants"
 const { Text } = Typography
-toast.configure()
+
 
 const UrlsPage = () => {
   const [form] = Form.useForm()
-  const { allLeadSlug, page } = useSelector((prev) => prev?.leadslug)
-  const urlPage = useSelector((state) => state.leadurls.page)
+  const { allLeadSlug } = useSelector((prev) => prev?.leadslug)
+  const totalCount = useSelector((state) => state.leadurls.totalUrlCount)
+  const { allLeadUrl } = useSelector((prev) => prev?.leadurls)
   const [urlDep, setUrlDep] = useState(false)
   const [openModal, setOpenModal] = useState(false)
   const [selectedRowKeys, setSelectedRowKeys] = useState([])
   const [searchText, setSearchText] = useState("")
   const [filteredData, setFilteredData] = useState([])
+  const [paginationData, setPaginationData] = useState({
+    page: 1,
+    size: 50,
+  })
 
   const dispatch = useDispatch()
   useEffect(() => {
-    dispatch(getAllSlugAction(page))
-  }, [dispatch, page])
+    dispatch(getAllSlugAction({page:1,size:200}))
+  }, [dispatch])
 
   useEffect(() => {
-    dispatch(getAllUrlAction(urlPage))
-  }, [dispatch, urlDep, urlPage])
+    dispatch(getAllUrlAction({page:paginationData?.page,size:paginationData?.size}))
+    dispatch(getAllUrlCount())
+  }, [dispatch, urlDep])
 
-  const { allLeadUrl } = useSelector((prev) => prev?.leadurls)
+  const handlePagination = useCallback(
+    (dataPage, size) => {
+      dispatch(
+        getAllSlugAction({
+          page: dataPage,
+          size: size,
+        })
+      )
+      setPaginationData({ size: size, page: dataPage })
+    },
+    [dispatch]
+  )
+
 
   const handleSubmit = async (values) => {
     const createNewUrl = await dispatch(createAllUrlAction(values))
@@ -107,11 +122,13 @@ const UrlsPage = () => {
     {
       title: "Quality",
       dataIndex: "quality",
+      width:100,
       render: (_, data) => <Text>{data?.quality ? "True" : "False"}</Text>,
     },
     {
       title: "Edit",
       dataIndex: "edit",
+      width:80,
       render: (_, data) => <EditUrls data={data} />,
     },
   ]
@@ -188,12 +205,14 @@ const UrlsPage = () => {
         rowSelection={true}
         onRowSelection={onSelectChange}
         selectedRowKeys={selectedRowKeys}
-        nextPage={handleNextPagination}
-        prevPage={handlePrevPagination}
         pagination={true}
-        scroll={{ y: 550, x: 1200 }}
-        prevDisable={urlPage === 0 ? true : false}
-        nextDisable={allLeadUrl?.length < 50 ? true : false}
+        scroll={{ y: 500, x: 1000 }}
+        rowKey={(row)=>row?.id}
+        totalCount={totalCount}
+        page={paginationData?.page}
+        size={paginationData?.size}
+        handlePagination={handlePagination}
+       
       />
 
       <Modal

@@ -1,53 +1,70 @@
-import React, { useEffect, useState } from "react"
+import React, { useCallback, useEffect, useState } from "react"
 import MainHeading from "../../../components/design/MainHeading"
 import { useDispatch, useSelector } from "react-redux"
 import {
   getAllSlugAction,
-  handleNextPagination,
-  handlePrevPagination,
+  getAllSlugCount,
   leadSlugAction,
 } from "../../../Toolkit/Slices/LeadSlugSlice"
-import { toast } from "react-toastify"
-import "react-toastify/dist/ReactToastify.css"
 import EditSlugModal from "../../../Model/EditSlugModal"
-import { Button, Form, Input, Modal } from "antd"
+import { Button, Form, Input, Modal, notification } from "antd"
 import CommonTable from "../../../components/CommonTable"
 import { Icon } from "@iconify/react"
-toast.configure()
 
 const SlugCreate = () => {
   const [slugDep, setSlugDep] = useState(false)
   const [openModal, setOpenModal] = useState(false)
-  const page = useSelector((state) => state.leadslug.page)
+  const totalCount = useSelector((state) => state.leadslug.totalSlugCount)
+  const { allLeadSlug } = useSelector((prev) => prev?.leadslug)
 
   const dispatch = useDispatch()
   const [form] = Form.useForm()
   const [searchText, setSearchText] = useState("")
   const [filteredData, setFilteredData] = useState([])
+  const [paginationData, setPaginationData] = useState({
+    page: 1,
+    size: 50,
+  })
 
   useEffect(() => {
-    dispatch(getAllSlugAction(page))
-  }, [dispatch, slugDep, page])
+    dispatch(
+      getAllSlugAction({
+        page: paginationData?.page,
+        size: paginationData?.size,
+      })
+    )
+    dispatch(getAllSlugCount())
+  }, [dispatch, slugDep])
 
-  const { allLeadSlug } = useSelector((prev) => prev?.leadslug)
-
-  
+  const handlePagination = useCallback(
+    (dataPage, size) => {
+      dispatch(
+        getAllSlugAction({
+          page: dataPage,
+          size: size,
+        })
+      )
+      setPaginationData({ size: size, page: dataPage })
+    },
+    [dispatch]
+  )
 
   const handleSubmit = async (values) => {
     const slugCreation = await dispatch(leadSlugAction(values?.slugName))
     if ((slugCreation.type = "createLeadSlugData/fulfilled")) {
       form.resetFields()
       setSlugDep((prev) => !prev)
-      toast.success("Slug Created Succesfully")
+      notification.success({message:'Slug created succesfully'})
     }
   }
 
   const columns = [
-    { title: "Id", dataIndex: "id" },
+    { title: "Id", dataIndex: "id",width:100 },
     { title: "Name", dataIndex: "name" },
     {
       title: "Edit",
       name: "edit",
+      width:100,
       render: (_, data) => <EditSlugModal data={data} />,
     },
   ]
@@ -89,12 +106,12 @@ const SlugCreate = () => {
       <CommonTable
         columns={columns}
         data={filteredData?.reverse()}
-        nextPage={handleNextPagination}
-        prevPage={handlePrevPagination}
         pagination={true}
-        scroll={{ y: 580 }}
-        prevDisable={page === 0 ? true : false}
-        nextDisable={allLeadSlug?.length < 50 ? true : false}
+        scroll={{ y: 500 }}
+        totalCount={totalCount}
+        pageSize={paginationData?.size}
+        page={paginationData?.page}
+        handlePagination={handlePagination}
       />
       <Modal
         title="Create slug"

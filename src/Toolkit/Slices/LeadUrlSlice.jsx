@@ -5,9 +5,9 @@ import { putQuery } from "../../API/PutQuery"
 
 export const getAllUrlAction = createAsyncThunk(
   "showLeadUrlData",
-  async (pageNo) => {
+  async ({page,size}) => {
     const showLeadUrl = await getQuery(
-      `/leadService/api/v1/urls/getUrls?pageSize=${50}&pageNo=${pageNo}`
+      `/leadService/api/v1/urls/getUrls?pageSize=${size}&pageNo=${page}`
     )
     return showLeadUrl?.data
   }
@@ -39,6 +39,11 @@ export const convertUrlsToProduct=createAsyncThunk('convertUrlsToProduct',async(
   return response.data
 })
 
+export const getAllUrlCount=createAsyncThunk('getTotalUrlCount',async()=>{
+  const response=await getQuery(`/leadService/api/v1/urls/getTotalUrlsCount`)
+  return response.data
+})
+
 export const LeadUrlSlice = createSlice({
   name: "leadurls",
   initialState: {
@@ -49,7 +54,8 @@ export const LeadUrlSlice = createSlice({
     allLeadUrlLoading: false,
     allLeadUrlError: false,
     page: 0,
-    allUrlList:[]
+    allUrlList:[],
+    totalUrlCount:0
   },
   reducers: {
     handleNextPagination: (state, action) => {
@@ -98,6 +104,20 @@ export const LeadUrlSlice = createSlice({
       state.createLeadUrlError = false
     })
     builder.addCase(getAllUrlList.rejected, (state, action) => {
+      state.createLeadUrlError = true
+      state.createLeadUrlLoading = false
+    })
+
+    builder.addCase(getAllUrlCount.pending, (state, action) => {
+      state.createLeadUrlLoading = true
+      state.createLeadUrlError = false
+    })
+    builder.addCase(getAllUrlCount.fulfilled, (state, action) => {
+      state.totalUrlCount = action.payload
+      state.createLeadUrlLoading = false
+      state.createLeadUrlError = false
+    })
+    builder.addCase(getAllUrlCount.rejected, (state, action) => {
       state.createLeadUrlError = true
       state.createLeadUrlLoading = false
     })

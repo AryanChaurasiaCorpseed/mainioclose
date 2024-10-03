@@ -5,21 +5,18 @@ import "./Graph.scss"
 import { Button, Flex, Typography } from "antd"
 import { Icon } from "@iconify/react"
 import CompanyAmountGraph from "./CompanyAmountGraph"
+import UserGraph from "./UserGraph"
 const { Text } = Typography
 
 const MainGraphPage = () => {
   const [expandedBox, setExpandedBox] = useState(null)
 
-  // Toggle the expansion of a grid box based on double click
   const handleDoubleClick = (boxIndex) => {
-    // If the same box is clicked again, collapse it; otherwise, expand the clicked box
     setExpandedBox((prevBox) => (prevBox === boxIndex ? null : boxIndex))
   }
 
-  // Check if a box is expanded
   const isExpanded = (boxIndex) => expandedBox === boxIndex
 
-  // Components to render in the grid boxes
   const items = [
     {
       label: "Project graph",
@@ -31,11 +28,11 @@ const MainGraphPage = () => {
     },
     {
       label: "Company amount graph",
-      content: <CompanyAmountGraph/>,
+      content: <CompanyAmountGraph expandedBox={expandedBox} />,
     },
     {
-      label: "Component 4",
-      content: "Component 4",
+      label: "User graph",
+      content: <UserGraph expandedBox={expandedBox} />,
     },
   ]
 
@@ -49,14 +46,13 @@ const MainGraphPage = () => {
         <div
           key={index}
           className={`grid-box ${isExpanded(index) ? "expanded" : ""}`}
-          // onDoubleClick={() => handleDoubleClick(index)}
         >
           <Flex
             align="center"
             justify="space-between"
             style={{ padding: "2px 4px" }}
           >
-            <Text className="heading-text">{item?.label}</Text>{" "}
+            <Text className="heading-text">{item?.label}</Text>
             <Button
               type="text"
               size="small"
