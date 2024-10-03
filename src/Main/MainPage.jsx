@@ -41,7 +41,7 @@ const MainPage = () => {
     dispatch(getAllUsers())
     dispatch(getAllContactDetails())
     dispatch(getAllStatusData())
-    dispatch(getAllUrlAction(0))
+    dispatch(getAllUrlAction({page:1,size:300}))
     dispatch(getAllSlugList())
     dispatch(getAllProductData())
     dispatch(getAllTaskStatus())
