@@ -27,7 +27,7 @@ const EditUrls = ({ data }) => {
           if (resp.meta.requestStatus === "fulfilled") {
             notification.success({ message: "URL edited successfully !" })
             setOpenModal(false)
-            dispatch(getAllUrlAction(0))
+            dispatch(getAllUrlAction({page:1,size:300}))
             form.resetFields()
           } else {
             notification.error({

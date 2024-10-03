@@ -36,7 +36,7 @@ const CreateRatingModel = ({ edit, urlRating, urlId }) => {
               message: "Rating updated successfully .",
             })
             dispatch(allRatingUsers({ id: urlId }))
-            dispatch(getAllUrlAction(page))
+            dispatch(getAllUrlAction({page:1,size:300}))
             form.resetFields()
             setOpenModal(false)
           } else if (response.meta.requestStatus === "rejected") {

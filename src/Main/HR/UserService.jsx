@@ -31,8 +31,8 @@ const UserService = () => {
 
   useEffect(() => {
     dispatch(getAllUsers())
-    dispatch(getAllUrlAction(0))
-    dispatch(getAllSlugAction(0))
+    dispatch(getAllUrlAction({page:1,size:300}))
+    dispatch(getAllSlugAction({page:1,size:300}))
   }, [dispatch])
 
   useEffect(() => {
