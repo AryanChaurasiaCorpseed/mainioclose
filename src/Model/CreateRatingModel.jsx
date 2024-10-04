@@ -1,6 +1,6 @@
-import React, { useCallback, useEffect, useState } from "react"
+import React, { useCallback, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import { getAllUrlAction, getAllUrlList } from "../Toolkit/Slices/LeadUrlSlice"
+import { getAllUrlList } from "../Toolkit/Slices/LeadUrlSlice"
 import { addNewRating, allRatingUsers } from "../Toolkit/Slices/RatingSlice"
 import { Button, Form, Modal, notification, Select } from "antd"
 
@@ -9,11 +9,6 @@ const CreateRatingModel = ({ edit, urlRating, urlId }) => {
   const [form] = Form.useForm()
   const [openModal, setOpenModal] = useState(false)
   const allLeadUrl = useSelector((state) => state.leadurls.allUrlList)
-  const page = useSelector((state) => state.leadurls.page)
-
-  useEffect(() => {
-    dispatch(getAllUrlList())
-  }, [dispatch])
 
   const { allUsers } = useSelector((prev) => prev?.user)
   const allStars = [
@@ -36,7 +31,7 @@ const CreateRatingModel = ({ edit, urlRating, urlId }) => {
               message: "Rating updated successfully .",
             })
             dispatch(allRatingUsers({ id: urlId }))
-            dispatch(getAllUrlAction({page:1,size:300}))
+            dispatch(getAllUrlList())
             form.resetFields()
             setOpenModal(false)
           } else if (response.meta.requestStatus === "rejected") {
@@ -51,7 +46,7 @@ const CreateRatingModel = ({ edit, urlRating, urlId }) => {
           setOpenModal(false)
         })
     },
-    [urlId, dispatch, form, urlRating,  page]
+    [urlId, dispatch, form, urlRating]
   )
 
   return (

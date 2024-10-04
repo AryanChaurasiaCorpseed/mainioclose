@@ -25,6 +25,7 @@ const VendorsList = () => {
   const procurementAssigneeList = useSelector(
     (state) => state.common.procurementAssigneeList
   )
+  const totalCount=useSelector((state)=>state.leads.totalVendorRequestCount)
 
   const [selectedRowKeys, setSelectedRowKeys] = useState([])
   const [assigneeId, setAssigneeId] = useState(null)
@@ -175,7 +176,7 @@ const VendorsList = () => {
           pagination={true}
           page={paginationData?.page}
           pageSize={paginationData?.size}
-          // totalCount={filteredData?.[0]?.totalProject}
+          totalCount={totalCount}
           handlePagination={handlePagination}
           footerContent={
             <div className={`bottom-line`}>

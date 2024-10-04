@@ -611,6 +611,7 @@ export const LeadSlice = createSlice({
     singleVendorHistoryList: [],
     historyLoading: "",
     totalCount: 0,
+    totalVendorRequestCount:0
   },
   reducers: {
     handleLoadingState: (state, action) => {
@@ -873,6 +874,7 @@ export const LeadSlice = createSlice({
     })
     builder.addCase(getAllVendorsRequest.fulfilled, (state, action) => {
       state.loading = "success"
+      state.totalVendorRequestCount=action?.payload?.totalItems
       state.allVendorsRequestList = action?.payload?.vendorsRequests
     })
     builder.addCase(getAllVendorsRequest.rejected, (state, action) => {

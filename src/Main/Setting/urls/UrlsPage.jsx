@@ -29,7 +29,9 @@ const { Text } = Typography
 
 const UrlsPage = () => {
   const [form] = Form.useForm()
+  const dispatch = useDispatch()
   const { allLeadSlug } = useSelector((prev) => prev?.leadslug)
+  const slugList=useSelector((state)=>state.leadslug.slugList)
   const totalCount = useSelector((state) => state.leadurls.totalUrlCount)
   const { allLeadUrl } = useSelector((prev) => prev?.leadurls)
   const [urlDep, setUrlDep] = useState(false)
@@ -42,10 +44,10 @@ const UrlsPage = () => {
     size: 50,
   })
 
-  const dispatch = useDispatch()
-  useEffect(() => {
-    dispatch(getAllSlugAction({page:1,size:200}))
-  }, [dispatch])
+
+  // useEffect(() => {
+  //   dispatch(({page:1,size:200}))
+  // }, [dispatch])
 
   useEffect(() => {
     dispatch(getAllUrlAction({page:paginationData?.page,size:paginationData?.size}))
@@ -242,8 +244,8 @@ const UrlsPage = () => {
               maxTagCount="responsive"
               showSearch
               options={
-                allLeadSlug?.length
-                  ? allLeadSlug?.map((item) => ({
+                slugList?.length
+                  ? slugList?.map((item) => ({
                       label: item?.name,
                       value: item?.id,
                     }))

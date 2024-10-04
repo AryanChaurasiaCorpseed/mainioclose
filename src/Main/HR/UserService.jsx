@@ -1,24 +1,17 @@
 import React, { useEffect, useState } from "react"
 import TableOutlet from "../../components/design/TableOutlet"
 import MainHeading from "../../components/design/MainHeading"
-import { useDispatch, useSelector } from "react-redux"
+import { useSelector } from "react-redux"
 import TableScalaton from "../../components/TableScalaton"
 import SomethingWrong from "../../components/usefulThings/SomethingWrong"
 import CreateRatingModel from "../../Model/CreateRatingModel"
-import { getAllSlugAction } from "../../Toolkit/Slices/LeadSlugSlice"
 import CommonTable from "../../components/CommonTable"
-import { getAllUsers } from "../../Toolkit/Slices/UsersSlice"
-import {
-  getAllUrlAction,
-  getAllUrlList,
-} from "../../Toolkit/Slices/LeadUrlSlice"
 import OverFlowText from "../../components/OverFlowText"
 import { Icon } from "@iconify/react"
 import { Input, Typography } from "antd"
 const { Text } = Typography
 
 const UserService = () => {
-  const dispatch = useDispatch()
   const { allLeadUrlLoading, allLeadUrlError, allUrlList } = useSelector(
     (prev) => prev?.leadurls
   )
@@ -29,15 +22,6 @@ const UserService = () => {
     setFilteredData(allUrlList)
   }, [allUrlList])
 
-  useEffect(() => {
-    dispatch(getAllUsers())
-    dispatch(getAllUrlAction({page:1,size:300}))
-    dispatch(getAllSlugAction({page:1,size:300}))
-  }, [dispatch])
-
-  useEffect(() => {
-    dispatch(getAllUrlList())
-  }, [dispatch])
 
   const handleSearch = (e) => {
     const value = e.target.value
@@ -54,6 +38,7 @@ const UserService = () => {
     {
       dataIndex: "id",
       title: "Id",
+      width:100
     },
     {
       dataIndex: "urlsName",
@@ -67,6 +52,7 @@ const UserService = () => {
     {
       dataIndex: "quality",
       title: "Quality",
+      width:100,
       render: (_, data) => <Text>{data?.quality ? "True" : "False"}</Text>,
     },
   ]

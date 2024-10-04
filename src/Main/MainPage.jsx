@@ -18,7 +18,7 @@ import {
   getAllStatusData,
   getAllTaskStatus,
 } from "../Toolkit/Slices/LeadSlice"
-import { getAllUrlAction } from "../Toolkit/Slices/LeadUrlSlice"
+import { getAllUrlList } from "../Toolkit/Slices/LeadUrlSlice"
 import { getAllSlugList } from "../Toolkit/Slices/LeadSlugSlice"
 const { Header, Sider, Content } = Layout
 toast.configure()
@@ -41,12 +41,12 @@ const MainPage = () => {
     dispatch(getAllUsers())
     dispatch(getAllContactDetails())
     dispatch(getAllStatusData())
-    dispatch(getAllUrlAction({page:1,size:300}))
     dispatch(getAllSlugList())
     dispatch(getAllProductData())
     dispatch(getAllTaskStatus())
     dispatch(getAllOppurtunities())
     dispatch(getAllProductWithCattegory())
+    dispatch(getAllUrlList())
   }, [dispatch])
 
   const pathname = window.location.pathname
