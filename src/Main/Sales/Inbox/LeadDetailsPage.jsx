@@ -577,6 +577,7 @@ const LeadDetailsPage = ({ leadid }) => {
               <Select
                 placeholder="Change assignee"
                 size="small"
+                showSearch
                 style={{ width: "100%", margin: "6px 0px" }}
                 value={assigneValue}
                 options={
@@ -600,7 +601,6 @@ const LeadDetailsPage = ({ leadid }) => {
             <Divider style={{ margin: "6px" }} />
             <Select
               showSearch
-              allowClear
               size="small"
               placeholder="change status"
               value={singleLeadResponseData?.status?.id}
