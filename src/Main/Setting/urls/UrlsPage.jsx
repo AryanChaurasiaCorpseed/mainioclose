@@ -26,12 +26,11 @@ import { Icon } from "@iconify/react"
 import { BTN_ICON_HEIGHT, BTN_ICON_WIDTH } from "../../../components/Constants"
 const { Text } = Typography
 
-
 const UrlsPage = () => {
   const [form] = Form.useForm()
   const dispatch = useDispatch()
   const { allLeadSlug } = useSelector((prev) => prev?.leadslug)
-  const slugList=useSelector((state)=>state.leadslug.slugList)
+  const slugList = useSelector((state) => state.leadslug.slugList)
   const totalCount = useSelector((state) => state.leadurls.totalUrlCount)
   const { allLeadUrl } = useSelector((prev) => prev?.leadurls)
   const [urlDep, setUrlDep] = useState(false)
@@ -44,13 +43,17 @@ const UrlsPage = () => {
     size: 50,
   })
 
-
   // useEffect(() => {
   //   dispatch(({page:1,size:200}))
   // }, [dispatch])
 
   useEffect(() => {
-    dispatch(getAllUrlAction({page:paginationData?.page,size:paginationData?.size}))
+    dispatch(
+      getAllUrlAction({
+        page: paginationData?.page,
+        size: paginationData?.size,
+      })
+    )
     dispatch(getAllUrlCount())
   }, [dispatch, urlDep])
 
@@ -66,7 +69,6 @@ const UrlsPage = () => {
     },
     [dispatch]
   )
-
 
   const handleSubmit = async (values) => {
     const createNewUrl = await dispatch(createAllUrlAction(values))
@@ -124,13 +126,13 @@ const UrlsPage = () => {
     {
       title: "Quality",
       dataIndex: "quality",
-      width:100,
+      width: 100,
       render: (_, data) => <Text>{data?.quality ? "True" : "False"}</Text>,
     },
     {
       title: "Edit",
       dataIndex: "edit",
-      width:80,
+      width: 80,
       render: (_, data) => <EditUrls data={data} />,
     },
   ]
@@ -181,12 +183,17 @@ const UrlsPage = () => {
         <MainHeading data={`Urls list`} />
         <div className="lead-box">
           <Button
+            size="small"
             onClick={handleConvertToProduct}
             disabled={selectedRowKeys?.length === 0 ? true : false}
           >
             Convert to product
           </Button>
-          <Button type="primary" onClick={() => setOpenModal(true)}>
+          <Button
+            type="primary"
+            size="small"
+            onClick={() => setOpenModal(true)}
+          >
             Create url
           </Button>
         </div>
@@ -209,12 +216,11 @@ const UrlsPage = () => {
         selectedRowKeys={selectedRowKeys}
         pagination={true}
         scroll={{ y: 500, x: 1000 }}
-        rowKey={(row)=>row?.id}
+        rowKey={(row) => row?.id}
         totalCount={totalCount}
         page={paginationData?.page}
         size={paginationData?.size}
         handlePagination={handlePagination}
-       
       />
 
       <Modal

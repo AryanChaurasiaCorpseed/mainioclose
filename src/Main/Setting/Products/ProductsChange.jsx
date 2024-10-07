@@ -190,7 +190,7 @@ const ProductsChange = () => {
     <div>
       <div className="create-user-box">
         <MainHeading data={`Lead product`} />
-        <Button type="primary" onClick={() => setOpenModal(true)}>
+        <Button type="primary" size="small" onClick={() => setOpenModal(true)}>
           Add product
         </Button>
       </div>

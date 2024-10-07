@@ -50,7 +50,7 @@ const IpAddress = () => {
     <div>
       <div className="create-user-box">
         <MainHeading data={`Ip address`} />
-        <Button type="primary" onClick={() => setOpenModal(true)}>
+        <Button type="primary" size="small" onClick={() => setOpenModal(true)}>
           Add ip address
         </Button>
       </div>

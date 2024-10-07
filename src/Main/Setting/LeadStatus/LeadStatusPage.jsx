@@ -109,7 +109,7 @@ const LeadStatusPage = () => {
     <div>
       <div className="create-user-box">
         <MainHeading data={`Lead status`} />
-        <Button type="primary" onClick={() => setOpenModal(true)}>
+        <Button type="primary" size="small" onClick={() => setOpenModal(true)}>
           Add lead status
         </Button>
       </div>

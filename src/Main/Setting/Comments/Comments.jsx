@@ -118,7 +118,7 @@ const Comments = () => {
     <div>
       <div className="create-user-box">
         <MainHeading data={`Comments`} />
-        <Button type="primary" onClick={() => setOpenModal(true)}>
+        <Button type="primary" size="small" onClick={() => setOpenModal(true)}>
           Add comment
         </Button>
       </div>

@@ -95,7 +95,7 @@ const Desigination = () => {
     <div>
       <div className="create-user-box">
         <MainHeading data={`Desigination`} />
-        <Button type="primary" onClick={() => setOpenModal(true)}>
+        <Button type="primary" size="small" onClick={() => setOpenModal(true)}>
           Add desigination
         </Button>
       </div>

@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 import { postQueryNoData } from "../../API/PostQueryNoDate"
 import { getQuery } from "../../API/GetQuery"
 import { putQuery } from "../../API/PutQuery"
+import { postQuery } from "../../API/PostQuery"
 
 export const leadSlugAction = createAsyncThunk(
   "createLeadSlugData",
@@ -37,6 +38,11 @@ export const getAllSlugList=createAsyncThunk('getSlugList',async()=>{
 
 export const getAllSlugCount=createAsyncThunk('allTotalSlugCount',async()=>{
   const response=await getQuery(`/leadService/api/v1/urls/getTotalSlugCount`)
+  return response.data
+})
+
+export const createPlantSetup=createAsyncThunk('createPlantSetup',async(data)=>{
+  const response = await putQuery(`/leadService/api/v1/slug/createPlantSetUp`,data)
   return response.data
 })
 

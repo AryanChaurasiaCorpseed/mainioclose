@@ -70,21 +70,21 @@ const Department = () => {
           .then((info) => {
             if (info.meta.requestStatus === "fulfilled") {
               notification.success({
-                message: "Department created successfully",
+                message: "Department created successfully.",
               })
               playSuccessSound()
               setOpenModal(false)
               dispatch(getAllDepartment())
             } else if (info.meta.requestStatus === "rejected") {
               notification.error({
-                message: "Something went wrong",
+                message: "Something went wrong !.",
               })
               playErrorSound()
             }
           })
           .catch(() => {
             notification.error({
-              message: "Something went wrong",
+              message: "Something went wrong !.",
             })
             playErrorSound()
           })
@@ -182,7 +182,7 @@ const Department = () => {
     <div>
       <div className="create-user-box">
         <MainHeading data={`Department`} />
-        <Button type="primary" onClick={() => setOpenModal(true)}>
+        <Button type="primary" size="small" onClick={() => setOpenModal(true)}>
           Add department
         </Button>
       </div>

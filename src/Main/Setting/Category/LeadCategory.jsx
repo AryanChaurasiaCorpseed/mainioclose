@@ -148,7 +148,7 @@ const LeadCategory = () => {
     <div>
       <div className="create-user-box">
         <MainHeading data={`Lead category`} />
-        <Button type="primary" onClick={() => setOpenModal(true)}>
+        <Button type="primary" size="small" onClick={() => setOpenModal(true)}>
           Create lead category
         </Button>
       </div>
