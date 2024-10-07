@@ -691,7 +691,7 @@ const LeadDetailsPage = ({ leadid }) => {
           <div className="flex-justify-end">
             <div className="btn-view-container">
               <Button size="small" onClick={() => leadAssignedToSame(leadid)}>
-                Assign to same person{" "}
+                Assign to same person
               </Button>
               <CompanyFormModal
                 detailView={true}

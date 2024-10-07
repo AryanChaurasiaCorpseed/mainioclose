@@ -41,7 +41,7 @@ const LeadCreateModel = ({ leadByCompany, companyId }) => {
           setOpenModal(false)
           window.location.reload()
         } else {
-          notification.error({ message: "Something went wrong" })
+          notification.error({ message: "Something went wrong !." })
         }
       })
     },

@@ -131,6 +131,7 @@ const BulkFileUploader = ({ leadid }) => {
   const [inputCommentText, setInputCommentText] = useState("")
   const [apiLoading, setApiLoading] = useState("")
   const [showUploadList,setUploadList]=useState(true)
+  const [filesToUpload,setFilesToUpload]=useState([])
 
   useEffect(() => {
     dispatch(getAllComments())
@@ -138,11 +139,12 @@ const BulkFileUploader = ({ leadid }) => {
   const props = {
     name: "file",
     multiple: true,
-    showUploadList: showUploadList,
+    // showUploadList: showUploadList,
     action: "/leadService/api/v1/upload/uploadimageToFileSystem",
-    defaultFileList: files,
+    fileList:filesToUpload,
     onChange(info) {
       setFiles(info?.fileList?.map((file) => file?.response))
+      setFilesToUpload(info?.fileList)
     },
     onDrop(e) {},
   }
@@ -164,6 +166,7 @@ const BulkFileUploader = ({ leadid }) => {
             setFlag(true)
             setApiLoading("success")
             setFiles([])
+            setFilesToUpload([])
             setText("")
             setInputCommentText("")
             dispatch(getAllRemarkAndCommnts(leadid))
