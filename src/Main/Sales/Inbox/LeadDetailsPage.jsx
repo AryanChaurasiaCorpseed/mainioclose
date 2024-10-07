@@ -25,6 +25,7 @@ import {
   Col,
   Collapse,
   Divider,
+  Flex,
   Form,
   Input,
   List,
@@ -87,7 +88,7 @@ const LeadDetailsPage = ({ leadid }) => {
     if (leadid) {
       dispatch(getSingleLeadDataByLeadID({ leadid, userid }))
     }
-  }, [leadid,userid, dispatch])
+  }, [leadid, userid, dispatch])
 
   const updateOriginalNameFun = useCallback(() => {
     dispatch(updateOriginalNameInLeads(originalData))
@@ -221,7 +222,6 @@ const LeadDetailsPage = ({ leadid }) => {
     },
     [leadid, userid, dispatch, getSingleLeadData]
   )
-
 
   const sameAssigneePresonFun = async () => {
     if (window.confirm("Aree you Want to Sure")) {
@@ -700,14 +700,11 @@ const LeadDetailsPage = ({ leadid }) => {
             </div>
           </div>
 
-          <div className="lead-filter-above">
-            <div className={`notes-box mt-2`}>
-              <div className="side-notes">
-                <BulkFileUploader leadid={leadid} />
-              </div>
-            </div>
-          </div>
-          <LeadComments list={notesApiData} leadid={leadid} />
+          <Flex vertical gap={12}>
+            <BulkFileUploader leadid={leadid} />
+            <LeadComments list={notesApiData} leadid={leadid} />
+          </Flex>
+         
         </Col>
       </Row>
       <Modal

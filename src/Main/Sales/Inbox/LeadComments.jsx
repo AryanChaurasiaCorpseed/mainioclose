@@ -95,6 +95,7 @@ const LeadComments = ({ list, leadid }) => {
           if (resp.meta.requestStatus === "fulfilled") {
             notification.success({ message: "Remark updated successfully" })
             dispatch(getAllRemarkAndCommnts(leadid))
+            setOpenModal(false)
           } else {
             notification.error({ message: "Something went wrong !." })
           }
@@ -111,7 +112,7 @@ const LeadComments = ({ list, leadid }) => {
       <List
         className="demo-loadmore-list custom-list"
         // loading={initLoading}
-        style={{ maxHeight: "45vh", overflow: "auto" }}
+        style={{ maxHeight: "40vh", overflow: "auto" }}
         size="small"
         itemLayout="vertical"
         // loadMore={loadMore}
