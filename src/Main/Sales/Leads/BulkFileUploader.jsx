@@ -101,6 +101,7 @@ import React, { useCallback, useEffect, useState } from "react"
 import { Icon } from "@iconify/react"
 import {
   Button,
+  Flex,
   Input,
   Select,
   Space,
@@ -204,7 +205,7 @@ const BulkFileUploader = ({ leadid }) => {
   }, [leadid, userid, text, files, dispatch, inputCommentText])
 
   return (
-    <>
+    <Flex vertical>
       <Space>
         <Text className="heading-text">Select the comment</Text>
       </Space>
@@ -268,7 +269,7 @@ const BulkFileUploader = ({ leadid }) => {
           Submit
         </Button>
       </div>
-    </>
+    </Flex>
   )
 }
 
