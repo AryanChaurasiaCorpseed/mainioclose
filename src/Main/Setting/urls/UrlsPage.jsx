@@ -30,10 +30,9 @@ const { Text } = Typography
 const UrlsPage = () => {
   const [form] = Form.useForm()
   const dispatch = useDispatch()
-  const { allLeadSlug } = useSelector((prev) => prev?.leadslug)
   const slugList=useSelector((state)=>state.leadslug.slugList)
   const totalCount = useSelector((state) => state.leadurls.totalUrlCount)
-  const { allLeadUrl } = useSelector((prev) => prev?.leadurls)
+  const allLeadUrl  = useSelector((prev) => prev?.leadurls.allLeadUrl)
   const [urlDep, setUrlDep] = useState(false)
   const [openModal, setOpenModal] = useState(false)
   const [selectedRowKeys, setSelectedRowKeys] = useState([])
@@ -57,7 +56,7 @@ const UrlsPage = () => {
   const handlePagination = useCallback(
     (dataPage, size) => {
       dispatch(
-        getAllSlugAction({
+        getAllUrlAction({
           page: dataPage,
           size: size,
         })
