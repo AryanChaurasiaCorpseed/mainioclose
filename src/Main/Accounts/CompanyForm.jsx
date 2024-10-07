@@ -7,8 +7,6 @@ import {
   addCommentCompanyForm,
   getAllCompanyByStatus,
   getFormComment,
-  handleNextPagination,
-  handlePrevPagination,
   searchCompanyForm,
 } from "../../Toolkit/Slices/CompanySlice"
 import {
@@ -19,7 +17,6 @@ import {
   notification,
   Radio,
   Select,
-  Tooltip,
   Typography,
 } from "antd"
 import {
@@ -27,7 +24,6 @@ import {
   updateStatusById,
 } from "../../Toolkit/Slices/LeadSlice"
 import { Icon } from "@iconify/react"
-import { BTN_ICON_HEIGHT, BTN_ICON_WIDTH } from "../../components/Constants"
 import { useParams } from "react-router-dom"
 import OverFlowText from "../../components/OverFlowText"
 import ColComp from "../../components/small/ColComp"
@@ -85,7 +81,7 @@ const CompanyForm = ({ role }) => {
       )
       setPaginationData({ size: size, page: dataPage })
     },
-    [userid,selectedFilter, dispatch]
+    [userid, selectedFilter, dispatch]
   )
 
   const onSearchLead = (e, b, c) => {
@@ -514,7 +510,13 @@ const CompanyForm = ({ role }) => {
               { label: "Approved", value: "approved" },
               { label: "Disapproved", value: "disapproved" },
             ]}
-            onChange={(e) => setSelectedFilter(e)}
+            onChange={(e) => {
+              setSelectedFilter(e)
+              setPaginationData({
+                page: 1,
+                size: 50,
+              })
+            }}
           />
         </div>
         <CommonTable
