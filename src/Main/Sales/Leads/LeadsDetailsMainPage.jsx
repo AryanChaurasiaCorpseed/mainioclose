@@ -35,6 +35,7 @@ const LeadsDetailsMainPage = ({
     setCurrLeadId(leadId)
   }, [leadId])
 
+
   const items = useCallback(() => {
     return [
       {
@@ -42,7 +43,7 @@ const LeadsDetailsMainPage = ({
         key: "leadDetail",
         children: <LeadDetailsPage leadid={currLeadId} />,
       },
-      ...(singleLeadResponseData?.parent
+      ...(singleLeadResponseData?.parent===true
         ? [
             {
               label: `Lead child's`,
@@ -72,7 +73,7 @@ const LeadsDetailsMainPage = ({
         children: <LeadHistory leadid={currLeadId} />,
       },
     ]
-  }, [currLeadId])
+  }, [currLeadId,singleLeadResponseData])
 
   const handleOnChange = useCallback(
     (e) => {

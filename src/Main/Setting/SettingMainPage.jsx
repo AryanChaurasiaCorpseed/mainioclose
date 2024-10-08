@@ -22,7 +22,10 @@ const SettingMainPage = () => {
     {
       key: "leadStatus",
       label: (
-        <Link className="link-four" to={`/erp/${currentUserId}/setting/leadStatus`}>
+        <Link
+          className="link-four"
+          to={`/erp/${currentUserId}/setting/leadStatus`}
+        >
           Lead status
         </Link>
       ),
@@ -109,6 +112,17 @@ const SettingMainPage = () => {
         </Link>
       ),
     },
+    {
+      key: "procurement",
+      label: (
+        <Link
+          className="link-four"
+          to={`/erp/${currentUserId}/setting/procurement`}
+        >
+          Procurement
+        </Link>
+      ),
+    },
   ]
 
   return (
@@ -120,7 +134,11 @@ const SettingMainPage = () => {
             background: colorBgContainer,
           }}
         >
-          <Menu mode="inline" items={items} defaultSelectedKeys={[getPathKey()]} />
+          <Menu
+            mode="inline"
+            items={items}
+            defaultSelectedKeys={[getPathKey()]}
+          />
         </Sider>
         <Layout>
           <Content

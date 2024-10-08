@@ -72,6 +72,7 @@ import IpAddress from "./Main/Setting/IpAddress/IpAddress"
 import VendorsList from "./Main/Vendors/VendorsList"
 import ProjectGraph from "./Main/GraphDashboard/ProjectGraph"
 import MainGraphPage from "./Main/GraphDashboard/MainGraphPage"
+import Procurement from "./Main/Vendors/Procurement"
 
 const SpinLoading = lazy(() => import("./components/SpinLoading"))
 
@@ -172,10 +173,10 @@ function App() {
             fontSize: 12,
             itemPaddingBottom: 32,
           },
-          Pagination:{
-            fontSizeSM:12,
-            itemSizeSM:22
-          }
+          Pagination: {
+            fontSizeSM: 12,
+            itemSizeSM: 22,
+          },
         },
       }}
     >
@@ -231,8 +232,6 @@ function App() {
                 />
                 <Route path="graphDashboard" element={<MainGraphPage />} />
               </Route>
-
-
 
               {/* hr module routes */}
               <Route path="/erp/:userid/hr" element={<HRMod />}>
@@ -460,6 +459,14 @@ function App() {
                   element={
                     <Suspense fallback={<SpinLoading />}>
                       <IpAddress />
+                    </Suspense>
+                  }
+                />
+                <Route
+                  path="procurement"
+                  element={
+                    <Suspense fallback={<SpinLoading />}>
+                      <Procurement />
                     </Suspense>
                   }
                 />

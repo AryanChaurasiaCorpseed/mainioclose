@@ -532,6 +532,7 @@ export const sendVendorsProposal = createAsyncThunk(
   }
 )
 
+
 export const getAllVendorsRequest = createAsyncThunk(
   "getAllVendorsRequest",
   async ({ id, page, size }) => {
@@ -576,6 +577,11 @@ export const getAllLeadCount = createAsyncThunk(
 
 export const getAllChildLeads=createAsyncThunk('getAllChildLeads',async(name)=>{
   const response=await getQuery(`/leadService/api/v1/urls/getSlugChildByName?name=${name}`)
+  return response.data
+})
+
+export const addLeadChild=createAsyncThunk('addLeadChild',async(data)=>{
+  const response=await putQuery(`/leadService/api/v1/lead/addChildLead`,data)
   return response.data
 })
 
