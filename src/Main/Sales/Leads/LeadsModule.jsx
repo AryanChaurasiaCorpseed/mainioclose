@@ -682,7 +682,7 @@ const LeadsModule = () => {
               value={allMultiFilterData?.userIdFilter}
               placeholder="Select users"
               onChange={(e) =>
-                setAllMultiFilterData((prev) => ({ ...prev, allUserMulti: e }))
+                setAllMultiFilterData((prev) => ({ ...prev, userIdFilter: e }))
               }
               options={
                 leadUserNew?.length > 0
