@@ -574,6 +574,11 @@ export const getAllLeadCount = createAsyncThunk(
   }
 )
 
+export const getAllChildLeads=createAsyncThunk('getAllChildLeads',async(name)=>{
+  const response=await getQuery(`/leadService/api/v1/urls/getSlugChildByName?name=${name}`)
+  return response.data
+})
+
 export const LeadSlice = createSlice({
   name: "lead",
   initialState: {
@@ -611,7 +616,8 @@ export const LeadSlice = createSlice({
     singleVendorHistoryList: [],
     historyLoading: "",
     totalCount: 0,
-    totalVendorRequestCount:0
+    totalVendorRequestCount:0,
+    leadChildData:[]
   },
   reducers: {
     handleLoadingState: (state, action) => {
@@ -900,6 +906,17 @@ export const LeadSlice = createSlice({
       state.totalCount = action?.payload
     })
     builder.addCase(getAllLeadCount.rejected, (state, action) => {
+      state.historyLoading = "rejected"
+    })
+
+    builder.addCase(getAllChildLeads.pending, (state, action) => {
+      state.historyLoading = "pending"
+    })
+    builder.addCase(getAllChildLeads.fulfilled, (state, action) => {
+      state.historyLoading = "success"
+      state.leadChildData = action?.payload
+    })
+    builder.addCase(getAllChildLeads.rejected, (state, action) => {
       state.historyLoading = "rejected"
     })
   },
