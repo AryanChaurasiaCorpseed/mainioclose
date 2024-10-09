@@ -27,7 +27,7 @@ import {
   getCompanyDetailsById,
   updateCompanyForm,
 } from "../../Toolkit/Slices/CompanySlice"
-import { useParams } from "react-router-dom"
+import { json, useParams } from "react-router-dom"
 import {
   getHighestPriorityRole,
   playErrorSound,
@@ -52,6 +52,9 @@ const CompanyFormModal = ({
   const companyUnits = useSelector((state) => state?.leads?.companyUnits)
   const companyDetailByUnitId = useSelector(
     (state) => state?.leads?.companyDetailByUnitId
+  )
+  const singleLeadResponseData = useSelector(
+    (state) => state.leads.singleLeadResponseData
   )
   const currentRoles = useSelector((state) => state?.auth?.roles)
   const contactList = useSelector((state) => state?.leads?.allContactList)
@@ -284,14 +287,16 @@ const CompanyFormModal = ({
     (values) => {
       values.gstDocuments = values.gstDocuments?.[0]?.response
       values.assigneeId =
-          getHighestPriorityRole(currentRoles) === "ADMIN"
-            ? values?.assigneeId
-            : userid
+        getHighestPriorityRole(currentRoles) === "ADMIN"
+          ? values?.assigneeId
+          : userid
       setFormLoading("pending")
       if (edit) {
         values.companyFormId = companyDetail?.id
         values.isPresent = companyDetail?.isPresent
-        values.leadId = companyDetail?.lead?.id
+        values.leadId = singleLeadResponseData?.parent
+          ? values?.leadId
+          : companyDetail?.lead?.id
         values.companyId = companyDetail?.companyId
         dispatch(updateCompanyForm(values))
           .then((response) => {
@@ -321,7 +326,11 @@ const CompanyFormModal = ({
           })
       } else {
         const formData = form.getFieldsValue(["companyId", "companyName"])
-        values.leadId = data?.id ? data?.id : data?.leadId
+        values.leadId = singleLeadResponseData?.parent
+          ? values?.leadId
+          : data?.id
+          ? data?.id
+          : data?.leadId
         if (Object.keys(companyDetails)?.length > 0) {
           values.isPresent = true
         } else {
@@ -361,6 +370,7 @@ const CompanyFormModal = ({
       userid,
       selectedFilter,
       edit,
+      singleLeadResponseData
     ]
   )
 
@@ -434,6 +444,30 @@ const CompanyFormModal = ({
           >
             <Input />
           </Form.Item>
+
+          {singleLeadResponseData?.parent && (
+            <Form.Item
+              label="Select lead"
+              name="leadId"
+              rules={[
+                { required: true, message: "please select the lead" },
+              ]}
+            >
+              <Select
+                options={
+                  singleLeadResponseData?.childLead?.length > 0
+                    ? singleLeadResponseData?.childLead?.map((item) => ({
+                        label: item?.childLeadName,
+                        value: item?.childId,
+                      }))
+                    : []
+                }
+                filterOption={(input, option) =>
+                  option.label.toLowerCase().includes(input.toLowerCase())
+                }
+              />
+            </Form.Item>
+          )}
 
           <Form.Item
             label="Gst type"

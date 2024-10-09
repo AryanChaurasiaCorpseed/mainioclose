@@ -100,6 +100,7 @@ const MainPage = () => {
           <Content
             style={{
               margin: "0 16px",
+              backgroundColor:'#ffffff'
             }}
           >
             <Outlet />
