@@ -152,7 +152,7 @@ const Department = () => {
           <div className="tagContainer">
             {tags?.[0]}
             {tags?.length >= 2 && (
-              <Tooltip title={tags} arrow={false}>
+              <Tooltip title={tags} arrow={false} overlayStyle={{maxWidth:'700px'}}>
                 <Icon
                   icon="fluent:more-horizontal-24-regular"
                   height={BTN_ICON_HEIGHT}

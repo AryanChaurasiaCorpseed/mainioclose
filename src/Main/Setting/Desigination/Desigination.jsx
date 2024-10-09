@@ -114,7 +114,7 @@ const Desigination = () => {
           <CommonTable
             data={filteredData}
             columns={columns}
-            scroll={{ y: 550 }}
+            scroll={{ y: 520 }}
           />
         </div>
       </div>

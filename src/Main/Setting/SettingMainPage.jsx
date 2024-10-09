@@ -144,6 +144,7 @@ const SettingMainPage = () => {
           <Content
             style={{
               margin: "24px 16px 0",
+              backgroundColor:'#fff'
             }}
           >
             <Outlet />

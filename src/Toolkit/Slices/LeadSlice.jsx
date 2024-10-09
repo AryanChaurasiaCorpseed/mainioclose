@@ -585,6 +585,16 @@ export const addLeadChild=createAsyncThunk('addLeadChild',async(data)=>{
   return response.data
 })
 
+export const allVendorsCategory=createAsyncThunk('allVendorsCatagory',async()=>{
+  const response=await getQuery(`/leadService/api/v1/vendor/fetch-all-vendor-category?page=1&size=50`)
+  return response.data
+})
+
+export const getSingleCategoryDataById=createAsyncThunk('getSingleCatagoryDataById',async(id)=>{
+  const response = await getQuery(`/leadService/api/v1/vendor/fetch-vendor-category?categoryId=${id}`)
+  return response.data
+})
+
 export const LeadSlice = createSlice({
   name: "lead",
   initialState: {
@@ -623,7 +633,9 @@ export const LeadSlice = createSlice({
     historyLoading: "",
     totalCount: 0,
     totalVendorRequestCount:0,
-    leadChildData:[]
+    leadChildData:[],
+    vendorsCategoryList:[],
+    singleCategoryDetail:{}
   },
   reducers: {
     handleLoadingState: (state, action) => {
@@ -923,6 +935,29 @@ export const LeadSlice = createSlice({
       state.leadChildData = action?.payload
     })
     builder.addCase(getAllChildLeads.rejected, (state, action) => {
+      state.historyLoading = "rejected"
+    })
+
+
+    builder.addCase(allVendorsCategory.pending, (state, action) => {
+      state.historyLoading = "pending"
+    })
+    builder.addCase(allVendorsCategory.fulfilled, (state, action) => {
+      state.historyLoading = "success"
+      state.vendorsCategoryList = action?.payload
+    })
+    builder.addCase(allVendorsCategory.rejected, (state, action) => {
+      state.historyLoading = "rejected"
+    })
+
+    builder.addCase(getSingleCategoryDataById.pending, (state, action) => {
+      state.historyLoading = "pending"
+    })
+    builder.addCase(getSingleCategoryDataById.fulfilled, (state, action) => {
+      state.historyLoading = "success"
+      state.singleCategoryDetail = action?.payload
+    })
+    builder.addCase(getSingleCategoryDataById.rejected, (state, action) => {
       state.historyLoading = "rejected"
     })
   },

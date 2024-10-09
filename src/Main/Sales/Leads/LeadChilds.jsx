@@ -1,4 +1,4 @@
-import { Button, Flex, List, notification, Select, Typography } from "antd"
+import { Button, Flex, notification, Select, Typography } from "antd"
 import React, { useCallback, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { addLeadChild } from "../../../Toolkit/Slices/LeadSlice"
@@ -89,20 +89,6 @@ const LeadChilds = () => {
           </Flex>
         </Flex>
         <Flex>
-          {/* <List
-            itemLayout="horizontal"
-            dataSource={singleLeadResponseData?.childLead}
-            style={{ width: "70%" }}
-            renderItem={(item, index) => (
-              <List.Item>
-                <List.Item.Meta
-                  title={item.childLeadName}
-                  description={`Assignee name : ${item?.childAssigneeName}`}
-                />
-                <Text> {item?.childAssigneeEmail}</Text>
-              </List.Item>
-            )}
-          /> */}
           <CommonTable
             columns={columns}
             data={singleLeadResponseData?.childLead}
