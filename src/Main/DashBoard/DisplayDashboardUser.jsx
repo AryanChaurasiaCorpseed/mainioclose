@@ -155,7 +155,6 @@ const DisplayDashboardUser = () => {
     },
   ]
 
-
   useEffect(() => {
     setFilteredData(allMainUser)
   }, [allMainUser])
@@ -202,6 +201,7 @@ const DisplayDashboardUser = () => {
           columns={columns}
           data={filteredData}
           rowSelection={true}
+          rowKey={(row) => row?.id}
           scroll={{ y: 520, x: 2000 }}
         />
       )}
