@@ -17,8 +17,8 @@ const CompanyAmountGraph = ({ expandedBox }) => {
   const [filteredData, setFilteredData] = useState({
     userId: userid,
     serviceName: null,
-    toDate: null,
-    fromDate: null,
+    toDate: dayjs().format("YYYY-MM-DD"),
+    fromDate: dayjs().subtract(1, "month").format("YYYY-MM-DD"),
   })
 
   useEffect(() => {
@@ -27,18 +27,17 @@ const CompanyAmountGraph = ({ expandedBox }) => {
 
   const onRangeChange = (dates, dateStrings) => {
     if (dates) {
-      console.log("From   out: ", dateStrings[0], ", to: ", dateStrings[1])
       dispatch(
         getAllCompanyAmountGrapgh({
           ...filteredData,
-          toDate: dateStrings[0],
-          fromDate: dateStrings[1],
+          toDate: dateStrings[1],
+          fromDate: dateStrings[0],
         })
       )
       setFilteredData((prev) => ({
         ...prev,
-        toDate: dateStrings[0],
-        fromDate: dateStrings[1],
+        toDate: dateStrings[1],
+        fromDate: dateStrings[0],
       }))
     } else {
       console.log("Clear")

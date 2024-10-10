@@ -28,18 +28,17 @@ const UserGraph = ({ expandedBox }) => {
 
   const onRangeChange = (dates, dateStrings) => {
     if (dates) {
-      console.log("From   out: ", dateStrings[0], ", to: ", dateStrings[1])
       dispatch(
         getGraphDataByUser({
           ...filteredData,
-          toDate: dateStrings[0],
-          fromDate: dateStrings[1],
+          toDate: dateStrings[1],
+          fromDate: dateStrings[0],
         })
       )
       setFilteredData((prev) => ({
         ...prev,
-        toDate: dateStrings[0],
-        fromDate: dateStrings[1],
+        toDate: dateStrings[1],
+        fromDate: dateStrings[0],
       }))
     } else {
       console.log("Clear")

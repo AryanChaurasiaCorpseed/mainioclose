@@ -127,7 +127,7 @@ const SettingMainPage = () => {
 
   return (
     <>
-      <Layout>
+      <Layout >
         <Sider
           style={{
             padding: 0,
@@ -140,7 +140,7 @@ const SettingMainPage = () => {
             defaultSelectedKeys={[getPathKey()]}
           />
         </Sider>
-        <Layout>
+        <Layout style={{backgroundColor:'#fff'}}>
           <Content
             style={{
               margin: "24px 16px 0",

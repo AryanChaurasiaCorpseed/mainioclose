@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
-import { postQuery } from "../../API/PostQuery"
+import { postQuery, postQueryWithoutDestructure } from "../../API/PostQuery"
 import { putQuery } from "../../API/PutQuery"
 import { getQuery } from "../../API/GetQuery"
 import { deleteQuery } from "../../API/DeleteQuery"
@@ -532,7 +532,6 @@ export const sendVendorsProposal = createAsyncThunk(
   }
 )
 
-
 export const getAllVendorsRequest = createAsyncThunk(
   "getAllVendorsRequest",
   async ({ id, page, size }) => {
@@ -575,25 +574,51 @@ export const getAllLeadCount = createAsyncThunk(
   }
 )
 
-export const getAllChildLeads=createAsyncThunk('getAllChildLeads',async(name)=>{
-  const response=await getQuery(`/leadService/api/v1/urls/getSlugChildByName?name=${name}`)
+export const getAllChildLeads = createAsyncThunk(
+  "getAllChildLeads",
+  async (name) => {
+    const response = await getQuery(
+      `/leadService/api/v1/urls/getSlugChildByName?name=${name}`
+    )
+    return response.data
+  }
+)
+
+export const addLeadChild = createAsyncThunk("addLeadChild", async (data) => {
+  const response = await putQuery(`/leadService/api/v1/lead/addChildLead`, data)
   return response.data
 })
 
-export const addLeadChild=createAsyncThunk('addLeadChild',async(data)=>{
-  const response=await putQuery(`/leadService/api/v1/lead/addChildLead`,data)
-  return response.data
-})
+export const allVendorsCategory = createAsyncThunk(
+  "allVendorsCatagory",
+  async () => {
+    const response = await getQuery(
+      `/leadService/api/v1/vendor/fetch-all-vendor-category?page=1&size=50`
+    )
+    return response.data
+  }
+)
 
-export const allVendorsCategory=createAsyncThunk('allVendorsCatagory',async()=>{
-  const response=await getQuery(`/leadService/api/v1/vendor/fetch-all-vendor-category?page=1&size=50`)
-  return response.data
-})
+export const getSingleCategoryDataById = createAsyncThunk(
+  "getSingleCatagoryDataById",
+  async (id) => {
+    const response = await getQuery(
+      `/leadService/api/v1/vendor/fetch-vendor-category?categoryId=${id}`
+    )
+    return response.data
+  }
+)
 
-export const getSingleCategoryDataById=createAsyncThunk('getSingleCatagoryDataById',async(id)=>{
-  const response = await getQuery(`/leadService/api/v1/vendor/fetch-vendor-category?categoryId=${id}`)
-  return response.data
-})
+export const updateProcurementUsers = createAsyncThunk(
+  "updateProcurementUsers",
+  async (data) => {
+    const response = await postQueryWithoutDestructure(
+      `/leadService/api/v1/vendor/map-assignee-to-sub-category?subCategoryId=${data?.subCategoryId}`,
+      data?.data
+    )
+    return response.data
+  }
+)
 
 export const LeadSlice = createSlice({
   name: "lead",
@@ -632,16 +657,15 @@ export const LeadSlice = createSlice({
     singleVendorHistoryList: [],
     historyLoading: "",
     totalCount: 0,
-    totalVendorRequestCount:0,
-    leadChildData:[],
-    vendorsCategoryList:[],
-    singleCategoryDetail:{}
+    totalVendorRequestCount: 0,
+    leadChildData: [],
+    vendorsCategoryList: [],
+    singleCategoryDetail: {},
   },
   reducers: {
     handleLoadingState: (state, action) => {
       state.loading = action.payload
     },
-    
   },
   extraReducers: (builder) => {
     builder.addCase(getAllLeads.pending, (state, action) => {
@@ -898,7 +922,7 @@ export const LeadSlice = createSlice({
     })
     builder.addCase(getAllVendorsRequest.fulfilled, (state, action) => {
       state.loading = "success"
-      state.totalVendorRequestCount=action?.payload?.totalItems
+      state.totalVendorRequestCount = action?.payload?.totalItems
       state.allVendorsRequestList = action?.payload?.vendorsRequests
     })
     builder.addCase(getAllVendorsRequest.rejected, (state, action) => {
@@ -937,7 +961,6 @@ export const LeadSlice = createSlice({
     builder.addCase(getAllChildLeads.rejected, (state, action) => {
       state.historyLoading = "rejected"
     })
-
 
     builder.addCase(allVendorsCategory.pending, (state, action) => {
       state.historyLoading = "pending"
