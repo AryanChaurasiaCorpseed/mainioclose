@@ -66,12 +66,12 @@ const Procurement = () => {
 
   const subCategoryColumn = [
     {
-      dataIndex: "id",
+      dataIndex: "subCategoryId",
       title: "Id",
       width: 100,
     },
     {
-      dataIndex: "categoryName",
+      dataIndex: "subCategoryName",
       title: "Sub category name",
     },
     {
@@ -109,11 +109,11 @@ const Procurement = () => {
         onClose={() => setOpenDrawer(false)}
       >
         <Text className="heading-text">
-          {singleCategoryDetail?.vendorCategoryName}
+          {singleCategoryDetail?.singleCategoryDetail}
         </Text>
         <CommonTable
           columns={subCategoryColumn}
-          data={singleCategoryDetail?.vendorSubCategories}
+          data={singleCategoryDetail?.subCategories}
         />
       </Drawer>
     </>
