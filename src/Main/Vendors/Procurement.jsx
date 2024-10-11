@@ -101,6 +101,14 @@ const Procurement = () => {
           </Text>
         ),
       },
+      {
+        title:'Added by',
+        dataIndex:'addedByUserName'
+      },
+      {
+        title:'Date',
+        dataIndex:'date'
+      }
     ]
     return item
   })
@@ -120,7 +128,7 @@ const Procurement = () => {
       title: "Assigned user",
       render: (_, data) =>
         data?.assignedUsers?.map((item,idx) => (
-          <Tag className="tags" key={`${idx}users`}>{item?.userName}</Tag>
+          <Tag className="tags" key={`${idx}procurement`} >{item?.userName}</Tag>
         )),
     },
     {

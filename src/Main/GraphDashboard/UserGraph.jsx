@@ -1,9 +1,7 @@
 import { Bar } from "@ant-design/plots"
 import React, { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import {
-  getGraphDataByUser,
-} from "../../Toolkit/Slices/DasboardSlice"
+import { getGraphDataByUser } from "../../Toolkit/Slices/DasboardSlice"
 import { DatePicker, Flex, Select } from "antd"
 import { useParams } from "react-router-dom"
 import { rangePresets } from "../Common/Commons"
@@ -50,20 +48,20 @@ const UserGraph = ({ expandedBox }) => {
     xField: "name",
     yField: "value",
     colorField: "name",
-    height: expandedBox === 0 || expandedBox >= 1 ? 650 : 300,
-    width: expandedBox === 0 || expandedBox >= 1 ? 1200 : 600,
+    height: expandedBox === 0 || expandedBox >= 1 ? 550 : 250,
+    width: expandedBox === 0 || expandedBox >= 1 ? 1000 : 550,
     legend: {
       color: {
         maxRows: 1,
       },
     },
   }
- 
 
   return (
     <>
       <Flex gap={8}>
         <Select
+          size="small"
           showSearch
           allowClear
           style={{ minWidth: "150px" }}
@@ -91,11 +89,10 @@ const UserGraph = ({ expandedBox }) => {
           }
         />
         <RangePicker
+          size="small"
+          allowClear={false}
           presets={rangePresets}
-          value={[
-            filteredData?.fromDate ? dayjs(filteredData?.fromDate) : dayjs(),
-            filteredData?.toDate ? dayjs(filteredData?.toDate) : dayjs(),
-          ]}
+          value={[dayjs(filteredData?.fromDate), dayjs(filteredData?.toDate)]}
           disabledDate={(current) => current && current > dayjs().endOf("day")}
           onChange={onRangeChange}
         />

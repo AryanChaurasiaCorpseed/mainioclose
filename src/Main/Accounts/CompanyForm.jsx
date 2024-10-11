@@ -522,7 +522,7 @@ const CompanyForm = ({ role }) => {
         <CommonTable
           data={leadCompanyList}
           columns={columns}
-          scroll={{ x: 5000, y: 540 }}
+          scroll={{ x: 5000, y: 480 }}
           rowSelection={true}
           page={paginationData?.page}
           pageSize={paginationData?.size}

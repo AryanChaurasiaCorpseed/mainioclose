@@ -72,6 +72,14 @@ const SideBar = () => {
           : getHighestPriorityRole(currentRoles) === "ADMIN"
           ? [
               {
+                label: (
+                  <Link to={`${userid}/dashboard/records`}>
+                    Record dashboard
+                  </Link>
+                ),
+                key: "records",
+              },
+              {
                 label: <Link to={`${userid}/dashboard/users`}>Users</Link>,
                 key: "users",
               },

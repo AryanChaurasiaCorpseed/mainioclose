@@ -184,6 +184,27 @@ export const getHistoryByCompanyId = createAsyncThunk(
   }
 )
 
+export const getAllCompanyFormForMultipleServices = createAsyncThunk(
+  "getAllCompanyFormForMultipleServices",
+  async (data) => {
+    const response = await getQuery(
+      `/leadService/api/v1/company/getAllCompanyFormByStatusAndCompany?status=${data?.status}&userId=${data?.userId}&page=${data?.page}&size=${data?.size}`
+    )
+    return response.data
+  }
+)
+
+export const updateMultiCompanyFormStatus = createAsyncThunk(
+  "updateMultiCompanyFormStatus",
+  async (data) => {
+    const response = await putQuery(
+      `/leadService/api/v1/company/updateMultiCompanyFormStatus`,
+      data
+    )
+    return response.data
+  }
+)
+
 const CompnaySlice = createSlice({
   name: "company",
   initialState: {
@@ -204,6 +225,7 @@ const CompnaySlice = createSlice({
     companyDetail: {},
     page: 0,
     companyHistoryList: [],
+    companyListWithServices: {},
   },
   reducers: {
     handleNextPagination: (state, action) => {
@@ -354,6 +376,26 @@ const CompnaySlice = createSlice({
     builder.addCase(getHistoryByCompanyId.rejected, (state, action) => {
       state.loading = "rejected"
     })
+
+    builder.addCase(
+      getAllCompanyFormForMultipleServices.pending,
+      (state, action) => {
+        state.loading = "pending"
+      }
+    )
+    builder.addCase(
+      getAllCompanyFormForMultipleServices.fulfilled,
+      (state, action) => {
+        state.companyListWithServices = action.payload
+        state.loading = "success"
+      }
+    )
+    builder.addCase(
+      getAllCompanyFormForMultipleServices.rejected,
+      (state, action) => {
+        state.loading = "rejected"
+      }
+    )
   },
 })
 

@@ -1207,7 +1207,7 @@ const LandingPage = () => {
                     <h2 className="as-header-1 white">Ready to keep growing?</h2>
 
                     <p className="intro-text mb4 fw6">
-                      Discover how Brightpearl can help control your cash flow
+                      Discover how Corpseed can help control your cash flow
                     </p>
 
                     {/* <a href="#" className="btn btn--std fw6 js-form-reveal dib">
@@ -1219,7 +1219,7 @@ const LandingPage = () => {
             </div>
           </section>
 
-          <section className="trusted-content">
+          {/* <section className="trusted-content">
             <div className="l-wrapper mw-82 pv4 pt5-l overflow-hidden">
               <div className="center mw-800 tc mb4 mb5-l">
                 <h2 className="as-intro-text sg-jade-mid mb0 pb2">Our customers</h2>
@@ -1433,7 +1433,7 @@ const LandingPage = () => {
                 </div>
               </div>
             </div>
-          </section>
+          </section> */}
 
           {/* <section className="brightpearl-at-a-glance bg-black">
             <div className="l-wrapper mw-82 pt5 pb4 overflow-hidden">
@@ -2156,7 +2156,7 @@ const LandingPage = () => {
 
                 <p className="intro-text mb4 fw6">
                   Ready to reach your potential? Book a demo today to see how
-                  Brightpearl can help you do business better.
+                  Corpseed can help you do business better.
                 </p>
 
                 <a
@@ -2219,7 +2219,7 @@ const LandingPage = () => {
               {" "}
               <span>
                 {" "}
-                See the benefits of Brightpearl's Retail Operating System in
+                See the benefits of Corpseed's Retail Operating System in
                 action
               </span>
             </h2>
@@ -2364,7 +2364,7 @@ const LandingPage = () => {
                               className="link"
                               data-wpel-link="internal"
                             >
-                              Brightpearl history
+                              Corpseed history
                             </a>
                           </li>
                           <li className="pb2">
@@ -2491,7 +2491,7 @@ const LandingPage = () => {
                 <div className="flex-l flex-row-l">
                   <div className="w-50-l pr5-l">
                     <p className="white">
-                      &copy; Brightpearl Copyright 2024 All rights reserved
+                      &copy; Corpseed Copyright 2024 All rights reserved
                     </p>
                   </div>
 
@@ -2537,25 +2537,3 @@ const LandingPage = () => {
 
 export default LandingPage
 
-// <div className="main-container">
-//   <div className={visible ? "navbar-container" : "hide"}>
-//     <div className="logo">
-//       <img className="main-logo-image" src={logo} alt="" />
-//     </div>
-//     <div className="nav-btn-container">
-//       <ul className="nav-btn">
-//         <li className="nav-btn-li">
-//           <Link className="nav-btn-li-link" to="/erp/login">
-//             <button>Login</button>
-//           </Link>
-//         </li>
-//       </ul>
-//     </div>
-//   </div>
-//   <div className="start-content-container">
-//     <div className="start-content-container-right" >
-//       <h1>Retail Operating System</h1>
-//     </div>
-//     <div></div>
-//   </div>
-// </div>

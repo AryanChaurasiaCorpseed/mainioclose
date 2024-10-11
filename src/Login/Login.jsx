@@ -33,10 +33,14 @@ const Login = () => {
               setLoading("fulfilled")
               dispatch(getDepartmentOfUser(resp?.payload?.id)).then(
                 (response) => {
-                  if (response.payload?.department === "Procurement") {
-                    navigate(`/erp/${resp?.payload?.id}/vendors`)
+                  if (resp?.payload?.roles?.includes("ADMIN")) {
+                    navigate(`/erp/${resp?.payload?.id}/dashboard/records`)
                   } else {
-                    navigate(`/erp/${resp?.payload?.id}/sales/leads`)
+                    if (response.payload?.department === "Procurement") {
+                      navigate(`/erp/${resp?.payload?.id}/vendors`)
+                    } else {
+                      navigate(`/erp/${resp?.payload?.id}/sales/leads`)
+                    }
                   }
                 }
               )

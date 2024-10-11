@@ -73,6 +73,7 @@ import VendorsList from "./Main/Vendors/VendorsList"
 import ProjectGraph from "./Main/GraphDashboard/ProjectGraph"
 import MainGraphPage from "./Main/GraphDashboard/MainGraphPage"
 import Procurement from "./Main/Vendors/Procurement"
+import MainCompanyFormPage from "./Main/Accounts/MainCompanyFormPage"
 
 const SpinLoading = lazy(() => import("./components/SpinLoading"))
 
@@ -230,7 +231,7 @@ function App() {
                   path="users/deactivateUser"
                   element={<AllDeactivateUser />}
                 />
-                <Route path="graphDashboard" element={<MainGraphPage />} />
+                <Route path="records" element={<MainGraphPage />} />
               </Route>
 
               {/* hr module routes */}
@@ -254,9 +255,13 @@ function App() {
                 <Route path="oppurtities" element={<Opportunities />} />
                 <Route path="company" element={<MainCompanyPage />} />
                 <Route path="project" element={<ProjectPage />} />
-                <Route
+                {/* <Route
                   path="lead-form"
                   element={<CompanyForm role={"sales"} />}
+                /> */}
+                <Route
+                  path="lead-form"
+                  element={<MainCompanyFormPage role={"sales"} />}
                 />
                 <Route
                   path="company/:companyId/details"

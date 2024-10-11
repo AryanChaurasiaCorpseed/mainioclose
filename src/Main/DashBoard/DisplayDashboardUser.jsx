@@ -155,7 +155,6 @@ const DisplayDashboardUser = () => {
     },
   ]
 
-
   useEffect(() => {
     setFilteredData(allMainUser)
   }, [allMainUser])

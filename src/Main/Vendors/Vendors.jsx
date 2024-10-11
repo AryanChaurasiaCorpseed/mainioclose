@@ -1,6 +1,5 @@
 import {
   Button,
-  Card,
   Col,
   Flex,
   Form,
@@ -18,6 +17,8 @@ import { Icon } from "@iconify/react"
 import { useDispatch, useSelector } from "react-redux"
 import {
   addVendorsDetail,
+  allVendorsCategory,
+  getSingleCategoryDataById,
   getVendorDetailList,
   sendVendorsProposal,
   updateVendorStatus,
@@ -27,11 +28,21 @@ import dayjs from "dayjs"
 import { BTN_ICON_HEIGHT, BTN_ICON_WIDTH } from "../../components/Constants"
 const { Text, Paragraph } = Typography
 
-const VendorForm = ({ leadId, userId, serviceName, setOpenPopOver }) => {
-  const { allLeadUrl } = useSelector((prev) => prev?.leadurls)
+const VendorForm = ({ leadId, userId, serviceName }) => {
+  const vendorsCategoryList = useSelector(
+    (state) => state.leads.vendorsCategoryList
+  )
+  const singleCategoryDetail = useSelector(
+    (state) => state.leads.singleCategoryDetail
+  )
   const dispatch = useDispatch()
   const [form] = Form.useForm()
   const [openModal, setOpenModal] = useState(false)
+
+  useEffect(() => {
+    dispatch(allVendorsCategory())
+  }, [dispatch])
+
   const normFile = (e) => {
     if (Array.isArray(e)) {
       return e
@@ -118,14 +129,30 @@ const VendorForm = ({ leadId, userId, serviceName, setOpenPopOver }) => {
             <Input />
           </Form.Item>
           <Form.Item
-            label="Select url"
-            name="serviceName"
-            rules={[{ required: true, message: "please select urls" }]}
+            label="Select category"
+            name="vendorCategoryId"
+            rules={[{ required: true, message: "please select category" }]}
           >
             <Select
-              options={allLeadUrl?.map((item) => ({
-                label: item?.urlsName,
-                value: item?.urlsName,
+              options={vendorsCategoryList?.map((item) => ({
+                label: item?.vendorCategoryName,
+                value: item?.id,
+              }))}
+              filterOption={(input, option) =>
+                option.label.toLowerCase().includes(input.toLowerCase())
+              }
+              onChange={(e) => dispatch(getSingleCategoryDataById(e))}
+            />
+          </Form.Item>
+          <Form.Item
+            label="Select sub category"
+            name="subVendorCategoryId"
+            rules={[{ required: true, message: "please select sub category" }]}
+          >
+            <Select
+              options={singleCategoryDetail?.subCategories?.map((item) => ({
+                label: item?.subCategoryName,
+                value: item?.subCategoryId,
               }))}
               filterOption={(input, option) =>
                 option.label.toLowerCase().includes(input.toLowerCase())
@@ -185,7 +212,7 @@ const Vendors = ({ leadId }) => {
 
   useEffect(() => {
     dispatch(getVendorDetailList({ leadId, userid }))
-  }, [leadId, userid])
+  }, [leadId, userid, dispatch])
 
   useEffect(() => {
     if (vendorList?.length > 0) {
@@ -273,13 +300,11 @@ const Vendors = ({ leadId }) => {
           notification.error({ message: "Something went wrong !." })
         })
     },
-    [dispatch, vendorDetail, userid, leadId]
+    [dispatch, vendorDetail, userid, leadId, form]
   )
 
-  console.log("sxcnbXNCBJJSDB", vendorList)
-
   return (
-    <div>
+    <>
       <div
         style={{
           display: "flex",
@@ -567,7 +592,7 @@ const Vendors = ({ leadId }) => {
           </Form.Item>
         </Form>
       </Modal>
-    </div>
+    </>
   )
 }
 

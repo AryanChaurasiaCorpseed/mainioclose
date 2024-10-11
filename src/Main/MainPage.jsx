@@ -76,7 +76,6 @@ const MainPage = () => {
           onCollapse={(value) => setCollapsed(value)}
         >
           <div className="demo-logo-vertical" />
-
           <Menu
             theme="dark"
             defaultSelectedKeys={[
@@ -100,7 +99,6 @@ const MainPage = () => {
           <Content
             style={{
               margin: "0 16px",
-              backgroundColor:'#ffffff'
             }}
           >
             <Outlet />

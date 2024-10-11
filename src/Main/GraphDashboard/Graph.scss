@@ -9,14 +9,12 @@
   }
   
   .grid-box {
-    background-color: rgb(233, 229, 229);
     display: flex;
-    // justify-content: center;
-    // align-items: center;
     flex-direction: column;
-    cursor: pointer;
     transition: all 0.3s ease-in-out;
-    border: 2px solid rgb(233, 229, 229);
+    padding: 4px 8px;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    border-radius: 4px;
   }
   
   .grid-box.expanded {

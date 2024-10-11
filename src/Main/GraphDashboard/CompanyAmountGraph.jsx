@@ -49,8 +49,8 @@ const CompanyAmountGraph = ({ expandedBox }) => {
     xField: "name",
     yField: "value",
     colorField: "name",
-    height: expandedBox === 0 || expandedBox >= 1 ? 650 : 300,
-    width: expandedBox === 0 || expandedBox >= 1 ? 1200 : 600,
+    height: expandedBox === 0 || expandedBox >= 1 ? 550 : 250,
+    width: expandedBox === 0 || expandedBox >= 1 ? 1000 : 550,
     legend: {
       color: {
         maxRows: 1,
@@ -61,6 +61,7 @@ const CompanyAmountGraph = ({ expandedBox }) => {
     <>
       <Flex gap={8}>
         <Select
+          size="small"
           showSearch
           allowClear
           style={{ minWidth: "150px" }}
@@ -92,11 +93,10 @@ const CompanyAmountGraph = ({ expandedBox }) => {
           }
         />
         <RangePicker
+          size="small"
+          allowClear={false}
           presets={rangePresets}
-          value={[
-            filteredData?.fromDate ? dayjs(filteredData?.fromDate) : dayjs(),
-            filteredData?.toDate ? dayjs(filteredData?.toDate) : dayjs(),
-          ]}
+          value={[dayjs(filteredData?.fromDate), dayjs(filteredData?.toDate)]}
           disabledDate={(current) => current && current > dayjs().endOf("day")}
           onChange={onRangeChange}
         />
