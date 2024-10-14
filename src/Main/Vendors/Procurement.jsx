@@ -3,6 +3,7 @@ import {
   Drawer,
   Flex,
   Form,
+  Input,
   Modal,
   notification,
   Select,
@@ -15,8 +16,11 @@ import MainHeading from "../../components/design/MainHeading"
 import { useDispatch, useSelector } from "react-redux"
 import {
   allVendorsCategory,
+  createVendorsCategory,
+  createVendorsSubCategory,
   getSingleCategoryDataById,
   updateProcurementUsers,
+  updateVendorsCategory,
 } from "../../Toolkit/Slices/LeadSlice"
 import { useParams } from "react-router-dom"
 import { getProcurementAssigneeList } from "../../Toolkit/Slices/CommonSlice"
@@ -28,6 +32,8 @@ const Procurement = () => {
   const dispatch = useDispatch()
   const { userid } = useParams()
   const [form] = Form.useForm()
+  const [form1] = Form.useForm()
+  const [form2] = Form.useForm()
   const vendorsCategoryList = useSelector(
     (state) => state.leads.vendorsCategoryList
   )
@@ -40,8 +46,12 @@ const Procurement = () => {
   )
   const [openDrawer, setOpenDrawer] = useState(false)
   const [openModal, setOpenModal] = useState(false)
-  const [categoryData,setCategoryData]=useState(null)
+  const [openModal1, setOpenModal1] = useState(false)
+  const [openModal2, setOpenModal2] = useState(false)
+  const [openModal3, setOpenModal3] = useState(false)
+  const [categoryData, setCategoryData] = useState(null)
   const [subCategoryData, setSubCategoryData] = useState(null)
+  const [updateCategoryData, setUpDateCategoryData] = useState(null)
 
   useEffect(() => {
     dispatch(allVendorsCategory())
@@ -72,13 +82,14 @@ const Procurement = () => {
             notification.success({ message: "Assignee updated successfully" })
             setOpenModal(false)
             dispatch(getSingleCategoryDataById(categoryData?.id))
+            form.resetFields()
           } else {
             notification.error({ message: "Something went wrong !." })
           }
         })
         .catch(() => notification.error({ message: "Something went wrong !." }))
     },
-    [subCategoryData, dispatch,categoryData]
+    [subCategoryData, dispatch, categoryData, form]
   )
 
   const column = useMemo(() => {
@@ -102,13 +113,29 @@ const Procurement = () => {
         ),
       },
       {
-        title:'Added by',
-        dataIndex:'addedByUserName'
+        title: "Added by",
+        dataIndex: "addedByUserName",
       },
       {
-        title:'Date',
-        dataIndex:'date'
-      }
+        title: "Date",
+        dataIndex: "date",
+      },
+      {
+        title: "Update category",
+        dataIndex: "updateCategory",
+        render: (_, data) => (
+          <Button
+            size="small"
+            type="text"
+            onClick={() => {
+              form1.setFieldsValue({ categoryName: data?.vendorCategoryName })
+              setOpenModal1(true)
+            }}
+          >
+            <Icon icon="fluent:edit-24-regular" />
+          </Button>
+        ),
+      },
     ]
     return item
   })
@@ -127,8 +154,10 @@ const Procurement = () => {
       dataIndex: "assignedUsers",
       title: "Assigned user",
       render: (_, data) =>
-        data?.assignedUsers?.map((item,idx) => (
-          <Tag className="tags" key={`${idx}procurement`} >{item?.userName}</Tag>
+        data?.assignedUsers?.map((item, idx) => (
+          <Tag className="tags" key={`${idx}procurement`}>
+            {item?.userName}
+          </Tag>
         )),
     },
     {
@@ -152,12 +181,97 @@ const Procurement = () => {
         )
       },
     },
+    {
+      title: "Update subcategory",
+      dataIndex: "updateSubcategory",
+      render: (_, data) => (
+        <Button size="small" type="text"    >
+          <Icon icon="fluent:edit-24-regular" />
+        </Button>
+      ),
+    },
   ]
+
+  const createCategoryForVendors = useCallback(
+    (values) => {
+      if (updateCategoryData !== null) {
+        dispatch(
+          updateVendorsCategory({
+            userId: userid,
+            categoryId: updateCategoryData?.id,
+            newCategoryName: values?.categoryName,
+          })
+        )
+          .then((resp) => {
+            if (resp.meta.requestStatus === "fulfilled") {
+              notification.success({ message: "Category updated successfully" })
+              setOpenModal1(false)
+              dispatch(allVendorsCategory())
+              setUpDateCategoryData(null)
+              form1.resetFields()
+            } else {
+              notification.error({ message: "Something went wrong !." })
+            }
+          })
+          .catch(() =>
+            notification.error({ message: "Something went wrong !." })
+          )
+      } else {
+        dispatch(createVendorsCategory({ userId: userid, ...values }))
+          .then((resp) => {
+            if (resp.meta.requestStatus === "fulfilled") {
+              notification.success({ message: "Category created successfully" })
+              setOpenModal1(false)
+              dispatch(allVendorsCategory())
+              form1.resetFields()
+            } else {
+              notification.error({ message: "Something went wrong !." })
+            }
+          })
+          .catch(() =>
+            notification.error({ message: "Something went wrong !." })
+          )
+      }
+    },
+    [userid, form1, dispatch]
+  )
+
+  const createSubCategoryForVendors = useCallback(
+    (values) => {
+      dispatch(
+        createVendorsSubCategory({
+          userId: userid,
+          data: { vendorCategoryId: categoryData?.id, ...values },
+        })
+      )
+        .then((resp) => {
+          if (resp.meta.requestStatus === "fulfilled") {
+            notification.success({ message: "Subcategory added successfully" })
+            setOpenModal2(false)
+            dispatch(getSingleCategoryDataById(categoryData?.id))
+            form2.resetFields()
+          } else {
+            notification.error({ message: "Something went wrong !." })
+          }
+        })
+        .catch(() => notification.error({ message: "Something went wrong !." }))
+    },
+    [categoryData, form2, dispatch]
+  )
 
   return (
     <>
       <Flex vertical gap={12}>
-        <MainHeading data={`Procurement catagory list`} />
+        <Flex justify="space-between">
+          <MainHeading data={`Procurement catagory list`} />
+          <Button
+            type="primary"
+            size="small"
+            onClick={() => setOpenModal1(true)}
+          >
+            Create category
+          </Button>
+        </Flex>
         <CommonTable
           data={vendorsCategoryList}
           columns={column}
@@ -170,9 +284,18 @@ const Procurement = () => {
         closeIcon={null}
         onClose={() => setOpenDrawer(false)}
       >
-        <Text className="heading-text">
-          {singleCategoryDetail?.singleCategoryDetail}
-        </Text>
+        <Flex justify="space-between">
+          <Text className="heading-text">
+            {singleCategoryDetail?.categoryName}
+          </Text>
+          <Button
+            size="small"
+            type="primary"
+            onClick={() => setOpenModal2(true)}
+          >
+            Create subcategory
+          </Button>
+        </Flex>
         <CommonTable
           columns={subCategoryColumn}
           data={singleCategoryDetail?.subCategories}
@@ -201,6 +324,51 @@ const Procurement = () => {
                   : []
               }
             />
+          </Form.Item>
+        </Form>
+      </Modal>
+
+      <Modal
+        title="Create category"
+        open={openModal1}
+        onCancel={() => setOpenModal1(false)}
+        onClose={() => setOpenModal1(false)}
+        onOk={() => form1.submit()}
+      >
+        <Form
+          layout="vertical"
+          form={form1}
+          onFinish={createCategoryForVendors}
+        >
+          <Form.Item label="Enter category name" name="categoryName">
+            <Input />
+          </Form.Item>
+        </Form>
+      </Modal>
+
+      <Modal
+        title="Create subcategory"
+        open={openModal2}
+        onCancel={() => setOpenModal2(false)}
+        onClose={() => setOpenModal2(false)}
+        onOk={() => form2.submit()}
+      >
+        <Form
+          layout="vertical"
+          form={form2}
+          onFinish={createSubCategoryForVendors}
+        >
+          <Form.Item label="Enter subcategory name" name="subCategoryName">
+            <Input />
+          </Form.Item>
+          <Form.Item
+            label="Category research TAT"
+            name="vendorCategoryResearchTat"
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item label="Category completion TAT" name="vendorCompletionTat">
+            <Input />
           </Form.Item>
         </Form>
       </Modal>

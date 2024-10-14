@@ -620,6 +620,37 @@ export const updateProcurementUsers = createAsyncThunk(
   }
 )
 
+export const createVendorsCategory = createAsyncThunk(
+  "createVendorsCategory",
+  async (data) => {
+    const response = await postQuery(
+      `/leadService/api/v1/vendor/create-vendor-category?userId=${data?.userId}&categoryName=${data?.categoryName}`
+    )
+    return response.data
+  }
+)
+
+export const createVendorsSubCategory = createAsyncThunk(
+  "createVendorsCategory",
+  async (data) => {
+    const response = await postQuery(
+      `/leadService/api/v1/vendor/create-vendor-sub-category?userId=${data?.userId}`,
+      data?.data
+    )
+    return response.data
+  }
+)
+
+export const updateVendorsCategory = createAsyncThunk(
+  "updateVendorsCategory",
+  async (data) => {
+    const response = await putQuery(
+      `/leadService/api/v1/vendor/update-vendor-category?userId=${data?.userId}&categoryId=${data?.categoryId}&newCategoryName=${data?.newCategoryName}`
+    )
+    return response.data
+  }
+)
+
 export const LeadSlice = createSlice({
   name: "lead",
   initialState: {

@@ -7,7 +7,7 @@ import {
 import { useDispatch, useSelector } from "react-redux"
 import { Icon } from "@iconify/react"
 
-const CreatePlantSetpModal = ({ data, paginationData }) => {
+const CreatePlantSetupModal = ({ data, paginationData }) => {
   const [form1] = Form.useForm()
   const dispatch = useDispatch()
   const slugList = useSelector((state) => state.leadslug.slugList)
@@ -118,4 +118,4 @@ const CreatePlantSetpModal = ({ data, paginationData }) => {
   )
 }
 
-export default CreatePlantSetpModal
+export default CreatePlantSetupModal

@@ -12,7 +12,8 @@ import CommonTable from "../../../components/CommonTable"
 import { Icon } from "@iconify/react"
 import OverFlowText from "../../../components/OverFlowText"
 import { BTN_ICON_HEIGHT, BTN_ICON_WIDTH } from "../../../components/Constants"
-import CreatePlantSetpModal from "../../../Model/CreatePlantSetpModal"
+import CreatePlantSetupModal from "../../../Model/CreatePlantSetupModal"
+
 
 const SlugCreate = () => {
   const dispatch = useDispatch()
@@ -104,7 +105,7 @@ const SlugCreate = () => {
       title: "Create/Edit plant setup",
       dataIndex: "plantSetUp",
       render: (_, data) => (
-        <CreatePlantSetpModal data={data} paginationData={paginationData} />
+        <CreatePlantSetupModal data={data} paginationData={paginationData} />
       ),
     },
     {
