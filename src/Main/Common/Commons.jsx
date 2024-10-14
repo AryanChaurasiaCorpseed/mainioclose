@@ -47,3 +47,29 @@ export const rangePresets = [
     value: [dayjs().add(-90, "d"), dayjs()],
   },
 ]
+
+export function modifyObject(obj) {
+  const modifiedObject = {}
+
+  for (let key in obj) {
+    modifiedObject[key] = {
+      selectedKeys: [],
+      value: [...obj[key]],
+    }
+  }
+
+  return modifiedObject
+}
+
+export function updateKeysAtIndex(obj, index, newKeys) {
+  console.log('aslvnldnvalsdknvalsknd',obj,index,newKeys)
+  let temp={...obj}
+  if (index) {
+    temp[index].selectedKeys = newKeys
+    return temp
+  } else {
+    console.error("Invalid index")
+  }
+
+  return obj
+}

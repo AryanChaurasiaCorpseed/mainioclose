@@ -152,7 +152,7 @@ const VendorsList = () => {
     },
     {
       dataIndex: "requestStatus",
-      title: "RequestStatus",
+      title: "Request status",
       render: (_, data) => <SingleVendorRequestDetails data={data} />,
     },
   ]

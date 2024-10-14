@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react"
 import CommonTable from "../../components/CommonTable"
 import MainHeading from "../../components/design/MainHeading"
-import TableOutlet from "../../components/design/TableOutlet"
 import { useDispatch, useSelector } from "react-redux"
 import { useParams } from "react-router-dom"
 import {
@@ -13,7 +12,6 @@ import {
   Collapse,
   Flex,
   Form,
-  Input,
   Modal,
   notification,
   Pagination,
@@ -24,6 +22,7 @@ import {
 import OverFlowText from "../../components/OverFlowText"
 import ColComp from "../../components/small/ColComp"
 import { Icon } from "@iconify/react"
+import { modifyObject, updateKeysAtIndex } from "../Common/Commons"
 const { Text } = Typography
 
 const Companies = () => {
@@ -33,6 +32,9 @@ const Companies = () => {
   const companiesData = useSelector(
     (state) => state.company.companyListWithServices
   )
+  const totalCompanyServiceCount = useSelector(
+    (state) => state.company.totalCompanyServiceCount
+  )
   const [selectedFilter, setSelectedFilter] = useState("initiated")
   const [paginationData, setPaginationData] = useState({
     page: 1,
@@ -40,6 +42,7 @@ const Companies = () => {
   })
   const [selectedRowKeys, setSelectedRowKeys] = useState([])
   const [openModal, setOpenModal] = useState(false)
+  const [data, setData] = useState({})
 
   useEffect(() => {
     dispatch(
@@ -52,9 +55,18 @@ const Companies = () => {
     )
   }, [dispatch, userid, selectedFilter])
 
-  const onSelectChange = (newSelectedRowKeys) => {
-    setSelectedRowKeys(newSelectedRowKeys)
-  }
+  useEffect(() => {
+    let tempData = { ...companiesData }
+    setData(modifyObject(tempData))
+  }, [companiesData])
+
+  const onSelectChange = useCallback(
+    (newSelectedRowKeys, idx) => {
+      setSelectedRowKeys(newSelectedRowKeys)
+      setData(updateKeysAtIndex(data, idx, newSelectedRowKeys))
+    },
+    [data]
+  )
 
   const handleUpdateCompaniesStatus = useCallback(
     (values) => {
@@ -84,7 +96,7 @@ const Companies = () => {
           })
         )
     },
-    [selectedRowKeys, userid, dispatch]
+    [selectedRowKeys, userid, dispatch, form]
   )
 
   const items = useMemo(() => {
@@ -133,7 +145,6 @@ const Companies = () => {
         dataIndex: "companyAge",
         render: (_, data) => <ColComp data={data?.companyAge} />,
       },
-
       {
         title: "Contact name",
         dataIndex: "contactName",
@@ -192,7 +203,7 @@ const Companies = () => {
         render: (_, data) => <ColComp data={data?.secondaryContactName} />,
       },
       {
-        title: "S Desigination",
+        title: "SDesigination",
         dataIndex: "secondarydesigination",
         render: (_, data) => <ColComp data={data?.secondaryDesignation} />,
       },
@@ -278,13 +289,14 @@ const Companies = () => {
       },
     ]
 
-    return Object?.entries(companiesData).map(([key, value], idx) => ({
+    return Object?.entries(data).map(([key, value], idx) => ({
       key: idx,
       label: key,
       extra: (
         <Button
           size="small"
           type="primary"
+          disabled={value?.selectedKeys?.length === 0 ? true : false}
           onClick={(e) => {
             e.stopPropagation()
             setOpenModal(true)
@@ -295,17 +307,32 @@ const Companies = () => {
       ),
       children: (
         <CommonTable
-          data={value}
+          data={value?.value}
           columns={columns}
           scroll={{ x: 5000, y: 200 }}
           rowSelection={true}
-          onRowSelection={onSelectChange}
-          selectedRowKeys={selectedRowKeys}
+          onRowSelection={(e) => onSelectChange(e, key)}
+          selectedRowKeys={value?.selectedKeys}
           rowKey={(record) => record?.id}
         />
       ),
     }))
-  }, [companiesData])
+  }, [data, form, onSelectChange])
+
+  const handlePagination = useCallback(
+    (page, size) => {
+      dispatch(
+        getAllCompanyFormForMultipleServices({
+          userId: userid,
+          status: selectedFilter,
+          page,
+          size,
+        })
+      )
+      setPaginationData((prev) => ({ ...prev, page, size }))
+    },
+    [userid, selectedFilter, dispatch]
+  )
 
   return (
     <Flex vertical>
@@ -363,7 +390,15 @@ const Companies = () => {
             style={{ maxHeight: "70vh", overflow: "auto", marginTop: 8 }}
           />
           <Flex justify="flex-end">
-            <Pagination defaultPageSize={50} pageSizeOptions={[50, 100, 150]} />
+            <Pagination
+              size="small"
+              responsive={true}
+              showLessItems={true}
+              defaultPageSize={50}
+              total={totalCompanyServiceCount}
+              pageSizeOptions={[50, 100, 150]}
+              onChange={(e, x) => handlePagination(e, x)}
+            />
           </Flex>
         </Flex>
       </div>

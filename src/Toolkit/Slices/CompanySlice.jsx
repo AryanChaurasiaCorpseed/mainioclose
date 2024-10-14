@@ -226,6 +226,7 @@ const CompnaySlice = createSlice({
     page: 0,
     companyHistoryList: [],
     companyListWithServices: {},
+    totalCompanyServiceCount: 0,
   },
   reducers: {
     handleNextPagination: (state, action) => {
@@ -386,7 +387,8 @@ const CompnaySlice = createSlice({
     builder.addCase(
       getAllCompanyFormForMultipleServices.fulfilled,
       (state, action) => {
-        state.companyListWithServices = action.payload
+        state.companyListWithServices = action.payload.data
+        state.totalCompanyServiceCount = action.payload.count
         state.loading = "success"
       }
     )
