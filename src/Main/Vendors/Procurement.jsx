@@ -21,6 +21,7 @@ import {
   getSingleCategoryDataById,
   updateProcurementUsers,
   updateVendorsCategory,
+  updateVendorsSubCategory,
 } from "../../Toolkit/Slices/LeadSlice"
 import { useParams } from "react-router-dom"
 import { getProcurementAssigneeList } from "../../Toolkit/Slices/CommonSlice"
@@ -151,6 +152,14 @@ const Procurement = () => {
       title: "Sub category name",
     },
     {
+      dataIndex: "vendorCategoryResearchTat",
+      title: "Research TAT",
+    },
+    {
+      dataIndex: "vendorCompletionTat",
+      title: "Completion TAT",
+    },
+    {
       dataIndex: "assignedUsers",
       title: "Assigned user",
       render: (_, data) =>
@@ -185,7 +194,19 @@ const Procurement = () => {
       title: "Update subcategory",
       dataIndex: "updateSubcategory",
       render: (_, data) => (
-        <Button size="small" type="text"    >
+        <Button
+          size="small"
+          type="text"
+          onClick={() => {
+            form2.setFieldsValue({
+              subCategoryName: data?.subCategoryName,
+              vendorCategoryResearchTat: data?.vendorCategoryResearchTat,
+              vendorCompletionTat: data?.vendorCompletionTat,
+            })
+            setOpenModal2(true)
+            setSubCategoryData(data)
+          }}
+        >
           <Icon icon="fluent:edit-24-regular" />
         </Button>
       ),
@@ -233,30 +254,60 @@ const Procurement = () => {
           )
       }
     },
-    [userid, form1, dispatch]
+    [userid, form1, dispatch, userid]
   )
 
   const createSubCategoryForVendors = useCallback(
     (values) => {
-      dispatch(
-        createVendorsSubCategory({
-          userId: userid,
-          data: { vendorCategoryId: categoryData?.id, ...values },
-        })
-      )
-        .then((resp) => {
-          if (resp.meta.requestStatus === "fulfilled") {
-            notification.success({ message: "Subcategory added successfully" })
-            setOpenModal2(false)
-            dispatch(getSingleCategoryDataById(categoryData?.id))
-            form2.resetFields()
-          } else {
+      if (subCategoryData) {
+        dispatch(
+          updateVendorsSubCategory({
+            userId: userid,
+            categoryId: categoryData?.id,
+            subCategoryId: subCategoryData?.subCategoryId,
+            ...values,
+          })
+        )
+          .then((response) => {
+            if (response.meta.requestStatus === "fulfilled") {
+              notification.success({
+                message: "Subcategory updated successfully",
+              })
+              dispatch(getSingleCategoryDataById(categoryData?.id))
+              setOpenModal2(false)
+              form2.resetFields()
+            } else {
+              notification.error({ message: "Something went wrong !." })
+            }
+          })
+          .catch(() =>
             notification.error({ message: "Something went wrong !." })
-          }
-        })
-        .catch(() => notification.error({ message: "Something went wrong !." }))
+          )
+      } else {
+        dispatch(
+          createVendorsSubCategory({
+            userId: userid,
+            data: { vendorCategoryId: categoryData?.id, ...values },
+          })
+        )
+          .then((resp) => {
+            if (resp.meta.requestStatus === "fulfilled") {
+              notification.success({
+                message: "Subcategory added successfully",
+              })
+              setOpenModal2(false)
+              dispatch(getSingleCategoryDataById(categoryData?.id))
+              form2.resetFields()
+            } else {
+              notification.error({ message: "Something went wrong !." })
+            }
+          })
+          .catch(() =>
+            notification.error({ message: "Something went wrong !." })
+          )
+      }
     },
-    [categoryData, form2, dispatch]
+    [categoryData, form2, dispatch, userid, subCategoryData]
   )
 
   return (
@@ -307,9 +358,14 @@ const Procurement = () => {
         onCancel={() => setOpenModal(false)}
         onClose={() => setOpenModal(false)}
         onOk={() => form.submit()}
+        okText='Submit'
       >
         <Form layout="vertical" form={form} onFinish={handleChangeAssignee}>
-          <Form.Item label="Select users" name="usersId">
+          <Form.Item
+            label="Select users"
+            name="usersId"
+            rules={[{ required: true, message: "please select users" }]}
+          >
             <Select
               placeholder="Select assignee"
               mode="multiple"
@@ -334,13 +390,18 @@ const Procurement = () => {
         onCancel={() => setOpenModal1(false)}
         onClose={() => setOpenModal1(false)}
         onOk={() => form1.submit()}
+        okText='Submit'
       >
         <Form
           layout="vertical"
           form={form1}
           onFinish={createCategoryForVendors}
         >
-          <Form.Item label="Enter category name" name="categoryName">
+          <Form.Item
+            label="Enter category name"
+            name="categoryName"
+            rules={[{ required: true, message: "please enter category name" }]}
+          >
             <Input />
           </Form.Item>
         </Form>
@@ -352,22 +413,34 @@ const Procurement = () => {
         onCancel={() => setOpenModal2(false)}
         onClose={() => setOpenModal2(false)}
         onOk={() => form2.submit()}
+        okText='Submit'
       >
         <Form
           layout="vertical"
           form={form2}
           onFinish={createSubCategoryForVendors}
         >
-          <Form.Item label="Enter subcategory name" name="subCategoryName">
+          <Form.Item
+            label="Enter subcategory name"
+            name="subCategoryName"
+            rules={[
+              { required: true, message: "please enter subcategory name" },
+            ]}
+          >
             <Input />
           </Form.Item>
           <Form.Item
             label="Category research TAT"
             name="vendorCategoryResearchTat"
+            rules={[{ required: true, message: "please enter research tat" }]}
           >
             <Input />
           </Form.Item>
-          <Form.Item label="Category completion TAT" name="vendorCompletionTat">
+          <Form.Item
+            label="Category completion TAT"
+            name="vendorCompletionTat"
+            rules={[{ required: true, message: "please enter completion tat" }]}
+          >
             <Input />
           </Form.Item>
         </Form>
@@ -377,3 +450,4 @@ const Procurement = () => {
 }
 
 export default Procurement
+
