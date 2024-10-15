@@ -2,9 +2,10 @@ import { Bar } from "@ant-design/plots"
 import React, { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { getGraphDataByUser } from "../../Toolkit/Slices/DasboardSlice"
-import { DatePicker, Flex, Select } from "antd"
+import { Button, DatePicker, Flex, Select } from "antd"
 import { useParams } from "react-router-dom"
 import { rangePresets } from "../Common/Commons"
+import { Icon } from "@iconify/react"
 import dayjs from "dayjs"
 const { RangePicker } = DatePicker
 
@@ -14,15 +15,23 @@ const UserGraph = ({ expandedBox }) => {
   const dataList = useSelector((state) => state.dashboard.userGraphList)
   const allUsers = useSelector((state) => state.user.allUsers)
   const [filteredData, setFilteredData] = useState({
-    userId: userid,
+    userId: null,
     serviceName: null,
-    toDate: dayjs().format("YYYY-MM-DD"),
-    fromDate: dayjs().subtract(1, "month").format("YYYY-MM-DD"),
+    toDate: null,
+    fromDate: null,
   })
+  const [pagination, setPagination] = useState({ prev: 0, next: 10 })
+  const [data, setData] = useState([])
 
   useEffect(() => {
     dispatch(getGraphDataByUser(filteredData))
   }, [dispatch])
+
+  useEffect(() => {
+    let tempdata = [...dataList]
+    let res = tempdata?.slice(pagination?.prev, pagination?.next)
+    setData(res)
+  }, [dataList, pagination])
 
   const onRangeChange = (dates, dateStrings) => {
     if (dates) {
@@ -39,12 +48,23 @@ const UserGraph = ({ expandedBox }) => {
         fromDate: dateStrings[0],
       }))
     } else {
-      console.log("Clear")
+      dispatch(
+        getGraphDataByUser({
+          ...filteredData,
+          toDate: null,
+          fromDate: null,
+        })
+      )
+      setFilteredData((prev) => ({
+        ...prev,
+        toDate: null,
+        fromDate: null,
+      }))
     }
   }
 
   const config = {
-    data: dataList?.slice(0, 10),
+    data: data,
     xField: "name",
     yField: "value",
     colorField: "name",
@@ -57,16 +77,37 @@ const UserGraph = ({ expandedBox }) => {
     },
   }
 
+
+
+  const handleprev = () => {
+    setPagination((data) => ({
+      prev: data?.prev - 10,
+      next: data?.prev,
+    }))
+  }
+
+  const handleNext = () => {
+    setPagination((prev) => ({
+      prev: prev?.next,
+      next: prev?.next + 10,
+    }))
+  }
+
+
   return (
     <>
       <Flex gap={8}>
-        <Select
+        {/* <Select
           size="small"
           showSearch
           allowClear
           style={{ minWidth: "150px" }}
           placeholder="Select user"
-          value={Number(filteredData?.userId)}
+          value={
+            Number(filteredData?.userId) === 0
+              ? ""
+              : Number(filteredData?.userId)
+          }
           options={
             allUsers?.length > 0
               ? allUsers?.map((item) => ({
@@ -87,15 +128,34 @@ const UserGraph = ({ expandedBox }) => {
           onClear={() =>
             dispatch(getGraphDataByUser({ ...filteredData, userId: userid }))
           }
-        />
+        /> */}
         <RangePicker
           size="small"
-          allowClear={false}
+          allowClear={true}
           presets={rangePresets}
-          value={[dayjs(filteredData?.fromDate), dayjs(filteredData?.toDate)]}
+          value={[
+            filteredData?.fromDate ? dayjs(filteredData?.fromDate) : "",
+            filteredData?.toDate ? dayjs(filteredData?.toDate) : "",
+          ]}
           disabledDate={(current) => current && current > dayjs().endOf("day")}
           onChange={onRangeChange}
         />
+        <Flex gap={4}>
+          <Button
+            size="small"
+            disabled={pagination?.prev === 0}
+            onClick={handleprev}
+          >
+            <Icon icon="fluent:chevron-left-24-regular" />
+          </Button>
+          <Button
+            size="small"
+            disabled={pagination?.next >= dataList?.length ? true:false}
+            onClick={handleNext}
+          >
+            <Icon icon="fluent:chevron-right-24-regular" />
+          </Button>
+        </Flex>
       </Flex>
       <Bar {...config} />
     </>
