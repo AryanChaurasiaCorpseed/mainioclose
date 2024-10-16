@@ -139,79 +139,81 @@ const Procurement = () => {
       },
     ]
     return item
-  })
+  }, [])
 
-  const subCategoryColumn = [
-    {
-      dataIndex: "subCategoryId",
-      title: "Id",
-      width: 100,
-    },
-    {
-      dataIndex: "subCategoryName",
-      title: "Sub category name",
-    },
-    {
-      dataIndex: "vendorCategoryResearchTat",
-      title: "Research TAT",
-    },
-    {
-      dataIndex: "vendorCompletionTat",
-      title: "Completion TAT",
-    },
-    {
-      dataIndex: "assignedUsers",
-      title: "Assigned user",
-      render: (_, data) =>
-        data?.assignedUsers?.map((item, idx) => (
-          <Tag className="tags" key={`${idx}procurement`}>
-            {item?.userName}
-          </Tag>
-        )),
-    },
-    {
-      dataIndex: "updateUsers",
-      title: "Update assignee",
-      render: (_, data) => {
-        return (
+  const subCategoryColumn = useMemo(() => {
+    return [
+      {
+        dataIndex: "subCategoryId",
+        title: "Id",
+        width: 100,
+      },
+      {
+        dataIndex: "subCategoryName",
+        title: "Sub category name",
+      },
+      {
+        dataIndex: "vendorCategoryResearchTat",
+        title: "Research TAT",
+      },
+      {
+        dataIndex: "vendorCompletionTat",
+        title: "Completion TAT",
+      },
+      {
+        dataIndex: "assignedUsers",
+        title: "Assigned user",
+        render: (_, data) =>
+          data?.assignedUsers?.map((item, idx) => (
+            <Tag className="tags" key={`${idx}procurement`}>
+              {item?.userName}
+            </Tag>
+          )),
+      },
+      {
+        dataIndex: "updateUsers",
+        title: "Update assignee",
+        render: (_, data) => {
+          return (
+            <Button
+              size="small"
+              type="text"
+              onClick={() => {
+                setOpenModal(true)
+                form.setFieldsValue({
+                  usersId: data?.assignedUsers?.map((item) => item?.userId),
+                })
+                setSubCategoryData(data)
+              }}
+            >
+              <Icon icon="fluent:edit-24-regular" />
+            </Button>
+          )
+        },
+      },
+      {
+        title: "Update subcategory",
+        dataIndex: "updateSubcategory",
+        render: (_, data) => (
           <Button
             size="small"
             type="text"
             onClick={() => {
-              setOpenModal(true)
-              form.setFieldsValue({
-                usersId: data?.assignedUsers?.map((item) => item?.userId),
+              form2.setFieldsValue({
+                subCategoryName: data?.subCategoryName,
+                vendorCategoryResearchTat: data?.vendorCategoryResearchTat,
+                vendorCompletionTat: data?.vendorCompletionTat,
               })
+              setOpenModal2(true)
               setSubCategoryData(data)
             }}
           >
             <Icon icon="fluent:edit-24-regular" />
           </Button>
-        )
+        ),
       },
-    },
-    {
-      title: "Update subcategory",
-      dataIndex: "updateSubcategory",
-      render: (_, data) => (
-        <Button
-          size="small"
-          type="text"
-          onClick={() => {
-            form2.setFieldsValue({
-              subCategoryName: data?.subCategoryName,
-              vendorCategoryResearchTat: data?.vendorCategoryResearchTat,
-              vendorCompletionTat: data?.vendorCompletionTat,
-            })
-            setOpenModal2(true)
-            setSubCategoryData(data)
-          }}
-        >
-          <Icon icon="fluent:edit-24-regular" />
-        </Button>
-      ),
-    },
-  ]
+    ]
+  }, [singleCategoryDetail,form2])
 
   const createCategoryForVendors = useCallback(
     (values) => {
@@ -358,7 +360,7 @@ const Procurement = () => {
         onCancel={() => setOpenModal(false)}
         onClose={() => setOpenModal(false)}
         onOk={() => form.submit()}
-        okText='Submit'
+        okText="Submit"
       >
         <Form layout="vertical" form={form} onFinish={handleChangeAssignee}>
           <Form.Item
@@ -390,7 +392,7 @@ const Procurement = () => {
         onCancel={() => setOpenModal1(false)}
         onClose={() => setOpenModal1(false)}
         onOk={() => form1.submit()}
-        okText='Submit'
+        okText="Submit"
       >
         <Form
           layout="vertical"
@@ -413,7 +415,7 @@ const Procurement = () => {
         onCancel={() => setOpenModal2(false)}
         onClose={() => setOpenModal2(false)}
         onOk={() => form2.submit()}
-        okText='Submit'
+        okText="Submit"
       >
         <Form
           layout="vertical"
@@ -450,4 +452,3 @@ const Procurement = () => {
 }
 
 export default Procurement
-

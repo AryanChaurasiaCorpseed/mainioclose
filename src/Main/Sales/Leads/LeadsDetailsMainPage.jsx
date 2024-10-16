@@ -3,6 +3,7 @@ import {
   getAllChildLeads,
   getAllLeads,
   getAllTaskData,
+  getVendorDetailList,
   handleViewHistory,
 } from "../../../Toolkit/Slices/LeadSlice"
 import { useDispatch, useSelector } from "react-redux"
@@ -30,11 +31,11 @@ const LeadsDetailsMainPage = ({
   )
   const [openDrawer, setOpenDrawer] = useState(false)
   const [currLeadId, setCurrLeadId] = useState(null)
+  const [tabKey, setTabKey] = useState("leadDetail")
 
   useEffect(() => {
     setCurrLeadId(leadId)
   }, [leadId])
-
 
   const items = useCallback(() => {
     return [
@@ -43,7 +44,7 @@ const LeadsDetailsMainPage = ({
         key: "leadDetail",
         children: <LeadDetailsPage leadid={currLeadId} />,
       },
-      ...(singleLeadResponseData?.parent===true
+      ...(singleLeadResponseData?.parent === true
         ? [
             {
               label: `Lead child's`,
@@ -73,10 +74,11 @@ const LeadsDetailsMainPage = ({
         children: <LeadHistory leadid={currLeadId} />,
       },
     ]
-  }, [currLeadId,singleLeadResponseData])
+  }, [currLeadId, singleLeadResponseData, leadId])
 
   const handleOnChange = useCallback(
     (e) => {
+      setTabKey(e)
       if (e === "history") {
         dispatch(getAllHistory({ id: currLeadId }))
       }
@@ -86,8 +88,11 @@ const LeadsDetailsMainPage = ({
       if (e === "leadChilds") {
         dispatch(getAllChildLeads(singleLeadResponseData?.leadName))
       }
+      if (e === "vendors") {
+        dispatch(getVendorDetailList({ leadId, userid }))
+      }
     },
-    [dispatch, currLeadId,singleLeadResponseData]
+    [dispatch, currLeadId, singleLeadResponseData, userid, leadId]
   )
 
   const handleCloseDrawer = useCallback(() => {
@@ -133,6 +138,7 @@ const LeadsDetailsMainPage = ({
         <Tabs
           defaultActiveKey="leadDetail"
           size="small"
+          activeKey={tabKey}
           items={items()}
           onChange={handleOnChange}
         />

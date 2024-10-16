@@ -593,7 +593,7 @@ export const allVendorsCategory = createAsyncThunk(
   "allVendorsCatagory",
   async () => {
     const response = await getQuery(
-      `/leadService/api/v1/vendor/fetch-all-vendor-category?page=1&size=50`
+      `/leadService/api/v1/vendor/fetch-all-vendor-category?page=1&size=200`
     )
     return response.data
   }
@@ -661,6 +661,16 @@ export const updateVendorsSubCategory = createAsyncThunk(
   }
 )
 
+export const vendorRequestListForSalesUser = createAsyncThunk(
+  "updateVendorsSubCategory",
+  async (data) => {
+    const response = await getQuery(
+      `/leadService/api/v1/vendor/find-all-vendor-request-of-user?userId=${data?.userid}&page=${data?.page}&size=${data?.size}`
+    )
+    return response.data
+  }
+)
+
 export const LeadSlice = createSlice({
   name: "lead",
   initialState: {
@@ -702,6 +712,7 @@ export const LeadSlice = createSlice({
     leadChildData: [],
     vendorsCategoryList: [],
     singleCategoryDetail: {},
+    requestListForVendors:[]
   },
   reducers: {
     handleLoadingState: (state, action) => {
@@ -956,6 +967,7 @@ export const LeadSlice = createSlice({
     })
     builder.addCase(getVendorDetailList.rejected, (state, action) => {
       state.loading = "rejected"
+      state.vendorsList = []
     })
 
     builder.addCase(getAllVendorsRequest.pending, (state, action) => {
@@ -1012,6 +1024,7 @@ export const LeadSlice = createSlice({
     })
     builder.addCase(allVendorsCategory.rejected, (state, action) => {
       state.historyLoading = "rejected"
+      state.vendorsCategoryList = []
     })
 
     builder.addCase(getSingleCategoryDataById.pending, (state, action) => {
@@ -1023,7 +1036,23 @@ export const LeadSlice = createSlice({
     })
     builder.addCase(getSingleCategoryDataById.rejected, (state, action) => {
       state.historyLoading = "rejected"
+      state.singleCategoryDetail = {}
     })
+
+
+    builder.addCase(vendorRequestListForSalesUser.pending, (state, action) => {
+      state.historyLoading = "pending"
+    })
+    builder.addCase(vendorRequestListForSalesUser.fulfilled, (state, action) => {
+      state.historyLoading = "success"
+      state.requestListForVendors = action?.payload
+    })
+    builder.addCase(vendorRequestListForSalesUser.rejected, (state, action) => {
+      state.historyLoading = "rejected"
+      state.requestListForVendors = []
+    })
+
+
   },
 })
 export const {

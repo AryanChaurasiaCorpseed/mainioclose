@@ -20,15 +20,13 @@ import {
   allVendorsCategory,
   getSingleCategoryDataById,
   getVendorDetailList,
-  sendVendorsProposal,
-  updateVendorStatus,
 } from "../../Toolkit/Slices/LeadSlice"
 import { useParams } from "react-router-dom"
 import dayjs from "dayjs"
 import { BTN_ICON_HEIGHT, BTN_ICON_WIDTH } from "../../components/Constants"
 const { Text, Paragraph } = Typography
 
-const VendorForm = ({ leadId, userId, serviceName }) => {
+const VendorForm = ({ leadId, userId }) => {
   const vendorsCategoryList = useSelector(
     (state) => state.leads.vendorsCategoryList
   )
@@ -75,7 +73,7 @@ const VendorForm = ({ leadId, userId, serviceName }) => {
           notification.error({ message: "Something went wrong !." })
         })
     },
-    [dispatch, leadId, userId, serviceName, form]
+    [dispatch, leadId, userId, form]
   )
   return (
     <>
@@ -96,7 +94,6 @@ const VendorForm = ({ leadId, userId, serviceName }) => {
           size="small"
           form={form}
           onFinish={handleFinish}
-          initialValues={{ serviceName: serviceName }}
           style={{ maxHeight: "80vh", overflow: "auto" }}
         >
           <Form.Item
@@ -199,25 +196,18 @@ const VendorForm = ({ leadId, userId, serviceName }) => {
 }
 
 const Vendors = ({ leadId }) => {
-  const dispatch = useDispatch()
   const { userid } = useParams()
-  const [form] = Form.useForm()
   const vendorList = useSelector((state) => state.leads.vendorsList)
-  const singleLeadResponseData = useSelector(
-    (state) => state.leads.singleLeadResponseData
-  )
   const [vendor, setVendor] = useState([])
   const [vendorDetail, setVendorDetail] = useState({})
-  const [openModal, setOpenModal] = useState(false)
-
-  useEffect(() => {
-    dispatch(getVendorDetailList({ leadId, userid }))
-  }, [leadId, userid, dispatch])
 
   useEffect(() => {
     if (vendorList?.length > 0) {
       setVendor(vendorList?.[0]?.updateHistory)
       setVendorDetail(vendorList?.[0])
+    }else{
+      setVendor([])
+      setVendorDetail({})
     }
   }, [vendorList])
 
@@ -228,79 +218,6 @@ const Vendors = ({ leadId }) => {
       setVendor(result?.updateHistory)
     },
     [vendorList]
-  )
-
-  const normFile = (e) => {
-    if (Array.isArray(e)) {
-      return e
-    }
-    return e?.fileList
-  }
-
-  const handleUpdateRequest = useCallback(
-    (values) => {
-      values.vendorReferenceFile = values?.vendorReferenceFile?.[0]?.response
-      values.serviceName = vendorDetail?.serviceName
-      values.companyName = vendorDetail?.clientCompanyName
-      values.contactPersonName = vendorDetail?.contactPersonName
-      let obj = {
-        vendorId: vendorDetail?.id,
-        userId: userid,
-        leadId: leadId,
-        data: values,
-      }
-      dispatch(updateVendorStatus(obj))
-        .then((resp) => {
-          if (resp.meta.requestStatus === "fulfilled") {
-            notification.success({
-              message: "Vendor's status updated successfully",
-            })
-            setOpenModal(false)
-            form.resetFields()
-            if (values?.status === "Finished") {
-              dispatch(
-                sendVendorsProposal({
-                  userId: userid,
-                  leadId: leadId,
-                  vendorRequestId: vendorDetail?.id,
-                  data: {
-                    attachmentPath: values?.vendorReferenceFile,
-                    clientMailId: vendorDetail?.clientEmailId,
-                    comment: values?.description,
-                    clientName: vendorDetail?.contactPersonName,
-                    serviceName: vendorDetail?.serviceName,
-                  },
-                })
-              )
-                .then((resp) => {
-                  if (resp.meta.requestStatus === "fulfilled") {
-                    notification.success({
-                      message: "Proposal send to client.",
-                    })
-                  } else {
-                    notification.error({
-                      message:
-                        "Something went wrong to proposal send to client !.",
-                    })
-                  }
-                })
-                .catch(() =>
-                  notification.error({
-                    message:
-                      "Something went wrong to proposal send to client !.",
-                  })
-                )
-            }
-            dispatch(getVendorDetailList({ leadId, userid }))
-          } else {
-            notification.error({ message: "Something went wrong !." })
-          }
-        })
-        .catch(() => {
-          notification.error({ message: "Something went wrong !." })
-        })
-    },
-    [dispatch, vendorDetail, userid, leadId, form]
   )
 
   return (
@@ -338,20 +255,13 @@ const Vendors = ({ leadId }) => {
           onChange={handleSelectVendor}
         />
         <div className="filter-box">
-          <VendorForm
-            leadId={leadId}
-            userId={userid}
-            serviceName={singleLeadResponseData?.originalName}
-          />
+          <VendorForm leadId={leadId} userId={userid} />
         </div>
       </div>
 
       <div style={{ marginTop: "12px" }}>
         <Flex justify="space-between" style={{ margin: "8px 0px" }}>
           <Text className="heading-text">Client request status</Text>
-          {/* <Button size="small" onClick={() => setOpenModal(true)}>
-            Update status
-          </Button> */}
         </Flex>
         <Row>
           <Col span={6}>
@@ -422,14 +332,30 @@ const Vendors = ({ leadId }) => {
                     </Flex>
                   )}
 
-                  {vendorDetail?.serviceName && (
+                  {vendorDetail?.vendorCategoryName && (
                     <Flex gap={6}>
                       <Icon
                         icon="fluent:person-settings-20-regular"
                         height={BTN_ICON_HEIGHT}
                         width={BTN_ICON_WIDTH}
                       />
-                      <Text>Service name : {vendorDetail?.serviceName}</Text>
+                      <Text>
+                        Category name : {vendorDetail?.vendorCategoryName}
+                      </Text>
+                    </Flex>
+                  )}
+
+                  {vendorDetail?.vendorSubCategoryName && (
+                    <Flex gap={6}>
+                      <Icon
+                        icon="fluent:person-settings-20-regular"
+                        height={BTN_ICON_HEIGHT}
+                        width={BTN_ICON_WIDTH}
+                      />
+                      <Text>
+                        Sub category name :{" "}
+                        {vendorDetail?.vendorSubCategoryName}
+                      </Text>
                     </Flex>
                   )}
 
@@ -518,80 +444,6 @@ const Vendors = ({ leadId }) => {
           </Col>
         </Row>
       </div>
-      <Modal
-        title="Update status"
-        open={openModal}
-        centered
-        onCancel={() => setOpenModal(false)}
-        onClose={() => setOpenModal(false)}
-        okText="Submit"
-        onOk={() => form.submit()}
-      >
-        <Form layout="vertical" onFinish={handleUpdateRequest} form={form}>
-          <Form.Item label="Status" name="status">
-            <Select
-              options={[
-                {
-                  label: "Initiated",
-                  value: "Initiated",
-                },
-                {
-                  label: "Processing",
-                  value: "Processing",
-                },
-                {
-                  label: "Unavailable",
-                  value: "Unavailable",
-                },
-                {
-                  label: "Finished",
-                  value: "Finished",
-                },
-              ]}
-              filterOption={(input, option) =>
-                option.label.toLowerCase().includes(input.toLowerCase())
-              }
-            />
-          </Form.Item>
-
-          <Form.Item
-            shouldUpdate={(prevValues, currentValues) =>
-              prevValues.status !== currentValues.status
-            }
-            noStyle
-          >
-            {({ getFieldValue }) => (
-              <>
-                {getFieldValue("status") === "Finished" && (
-                  <Form.Item
-                    label="Reference attachement"
-                    name="vendorReferenceFile"
-                    getValueFromEvent={normFile}
-                    valuePropName="fileList"
-                  >
-                    <Upload
-                      action="/leadService/api/v1/upload/uploadimageToFileSystem"
-                      listType="text"
-                    >
-                      <Button size="small">
-                        <Icon icon="fluent:arrow-upload-20-filled" />
-                        Upload
-                      </Button>
-                    </Upload>
-                  </Form.Item>
-                )}
-              </>
-            )}
-          </Form.Item>
-          <Form.Item label="Quotation amount" name="vendorSharedPrice">
-            <Input />
-          </Form.Item>
-
-          <Form.Item label="Description" name="description">
-            <Input.TextArea />
-          </Form.Item>
-        </Form>
-      </Modal>
     </>
   )
 }

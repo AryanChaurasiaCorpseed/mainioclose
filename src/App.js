@@ -74,6 +74,7 @@ import ProjectGraph from "./Main/GraphDashboard/ProjectGraph"
 import MainGraphPage from "./Main/GraphDashboard/MainGraphPage"
 import Procurement from "./Main/Vendors/Procurement"
 import MainCompanyFormPage from "./Main/Accounts/MainCompanyFormPage"
+import VendorsRequestList from "./Main/Sales/Leads/VendorsRequestList"
 
 const SpinLoading = lazy(() => import("./components/SpinLoading"))
 
@@ -172,7 +173,7 @@ function App() {
           },
           Timeline: {
             fontSize: 12,
-            itemPaddingBottom: 32,
+            itemPaddingBottom: 68,
           },
           Pagination: {
             fontSizeSM: 12,
@@ -255,13 +256,10 @@ function App() {
                 <Route path="oppurtities" element={<Opportunities />} />
                 <Route path="company" element={<MainCompanyPage />} />
                 <Route path="project" element={<ProjectPage />} />
-                {/* <Route
-                  path="lead-form"
-                  element={<CompanyForm role={"sales"} />}
-                /> */}
+                <Route path="vendors-request" element={<VendorsRequestList />} />
                 <Route
                   path="lead-form"
-                  element={<MainCompanyFormPage role={"sales"} />}
+                  element={<CompanyForm/>}
                 />
                 <Route
                   path="company/:companyId/details"
@@ -287,7 +285,11 @@ function App() {
               {/* accounts module routes */}
               <Route path="/erp/:userid/account" element={<Accounts />}>
                 {/* <Route path="accountlist" element={<AccountsList />} /> */}
-                <Route path="companyForm" element={<CompanyForm />} />
+                {/* <Route path="companyForm" element={<CompanyForm />} /> */}
+                <Route
+                  path="companyForm"
+                  element={<MainCompanyFormPage role={"sales"} />}
+                />
                 <Route
                   path="accounttwo"
                   element={<div>account second page</div>}

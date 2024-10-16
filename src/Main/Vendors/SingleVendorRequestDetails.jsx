@@ -58,9 +58,10 @@ const SingleVendorRequestDetails = ({ data }) => {
   const handleUpdateRequest = useCallback(
     (values) => {
       values.quotationFilePath = values?.quotationFilePath?.[0]?.response
-      values.serviceName = data?.serviceName
       values.companyName = data?.clientCompanyName
       values.contactPersonName = data?.contactPersonName
+      values.vendorCategoryId=data?.vendorCategoryId
+      values.subVendorCategoryId=data?.vendorSubCategoryId
       let obj = {
         vendorId: data?.id,
         userId: userid,
@@ -84,7 +85,6 @@ const SingleVendorRequestDetails = ({ data }) => {
                   data: {
                     clientMailId: data?.clientEmailId,
                     clientName: data?.clientName,
-                    serviceName: data?.serviceName,
                     clientContactNumber: data?.clientMobileNumber,
                     budgetPrice: data?.budgetPrice,
                     ...values,
@@ -211,14 +211,30 @@ const SingleVendorRequestDetails = ({ data }) => {
                     </Flex>
                   )}
 
-                  {data?.serviceName && (
+                  {data?.vendorCategoryName && (
                     <Flex gap={6}>
                       <Icon
                         icon="fluent:person-settings-20-regular"
                         height={BTN_ICON_HEIGHT}
                         width={BTN_ICON_WIDTH}
                       />
-                      <Text>Service name : {data?.serviceName}</Text>
+                      <Text>
+                        Category name : {data?.vendorCategoryName}
+                      </Text>
+                    </Flex>
+                  )}
+
+                  {data?.vendorSubCategoryName && (
+                    <Flex gap={6}>
+                      <Icon
+                        icon="fluent:person-settings-20-regular"
+                        height={BTN_ICON_HEIGHT}
+                        width={BTN_ICON_WIDTH}
+                      />
+                      <Text>
+                        Sub category name :{" "}
+                        {data?.vendorSubCategoryName}
+                      </Text>
                     </Flex>
                   )}
 
@@ -390,7 +406,7 @@ const SingleVendorRequestDetails = ({ data }) => {
           <Form.Item label="Amount given to vendor" name="internalVendorPrices">
             <Input />
           </Form.Item>
-          
+
           <Form.Item label="Amount given by vendor" name="externalVendorPrice">
             <Input />
           </Form.Item>

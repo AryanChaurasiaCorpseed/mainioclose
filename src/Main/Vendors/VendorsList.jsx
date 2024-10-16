@@ -25,7 +25,7 @@ const VendorsList = () => {
   const procurementAssigneeList = useSelector(
     (state) => state.common.procurementAssigneeList
   )
-  const totalCount=useSelector((state)=>state.leads.totalVendorRequestCount)
+  const totalCount = useSelector((state) => state.leads.totalVendorRequestCount)
 
   const [selectedRowKeys, setSelectedRowKeys] = useState([])
   const [assigneeId, setAssigneeId] = useState(null)
@@ -46,7 +46,7 @@ const VendorsList = () => {
 
   useEffect(() => {
     dispatch(getProcurementAssigneeList(userid))
-  }, [userid,dispatch])
+  }, [userid, dispatch])
 
   const handlePagination = useCallback(
     (dataPage, size) => {
@@ -78,7 +78,12 @@ const VendorsList = () => {
         .then((resp) => {
           if (resp.meta.requestStatus === "fulfilled") {
             notification.success({ message: "Assignee updated successfully." })
-            dispatch(getAllVendorsRequest({ id: userid, page: 0 }))
+            dispatch(
+              getAllVendorsRequest({
+                id: userid,
+                ...paginationData,
+              })
+            )
             setSelectedRowKeys([])
             setAssigneeId(null)
           } else {
@@ -87,7 +92,7 @@ const VendorsList = () => {
         })
         .catch(() => notification.error({ message: "Something went wrong !." }))
     },
-    [dispatch, userid]
+    [dispatch, userid, paginationData]
   )
 
   const columns = [
@@ -144,6 +149,14 @@ const VendorsList = () => {
       title: "Client budget",
     },
     {
+      dataIndex: "vendorCategoryName",
+      title: "Category name",
+    },
+    {
+      dataIndex: "vendorSubCategoryName",
+      title: "Subcategory name",
+    },
+    {
       dataIndex: "vendorComment",
       title: "Comment",
       render: (_, info) => (
@@ -156,7 +169,6 @@ const VendorsList = () => {
       render: (_, data) => <SingleVendorRequestDetails data={data} />,
     },
   ]
-
 
   return (
     <>

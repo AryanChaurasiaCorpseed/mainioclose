@@ -79,7 +79,7 @@ const DashboardSlice = createSlice({
     })
     builders.addCase(getAllCompanyAmountGrapgh.fulfilled, (state, action) => {
       state.loading = "success"
-      state.companyAmountList = action.payload
+      state.companyAmountList = action.payload?.reverse()
     })
     builders.addCase(getAllCompanyAmountGrapgh.rejected, (state, action) => {
       state.loading = "error"

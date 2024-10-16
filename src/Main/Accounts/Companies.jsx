@@ -277,13 +277,14 @@ const Companies = () => {
         render: (_, data) => (
           <Button
             size="small"
+            type="text"
             onClick={() => {
               setOpenModal(true)
               setSelectedRowKeys([data?.id])
               form.setFieldsValue({ status: data?.status })
             }}
           >
-            <Icon icon="fluent:keyboard-shift-24-regular" />
+            <Icon icon="fluent:approvals-app-24-regular" />
           </Button>
         ),
       },
@@ -336,9 +337,9 @@ const Companies = () => {
 
   return (
     <Flex vertical>
-      <div className="create-user-box">
+      {/* <div className="create-user-box">
         <MainHeading data={"Company list"} />
-      </div>
+      </div> */}
       <div className="mt-3">
         <div className="flex-verti-center-hori-start">
           {/* <Search

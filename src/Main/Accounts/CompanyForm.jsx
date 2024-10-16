@@ -317,7 +317,7 @@ const CompanyForm = ({ role }) => {
                 <>
                   <Button
                     size="small"
-                    shape="round"
+                    type="text"
                     onClick={() => {
                       setFormId(value?.id)
                       setOpenModal(true)
@@ -331,7 +331,7 @@ const CompanyForm = ({ role }) => {
                       })
                     }}
                   >
-                    <Icon icon="fluent:keyboard-shift-24-regular" />
+                    <Icon icon="fluent:approvals-app-24-regular" />
                   </Button>
                   {/* <Tooltip title="Approved" arrow={false}>
                     <Button
@@ -474,9 +474,9 @@ const CompanyForm = ({ role }) => {
 
   return (
     <TableOutlet>
-      <div className="create-user-box">
+      {/* <div className="create-user-box">
         <MainHeading data={"Company list"} />
-      </div>
+      </div> */}
       <div className="mt-3">
         <div className="flex-verti-center-hori-start">
           <Search
