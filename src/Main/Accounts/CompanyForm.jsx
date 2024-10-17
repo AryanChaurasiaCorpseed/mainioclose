@@ -30,6 +30,7 @@ import ColComp from "../../components/small/ColComp"
 import CompanyFormModal from "./CompanyFormModal"
 import { getAllUsers } from "../../Toolkit/Slices/UsersSlice"
 import { getHighestPriorityRole } from "../Common/Commons"
+import { BTN_ICON_HEIGHT, BTN_ICON_WIDTH } from "../../components/Constants"
 const { Text } = Typography
 const { Search } = Input
 
@@ -331,7 +332,11 @@ const CompanyForm = ({ role }) => {
                       })
                     }}
                   >
-                    <Icon icon="fluent:approvals-app-24-regular" />
+                    <Icon
+                      icon="fluent:approvals-app-24-regular"
+                      height={BTN_ICON_HEIGHT}
+                      width={BTN_ICON_WIDTH}
+                    />
                   </Button>
                   {/* <Tooltip title="Approved" arrow={false}>
                     <Button

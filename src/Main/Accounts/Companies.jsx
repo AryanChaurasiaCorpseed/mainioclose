@@ -25,6 +25,7 @@ import OverFlowText from "../../components/OverFlowText"
 import ColComp from "../../components/small/ColComp"
 import { Icon } from "@iconify/react"
 import { modifyObject, updateKeysAtIndex } from "../Common/Commons"
+import { BTN_ICON_HEIGHT, BTN_ICON_WIDTH } from "../../components/Constants"
 const { Text } = Typography
 const { Search } = Input
 
@@ -287,7 +288,11 @@ const Companies = () => {
               form.setFieldsValue({ status: data?.status })
             }}
           >
-            <Icon icon="fluent:approvals-app-24-regular" />
+            <Icon
+              icon="fluent:approvals-app-24-regular"
+              height={BTN_ICON_HEIGHT}
+              width={BTN_ICON_WIDTH}
+            />
           </Button>
         ),
       },
@@ -349,7 +354,7 @@ const Companies = () => {
   }
 
   return (
-    <Flex vertical>
+    <Flex vertical gap={8}>
       {/* <div className="create-user-box">
         <MainHeading data={"Company list"} />
       </div> */}
@@ -403,7 +408,7 @@ const Companies = () => {
             }}
           />
         </div>
-        <Flex vertical>
+        <Flex vertical gap={8}>
           <Collapse
             accordion
             size="small"

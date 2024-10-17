@@ -219,7 +219,7 @@ const BulkFileUploader = ({ leadid }) => {
         showSearch
         allowClear
         options={
-          [...allComments, { name: "Other" }]?.map((item) => ({
+          [ { name: "Other" },...allComments]?.map((item) => ({
             label: item?.name,
             value: item?.name,
           })) || []
