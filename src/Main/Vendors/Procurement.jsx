@@ -344,7 +344,10 @@ const Procurement = () => {
           <Button
             size="small"
             type="primary"
-            onClick={() => setOpenModal2(true)}
+            onClick={() => {
+              setOpenModal2(true)
+              form2.resetFields()
+            }}
           >
             Create subcategory
           </Button>
