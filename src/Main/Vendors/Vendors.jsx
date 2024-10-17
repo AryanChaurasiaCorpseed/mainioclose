@@ -415,7 +415,7 @@ const Vendors = ({ leadId }) => {
                       ),
                       children: (
                         <Flex vertical gap={2}>
-                          {item?.externalVendorPrice && (
+                          {/* {item?.externalVendorPrice && (
                             <Text strong>
                               Price give by vendor : {item?.externalVendorPrice}
                             </Text>
@@ -426,7 +426,7 @@ const Vendors = ({ leadId }) => {
                               Price given to vendor :{" "}
                               {item?.internalVendorPrices}
                             </Text>
-                          )}
+                          )} */}
 
                           {item?.quotationAmount && (
                             <Text strong>

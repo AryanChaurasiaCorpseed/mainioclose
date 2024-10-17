@@ -19,7 +19,6 @@ import { BTN_ICON_HEIGHT, BTN_ICON_WIDTH } from "../../components/Constants"
 import dayjs from "dayjs"
 import { useDispatch, useSelector } from "react-redux"
 import {
-  getAllVendorsRequest,
   getvendorHistoryByLeadId,
   sendVendorsProposal,
   updateVendorStatus,
@@ -60,8 +59,8 @@ const SingleVendorRequestDetails = ({ data }) => {
       values.quotationFilePath = values?.quotationFilePath?.[0]?.response
       values.companyName = data?.clientCompanyName
       values.contactPersonName = data?.contactPersonName
-      values.vendorCategoryId=data?.vendorCategoryId
-      values.subVendorCategoryId=data?.vendorSubCategoryId
+      values.vendorCategoryId = data?.vendorCategoryId
+      values.subVendorCategoryId = data?.vendorSubCategoryId
       let obj = {
         vendorId: data?.id,
         userId: userid,
@@ -125,8 +124,9 @@ const SingleVendorRequestDetails = ({ data }) => {
           notification.error({ message: "Something went wrong !." })
         })
     },
-    [dispatch, data, userid]
+    [dispatch, data, userid, form]
   )
+  
   return (
     <>
       <Button size="small" shape="round" onClick={handleOpenDrawer}>
@@ -218,9 +218,7 @@ const SingleVendorRequestDetails = ({ data }) => {
                         height={BTN_ICON_HEIGHT}
                         width={BTN_ICON_WIDTH}
                       />
-                      <Text>
-                        Category name : {data?.vendorCategoryName}
-                      </Text>
+                      <Text>Category name : {data?.vendorCategoryName}</Text>
                     </Flex>
                   )}
 
@@ -232,8 +230,7 @@ const SingleVendorRequestDetails = ({ data }) => {
                         width={BTN_ICON_WIDTH}
                       />
                       <Text>
-                        Sub category name :{" "}
-                        {data?.vendorSubCategoryName}
+                        Sub category name : {data?.vendorSubCategoryName}
                       </Text>
                     </Flex>
                   )}
@@ -266,11 +263,11 @@ const SingleVendorRequestDetails = ({ data }) => {
                           : item?.requestStatus === "Finished"
                           ? "green"
                           : item?.requestStatus === "Processing"
-                          ? "yellow"
+                          ? "orange"
                           : "blue",
                       dot:
                         item?.requestStatus === "Processing" ? (
-                          <Icon icon="fluent:clock-24-regular" color="yellow" />
+                          <Icon icon="fluent:clock-24-regular" color="orange" />
                         ) : item?.requestStatus === "Finished" ? (
                           <Icon
                             icon="fluent:checkmark-24-filled"
@@ -282,9 +279,7 @@ const SingleVendorRequestDetails = ({ data }) => {
                       label: (
                         <Flex vertical gap="2" justify="flex-end">
                           <Text>{item?.requestStatus}</Text>
-                          <Text type="secondary">
-                            by {item?.user?.fullName}
-                          </Text>
+                          <Text type="secondary">by {item?.updatedName}</Text>
                           <Text type="secondary">
                             {dayjs(item?.updateDate).format(
                               "YYYY-MM-DD , hh:mm a"

@@ -30,7 +30,7 @@ const CompanyAmountGraph = ({ expandedBox }) => {
 
   useEffect(() => {
     let tempdata = [...dataList]
-    let res = tempdata?.reverse()?.slice(pagination?.prev, pagination?.next)
+    let res = tempdata?.slice(pagination?.prev, pagination?.next)
     setData(res)
   }, [dataList, pagination])
 

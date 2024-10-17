@@ -205,6 +205,16 @@ export const updateMultiCompanyFormStatus = createAsyncThunk(
   }
 )
 
+export const searchFormCompaniesBy = createAsyncThunk(
+  "searchFormCompaniesBy",
+  async (data) => {
+    const response = await getQuery(
+      `/leadService/api/v1/company/searchCompanyFormDataCompanywise?searchNameAndGSt=${data?.inputText}&userId=${data?.userId}&status=${data?.status}`
+    )
+    return response.data
+  }
+)
+
 const CompnaySlice = createSlice({
   name: "company",
   initialState: {
@@ -398,6 +408,18 @@ const CompnaySlice = createSlice({
         state.loading = "rejected"
       }
     )
+
+    builder.addCase(searchFormCompaniesBy.pending, (state, action) => {
+      state.loading = "pending"
+    })
+    builder.addCase(searchFormCompaniesBy.fulfilled, (state, action) => {
+      state.companyListWithServices = action.payload
+      state.loading = "success"
+    })
+    builder.addCase(searchFormCompaniesBy.rejected, (state, action) => {
+      state.loading = "rejected"
+      state.companyListWithServices = {}
+    })
   },
 })
 

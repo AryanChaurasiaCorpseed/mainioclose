@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux"
 import { useParams } from "react-router-dom"
 import {
   getAllCompanyFormForMultipleServices,
+  searchFormCompaniesBy,
   updateMultiCompanyFormStatus,
 } from "../../Toolkit/Slices/CompanySlice"
 import {
@@ -12,6 +13,7 @@ import {
   Collapse,
   Flex,
   Form,
+  Input,
   Modal,
   notification,
   Pagination,
@@ -24,6 +26,7 @@ import ColComp from "../../components/small/ColComp"
 import { Icon } from "@iconify/react"
 import { modifyObject, updateKeysAtIndex } from "../Common/Commons"
 const { Text } = Typography
+const { Search } = Input
 
 const Companies = () => {
   const dispatch = useDispatch()
@@ -335,6 +338,16 @@ const Companies = () => {
     [userid, selectedFilter, dispatch]
   )
 
+  const handleOnSearch = (e) => {
+    dispatch(
+      searchFormCompaniesBy({
+        inputText: e,
+        userId: userid,
+        status: selectedFilter,
+      })
+    )
+  }
+
   return (
     <Flex vertical>
       {/* <div className="create-user-box">
@@ -342,27 +355,35 @@ const Companies = () => {
       </div> */}
       <div className="mt-3">
         <div className="flex-verti-center-hori-start">
-          {/* <Search
+          <Search
             size="small"
-            onSearch={onSearchLead}
+            allowClear
+            onSearch={handleOnSearch}
             style={{ width: "220px" }}
             placeholder="search"
+            onClear={() =>
+              dispatch(
+                getAllCompanyFormForMultipleServices({
+                  userId: userid,
+                  status: selectedFilter,
+                  ...paginationData,
+                })
+              )
+            }
             onChange={(e) =>
               !e.target.value
                 ? dispatch(
-                    searchCompanyForm({
-                      inputText: "",
+                    getAllCompanyFormForMultipleServices({
                       userId: userid,
-                      page: paginationData?.page,
-                      size: paginationData?.size,
                       status: selectedFilter,
+                      ...paginationData,
                     })
                   )
                 : ""
             }
             enterButton="search"
             prefix={<Icon icon="fluent:search-24-regular" />}
-          /> */}
+          />
           <Select
             style={{ width: "220px" }}
             showSearch
