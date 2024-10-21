@@ -113,7 +113,7 @@ const CompanyForm = ({ role }) => {
       title: "Id",
       dataIndex: "id",
       fixed: "left",
-      width: 100,
+      width: 80,
     },
     {
       title: "Company name",
@@ -327,6 +327,7 @@ const CompanyForm = ({ role }) => {
                           form.setFieldsValue({
                             comment: resp?.payload,
                             status: value?.status,
+
                           })
                         }
                       })

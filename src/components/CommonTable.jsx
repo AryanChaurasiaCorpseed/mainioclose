@@ -18,6 +18,8 @@ const CommonTable = ({
   handlePagination,
   totalCount,
   pageSize,
+  onRow,
+  getCheckboxProps
 }) => {
   const tableContainerRef = useRef(null)
   const scrollIntervalRef = useRef(null)
@@ -116,11 +118,13 @@ const CommonTable = ({
         dataSource={data}
         pagination={false}
         scroll={scroll}
+        onRow={onRow}
         rowKey={rowKey}
         rowClassName={rowClassName}
         rowSelection={
           rowSelection && {
             type: "checkbox",
+            getCheckboxProps: getCheckboxProps,
             selectedRowKeys: selectedRowKeys,
             onChange: onRowSelection,
           }

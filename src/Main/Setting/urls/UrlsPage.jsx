@@ -124,6 +124,13 @@ const UrlsPage = () => {
         ),
     },
     {
+      title: "Product present",
+      dataIndex: "product",
+      width: 100,
+      render: (_, data) => <Text>{data?.product ? "True" : "False"}</Text>,
+    },
+
+    {
       title: "Quality",
       dataIndex: "quality",
       width: 100,
@@ -167,18 +174,26 @@ const UrlsPage = () => {
           notification.success({
             message: "urls converted to product successfully",
           })
+          dispatch(
+            getAllUrlAction({
+              page: paginationData?.page,
+              size: paginationData?.size,
+            })
+          )
           setSelectedRowKeys([])
         } else {
-          notification.error({ message: "Something went wrong !." })
+          notification.error({
+            message: "Something went wrong !.",
+          })
         }
       })
       .catch(() => {
         notification.error({ message: "Something went wrong !." })
       })
-  }, [dispatch, selectedRowKeys])
+  }, [dispatch, selectedRowKeys, paginationData])
 
   return (
-    <div>
+    <>
       <div className="create-user-box">
         <MainHeading data={`Urls list`} />
         <div className="lead-box">
@@ -211,6 +226,9 @@ const UrlsPage = () => {
       <CommonTable
         columns={columns}
         data={filteredData}
+        getCheckboxProps={(record) => ({
+          disabled: record.product, 
+        })}
         rowSelection={true}
         onRowSelection={onSelectChange}
         selectedRowKeys={selectedRowKeys}
@@ -281,7 +299,7 @@ const UrlsPage = () => {
           </Form.Item>
         </Form>
       </Modal>
-    </div>
+    </>
   )
 }
 

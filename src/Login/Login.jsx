@@ -38,6 +38,9 @@ const Login = () => {
                   } else {
                     if (response.payload?.department === "Procurement") {
                       navigate(`/erp/${resp?.payload?.id}/vendors`)
+                    }
+                    if (response.payload?.department === "HR") {
+                      navigate(`/erp/${resp?.payload?.id}/hr/userlist`)
                     } else {
                       navigate(`/erp/${resp?.payload?.id}/sales/leads`)
                     }
