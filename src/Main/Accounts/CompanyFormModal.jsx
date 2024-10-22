@@ -634,7 +634,7 @@ const CompanyFormModal = ({
             <Input maxLength={10} onChange={handlePanNumberChange} />
           </Form.Item>
           <Form.Item label="Amount" name="amount">
-            <Input />
+            <Input type='number' />
           </Form.Item>
 
           <Divider style={{ color: "#cccccc" }} orientation="center">

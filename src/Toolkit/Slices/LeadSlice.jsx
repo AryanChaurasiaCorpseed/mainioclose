@@ -671,6 +671,16 @@ export const vendorRequestListForSalesUser = createAsyncThunk(
   }
 )
 
+export const vendorsRequestView = createAsyncThunk(
+  "vendorsRequestView",
+  async ({ id, userid }) => {
+    const response = await putQuery(
+      `/leadService/api/v1/vendor/vendor-request-view?id=${id}&userId=${userid}`
+    )
+    return response.data
+  }
+)
+
 export const LeadSlice = createSlice({
   name: "lead",
   initialState: {
@@ -712,7 +722,7 @@ export const LeadSlice = createSlice({
     leadChildData: [],
     vendorsCategoryList: [],
     singleCategoryDetail: {},
-    requestListForVendors:[]
+    requestListForVendors: [],
   },
   reducers: {
     handleLoadingState: (state, action) => {
@@ -1039,20 +1049,20 @@ export const LeadSlice = createSlice({
       state.singleCategoryDetail = {}
     })
 
-
     builder.addCase(vendorRequestListForSalesUser.pending, (state, action) => {
       state.historyLoading = "pending"
     })
-    builder.addCase(vendorRequestListForSalesUser.fulfilled, (state, action) => {
-      state.historyLoading = "success"
-      state.requestListForVendors = action?.payload
-    })
+    builder.addCase(
+      vendorRequestListForSalesUser.fulfilled,
+      (state, action) => {
+        state.historyLoading = "success"
+        state.requestListForVendors = action?.payload
+      }
+    )
     builder.addCase(vendorRequestListForSalesUser.rejected, (state, action) => {
       state.historyLoading = "rejected"
       state.requestListForVendors = []
     })
-
-
   },
 })
 export const {

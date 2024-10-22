@@ -141,6 +141,10 @@ const VendorsList = () => {
       ),
     },
     {
+      dataIndex:'assigneeName',
+      title:'Assignee name'
+    },
+    {
       dataIndex: "clientMobileNumber",
       title: "Client contact",
     },
@@ -186,6 +190,7 @@ const VendorsList = () => {
           onRowSelection={onSelectChange}
           selectedRowKeys={selectedRowKeys}
           rowKey={(record) => record?.id}
+          rowClassName={(record) => (!record.view ? "light-gray-row" : "")}
           pagination={true}
           page={paginationData?.page}
           pageSize={paginationData?.size}

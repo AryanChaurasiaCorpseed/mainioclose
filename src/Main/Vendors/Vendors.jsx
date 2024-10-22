@@ -200,12 +200,13 @@ const Vendors = ({ leadId }) => {
   const vendorList = useSelector((state) => state.leads.vendorsList)
   const [vendor, setVendor] = useState([])
   const [vendorDetail, setVendorDetail] = useState({})
+  const [openDocModal, setOpenDocModal] = useState(false)
 
   useEffect(() => {
     if (vendorList?.length > 0) {
       setVendor(vendorList?.[0]?.updateHistory)
       setVendorDetail(vendorList?.[0])
-    }else{
+    } else {
       setVendor([])
       setVendorDetail({})
     }
@@ -219,6 +220,8 @@ const Vendors = ({ leadId }) => {
     },
     [vendorList]
   )
+
+  console.log("BNLKASDBNVLKASJBDK", vendorDetail)
 
   return (
     <>
@@ -375,6 +378,31 @@ const Vendors = ({ leadId }) => {
                   )}
                 </Flex>
               )}
+              <Flex vertical gap={8}>
+                {vendorDetail?.vendorReferenceFile && (
+                  <>
+                    <Text className="heading-text">Attachements</Text>
+                    <Button onClick={() => setOpenDocModal(true)} size="small">
+                      view document
+                    </Button>
+                  </>
+                )}
+                <Modal
+                  title="Documents"
+                  width={800}
+                  centered
+                  open={openDocModal}
+                  onClose={() => setOpenDocModal(false)}
+                  onCancel={() => setOpenDocModal(false)}
+                  footer={null}
+                >
+                  <iframe
+                    src={vendorDetail?.salesAttachmentImage}
+                    height={500}
+                    width={"100%"}
+                  />
+                </Modal>
+              </Flex>
             </Flex>
           </Col>
           <Col span={18}>
@@ -405,7 +433,9 @@ const Vendors = ({ leadId }) => {
                       label: (
                         <Flex vertical gap="2" justify="flex-end">
                           <Text>{item?.requestStatus}</Text>
-
+                          <Text type="secondary">
+                            Assigned to : {vendorDetail?.assigneeName}
+                          </Text>
                           <Text type="secondary">
                             {dayjs(item?.updateDate).format(
                               "YYYY-MM-DD , hh:mm a"

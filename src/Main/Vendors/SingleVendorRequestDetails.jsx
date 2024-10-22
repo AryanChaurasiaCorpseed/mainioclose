@@ -22,6 +22,7 @@ import {
   getvendorHistoryByLeadId,
   sendVendorsProposal,
   updateVendorStatus,
+  vendorsRequestView,
 } from "../../Toolkit/Slices/LeadSlice"
 import { useParams } from "react-router-dom"
 const { Text, Paragraph } = Typography
@@ -34,6 +35,7 @@ const SingleVendorRequestDetails = ({ data }) => {
   )
   const [openDrawer, setOpenDrawer] = useState(false)
   const [openModal, setOpenModal] = useState(false)
+  const [openDocModal, setOpenDocModal] = useState(false)
   const [form] = Form.useForm()
 
   const normFile = (e) => {
@@ -45,6 +47,7 @@ const SingleVendorRequestDetails = ({ data }) => {
 
   const handleOpenDrawer = useCallback(() => {
     setOpenDrawer(true)
+    dispatch(vendorsRequestView({ id: data?.id, userid }))
     dispatch(
       getvendorHistoryByLeadId({
         userId: userid,
@@ -126,7 +129,7 @@ const SingleVendorRequestDetails = ({ data }) => {
     },
     [dispatch, data, userid, form]
   )
-  
+
   return (
     <>
       <Button size="small" shape="round" onClick={handleOpenDrawer}>
@@ -249,6 +252,27 @@ const SingleVendorRequestDetails = ({ data }) => {
                   )}
                 </Flex>
               )}
+            </Flex>
+            <Flex vertical gap={8}>
+              <Text className="heading-text">Attachements</Text>
+              <Button onClick={() => setOpenDocModal(true)} size="small">
+                view document
+              </Button>
+              <Modal
+                title="Documents"
+                width={800}
+                centered
+                open={openDocModal}
+                onClose={() => setOpenDocModal(false)}
+                onCancel={() => setOpenDocModal(false)}
+                footer={null}
+              >
+                <iframe
+                  src={data?.salesAttachmentImage}
+                  height={500}
+                  width={"100%"}
+                />
+              </Modal>
             </Flex>
           </Col>
           <Col span={18}>
