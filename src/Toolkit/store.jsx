@@ -25,6 +25,7 @@ import SettingSlice from "./Slices/SettingSlice"
 import CommonSlice from "./Slices/CommonSlice"
 import IndustrySlice from "./Slices/IndustrySlice"
 import DasboardSlice from "./Slices/DasboardSlice"
+import ProductSlice from './Slices/ProductSlice'
 
 
 const reducers = combineReducers({
@@ -49,7 +50,8 @@ const reducers = combineReducers({
   setting: SettingSlice,
   common: CommonSlice,
   industry:IndustrySlice,
-  dashboard:DasboardSlice
+  dashboard:DasboardSlice,
+  product:ProductSlice
 })
 
 const persistConfig = {

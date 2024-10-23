@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react"
-import { useParams } from "react-router-dom"
+import { Link, useParams } from "react-router-dom"
 import { useCustomRoute } from "../../../Routes/GetCustomRoutes"
 import { postQuery } from "../../../API/PostQuery"
 import InputErrorComponent from "../../../components/InputErrorComponent"
@@ -9,36 +9,21 @@ import LongInput from "../../../components/Inputs/LongInput"
 import UserLeadComponent from "../../../Tables/UserLeadComponent"
 import MainHeading from "../../../components/design/MainHeading"
 import { Button, Form, Input, Modal, Select } from "antd"
-import { useDispatch } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import CommonTable from "../../../components/CommonTable"
 import { Icon } from "@iconify/react"
 import OverFlowText from "../../../components/OverFlowText"
+import ProductDetails from "./ProductDetails"
 
 const ProductsChange = () => {
   const { userid } = useParams()
-  const [addProductDep, setAddProductDep] = useState(false)
-  const [deleteCategoryDep, setDeleteCategoryDep] = useState(false)
+  const productData = useSelector((state) => state.product.productData)
+  const categoryData = useSelector((state) => state.product.categoryData)
   const dispatch = useDispatch()
   const [form] = Form.useForm()
   const [openModal, setOpenModal] = useState(false)
-
-  const categoryUrl = `/leadService/api/v1/category/getAllCategories`
-  const categoryDep = []
-
-  const { productData: categoryData, loading: categoryLoading } =
-    useCustomRoute(categoryUrl, categoryDep)
-
-  const productUrl = `/leadService/api/v1/product/getAllProducts`
-  const productDep = [addProductDep, deleteCategoryDep]
-
-  const { productData: productData, loading: productLoading } = useCustomRoute(
-    productUrl,
-    productDep
-  )
-
   const [searchText, setSearchText] = useState("")
   const [filteredData, setFilteredData] = useState([])
-
 
   useEffect(() => {
     setFilteredData(productData)
@@ -62,7 +47,7 @@ const ProductsChange = () => {
       title: "Product name",
       fixed: "left",
       render: (_, records) => (
-        <OverFlowText>{records?.productName}</OverFlowText>
+        <ProductDetails data={records}>{records?.productName}</ProductDetails>
       ),
     },
     {
@@ -165,7 +150,6 @@ const ProductsChange = () => {
         const leadProductDel = await deleteQuery(
           `/leadService/api/v1/product/delete?id=${statusId}`
         )
-        setDeleteCategoryDep((prev) => !prev)
       } catch (err) {
         console.log(err)
       }
@@ -195,24 +179,21 @@ const ProductsChange = () => {
         </Button>
       </div>
       <div className="flex-verti-center-hori-start mt-2">
-          <Input
-            value={searchText}
-            size="small"
-            onChange={handleSearch}
-            style={{ width: "220px" }}
-            placeholder="search"
-            prefix={<Icon icon="fluent:search-24-regular" />}
-          />
-        </div>
-      {productLoading ? (
-        <SmallTableScalaton />
-      ) : (
-        <CommonTable
-          data={filteredData}
-          columns={ProductCol}
-          scroll={{ y: 500, x: 2500 }}
+        <Input
+          value={searchText}
+          size="small"
+          onChange={handleSearch}
+          style={{ width: "220px" }}
+          placeholder="search"
+          prefix={<Icon icon="fluent:search-24-regular" />}
         />
-      )}
+      </div>
+
+      <CommonTable
+        data={filteredData}
+        columns={ProductCol}
+        scroll={{ y: 500, x: 2500 }}
+      />
 
       <Modal
         title="Add product"

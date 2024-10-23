@@ -986,7 +986,7 @@ export const LeadSlice = createSlice({
     builder.addCase(getAllVendorsRequest.fulfilled, (state, action) => {
       state.loading = "success"
       state.totalVendorRequestCount = action?.payload?.totalItems
-      state.allVendorsRequestList = action?.payload?.vendorsRequests
+      state.allVendorsRequestList = action?.payload?.vendorsRequests?.reverse()
     })
     builder.addCase(getAllVendorsRequest.rejected, (state, action) => {
       state.loading = "rejected"

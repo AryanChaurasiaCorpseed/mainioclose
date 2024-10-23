@@ -161,6 +161,7 @@ const VendorForm = ({ leadId, userId }) => {
             name="saleTeamAttachmentReference"
             getValueFromEvent={normFile}
             valuePropName="fileList"
+            rules={[{required:true,message:'please upload the document'}]}
           >
             <Upload
               action="/leadService/api/v1/upload/uploadimageToFileSystem"
