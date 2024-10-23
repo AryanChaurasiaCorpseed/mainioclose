@@ -268,6 +268,7 @@ const SingleVendorRequestDetails = ({ data }) => {
                 footer={null}
               >
                 <iframe
+                  title=""
                   src={data?.salesAttachmentImage}
                   height={500}
                   width={"100%"}
@@ -303,7 +304,12 @@ const SingleVendorRequestDetails = ({ data }) => {
                       label: (
                         <Flex vertical gap="2" justify="flex-end">
                           <Text>{item?.requestStatus}</Text>
-                          <Text type="secondary">by {item?.updatedName}</Text>
+                          {item?.raisedBy?.fullName && (
+                            <Text> Raised by : {item?.raisedBy?.fullName}</Text>
+                          )}
+                          {item?.updatedName && (
+                            <Text type="secondary">Updated by : {item?.updatedName}</Text>
+                          )}
                           <Text type="secondary">
                             {dayjs(item?.updateDate).format(
                               "YYYY-MM-DD , hh:mm a"
@@ -314,20 +320,20 @@ const SingleVendorRequestDetails = ({ data }) => {
                       children: (
                         <Flex vertical gap={2}>
                           {item?.externalVendorPrice && (
-                            <Text strong>
+                            <Text >
                               Price give by vendor : {item?.externalVendorPrice}
                             </Text>
                           )}
 
                           {item?.internalVendorPrices && (
-                            <Text strong>
+                            <Text >
                               Price given to vendor :{" "}
                               {item?.internalVendorPrices}
                             </Text>
                           )}
 
                           {item?.quotationAmount && (
-                            <Text strong>
+                            <Text >
                               Quotation amount : {item?.quotationAmount}
                             </Text>
                           )}

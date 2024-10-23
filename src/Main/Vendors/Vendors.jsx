@@ -397,6 +397,7 @@ const Vendors = ({ leadId }) => {
                   footer={null}
                 >
                   <iframe
+                    title=""
                     src={vendorDetail?.salesAttachmentImage}
                     height={500}
                     width={"100%"}
@@ -417,11 +418,11 @@ const Vendors = ({ leadId }) => {
                           : item?.requestStatus === "Finished"
                           ? "green"
                           : item?.requestStatus === "Processing"
-                          ? "yellow"
+                          ? "orange"
                           : "blue",
                       dot:
                         item?.requestStatus === "Processing" ? (
-                          <Icon icon="fluent:clock-24-regular" color="yellow" />
+                          <Icon icon="fluent:clock-24-regular" color="orange" />
                         ) : item?.requestStatus === "Finished" ? (
                           <Icon
                             icon="fluent:checkmark-24-filled"
