@@ -59,7 +59,9 @@ const SingleVendorRequestDetails = ({ data }) => {
 
   const handleUpdateRequest = useCallback(
     (values) => {
-      values.quotationFilePath = values?.quotationFilePath?.[0]?.response
+      values.quotationFilePath = values?.quotationFilePath?.map(
+        (item) => item?.response
+      )
       values.companyName = data?.clientCompanyName
       values.contactPersonName = data?.contactPersonName
       values.vendorCategoryId = data?.vendorCategoryId
@@ -308,7 +310,9 @@ const SingleVendorRequestDetails = ({ data }) => {
                             <Text> Raised by : {item?.raisedBy?.fullName}</Text>
                           )}
                           {item?.updatedName && (
-                            <Text type="secondary">Updated by : {item?.updatedName}</Text>
+                            <Text type="secondary">
+                              Updated by : {item?.updatedName}
+                            </Text>
                           )}
                           <Text type="secondary">
                             {dayjs(item?.updateDate).format(
@@ -320,20 +324,20 @@ const SingleVendorRequestDetails = ({ data }) => {
                       children: (
                         <Flex vertical gap={2}>
                           {item?.externalVendorPrice && (
-                            <Text >
+                            <Text>
                               Price give by vendor : {item?.externalVendorPrice}
                             </Text>
                           )}
 
                           {item?.internalVendorPrices && (
-                            <Text >
+                            <Text>
                               Price given to vendor :{" "}
                               {item?.internalVendorPrices}
                             </Text>
                           )}
 
                           {item?.quotationAmount && (
-                            <Text >
+                            <Text>
                               Quotation amount : {item?.quotationAmount}
                             </Text>
                           )}
@@ -403,6 +407,7 @@ const SingleVendorRequestDetails = ({ data }) => {
                       <Upload
                         action="/leadService/api/v1/upload/uploadimageToFileSystem"
                         listType="text"
+                        multiple={true}
                       >
                         <Button size="small">
                           <Icon icon="fluent:arrow-upload-20-filled" />

@@ -65,6 +65,7 @@ const DocumentModal = ({ data }) => {
           >
             <Input />
           </Form.Item>
+
           <Form.Item
             label="Description"
             name="description"
@@ -74,6 +75,7 @@ const DocumentModal = ({ data }) => {
           >
             <Input.TextArea />
           </Form.Item>
+
           <Form.Item
             label="Type"
             name="type"
@@ -86,6 +88,7 @@ const DocumentModal = ({ data }) => {
               ]}
             />
           </Form.Item>
+
           <Form.Item
             label="Document attachement"
             name="saleTeamAttachmentReference"
@@ -102,6 +105,7 @@ const DocumentModal = ({ data }) => {
               </Button>
             </Upload>
           </Form.Item>
+          
         </Form>
       </Modal>
     </>

@@ -58,6 +58,7 @@ const MilestoneModal = ({ data }) => {
           >
             <Input />
           </Form.Item>
+
           <Form.Item
             label="Duration"
             name="noOfDays"
@@ -65,6 +66,7 @@ const MilestoneModal = ({ data }) => {
           >
             <Input />
           </Form.Item>
+
           <Form.Item
             label="Steps"
             name="stageNo"
@@ -72,6 +74,7 @@ const MilestoneModal = ({ data }) => {
           >
             <Input />
           </Form.Item>
+
           <Form.Item
             label="Assign %"
             name="transferPercent"
@@ -79,6 +82,7 @@ const MilestoneModal = ({ data }) => {
           >
             <Input />
           </Form.Item>
+          
           <Form.Item
             label="Price %"
             name="pricePercent"

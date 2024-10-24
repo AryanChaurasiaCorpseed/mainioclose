@@ -479,7 +479,7 @@ const LeadsModule = () => {
     dispatch(multiAssignedLeads(obj))
       .then((response) => {
         if (response?.meta?.requestStatus === "fulfilled") {
-          notification.success({ message: "Leads assigned successfully" })
+          notification.success({ message: "Leads assigned successfully ." })
           // playSuccessSound()
           dispatch(getAllLeads(allMultiFilterData))
           setMultibtn("success")
@@ -571,7 +571,6 @@ const LeadsModule = () => {
     }
   }
 
-  console.log("skhbqsucbqwschbuybcsah", assignedLeadInfo)
 
   return (
     <div className="lead-module small-box-padding">

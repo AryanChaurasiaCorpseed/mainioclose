@@ -47,10 +47,12 @@ const VendorForm = ({ leadId, userId }) => {
     }
     return e?.fileList
   }
+
   const handleFinish = useCallback(
     (data) => {
-      data.saleTeamAttachmentReference =
-        data?.saleTeamAttachmentReference?.[0]?.response
+      data.salesAttachmentReferencePath = data?.salesAttachmentReferencePath?.map(
+        (item) => item?.response
+      )
       let temData = {
         leadId,
         userId,
@@ -75,6 +77,8 @@ const VendorForm = ({ leadId, userId }) => {
     },
     [dispatch, leadId, userId, form]
   )
+
+
   return (
     <>
       <Button type="primary" onClick={() => setOpenModal(true)}>
@@ -96,6 +100,7 @@ const VendorForm = ({ leadId, userId }) => {
           onFinish={handleFinish}
           style={{ maxHeight: "80vh", overflow: "auto" }}
         >
+
           <Form.Item
             label="Client name"
             name="clientName"
@@ -105,6 +110,7 @@ const VendorForm = ({ leadId, userId }) => {
           >
             <Input />
           </Form.Item>
+
           <Form.Item
             label="Email"
             name="clientMailId"
@@ -118,6 +124,7 @@ const VendorForm = ({ leadId, userId }) => {
           >
             <Input />
           </Form.Item>
+
           <Form.Item
             label="Company name"
             name="companyName"
@@ -125,6 +132,7 @@ const VendorForm = ({ leadId, userId }) => {
           >
             <Input />
           </Form.Item>
+
           <Form.Item
             label="Select category"
             name="vendorCategoryId"
@@ -141,6 +149,7 @@ const VendorForm = ({ leadId, userId }) => {
               onChange={(e) => dispatch(getSingleCategoryDataById(e))}
             />
           </Form.Item>
+
           <Form.Item
             label="Select sub category"
             name="subVendorCategoryId"
@@ -156,16 +165,18 @@ const VendorForm = ({ leadId, userId }) => {
               }
             />
           </Form.Item>
+
           <Form.Item
             label="Reference attachement"
-            name="saleTeamAttachmentReference"
+            name="salesAttachmentReferencePath"
             getValueFromEvent={normFile}
             valuePropName="fileList"
-            rules={[{required:true,message:'please upload the document'}]}
+            rules={[{ required: true, message: "please upload the document" }]}
           >
             <Upload
               action="/leadService/api/v1/upload/uploadimageToFileSystem"
               listType="text"
+              multiple={true}
             >
               <Button size="small">
                 <Icon icon="fluent:arrow-upload-20-filled" />
@@ -173,6 +184,7 @@ const VendorForm = ({ leadId, userId }) => {
               </Button>
             </Upload>
           </Form.Item>
+
           <Form.Item
             label="Contact number"
             name="clientMobileNumber"
@@ -180,9 +192,11 @@ const VendorForm = ({ leadId, userId }) => {
           >
             <Input maxLength={10} />
           </Form.Item>
+
           <Form.Item label="Client budget price" name="clientBudgetPrice">
             <Input />
           </Form.Item>
+
           <Form.Item
             label="Description"
             name="description"
@@ -190,6 +204,7 @@ const VendorForm = ({ leadId, userId }) => {
           >
             <Input.TextArea />
           </Form.Item>
+
         </Form>
       </Modal>
     </>
@@ -379,6 +394,7 @@ const Vendors = ({ leadId }) => {
                   )}
                 </Flex>
               )}
+              
               <Flex vertical gap={8}>
                 {vendorDetail?.vendorReferenceFile && (
                   <>

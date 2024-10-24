@@ -114,7 +114,6 @@ import { useDispatch, useSelector } from "react-redux"
 import {
   createRemakWithFile,
   getAllRemarkAndCommnts,
-  getSingleLeadDataByLeadID,
 } from "../../../Toolkit/Slices/LeadSlice"
 import { useParams } from "react-router-dom"
 import { getAllComments } from "../../../Toolkit/Slices/UserRatingSlice"
@@ -136,6 +135,7 @@ const BulkFileUploader = ({ leadid }) => {
   useEffect(() => {
     dispatch(getAllComments())
   }, [dispatch])
+  
   const props = {
     name: "file",
     multiple: true,
