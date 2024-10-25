@@ -13,11 +13,13 @@ import SingleVendorRequestDetails from "./SingleVendorRequestDetails"
 import { Icon } from "@iconify/react"
 import { Button, Flex, notification, Select, Typography } from "antd"
 import { getProcurementAssigneeList } from "../../Toolkit/Slices/CommonSlice"
+import { getHighestPriorityRole } from "../Common/Commons"
 const { Text } = Typography
 
 const VendorsList = () => {
   const dispatch = useDispatch()
   const loading = useSelector((state) => state.leads.loading)
+  const currentRoles = useSelector((state) => state?.auth?.roles)
   const { userid } = useParams()
   const allVendorsRequestList = useSelector(
     (prev) => prev?.leads.allVendorsRequestList
@@ -141,13 +143,18 @@ const VendorsList = () => {
       ),
     },
     {
-      dataIndex:'assigneeName',
-      title:'Assignee name'
+      dataIndex: "assigneeName",
+      title: "Assignee name",
     },
-    {
-      dataIndex: "clientMobileNumber",
-      title: "Client contact",
-    },
+    ...(getHighestPriorityRole(currentRoles) === "ADMIN"
+      ? [
+          {
+            dataIndex: "clientMobileNumber",
+            title: "Client contact",
+          },
+        ]
+      : []),
+
     {
       dataIndex: "budgetPrice",
       title: "Client budget",

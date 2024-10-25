@@ -69,7 +69,7 @@ const Industries = () => {
       >
         <Form layout="vertical" form={form} onFinish={handleFinish}>
           <Form.Item
-            label="Industry type "
+            label="Industry type"
             name="name"
             rules={[
               {
@@ -80,6 +80,7 @@ const Industries = () => {
           >
             <Input />
           </Form.Item>
+
           <Form.Item
             label="Select industry"
             name="subIndustryId"

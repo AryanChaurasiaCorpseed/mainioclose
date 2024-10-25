@@ -27,7 +27,6 @@ const Opportunities = () => {
           </button>
         </div>
       </div>
-
       <AllLeadsDisplay />
     </div>
   )

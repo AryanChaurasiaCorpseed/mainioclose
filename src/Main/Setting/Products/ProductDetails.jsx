@@ -6,13 +6,14 @@ import { useDispatch } from "react-redux"
 import { getSingleProductByProductId } from "../../../Toolkit/Slices/ProductSlice"
 
 const ProductDetails = ({ children, data }) => {
-    const dispatch=useDispatch()
+  const dispatch = useDispatch()
   const [openDrawer, setOpenDrawer] = useState(false)
 
-  const handleOpenDrawer=useCallback(()=>{
+  const handleOpenDrawer = useCallback(() => {
     dispatch(getSingleProductByProductId(data?.id))
     setOpenDrawer(true)
-  },[data,dispatch])
+  }, [data, dispatch])
+  
   return (
     <>
       <Link className="link-heading" onClick={handleOpenDrawer}>
@@ -22,7 +23,8 @@ const ProductDetails = ({ children, data }) => {
         open={openDrawer}
         onClose={() => setOpenDrawer(false)}
         closeIcon={null}
-        width={'80%'}
+        width={"80%"}
+        style={{backgroundColor:'#fafafa'}}
       >
         <ProductFormDetail data={data} />
       </Drawer>

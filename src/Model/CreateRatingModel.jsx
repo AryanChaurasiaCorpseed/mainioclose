@@ -90,6 +90,7 @@ const CreateRatingModel = ({ edit, urlRating, urlId }) => {
               }
             />
           </Form.Item>
+          
           <Form.Item
             label="Number of rating"
             name="rating"

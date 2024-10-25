@@ -25,6 +25,7 @@ import {
   vendorsRequestView,
 } from "../../Toolkit/Slices/LeadSlice"
 import { useParams } from "react-router-dom"
+import { getHighestPriorityRole } from "../Common/Commons"
 const { Text, Paragraph } = Typography
 
 const SingleVendorRequestDetails = ({ data }) => {
@@ -33,6 +34,7 @@ const SingleVendorRequestDetails = ({ data }) => {
   const historyList = useSelector(
     (state) => state.leads.singleVendorHistoryList
   )
+  const currentRoles = useSelector((state) => state?.auth?.roles)
   const [openDrawer, setOpenDrawer] = useState(false)
   const [openModal, setOpenModal] = useState(false)
   const [openDocModal, setOpenDocModal] = useState(false)
@@ -172,27 +174,29 @@ const SingleVendorRequestDetails = ({ data }) => {
                     </Flex>
                   )}
 
-                  {data?.clientEmailId && (
-                    <Flex gap={6}>
-                      <Icon
-                        icon="fluent:mail-24-regular"
-                        height={BTN_ICON_HEIGHT}
-                        width={BTN_ICON_WIDTH}
-                      />
-                      <Text>{data?.clientEmailId}</Text>
-                    </Flex>
-                  )}
+                  {data?.clientEmailId &&
+                    getHighestPriorityRole(currentRoles) === "ADMIN" && (
+                      <Flex gap={6}>
+                        <Icon
+                          icon="fluent:mail-24-regular"
+                          height={BTN_ICON_HEIGHT}
+                          width={BTN_ICON_WIDTH}
+                        />
+                        <Text>{data?.clientEmailId}</Text>
+                      </Flex>
+                    )}
 
-                  {data?.contactNumber && (
-                    <Flex gap={6}>
-                      <Icon
-                        icon="fluent:call-24-regular"
-                        height={BTN_ICON_HEIGHT}
-                        width={BTN_ICON_WIDTH}
-                      />
-                      <Text>{data?.contactNumber}</Text>
-                    </Flex>
-                  )}
+                  {data?.contactNumber &&
+                    getHighestPriorityRole(currentRoles) === "ADMIN" && (
+                      <Flex gap={6}>
+                        <Icon
+                          icon="fluent:call-24-regular"
+                          height={BTN_ICON_HEIGHT}
+                          width={BTN_ICON_WIDTH}
+                        />
+                        <Text>{data?.contactNumber}</Text>
+                      </Flex>
+                    )}
 
                   {data?.clientCompanyName && (
                     <Flex gap={6}>

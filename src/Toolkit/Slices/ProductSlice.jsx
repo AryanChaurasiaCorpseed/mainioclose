@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 import { getQuery } from "../../API/GetQuery"
 import { postQuery } from "../../API/PostQuery"
+import { deleteQuery } from "../../API/DeleteQuery"
 
 export const getAllProductData = createAsyncThunk(
   "getAllProductData",
@@ -43,10 +44,68 @@ export const addDocumentProduct = createAsyncThunk(
   }
 )
 
-export const addMilestoneForProduct=createAsyncThunk('addMilestoneForProduct',async(data)=>{
-    const response=await postQuery(`/leadService/api/v1/product/addStageInProduct`,data)
+export const addMilestoneForProduct = createAsyncThunk(
+  "addMilestoneForProduct",
+  async (data) => {
+    const response = await postQuery(
+      `/leadService/api/v1/product/addStageInProduct`,
+      data
+    )
     return response.data
-})
+  }
+)
+
+export const addAmountForProduct = createAsyncThunk(
+  "addAmountForProduct",
+  async (data) => {
+    const response = await postQuery(
+      `/leadService/api/v1/product/addAmountInProduct`,
+      data
+    )
+    return response.data
+  }
+)
+
+export const addTATforProduct = createAsyncThunk(
+  "addTATforProduct",
+  async (data) => {
+    const response = await postQuery(
+      `/leadService/api/v1/product/addTatAndDescription`,
+      data
+    )
+    return response.data
+  }
+)
+
+export const deleteMileStoneForProduct = createAsyncThunk(
+  "deleteMileStoneForProduct",
+  async (id) => {
+    const response = await deleteQuery(
+      `/leadService/api/v1/product/deleteStageFromProduct?productStageId =${id}`
+    )
+    return response.data
+  }
+)
+
+export const deletePriceForProduct = createAsyncThunk(
+  "deletePriceForProduct",
+  async (id) => {
+    const response = await deleteQuery(
+      `/leadService/api/v1/product/deleteAmountFromProduct?productAmountId=${id}`
+    )
+    return response.data
+  }
+)
+
+export const deleteDocumentForProduct = createAsyncThunk(
+  "deleteDocumentForProduct",
+  async (id) => {
+    const response = await deleteQuery(
+      `/leadService/api/v1/product/deleteDocumentFromProduct?productdocumentId=${id}`
+    )
+    return response.data
+  }
+)
 
 const ProductSlice = createSlice({
   name: "product",

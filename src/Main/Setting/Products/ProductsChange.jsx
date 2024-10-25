@@ -1,25 +1,18 @@
-import React, { useEffect, useRef, useState } from "react"
-import { Link, useParams } from "react-router-dom"
-import { useCustomRoute } from "../../../Routes/GetCustomRoutes"
+import React, { useEffect, useState } from "react"
 import { postQuery } from "../../../API/PostQuery"
-import InputErrorComponent from "../../../components/InputErrorComponent"
-import SmallTableScalaton from "../../../components/Scalaton/SmallTableScalaton"
 import { deleteQuery } from "../../../API/DeleteQuery"
-import LongInput from "../../../components/Inputs/LongInput"
-import UserLeadComponent from "../../../Tables/UserLeadComponent"
 import MainHeading from "../../../components/design/MainHeading"
-import { Button, Form, Input, Modal, Select } from "antd"
-import { useDispatch, useSelector } from "react-redux"
+import { Button, Form, Input, Modal } from "antd"
+import { useSelector } from "react-redux"
 import CommonTable from "../../../components/CommonTable"
 import { Icon } from "@iconify/react"
 import OverFlowText from "../../../components/OverFlowText"
 import ProductDetails from "./ProductDetails"
+import "./Product.scss"
 
 const ProductsChange = () => {
-  const { userid } = useParams()
   const productData = useSelector((state) => state.product.productData)
-  const categoryData = useSelector((state) => state.product.categoryData)
-  const dispatch = useDispatch()
+
   const [form] = Form.useForm()
   const [openModal, setOpenModal] = useState(false)
   const [searchText, setSearchText] = useState("")
@@ -204,12 +197,7 @@ const ProductsChange = () => {
         onOk={() => form.submit()}
         okText="Submit"
       >
-        <Form
-          layout="vertical"
-          style={{ maxHeight: "70vh", overflow: "auto" }}
-          form={form}
-          onFinish={handleFinish}
-        >
+        <Form layout="vertical" form={form} onFinish={handleFinish}>
           <Form.Item
             label="Enter product name"
             name="name"
@@ -217,61 +205,6 @@ const ProductsChange = () => {
               { required: true, message: "please enter the product name" },
             ]}
           >
-            <Input />
-          </Form.Item>
-          <Form.Item
-            label="Select category"
-            name="categoryId"
-            rules={[{ required: true, message: "please select category" }]}
-          >
-            <Select
-              allowClear
-              showSearch
-              options={
-                categoryData?.map((item) => ({
-                  label: item?.categoryName,
-                  value: item?.id,
-                })) || []
-              }
-              filterOption={(input, option) =>
-                option.label.toLowerCase().includes(input.toLowerCase())
-              }
-            />
-          </Form.Item>
-          <Form.Item label="Government fees" name="govermentfees">
-            <Input />
-          </Form.Item>
-          <Form.Item label="Government codes" name="govermentCode">
-            <Input />
-          </Form.Item>
-          <Form.Item label="Goverment GST (%)" name="govermentGst">
-            <Input />
-          </Form.Item>
-          <Form.Item label="Professional Fees" name="professionalFees">
-            <Input />
-          </Form.Item>
-          <Form.Item label="Professional Code" name="professionalCode">
-            <Input />
-          </Form.Item>
-          <Form.Item label="Profesional GST (%)" name="profesionalGst">
-            <Input />
-          </Form.Item>
-          <Form.Item label="Service Charge" name="serviceCharge">
-            <Input />
-          </Form.Item>
-          <Form.Item label="Service Code" name="serviceCode">
-            <Input />
-          </Form.Item>
-          <Form.Item label="Service GST (%)" name="serviceGst">
-            <Input />
-          </Form.Item>
-          <Form.Item label="Other Fees" name="otherFees">
-            <Input />
-          </Form.Item>
-          <Form.Item label="Other Code" name="otherCode">
-            <Input />
-          </Form.Item>
-          <Form.Item label="Other GST (%)" name="otherGst">
             <Input />
           </Form.Item>
         </Form>

@@ -1,12 +1,23 @@
-import { Button, Flex, Row, Typography } from "antd"
+import { Button, Flex, notification, Popconfirm, Typography } from "antd"
 import React from "react"
 import CommonTable from "../../../components/CommonTable"
 import DocumentModal from "./ProductModals/DocumentModal"
 import MilestoneModal from "./ProductModals/MilestoneModal"
-import { useSelector } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
+import PriceModal from "./ProductModals/PriceModal"
+import TatModal from "./ProductModals/TatModal"
+import "./Product.scss"
+import {
+  deleteDocumentForProduct,
+  deleteMileStoneForProduct,
+  deletePriceForProduct,
+  getSingleProductByProductId,
+} from "../../../Toolkit/Slices/ProductSlice"
+import { Icon } from "@iconify/react"
 const { Text } = Typography
 
 const ProductFormDetail = ({ data }) => {
+  const dispatch = useDispatch()
   const productDetail = useSelector(
     (state) => state.product.singleProductDetail
   )
@@ -14,53 +25,97 @@ const ProductFormDetail = ({ data }) => {
   const priceColumns = [
     {
       title: "Fees types",
+      dataIndex: "name",
     },
     {
       title: "Amount fee",
+      dataIndex: "fees",
     },
     {
       title: "HSN for tax",
+      dataIndex: "hsnNo",
     },
     {
-      title: "Tax",
+      title: "Tax amount %",
+      dataIndex: "taxAmount",
     },
     {
-      title: "Amount",
+      title: "Delete",
+      render: (_, record) => (
+        <Popconfirm
+          title="Delete the task"
+          description="Are sure to delete it"
+          okText="Yes"
+          onConfirm={() =>
+            dispatch(deletePriceForProduct(record?.id))
+              .then((resp) => {
+                if (resp.meta.requestStatus === "fulfilled") {
+                  notification.success({ message: "Task deleted successfully" })
+                  dispatch(getSingleProductByProductId(data?.id))
+                } else {
+                  notification.error({ message: "Something went wrong !." })
+                }
+              })
+              .catch(() =>
+                notification.error({ message: "Something went wrong !." })
+              )
+          }
+        >
+          <Button size="small" type="text" danger>
+            <Icon icon="fluent:delete-24-regular" />
+          </Button>
+        </Popconfirm>
+      ),
     },
   ]
 
   const milestoneColumns = [
     {
       title: "Milestone name",
-      dataIndex:'name'
+      dataIndex: "name",
     },
     {
       title: "Time",
-      dataIndex:'noOfDays'
+      dataIndex: "noOfDays",
     },
     {
       title: "Steps",
-      dataIndex:'stageNo'
+      dataIndex: "stageNo",
     },
     {
       title: "Assign %",
-      dataIndex:'transferPercent'
+      dataIndex: "transferPercent",
     },
     {
       title: "Price %",
-      dataIndex:'pricePercent'
+      dataIndex: "pricePercent",
     },
     {
-      title: "Action",
+      title: "Delete",
       render: (_, record) => (
-        <Flex>
-          <Button size="small" type="text">
-            view
+        <Popconfirm
+          title="Delete the task"
+          description="Are sure to delete it"
+          okText="Yes"
+          onConfirm={() =>
+            dispatch(deleteMileStoneForProduct(record?.id))
+              .then((resp) => {
+                if (resp.meta.requestStatus === "fulfilled") {
+                  notification.success({ message: "Task deleted successfully" })
+                  dispatch(getSingleProductByProductId(data?.id))
+                } else {
+                  notification.error({ message: "Something went wrong !." })
+                }
+              })
+              .catch(() =>
+                notification.error({ message: "Something went wrong !." })
+              )
+          }
+        >
+          <Button size="small" type="text" danger>
+            <Icon icon="fluent:delete-24-regular" />
           </Button>
-          <Button size="small" type="text">
-            delete
-          </Button>
-        </Flex>
+        </Popconfirm>
       ),
     },
   ]
@@ -78,51 +133,112 @@ const ProductFormDetail = ({ data }) => {
       title: "Type",
       dataIndex: "type",
     },
-
     {
-      title: "Action",
+      title: "Delete",
       render: (_, record) => (
-        <Flex>
-          <Button size="small" type="text">
-            view
+        <Popconfirm
+          title="Delete the task"
+          description="Are sure to delete it"
+          okText="Yes"
+          onConfirm={() =>
+            dispatch(deleteDocumentForProduct(record?.id))
+              .then((resp) => {
+                if (resp.meta.requestStatus === "fulfilled") {
+                  notification.success({ message: "Task deleted successfully" })
+                  dispatch(getSingleProductByProductId(data?.id))
+                } else {
+                  notification.error({ message: "Something went wrong !." })
+                }
+              })
+              .catch(() =>
+                notification.error({ message: "Something went wrong !." })
+              )
+          }
+        >
+          <Button size="small" type="text" danger>
+            <Icon icon="fluent:delete-24-regular" />
           </Button>
-          <Button size="small" type="text">
-            delete
-          </Button>
-        </Flex>
+        </Popconfirm>
       ),
     },
   ]
 
   return (
     <Flex vertical gap={24}>
-      <Flex vertical>
-        <Flex justify="space-between">
+      <Flex vertical className="product-container">
+        <Flex
+          justify="space-between"
+          align="center"
+          className="product-container-header"
+        >
           <Text className="heading-text">Price</Text>
-          <Button size="small" type="text">
-            +
-          </Button>
+          <PriceModal data={data} />
         </Flex>
-        <CommonTable columns={priceColumns} />
+        <CommonTable
+          data={productDetail?.productAmount}
+          columns={priceColumns}
+          scroll={{ y: 120, x: 800 }}
+        />
       </Flex>
 
-      <Flex vertical>
-        <Flex justify="space-between">
+      <Flex vertical className="product-container">
+        <Flex
+          justify="space-between"
+          align="center"
+          className="product-container-header"
+        >
           <Text className="heading-text">Milestone</Text>
           <MilestoneModal data={data} />
         </Flex>
-        <CommonTable data={productDetail?.productStage} columns={milestoneColumns} />
+        <CommonTable
+          data={productDetail?.productStage}
+          columns={milestoneColumns}
+          scroll={{ y: 120 }}
+        />
       </Flex>
 
-      <Flex vertical>
-        <Flex justify="space-between">
+      <Flex vertical className="product-container">
+        <Flex
+          justify="space-between"
+          align="center"
+          className="product-container-header"
+        >
           <Text className="heading-text">Document</Text>
           <DocumentModal data={data} />
         </Flex>
         <CommonTable
           data={productDetail?.productDoc}
           columns={documentColumns}
+          scroll={{ y: 120 }}
         />
+      </Flex>
+
+      <Flex vertical className="product-container">
+        <Flex
+          justify="space-between"
+          align="center"
+          className="product-container-header"
+        >
+          <Text className="heading-text">Turn around time</Text>
+          <TatModal data={data} />
+        </Flex>
+        <Flex>
+          <Flex vertical gap={8} className="product-container-description">
+            <Flex gap={12}>
+              <Text type="secondary">TAT duration :</Text>
+              <Text>{productDetail?.tatValue}</Text>
+            </Flex>
+            <Flex gap={12}>
+              <Text type="secondary">TAT type : </Text>
+              <Text>{productDetail?.tatType}</Text>
+            </Flex>
+
+            <Flex gap={12}>
+              <Text type="secondary">Description :</Text>{" "}
+              <Text>{productDetail?.description}</Text>
+            </Flex>
+          </Flex>
+        </Flex>
       </Flex>
     </Flex>
   )

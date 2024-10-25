@@ -257,6 +257,7 @@ const UrlsPage = () => {
           >
             <Input />
           </Form.Item>
+
           <Form.Item
             label="Select slug"
             name="urlSlug"
@@ -280,6 +281,7 @@ const UrlsPage = () => {
               }
             />
           </Form.Item>
+
           <Form.Item
             label="Select quality"
             name="quality"
@@ -297,6 +299,7 @@ const UrlsPage = () => {
               }
             />
           </Form.Item>
+          
         </Form>
       </Modal>
     </>

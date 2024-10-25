@@ -103,6 +103,7 @@ const Login = () => {
               size="large"
             />
           </Form.Item>
+
           <Form.Item
             label="Password"
             name="password"
@@ -120,6 +121,7 @@ const Login = () => {
               size="large"
             />
           </Form.Item>
+
           {loading === "rejected" ? (
             <Text type="danger"> Invalid email and password . </Text>
           ) : loading === "ipRestricted" ? (
@@ -127,12 +129,14 @@ const Login = () => {
           ) : (
             ""
           )}
+
           <Form.Item valuePropName="checked">
             <Checkbox>Remember me.</Checkbox>{" "}
             <Link className="bl-clr" to="/erp/forgetpassword">
               Forget Password ?
             </Link>
           </Form.Item>
+          
           <Form.Item>
             <Button
               type="primary"

@@ -3,7 +3,6 @@ import React, { useCallback, useState } from "react"
 import { Icon } from "@iconify/react"
 import { useDispatch } from "react-redux"
 import { addDocumentProduct, getSingleProductByProductId } from "../../../../Toolkit/Slices/ProductSlice"
-import { getAllProductData } from "../../../../Toolkit/Slices/LeadSlice"
 
 const DocumentModal = ({ data }) => {
   const dispatch = useDispatch()
