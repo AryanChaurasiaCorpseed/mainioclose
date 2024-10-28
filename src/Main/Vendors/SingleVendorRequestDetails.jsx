@@ -61,9 +61,7 @@ const SingleVendorRequestDetails = ({ data }) => {
 
   const handleUpdateRequest = useCallback(
     (values) => {
-      values.quotationFilePath = values?.quotationFilePath?.map(
-        (item) => item?.response
-      )
+      values.quotationFilePath = values?.quotationFilePath?.[0]?.response
       values.companyName = data?.clientCompanyName
       values.contactPersonName = data?.contactPersonName
       values.vendorCategoryId = data?.vendorCategoryId
