@@ -38,6 +38,9 @@ const SingleVendorRequestDetails = ({ data }) => {
   const [openDrawer, setOpenDrawer] = useState(false)
   const [openModal, setOpenModal] = useState(false)
   const [openDocModal, setOpenDocModal] = useState(false)
+  const [openDocModal1, setOpenDocModal1] = useState(false)
+  const [index, setIndex] = useState(0)
+
   const [form] = Form.useForm()
 
   const normFile = (e) => {
@@ -259,25 +262,69 @@ const SingleVendorRequestDetails = ({ data }) => {
             </Flex>
             <Flex vertical gap={8}>
               <Text className="heading-text">Attachements</Text>
-              <Button onClick={() => setOpenDocModal(true)} size="small">
-                view document
-              </Button>
-              <Modal
-                title="Documents"
-                width={800}
-                centered
-                open={openDocModal}
-                onClose={() => setOpenDocModal(false)}
-                onCancel={() => setOpenDocModal(false)}
-                footer={null}
-              >
-                <iframe
-                  title=""
-                  src={data?.salesAttachmentImage}
-                  height={500}
-                  width={"100%"}
-                />
-              </Modal>
+              <Flex gap={12}>
+                <Flex>
+                  <Button onClick={() => setOpenDocModal(true)} size="small">
+                    Sales attachement
+                  </Button>
+                  <Modal
+                    title="Documents"
+                    width={800}
+                    centered
+                    open={openDocModal}
+                    onClose={() => setOpenDocModal(false)}
+                    onCancel={() => setOpenDocModal(false)}
+                    footer={null}
+                  >
+                    <iframe
+                      title=""
+                      src={data?.salesAttachmentImage?.[index]}
+                      height={500}
+                      width={"100%"}
+                    />
+                    <Flex justify="space-between">
+                      <Button
+                        size="small"
+                        disabled={index === 0}
+                        onClick={() => setIndex((prev) => prev - 1)}
+                      >
+                        Prev
+                      </Button>
+                      <Button
+                        size="small"
+                        disabled={index >= data?.salesAttachmentImage?.length}
+                        onClick={() => setIndex((prev) => prev + 1)}
+                      >
+                        Next
+                      </Button>
+                    </Flex>
+                  </Modal>
+                </Flex>
+                <Flex>
+                  <Button onClick={() => setOpenDocModal1(true)} size="small">
+                    Vendor attachement
+                  </Button>
+                  <Modal
+                    title="Documents"
+                    width={800}
+                    centered
+                    open={openDocModal1}
+                    onClose={() => setOpenDocModal1(false)}
+                    onCancel={() => setOpenDocModal1(false)}
+                    footer={null}
+                  >
+                    <iframe
+                      title=""
+                      src={
+                        historyList?.[historyList?.length - 1]
+                          ?.quotationFilePath
+                      }
+                      height={500}
+                      width={"100%"}
+                    />
+                  </Modal>
+                </Flex>
+              </Flex>
             </Flex>
           </Col>
           <Col span={18}>
@@ -285,69 +332,78 @@ const SingleVendorRequestDetails = ({ data }) => {
               mode="left"
               items={
                 historyList?.length > 0
-                  ? historyList?.map((item) => ({
-                      color:
-                        item?.requestStatus === "Unavailable"
-                          ? "red"
-                          : item?.requestStatus === "Finished"
-                          ? "green"
-                          : item?.requestStatus === "Processing"
-                          ? "orange"
-                          : "blue",
-                      dot:
-                        item?.requestStatus === "Processing" ? (
-                          <Icon icon="fluent:clock-24-regular" color="orange" />
-                        ) : item?.requestStatus === "Finished" ? (
-                          <Icon
-                            icon="fluent:checkmark-24-filled"
-                            color="green"
-                          />
-                        ) : (
-                          ""
-                        ),
-                      label: (
-                        <Flex vertical gap="2" justify="flex-end">
-                          <Text>{item?.requestStatus}</Text>
-                          {item?.raisedBy?.fullName && (
-                            <Text> Raised by : {item?.raisedBy?.fullName}</Text>
-                          )}
-                          {item?.updatedName && (
-                            <Text type="secondary">
-                              Updated by : {item?.updatedName}
-                            </Text>
-                          )}
-                          <Text type="secondary">
-                            {dayjs(item?.updateDate).format(
-                              "YYYY-MM-DD , hh:mm a"
+                  ? historyList?.map((item) => {
+                      return {
+                        color:
+                          item?.requestStatus === "Unavailable"
+                            ? "red"
+                            : item?.requestStatus === "Finished"
+                            ? "green"
+                            : item?.requestStatus === "Processing"
+                            ? "orange"
+                            : "blue",
+                        dot:
+                          item?.requestStatus === "Processing" ? (
+                            <Icon
+                              icon="fluent:clock-24-regular"
+                              color="orange"
+                            />
+                          ) : item?.requestStatus === "Finished" ? (
+                            <Icon
+                              icon="fluent:checkmark-24-filled"
+                              color="green"
+                            />
+                          ) : (
+                            ""
+                          ),
+                        label: (
+                          <Flex vertical gap="2" justify="flex-end">
+                            <Text>{item?.requestStatus}</Text>
+                            {item?.raisedBy?.fullName && (
+                              <Text>
+                                {" "}
+                                Raised by : {item?.raisedBy?.fullName}
+                              </Text>
                             )}
-                          </Text>
-                        </Flex>
-                      ),
-                      children: (
-                        <Flex vertical gap={2}>
-                          {item?.externalVendorPrice && (
-                            <Text>
-                              Price give by vendor : {item?.externalVendorPrice}
+                            {item?.updatedName && (
+                              <Text type="secondary">
+                                Updated by : {item?.updatedName}
+                              </Text>
+                            )}
+                            <Text type="secondary">
+                              {dayjs(item?.updateDate).format(
+                                "YYYY-MM-DD , hh:mm a"
+                              )}
                             </Text>
-                          )}
+                          </Flex>
+                        ),
+                        children: (
+                          <Flex vertical gap={2}>
+                            {item?.externalVendorPrice && (
+                              <Text>
+                                Price give by vendor :{" "}
+                                {item?.externalVendorPrice}
+                              </Text>
+                            )}
 
-                          {item?.internalVendorPrices && (
-                            <Text>
-                              Price given to vendor :{" "}
-                              {item?.internalVendorPrices}
-                            </Text>
-                          )}
+                            {item?.internalVendorPrices && (
+                              <Text>
+                                Price given to vendor :{" "}
+                                {item?.internalVendorPrices}
+                              </Text>
+                            )}
 
-                          {item?.quotationAmount && (
-                            <Text>
-                              Quotation amount : {item?.quotationAmount}
-                            </Text>
-                          )}
+                            {item?.quotationAmount && (
+                              <Text>
+                                Quotation amount : {item?.quotationAmount}
+                              </Text>
+                            )}
 
-                          <Text> {item?.updateDescription}</Text>
-                        </Flex>
-                      ),
-                    }))
+                            <Text> {item?.updateDescription}</Text>
+                          </Flex>
+                        ),
+                      }
+                    })
                   : []
               }
             />

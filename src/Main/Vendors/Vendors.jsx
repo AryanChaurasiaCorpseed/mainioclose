@@ -50,9 +50,8 @@ const VendorForm = ({ leadId, userId }) => {
 
   const handleFinish = useCallback(
     (data) => {
-      data.salesAttachmentReferencePath = data?.salesAttachmentReferencePath?.map(
-        (item) => item?.response
-      )
+      data.salesAttachmentReferencePath =
+        data?.salesAttachmentReferencePath?.map((item) => item?.response)
       let temData = {
         leadId,
         userId,
@@ -78,7 +77,6 @@ const VendorForm = ({ leadId, userId }) => {
     [dispatch, leadId, userId, form]
   )
 
-
   return (
     <>
       <Button type="primary" onClick={() => setOpenModal(true)}>
@@ -100,7 +98,6 @@ const VendorForm = ({ leadId, userId }) => {
           onFinish={handleFinish}
           style={{ maxHeight: "80vh", overflow: "auto" }}
         >
-
           <Form.Item
             label="Client name"
             name="clientName"
@@ -204,7 +201,6 @@ const VendorForm = ({ leadId, userId }) => {
           >
             <Input.TextArea />
           </Form.Item>
-
         </Form>
       </Modal>
     </>
@@ -217,6 +213,7 @@ const Vendors = ({ leadId }) => {
   const [vendor, setVendor] = useState([])
   const [vendorDetail, setVendorDetail] = useState({})
   const [openDocModal, setOpenDocModal] = useState(false)
+  const [index, setIndex] = useState(0)
 
   useEffect(() => {
     if (vendorList?.length > 0) {
@@ -394,13 +391,13 @@ const Vendors = ({ leadId }) => {
                   )}
                 </Flex>
               )}
-              
+
               <Flex vertical gap={8}>
                 {vendorDetail?.vendorReferenceFile && (
                   <>
                     <Text className="heading-text">Attachements</Text>
                     <Button onClick={() => setOpenDocModal(true)} size="small">
-                      view document
+                      View document
                     </Button>
                   </>
                 )}
@@ -415,10 +412,28 @@ const Vendors = ({ leadId }) => {
                 >
                   <iframe
                     title=""
-                    src={vendorDetail?.salesAttachmentImage}
+                    src={vendorDetail?.salesAttachmentImage?.[index]}
                     height={500}
                     width={"100%"}
                   />
+                  <Flex justify="space-between">
+                    <Button
+                      size="small"
+                      disabled={index === 0}
+                      onClick={() => setIndex((prev) => prev - 1)}
+                    >
+                      Prev
+                    </Button>
+                    <Button
+                      size="small"
+                      disabled={
+                        index >= vendorDetail?.salesAttachmentImage?.length
+                      }
+                      onClick={() => setIndex((prev) => prev + 1)}
+                    >
+                      Next
+                    </Button>
+                  </Flex>
                 </Modal>
               </Flex>
             </Flex>
