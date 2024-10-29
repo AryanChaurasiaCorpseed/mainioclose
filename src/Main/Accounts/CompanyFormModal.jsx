@@ -166,6 +166,8 @@ const CompanyFormModal = ({
             comment: editData?.comment,
             secondaryDesignation: editData?.secondaryDesignation,
             primaryDesignation: editData?.primaryDesignation,
+            primaryTitle: editData?.primaryTitle,
+            secondaryTitle: editData?.secondaryTitle,
           })
         }
       })
@@ -662,6 +664,25 @@ const CompanyFormModal = ({
                 {getFieldValue("primaryContact") ? (
                   <>
                     <Form.Item
+                      label="Salutation"
+                      name="primaryTitle"
+                      rules={[
+                        {
+                          required: true,
+                          message: "please select salutation for contact name",
+                        },
+                      ]}
+                    >
+                      <Select
+                        options={[
+                          { label: "Master.", value: "master" },
+                          { label: "Mr.", value: "mr" },
+                          { label: "Mrs.", value: "mrs" },
+                          { label: "Miss.", value: "miss" },
+                        ]}
+                      />
+                    </Form.Item>
+                    <Form.Item
                       label="Contact name"
                       name="contactName"
                       rules={[
@@ -841,6 +862,25 @@ const CompanyFormModal = ({
               <>
                 {getFieldValue("secondaryContact") ? (
                   <>
+                    <Form.Item
+                      label="Salutation"
+                      name="secondaryTitle"
+                      rules={[
+                        {
+                          required: true,
+                          message: "please select salutation for contact name ",
+                        },
+                      ]}
+                    >
+                      <Select
+                        options={[
+                          { label: "Master.", value: "master" },
+                          { label: "Mr.", value: "mr" },
+                          { label: "Mrs.", value: "mrs" },
+                          { label: "Miss.", value: "miss" },
+                        ]}
+                      />
+                    </Form.Item>
                     <Form.Item
                       label="Contact name"
                       name="scontactName"
