@@ -370,7 +370,7 @@ const CompanyFormModal = ({
       userid,
       selectedFilter,
       edit,
-      singleLeadResponseData
+      singleLeadResponseData,
     ]
   )
 
@@ -449,9 +449,7 @@ const CompanyFormModal = ({
             <Form.Item
               label="Select lead"
               name="leadId"
-              rules={[
-                { required: true, message: "please select the lead" },
-              ]}
+              rules={[{ required: true, message: "please select the lead" }]}
             >
               <Select
                 options={
@@ -633,8 +631,12 @@ const CompanyFormModal = ({
           >
             <Input maxLength={10} onChange={handlePanNumberChange} />
           </Form.Item>
-          <Form.Item label="Amount" name="amount">
-            <Input type='number' />
+          <Form.Item
+            label="Amount"
+            name="amount"
+            rules={[{ required: true, message: "please enter amount" }]}
+          >
+            <Input type="number" />
           </Form.Item>
 
           <Divider style={{ color: "#cccccc" }} orientation="center">
