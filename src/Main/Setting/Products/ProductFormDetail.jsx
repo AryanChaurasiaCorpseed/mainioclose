@@ -164,7 +164,10 @@ const ProductFormDetail = ({ data }) => {
   ]
 
   return (
-    <Flex vertical gap={24}>
+    <Flex vertical gap={16}>
+      <Flex className="product-header">
+        <Text className="heading-text">{productDetail?.productName}</Text>
+      </Flex>
       <Flex vertical className="product-container">
         <Flex
           justify="space-between"
@@ -222,12 +225,14 @@ const ProductFormDetail = ({ data }) => {
           <Text className="heading-text">Turn around time</Text>
           <TatModal data={data} />
         </Flex>
+        
         <Flex>
           <Flex vertical gap={8} className="product-container-description">
             <Flex gap={12}>
               <Text type="secondary">TAT duration :</Text>
               <Text>{productDetail?.tatValue}</Text>
             </Flex>
+
             <Flex gap={12}>
               <Text type="secondary">TAT type : </Text>
               <Text>{productDetail?.tatType}</Text>

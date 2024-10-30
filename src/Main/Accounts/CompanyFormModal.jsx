@@ -21,13 +21,12 @@ import {
   getContactById,
 } from "../../Toolkit/Slices/LeadSlice"
 import { getAllUsers } from "../../Toolkit/Slices/UsersSlice"
-import { BTN_ICON_HEIGHT, BTN_ICON_WIDTH } from "../../components/Constants"
 import {
   getAllCompanyByStatus,
   getCompanyDetailsById,
   updateCompanyForm,
 } from "../../Toolkit/Slices/CompanySlice"
-import { json, useParams } from "react-router-dom"
+import { useParams } from "react-router-dom"
 import {
   getHighestPriorityRole,
   playErrorSound,
@@ -633,6 +632,7 @@ const CompanyFormModal = ({
           >
             <Input maxLength={10} onChange={handlePanNumberChange} />
           </Form.Item>
+          
           <Form.Item
             label="Amount"
             name="amount"
@@ -682,6 +682,7 @@ const CompanyFormModal = ({
                         ]}
                       />
                     </Form.Item>
+
                     <Form.Item
                       label="Contact name"
                       name="contactName"
@@ -694,6 +695,7 @@ const CompanyFormModal = ({
                     >
                       <Input />
                     </Form.Item>
+
                     <Form.Item
                       label="Desigination"
                       name="primaryDesignation"
@@ -881,6 +883,7 @@ const CompanyFormModal = ({
                         ]}
                       />
                     </Form.Item>
+
                     <Form.Item
                       label="Contact name"
                       name="scontactName"
