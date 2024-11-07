@@ -93,7 +93,7 @@ const LeadsModule = () => {
       dispatch(getAllLeads({ ...allMultiFilterData, page: dataPage, size }))
       setAllMultiFilterData((prev) => ({ ...prev, page: dataPage, size }))
     },
-    [allMultiFilterData,dispatch]
+    [allMultiFilterData, dispatch]
   )
 
   const handleDeleteMutipleLeads = useCallback(() => {
@@ -122,7 +122,7 @@ const LeadsModule = () => {
         // playErrorSound()
       })
   }, [selectedRowKeys, userid, dispatch, allMultiFilterData])
-            
+
   const currentUserRoles = useSelector((state) => state?.auth?.roles)
   const adminRole = currentUserRoles.includes("ADMIN")
   const allUsers = useSelector((state) => state.user.allUsers)
@@ -276,7 +276,7 @@ const LeadsModule = () => {
           leadId={data?.id}
           data={data}
         >
-          {data?.originalName}
+          {data?.originalName ? data?.originalName : data?.leadName}
         </LeadsDetailsMainPage>
       ),
     },
@@ -570,7 +570,6 @@ const LeadsModule = () => {
       setSearchText("")
     }
   }
-
 
   return (
     <div className="lead-module small-box-padding">
