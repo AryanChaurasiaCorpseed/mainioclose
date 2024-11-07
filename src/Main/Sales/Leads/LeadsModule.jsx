@@ -276,7 +276,7 @@ const LeadsModule = () => {
           leadId={data?.id}
           data={data}
         >
-          {data?.leadName}
+          {data?.originalName}
         </LeadsDetailsMainPage>
       ),
     },
