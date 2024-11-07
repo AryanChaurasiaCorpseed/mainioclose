@@ -44,84 +44,6 @@ const ProductsChange = () => {
       ),
     },
     {
-      dataIndex: "govermentfees",
-      title: "Govt. fees",
-      render: (_, records) => (
-        <OverFlowText>{records?.govermentfees}</OverFlowText>
-      ),
-    },
-    {
-      dataIndex: "govermentCode",
-      title: "Govt. code",
-      render: (_, records) => (
-        <OverFlowText>{records?.govermentCode}</OverFlowText>
-      ),
-    },
-    {
-      dataIndex: "govermentGst",
-      title: "Govt. GST (%)",
-      render: (_, records) => (
-        <OverFlowText>{records?.govermentGst}</OverFlowText>
-      ),
-    },
-    {
-      dataIndex: "professionalFees",
-      title: "Prof. fees",
-      render: (_, records) => (
-        <OverFlowText>{records?.professionalFees}</OverFlowText>
-      ),
-    },
-    {
-      dataIndex: "professionalCode",
-      title: "Prof. code",
-      render: (_, records) => (
-        <OverFlowText>{records?.professionalCode}</OverFlowText>
-      ),
-    },
-    {
-      dataIndex: "profesionalGst",
-      title: "Prof. GST (%)",
-      render: (_, records) => (
-        <OverFlowText>{records?.profesionalGst}</OverFlowText>
-      ),
-    },
-    {
-      dataIndex: "serviceCharge",
-      title: "Service charge",
-      render: (_, records) => (
-        <OverFlowText>{records?.serviceCharge}</OverFlowText>
-      ),
-    },
-    {
-      dataIndex: "serviceCode",
-      title: "Service code",
-      render: (_, records) => (
-        <OverFlowText>{records?.serviceCode}</OverFlowText>
-      ),
-    },
-    {
-      dataIndex: "serviceGst",
-      title: "Service GST (%)",
-      render: (_, records) => (
-        <OverFlowText>{records?.serviceGst}</OverFlowText>
-      ),
-    },
-    {
-      dataIndex: "otherFees",
-      title: "Other fees",
-      render: (_, records) => <OverFlowText>{records?.otherFees}</OverFlowText>,
-    },
-    {
-      dataIndex: "otherCode",
-      title: "Other code",
-      render: (_, records) => <OverFlowText>{records?.otherCode}</OverFlowText>,
-    },
-    {
-      dataIndex: "otherGst",
-      title: "Other GST (%)",
-      render: (_, records) => <OverFlowText>{records?.otherGst}</OverFlowText>,
-    },
-    {
       dataIndex: "Action",
       title: "Delete",
       render: (_, props) => (
@@ -185,7 +107,7 @@ const ProductsChange = () => {
       <CommonTable
         data={filteredData}
         columns={ProductCol}
-        scroll={{ y: 500, x: 2500 }}
+        scroll={{ y: 500}}
       />
 
       <Modal

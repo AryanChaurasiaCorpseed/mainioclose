@@ -19,7 +19,7 @@ const CommonTable = ({
   totalCount,
   pageSize,
   onRow,
-  getCheckboxProps
+  getCheckboxProps,
 }) => {
   const tableContainerRef = useRef(null)
   const scrollIntervalRef = useRef(null)
@@ -141,7 +141,7 @@ const CommonTable = ({
                 current={page}
                 pageSize={pageSize}
                 defaultPageSize={50}
-                pageSizeOptions={[50, 100, 150]}
+                pageSizeOptions={[50, 100, 150, 500, 1000, 2000, 5000]}
                 total={totalCount}
                 onChange={(e, x) => handlePagination(e, x)}
               />

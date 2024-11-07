@@ -1,20 +1,35 @@
-import React, { useEffect, useState } from "react"
+import React, { useCallback, useEffect, useState } from "react"
 import MainHeading from "../../../components/design/MainHeading"
 import { Button, Form, Input, Modal, notification, Select } from "antd"
 import CommonTable from "../../../components/CommonTable"
 import { useDispatch, useSelector } from "react-redux"
-import { createSubIndustry, getAllSubIndustry, getAllSubsubIndustry } from "../../../Toolkit/Slices/IndustrySlice"
+import {
+  createSubIndustry,
+  getAllSubIndustry,
+  getAllSubIndustryWithPagination,
+  getAllSubIndustyCount,
+  getAllSubsubIndustry,
+} from "../../../Toolkit/Slices/IndustrySlice"
 
 const SubIndustry = () => {
   const dispatch = useDispatch()
   const [form] = Form.useForm()
-  const allSubsubIndustry = useSelector((state) => state.industry.allSubsubIndustry)
-  const allSubIndustry = useSelector((state) => state.industry.allSubIndustry)
+  const allSubsubIndustry = useSelector(
+    (state) => state.industry.allSubsubIndustry
+  )
+  const allSubIndustry = useSelector((state) => state.industry.allSubIndustryWithPage)
+  const totalCount = useSelector((state) => state.industry.allSubIndustryCount)
   const [openModal, setOpenModal] = useState(false)
+  const [paginationData, setPaginationData] = useState({
+    page: 1,
+    size: 50,
+  })
 
   useEffect(() => {
     dispatch(getAllSubsubIndustry())
     dispatch(getAllSubIndustry())
+    dispatch(getAllSubIndustryWithPagination(paginationData))
+    dispatch(getAllSubIndustyCount())
   }, [dispatch])
 
   const handleFinish = (values) => {
@@ -22,7 +37,7 @@ const SubIndustry = () => {
       .then((resp) => {
         if (resp.meta.requestStatus === "fulfilled") {
           notification.success({ message: "Industry created successfully" })
-          dispatch(getAllSubIndustry())
+          dispatch(getAllSubIndustryWithPagination(paginationData))
           setOpenModal(false)
           form.resetFields()
         } else {
@@ -45,6 +60,19 @@ const SubIndustry = () => {
     },
   ]
 
+  const handlePagination = useCallback(
+    (dataPage, size) => {
+      dispatch(
+        getAllSubIndustryWithPagination({
+          page: dataPage,
+          size: size,
+        })
+      )
+      setPaginationData({ size: size, page: dataPage })
+    },
+    [dispatch]
+  )
+
   return (
     <div>
       <div className="create-user-box">
@@ -58,7 +86,12 @@ const SubIndustry = () => {
         <CommonTable
           data={allSubIndustry}
           columns={columns}
-          scroll={{ y: 600 }}
+          scroll={{ y: 550 }}
+          pagination={true}
+          totalCount={totalCount}
+          pageSize={paginationData?.size}
+          page={paginationData?.page}
+          handlePagination={handlePagination}
         />
       </div>
       <Modal
@@ -96,7 +129,7 @@ const SubIndustry = () => {
               showSearch
               allowClear
               mode="multiple"
-              maxTagCount='responsive'
+              maxTagCount="responsive"
               options={
                 allSubsubIndustry?.length > 0
                   ? allSubsubIndustry?.map((item) => ({

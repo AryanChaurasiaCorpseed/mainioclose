@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useCallback, useEffect, useState } from "react"
 import CommonTable from "../../../components/CommonTable"
 import { Button, Form, Input, Modal, notification } from "antd"
 import MainHeading from "../../../components/design/MainHeading"
@@ -6,16 +6,22 @@ import { useDispatch, useSelector } from "react-redux"
 import {
   createIndustry,
   getAllIndustry,
+  getAllIndustryDataWithPagination,
 } from "../../../Toolkit/Slices/IndustrySlice"
 
 const IndustryData = () => {
   const dispatch = useDispatch()
   const [form] = Form.useForm()
   const [openModal, setOpenModal] = useState(false)
-  const allIndustry = useSelector((state) => state.industry.allIndustry)
+  const allIndustry = useSelector((state) => state.industry.allIndustryDataWithPage)
+  const totalCount = useSelector((state) => state.industry.allIndustryDataCount)
+  const [paginationData, setPaginationData] = useState({
+    page: 1,
+    size: 50,
+  })
 
   useEffect(() => {
-    dispatch(getAllIndustry())
+    dispatch(getAllIndustryDataWithPagination(paginationData))
   }, [dispatch])
 
   const handleFinish = (values) => {
@@ -46,6 +52,20 @@ const IndustryData = () => {
     },
   ]
 
+
+  const handlePagination = useCallback(
+    (dataPage, size) => {
+      dispatch(
+        getAllIndustryDataWithPagination({
+          page: dataPage,
+          size: size,
+        })
+      )
+      setPaginationData({ size: size, page: dataPage })
+    },
+    [dispatch]
+  )
+
   return (
     <div>
       <div className="create-user-box">
@@ -56,7 +76,16 @@ const IndustryData = () => {
       </div>
 
       <div className="table-responsive">
-        <CommonTable data={allIndustry} columns={columns} scroll={{ y: 600 }} />
+        <CommonTable
+          data={allIndustry}
+          columns={columns}
+          scroll={{ y: 550 }}
+          pagination={true}
+          totalCount={totalCount}
+          pageSize={paginationData?.size}
+          page={paginationData?.page}
+          handlePagination={handlePagination}
+        />
       </div>
       <Modal
         title={"Add industry data"}

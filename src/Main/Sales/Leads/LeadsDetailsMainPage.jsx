@@ -1,7 +1,6 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react"
+import React, { useCallback, useEffect, useState } from "react"
 import {
   getAllChildLeads,
-  getAllLeads,
   getAllTaskData,
   getVendorDetailList,
   handleViewHistory,
@@ -16,6 +15,7 @@ import { LeadActivityPage } from "./LeadActivityPage"
 import LeadHistory from "./LeadHistory"
 import Vendors from "../../Vendors/Vendors"
 import LeadChilds from "./LeadChilds"
+import LeadEstimate from "./LeadEstimate"
 
 const LeadsDetailsMainPage = ({
   children,
@@ -73,8 +73,13 @@ const LeadsDetailsMainPage = ({
         key: "history",
         children: <LeadHistory leadid={currLeadId} />,
       },
+      {
+        label:'Estimate',
+        key:'estimate',
+        children:<LeadEstimate leadid={currLeadId}  />
+      }
     ]
-  }, [currLeadId, singleLeadResponseData, leadId])
+  }, [currLeadId, singleLeadResponseData])
 
   const handleOnChange = useCallback(
     (e) => {

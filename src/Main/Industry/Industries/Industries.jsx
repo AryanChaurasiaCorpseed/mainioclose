@@ -1,9 +1,11 @@
-import React, { useEffect, useState } from "react"
+import React, { useCallback, useEffect, useState } from "react"
 import CommonTable from "../../../components/CommonTable"
 import { Button, Form, Input, Modal, notification, Select } from "antd"
 import { useDispatch, useSelector } from "react-redux"
 import {
+  allIndstriesCount,
   createMainIndustry,
+  getAllIndustriesWithPagination,
   getAllMainIndustry,
 } from "../../../Toolkit/Slices/IndustrySlice"
 import MainHeading from "../../../components/design/MainHeading"
@@ -13,10 +15,17 @@ const Industries = () => {
   const [form] = Form.useForm()
   const [openModal, setOpenModal] = useState(false)
   const allSubIndustry = useSelector((state) => state.industry.allSubIndustry)
-  const allMainIndustry = useSelector((state) => state.industry.allMainIndustry)
+  const allMainIndustry = useSelector((state) => state.industry.allIndustriesWithPage)
+  const totalCount=useSelector((state) => state.industry.allIndustryCount)
+  const [paginationData, setPaginationData] = useState({
+    page: 1,
+    size: 50,
+  })
+
 
   useEffect(() => {
-    dispatch(getAllMainIndustry())
+    dispatch(getAllIndustriesWithPagination(paginationData))
+    dispatch(allIndstriesCount())
   }, [dispatch])
 
   const handleFinish = (values) => {
@@ -24,7 +33,7 @@ const Industries = () => {
       .then((resp) => {
         if (resp.meta.requestStatus === "fulfilled") {
           notification.success({ message: "Industry created successfully" })
-          dispatch(getAllMainIndustry())
+          dispatch(getAllIndustriesWithPagination(paginationData))
           setOpenModal(false)
           form.resetFields()
         } else {
@@ -47,6 +56,24 @@ const Industries = () => {
     },
   ]
 
+
+  const handlePagination = useCallback(
+    (dataPage, size) => {
+      dispatch(
+        getAllMainIndustry({
+          page: dataPage,
+          size: size,
+        })
+      )
+      setPaginationData({ size: size, page: dataPage })
+    },
+    [dispatch]
+  )
+
+
+
+
+
   return (
     <div>
       <div className="create-user-box">
@@ -57,7 +84,16 @@ const Industries = () => {
       </div>
 
       <div className="table-responsive">
-        <CommonTable data={allMainIndustry} columns={columns} scroll={{ y: 600 }} />
+        <CommonTable
+          data={allMainIndustry}
+          columns={columns}
+          scroll={{ y: 550 }}
+          pagination={true}
+          totalCount={totalCount}
+          pageSize={paginationData?.size}
+          page={paginationData?.page}
+          handlePagination={handlePagination}
+        />
       </div>
       <Modal
         title={"Add industry"}
@@ -94,7 +130,7 @@ const Industries = () => {
             <Select
               showSearch
               allowClear
-              maxTagCount='responsive'
+              maxTagCount="responsive"
               mode="multiple"
               options={
                 allSubIndustry?.length > 0
@@ -116,4 +152,3 @@ const Industries = () => {
 }
 
 export default Industries
-

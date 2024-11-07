@@ -33,6 +33,12 @@ import {
   playSuccessSound,
   playWarningSound,
 } from "../Common/Commons"
+import {
+  getAllMainIndustry,
+  getIndustryDataBySubSubIndustryId,
+  getSubIndustryByIndustryId,
+  getSubSubIndustryBySubIndustryId,
+} from "../../Toolkit/Slices/IndustrySlice"
 
 const CompanyFormModal = ({
   edit,
@@ -60,6 +66,16 @@ const CompanyFormModal = ({
   const contactDetail = useSelector((state) => state?.leads?.contactDetail)
   const companyDetail = useSelector((state) => state?.company?.companyDetail)
   const page = useSelector((state) => state.company.page)
+  const allIndustry = useSelector((state) => state.industry.allMainIndustry)
+  const subIndustryListById = useSelector(
+    (state) => state.industry.subIndustryListByIndustryId
+  )
+  const subSubIndustryListById = useSelector(
+    (state) => state.industry.subSubIndustryListBySubIndustryId
+  )
+  const industryDataListById = useSelector(
+    (state) => state.industry.industryDataListBySubSubIndustryId
+  )
   const [openModal, setOpenModal] = useState(false)
   const [formLoading, setFormLoading] = useState("")
   const [gstMand, setGstMand] = useState("")
@@ -78,6 +94,8 @@ const CompanyFormModal = ({
   }
 
   const handleButtonClick = useCallback(() => {
+    console.log("askcjlksslkdjcsijhg")
+    dispatch(getAllMainIndustry())
     dispatch(
       getCompanyDetailsByLeadId(data?.id ? data?.id : data?.leadId)
     ).then((resp) => {
@@ -115,9 +133,12 @@ const CompanyFormModal = ({
 
   const handleEditBtnClick = useCallback(() => {
     if (editInfo?.id !== undefined) {
+      dispatch(getAllMainIndustry())
       dispatch(getCompanyDetailsById(editInfo?.id)).then((resp) => {
         if (resp.meta.requestStatus === "fulfilled") {
           let editData = resp?.payload
+          dispatch(getSubIndustryByIndustryId(editData?.industry))
+          dispatch(getSubSubIndustryBySubIndustryId(editData?.subIndustry))
           form.setFieldsValue({
             isPresent: editData?.isPresent,
             companyName: editData?.companyName,
@@ -507,6 +528,103 @@ const CompanyFormModal = ({
           </Form.Item>
 
           <Form.Item
+            label="Select industry"
+            name="industry"
+            rules={[{ required: true, message: "please select the industry" }]}
+          >
+            <Select
+              allowClear
+              showSearch
+              options={
+                allIndustry?.length > 0
+                  ? allIndustry?.map((item) => ({
+                      label: item?.name,
+                      value: item?.id,
+                    }))
+                  : []
+              }
+              filterOption={(input, option) =>
+                option.label.toLowerCase().includes(input.toLowerCase())
+              }
+              onChange={(e) => dispatch(getSubIndustryByIndustryId(e))}
+            />
+          </Form.Item>
+          <Form.Item
+            label="Select sub-industry"
+            name="subIndustry"
+            rules={[
+              { required: true, message: "please select the sub industry" },
+            ]}
+          >
+            <Select
+              allowClear
+              showSearch
+              options={
+                subIndustryListById?.length > 0
+                  ? subIndustryListById?.map((item) => ({
+                      label: item?.name,
+                      value: item?.id,
+                    }))
+                  : []
+              }
+              filterOption={(input, option) =>
+                option.label.toLowerCase().includes(input.toLowerCase())
+              }
+              onChange={(e) => dispatch(getSubSubIndustryBySubIndustryId(e))}
+            />
+          </Form.Item>
+          <Form.Item
+            label="Select sub-sub-industry"
+            name="subsubIndustry"
+            rules={[
+              { required: true, message: "please select the sub sub industry" },
+            ]}
+          >
+            <Select
+              allowClear
+              showSearch
+              options={
+                subSubIndustryListById?.length > 0
+                  ? subSubIndustryListById?.map((item) => ({
+                      label: item?.name,
+                      value: item?.id,
+                    }))
+                  : []
+              }
+              filterOption={(input, option) =>
+                option.label.toLowerCase().includes(input.toLowerCase())
+              }
+              onChange={(e) => dispatch(getIndustryDataBySubSubIndustryId(e))}
+            />
+          </Form.Item>
+
+          <Form.Item
+            label="Select industry data"
+            name="industrydata"
+            rules={[
+              { required: true, message: "please select the industry data" },
+            ]}
+          >
+            <Select
+              allowClear
+              showSearch
+              mode="multiple"
+              maxTagCount="responsive"
+              options={
+                industryDataListById?.length > 0
+                  ? industryDataListById?.map((item) => ({
+                      label: item?.name,
+                      value: item?.id,
+                    }))
+                  : []
+              }
+              filterOption={(input, option) =>
+                option.label.toLowerCase().includes(input.toLowerCase())
+              }
+            />
+          </Form.Item>
+
+          <Form.Item
             label="Upload gst document"
             name="gstDocuments"
             getValueFromEvent={normFile}
@@ -632,7 +750,7 @@ const CompanyFormModal = ({
           >
             <Input maxLength={10} onChange={handlePanNumberChange} />
           </Form.Item>
-          
+
           <Form.Item
             label="Amount"
             name="amount"

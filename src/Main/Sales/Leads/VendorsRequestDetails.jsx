@@ -125,9 +125,7 @@ const VendorsRequestDetails = ({ data, children }) => {
                       height={BTN_ICON_HEIGHT}
                       width={BTN_ICON_WIDTH}
                     />
-                    <Text>
-                      Sub category name : {data?.subCategoryName}
-                    </Text>
+                    <Text>Sub category name : {data?.subCategoryName}</Text>
                   </Flex>
                 )}
 
@@ -175,7 +173,7 @@ const VendorsRequestDetails = ({ data, children }) => {
                         <Flex vertical gap="2" justify="flex-end">
                           <Text>{item?.requestStatus}</Text>
                           <Text type="secondary">
-                            by {item?.user?.fullName}
+                            Assigned to : {data?.assigneeName}
                           </Text>
                           <Text type="secondary">
                             {dayjs(item?.updateDate).format(

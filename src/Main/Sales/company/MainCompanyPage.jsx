@@ -58,6 +58,7 @@ const MainCompanyPage = () => {
     page: 1,
     size: 50,
   })
+  const [filterUserId, setFilterUserId] = useState("")
 
   useEffect(() => {
     dispatch(
@@ -65,7 +66,7 @@ const MainCompanyPage = () => {
         id: currUser?.id,
         page: paginationData?.page,
         size: paginationData?.size,
-        filterUserId: 0,
+        filterUserId,
       })
     )
   }, [dispatch, currUser])
@@ -93,12 +94,12 @@ const MainCompanyPage = () => {
           id: currUser?.id,
           page: dataPage,
           size: size,
-          filterUserId: 0,
+          filterUserId: filterUserId,
         })
       )
       setPaginationData({ size: size, page: dataPage })
     },
-    [currUser, dispatch]
+    [currUser, dispatch, filterUserId]
   )
 
   const handleUpdateAssignee = useCallback(
@@ -119,7 +120,7 @@ const MainCompanyPage = () => {
                 id: currUser?.id,
                 page: paginationData?.page,
                 size: paginationData?.size,
-                filterUserId: 0,
+                filterUserId,
               })
             )
           } else {
@@ -130,7 +131,7 @@ const MainCompanyPage = () => {
           notification.error({ message: "Something went wrong !." })
         })
     },
-    [dispatch, currUser, paginationData]
+    [dispatch, currUser, paginationData, filterUserId]
   )
 
   const filterCompanyBasedOnUser = useCallback(
@@ -144,6 +145,7 @@ const MainCompanyPage = () => {
             filterUserId,
           })
         )
+        setFilterUserId(filterUserId)
       }
     },
     [paginationData, dispatch, currUser]
@@ -288,7 +290,6 @@ const MainCompanyPage = () => {
         <OverFlowText>{record?.primaryContact?.designation}</OverFlowText>
       ),
     },
-
     {
       dataIndex: "contactNo",
       title: "Contact no.",
@@ -464,7 +465,7 @@ const MainCompanyPage = () => {
 
   return (
     <TableOutlet>
-      <MainHeading data={`All company (${allCompnay?.length})`} />
+      <MainHeading data={`All company (${allCompnay?.[0]?.total})`} />
       <Flex justify="space-between" align="center">
         <div className="flex-verti-center-hori-start mt-2">
           <Search
@@ -486,7 +487,7 @@ const MainCompanyPage = () => {
               allowClear
               style={{ width: "250px" }}
               placeholder="Filter out companies"
-              value={assigneeId}
+              value={filterUserId === "" ? null : filterUserId}
               options={
                 allUsers?.length > 0
                   ? allUsers?.map((item) => ({
@@ -505,7 +506,7 @@ const MainCompanyPage = () => {
                     id: currUser?.id,
                     page: paginationData?.page,
                     size: paginationData?.size,
-                    filterUserId: 0,
+                    filterUserId: "",
                   })
                 )
               }
@@ -607,6 +608,7 @@ const MainCompanyPage = () => {
                         allowClear
                         size="small"
                         style={{ width: 200 }}
+                        value={assigneeId}
                         placeholder="select user"
                         options={
                           leadUserNew?.length > 0
@@ -617,6 +619,7 @@ const MainCompanyPage = () => {
                             : []
                         }
                         onChange={(e) => setAssigneeId(e)}
+                        onClear={() => setAssigneeId(null)}
                         filterOption={(input, option) =>
                           option.label
                             .toLowerCase()
