@@ -188,6 +188,10 @@ const CompanyFormModal = ({
             primaryDesignation: editData?.primaryDesignation,
             primaryTitle: editData?.primaryTitle,
             secondaryTitle: editData?.secondaryTitle,
+            industry: editData?.industry,
+            subIndustry: editData?.subIndustry,
+            subsubIndustry: editData?.subsubIndustry,
+            industrydata: editData?.industryDataList,
           })
         }
       })
@@ -546,7 +550,14 @@ const CompanyFormModal = ({
               filterOption={(input, option) =>
                 option.label.toLowerCase().includes(input.toLowerCase())
               }
-              onChange={(e) => dispatch(getSubIndustryByIndustryId(e))}
+              onChange={(e) => {
+                dispatch(getSubIndustryByIndustryId(e))
+                form.resetFields([
+                  "industrydata",
+                  "subsubIndustry",
+                  "subIndustry",
+                ])
+              }}
             />
           </Form.Item>
           <Form.Item
@@ -570,7 +581,10 @@ const CompanyFormModal = ({
               filterOption={(input, option) =>
                 option.label.toLowerCase().includes(input.toLowerCase())
               }
-              onChange={(e) => dispatch(getSubSubIndustryBySubIndustryId(e))}
+              onChange={(e) => {
+                dispatch(getSubSubIndustryBySubIndustryId(e))
+                form.resetFields(["industrydata", "subsubIndustry"])
+              }}
             />
           </Form.Item>
           <Form.Item
@@ -594,7 +608,10 @@ const CompanyFormModal = ({
               filterOption={(input, option) =>
                 option.label.toLowerCase().includes(input.toLowerCase())
               }
-              onChange={(e) => dispatch(getIndustryDataBySubSubIndustryId(e))}
+              onChange={(e) => {
+                dispatch(getIndustryDataBySubSubIndustryId(e))
+                form.resetFields(["industrydata"])
+              }}
             />
           </Form.Item>
 
