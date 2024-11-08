@@ -107,6 +107,21 @@ export const deleteDocumentForProduct = createAsyncThunk(
   }
 )
 
+export const createProduct = createAsyncThunk("createProduct", async (data) => {
+  const response = await postQuery(
+    `/leadService/api/v1/product/createProduct`,
+    data
+  )
+  return response.data
+})
+
+export const deleteProduct = createAsyncThunk("deleteProduct", async (id) => {
+  const response = await deleteQuery(
+    `/leadService/api/v1/product/delete?id=${id}`
+  )
+  return response.data
+})
+
 const ProductSlice = createSlice({
   name: "product",
   initialState: {

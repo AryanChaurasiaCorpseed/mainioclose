@@ -1,0 +1,178 @@
+import React, { useEffect, useState } from "react"
+import MainHeading from "../../../components/design/MainHeading"
+import CommonTable from "../../../components/CommonTable"
+import { Button, Form, Input, Modal, notification, Popconfirm } from "antd"
+import { useDispatch, useSelector } from "react-redux"
+import { Icon } from "@iconify/react"
+import OverFlowText from "../../../components/OverFlowText"
+import {
+  createClientDesigination,
+  deleteClientDesigination,
+  getClientDesiginationList,
+  updateClientDesigination,
+} from "../../../Toolkit/Slices/SettingSlice"
+
+const ClientDesigination = () => {
+  const [form] = Form.useForm()
+  const dispatch = useDispatch()
+  const desiginationList = useSelector(
+    (state) => state.setting.clientDesiginationList
+  )
+
+  const [openModal, setOpenModal] = useState(false)
+  const [searchText, setSearchText] = useState("")
+  const [filteredData, setFilteredData] = useState([])
+  const [editId, setEditId] = useState(null)
+
+  useEffect(() => {
+    dispatch(getClientDesiginationList())
+  }, [])
+
+  useEffect(() => {
+    setFilteredData(desiginationList)
+  }, [desiginationList])
+
+  const handleSearch = (e) => {
+    const value = e.target.value
+    setSearchText(value)
+    const filtered = desiginationList?.filter((item) =>
+      Object.values(item)?.some((val) =>
+        String(val)?.toLowerCase()?.includes(value?.toLowerCase())
+      )
+    )
+    setFilteredData(filtered)
+  }
+
+  const columns = [
+    {
+      title: "Id",
+      dataIndex: "id",
+    },
+    {
+      title: "Name",
+      dataIndex: "name",
+    },
+    {
+      title: "Edit",
+      dataIndex: "edit",
+      render: (_, data) => (
+        <Button
+          type="text"
+          size="small"
+          onClick={() => {
+            form.setFieldsValue({ name: data?.name })
+            setOpenModal(true)
+            setEditId(data?.id)
+          }}
+        >
+          <Icon icon="fluent:edit-24-regular" />
+        </Button>
+      ),
+    },
+    {
+      title: "Delete",
+      dataIndex: "delete",
+      render: (_, status) => (
+        <Popconfirm title='Delete desigination' description='Are you sure to delete this desigination' onConfirm={()=>{
+            dispatch(deleteClientDesigination(status?.id)).then((res)=>{
+                if(res.meta.requestStatus==='fulfilled'){
+                    notification.success({message:'Desigination deleted successfully'})
+                    dispatch(getClientDesiginationList())
+                }else{
+                    notification.error({message:'Something went wrong!.'})
+                }
+            }).catch(()=>notification.error({message:'Something went wrong!.'}))
+        }}>
+            <Button type="text" danger size="small" >
+          <Icon icon="fluent:delete-20-regular" />
+        </Button>
+        </Popconfirm>
+      ),
+    },
+  ]
+
+  const handleFinish = (values) => {
+    if (editId) {
+      dispatch(updateClientDesigination({ id: editId, ...values }))
+        .then((resp) => {
+          if (resp.meta.requestStatus === "fulfilled") {
+            notification.success({
+              message: "Desigination updated successfully !.",
+            })
+            dispatch(getClientDesiginationList())
+            setOpenModal(false)
+            setEditId(null)
+          } else {
+            notification.error({ message: "Something went wrong !." })
+          }
+        })
+        .catch(() => notification.error({ message: "Something went wrong !." }))
+    } else {
+      dispatch(createClientDesigination(values))
+        .then((resp) => {
+          if (resp.meta.requestStatus === "fulfilled") {
+            notification.success({
+              message: "Desigination added successfully !.",
+            })
+            dispatch(getClientDesiginationList())
+            setOpenModal(false)
+          } else {
+            notification.error({ message: "Something went wrong !." })
+          }
+        })
+        .catch(() => notification.error({ message: "Something went wrong !." }))
+    }
+  }
+
+  return (
+    <>
+      <div className="create-user-box">
+        <MainHeading data={`Client desigination`} />
+        <Button type="primary" size="small" onClick={() => setOpenModal(true)}>
+          Create client desigination
+        </Button>
+      </div>
+      <div className="setting-table">
+        <div className="flex-verti-center-hori-start mt-2">
+          <Input
+            value={searchText}
+            size="small"
+            onChange={handleSearch}
+            style={{ width: "220px" }}
+            placeholder="search"
+            prefix={<Icon icon="fluent:search-24-regular" />}
+          />
+        </div>
+        <div className="table-responsive">
+          <CommonTable
+            data={filteredData}
+            columns={columns}
+            scroll={{ y: 550 }}
+          />
+        </div>
+      </div>
+      <Modal
+        title={editId ? "Edit desigination" : "Create desigination"}
+        open={openModal}
+        onCancel={() => setOpenModal(false)}
+        onClose={() => setOpenModal(false)}
+        okText="Submit"
+        onOk={() => form.submit()}
+      >
+        <Form layout="vertical" form={form} onFinish={handleFinish}>
+          <Form.Item
+            label="Enter desigination"
+            name="name"
+            rules={[
+              { required: true, message: "please enter the lead category" },
+            ]}
+          >
+            <Input />
+          </Form.Item>
+        </Form>
+      </Modal>
+    </>
+  )
+}
+
+export default ClientDesigination

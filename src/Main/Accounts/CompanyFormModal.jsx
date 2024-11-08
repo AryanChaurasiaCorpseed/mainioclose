@@ -9,7 +9,7 @@ import {
   Switch,
   Upload,
 } from "antd"
-import React, { useCallback, useState } from "react"
+import React, { useCallback, useEffect, useState } from "react"
 import { Icon } from "@iconify/react"
 import { useDispatch, useSelector } from "react-redux"
 import {
@@ -39,6 +39,7 @@ import {
   getSubIndustryByIndustryId,
   getSubSubIndustryBySubIndustryId,
 } from "../../Toolkit/Slices/IndustrySlice"
+import { getClientDesiginationList } from "../../Toolkit/Slices/SettingSlice"
 
 const CompanyFormModal = ({
   edit,
@@ -76,6 +77,9 @@ const CompanyFormModal = ({
   const industryDataListById = useSelector(
     (state) => state.industry.industryDataListBySubSubIndustryId
   )
+  const desiginationList = useSelector(
+    (state) => state.setting.clientDesiginationList
+  )
   const [openModal, setOpenModal] = useState(false)
   const [formLoading, setFormLoading] = useState("")
   const [gstMand, setGstMand] = useState("")
@@ -94,8 +98,8 @@ const CompanyFormModal = ({
   }
 
   const handleButtonClick = useCallback(() => {
-    console.log("askcjlksslkdjcsijhg")
     dispatch(getAllMainIndustry())
+    dispatch(getClientDesiginationList())
     dispatch(
       getCompanyDetailsByLeadId(data?.id ? data?.id : data?.leadId)
     ).then((resp) => {
@@ -134,6 +138,7 @@ const CompanyFormModal = ({
   const handleEditBtnClick = useCallback(() => {
     if (editInfo?.id !== undefined) {
       dispatch(getAllMainIndustry())
+      dispatch(getClientDesiginationList())
       dispatch(getCompanyDetailsById(editInfo?.id)).then((resp) => {
         if (resp.meta.requestStatus === "fulfilled") {
           let editData = resp?.payload
@@ -831,7 +836,7 @@ const CompanyFormModal = ({
                       <Input />
                     </Form.Item>
 
-                    <Form.Item
+                    {/* <Form.Item
                       label="Desigination"
                       name="primaryDesignation"
                       rules={[
@@ -842,6 +847,34 @@ const CompanyFormModal = ({
                       ]}
                     >
                       <Input />
+                    </Form.Item> */}
+                    <Form.Item
+                      label="Desigination"
+                      name="primaryDesignation"
+                      rules={[
+                        {
+                          required: true,
+                          message: "please enter desigination",
+                        },
+                      ]}
+                    >
+                      <Select
+                        allowClear
+                        showSearch
+                        options={
+                          desiginationList?.length > 0
+                            ? desiginationList?.map((item) => ({
+                                label: item?.name,
+                                value: item?.id,
+                              }))
+                            : []
+                        }
+                        filterOption={(input, option) =>
+                          option.label
+                            .toLowerCase()
+                            .includes(input.toLowerCase())
+                        }
+                      />
                     </Form.Item>
 
                     <Form.Item
@@ -1032,7 +1065,7 @@ const CompanyFormModal = ({
                       <Input />
                     </Form.Item>
 
-                    <Form.Item
+                    {/* <Form.Item
                       label="Desigination"
                       name="secondaryDesignation"
                       rules={[
@@ -1043,6 +1076,34 @@ const CompanyFormModal = ({
                       ]}
                     >
                       <Input />
+                    </Form.Item> */}
+                    <Form.Item
+                      label="Desigination"
+                      name="secondaryDesignation"
+                      rules={[
+                        {
+                          required: true,
+                          message: "please enter desigination",
+                        },
+                      ]}
+                    >
+                      <Select
+                        allowClear
+                        showSearch
+                        options={
+                          desiginationList?.length > 0
+                            ? desiginationList?.map((item) => ({
+                                label: item?.name,
+                                value: item?.id,
+                              }))
+                            : []
+                        }
+                        filterOption={(input, option) =>
+                          option.label
+                            .toLowerCase()
+                            .includes(input.toLowerCase())
+                        }
+                      />
                     </Form.Item>
 
                     <Form.Item

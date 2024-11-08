@@ -123,6 +123,17 @@ const SettingMainPage = () => {
         </Link>
       ),
     },
+    {
+      key: "clientDesigination",
+      label: (
+        <Link
+          className="link-four"
+          to={`/erp/${currentUserId}/setting/clientDesigination`}
+        >
+          Client Desigination
+        </Link>
+      ),
+    },
   ]
 
   return (

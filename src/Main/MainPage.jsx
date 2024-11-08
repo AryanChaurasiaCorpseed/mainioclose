@@ -13,7 +13,6 @@ import {
   getAllContactDetails,
   getAllLeadUser,
   getAllOppurtunities,
-  getAllProductData,
   getAllProductWithCattegory,
   getAllStatusData,
   getAllTaskStatus,
@@ -42,7 +41,6 @@ const MainPage = () => {
     dispatch(getAllContactDetails())
     dispatch(getAllStatusData())
     dispatch(getAllSlugList())
-    dispatch(getAllProductData())
     dispatch(getAllTaskStatus())
     dispatch(getAllOppurtunities())
     dispatch(getAllProductWithCattegory())

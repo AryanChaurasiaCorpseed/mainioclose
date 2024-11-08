@@ -1,6 +1,8 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 import { getQuery } from "../../API/GetQuery"
 import { postQuery } from "../../API/PostQuery"
+import { deleteQuery } from "../../API/DeleteQuery"
+import { putQuery } from "../../API/PutQuery"
 
 export const getAllDesiginations = createAsyncThunk(
   "allDesiginations",
@@ -40,21 +42,68 @@ export const createDepartment = createAsyncThunk(
   }
 )
 
-export const createDesiginationByDepartmentId=createAsyncThunk('createDesiginationByDepartmentId',async(data)=>{
-  const response=await postQuery(`/leadService/api/v1/designation/createDepartmentInDesignation`,data)
+export const createDesiginationByDepartmentId = createAsyncThunk(
+  "createDesiginationByDepartmentId",
+  async (data) => {
+    const response = await postQuery(
+      `/leadService/api/v1/designation/createDepartmentInDesignation`,
+      data
+    )
+    return response.data
+  }
+)
+
+export const getAllIpAddress = createAsyncThunk("allIpAddress", async () => {
+  const response = await getQuery(`/securityService/api/auth/getAllIpAddress`)
   return response.data
 })
 
-
-export const getAllIpAddress=createAsyncThunk('allIpAddress',async()=>{
-  const response=await getQuery(`/securityService/api/auth/getAllIpAddress`)
+export const addIpAddress = createAsyncThunk("addIpAddress", async (data) => {
+  const response = await postQuery(
+    `/securityService/api/auth/addIpAddress?ipAddressName=${data?.ipaddress}`
+  )
   return response.data
 })
 
-export const addIpAddress=createAsyncThunk('addIpAddress',async(data)=>{
-  const response=await postQuery(`/securityService/api/auth/addIpAddress?ipAddressName=${data?.ipaddress}`)
-  return response.data
-})
+export const getClientDesiginationList = createAsyncThunk(
+  "getClientDesiginationList",
+  async () => {
+    const response = await getQuery(
+      `/leadService/api/v1/clientDesignation/getAllClientDesignation`
+    )
+    return response.data
+  }
+)
+
+export const createClientDesigination = createAsyncThunk(
+  "createClientDesigination",
+  async (data) => {
+    const response = await postQuery(
+      `/leadService/api/v1/clientDesignation/createClientDesignation?name=${data?.name}`
+    )
+    return response.data
+  }
+)
+
+export const deleteClientDesigination = createAsyncThunk(
+  "deleteClientDesigination",
+  async (id) => {
+    const response = await deleteQuery(
+      `/leadService/api/v1/clientDesignation/deleteClientDesignation?id=${id}`
+    )
+    return response.data
+  }
+)
+
+export const updateClientDesigination = createAsyncThunk(
+  "updateClientDesigination",
+  async (data) => {
+    const response = await putQuery(
+      `/leadService/api/v1/clientDesignation/updateClientDesignation?id=${data?.id}&name=${data?.name}`
+    )
+    return response.data
+  }
+)
 
 const settingSlice = createSlice({
   name: "setting",
@@ -62,7 +111,8 @@ const settingSlice = createSlice({
     desiginationList: [],
     loading: "",
     allDepartment: [],
-    allIpAddress:[]
+    allIpAddress: [],
+    clientDesiginationList: [],
   },
   extraReducers: (builder) => {
     builder.addCase(getAllDesiginations.pending, (state, action) => {
@@ -114,6 +164,17 @@ const settingSlice = createSlice({
       state.allIpAddress = action.payload
     })
     builder.addCase(getAllIpAddress.rejected, (state, action) => {
+      state.loading = "rejected"
+    })
+
+    builder.addCase(getClientDesiginationList.pending, (state, action) => {
+      state.loading = "pending"
+    })
+    builder.addCase(getClientDesiginationList.fulfilled, (state, action) => {
+      state.loading = "success"
+      state.clientDesiginationList = action.payload
+    })
+    builder.addCase(getClientDesiginationList.rejected, (state, action) => {
       state.loading = "rejected"
     })
   },

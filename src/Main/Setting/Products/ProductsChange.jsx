@@ -2,21 +2,32 @@ import React, { useEffect, useState } from "react"
 import { postQuery } from "../../../API/PostQuery"
 import { deleteQuery } from "../../../API/DeleteQuery"
 import MainHeading from "../../../components/design/MainHeading"
-import { Button, Form, Input, Modal } from "antd"
-import { useSelector } from "react-redux"
+import { Button, Form, Input, Modal, notification, Popconfirm } from "antd"
+import { useDispatch, useSelector } from "react-redux"
 import CommonTable from "../../../components/CommonTable"
 import { Icon } from "@iconify/react"
 import OverFlowText from "../../../components/OverFlowText"
 import ProductDetails from "./ProductDetails"
 import "./Product.scss"
+import { useParams } from "react-router-dom"
+import { createProduct } from "../../../Toolkit/Slices/ProductSlice"
+import {
+  deleteProduct,
+  getAllProductData,
+} from "../../../Toolkit/Slices/LeadSlice"
 
 const ProductsChange = () => {
-  const productData = useSelector((state) => state.product.productData)
-
+  const dispatch = useDispatch()
+  const { userid } = useParams()
   const [form] = Form.useForm()
+  const productData = useSelector((state) => state.product.productData)
   const [openModal, setOpenModal] = useState(false)
   const [searchText, setSearchText] = useState("")
   const [filteredData, setFilteredData] = useState([])
+
+  useEffect(() => {
+    dispatch(getAllProductData())
+  }, [])
 
   useEffect(() => {
     setFilteredData(productData)
@@ -47,42 +58,46 @@ const ProductsChange = () => {
       dataIndex: "Action",
       title: "Delete",
       render: (_, props) => (
-        <Button
-          size="small"
-          type="text"
-          danger
-          onClick={() => deleteProductFun(props.id)}
+        <Popconfirm
+          title="Delete the product"
+          description="Are you sure to delete the product"
+          onConfirm={() =>
+            dispatch(deleteProduct(props.id))
+              .then((resp) => {
+                if (resp.meta.requestStatus === "fulfilled") {
+                  notification.success({
+                    message: "Peoduct deleted successfully!.",
+                  })
+                  dispatch(getAllProductData())
+                } else {
+                  notification.error({ message: "Something went wrong !." })
+                }
+              })
+              .catch(() =>
+                notification.error({ message: "Something went wrong !." })
+              )
+          }
         >
-          <Icon icon="fluent:delete-20-regular" />
-        </Button>
+          <Button size="small" type="text" danger>
+            <Icon icon="fluent:delete-20-regular" />
+          </Button>
+        </Popconfirm>
       ),
     },
   ]
 
-  const deleteProductFun = async (statusId) => {
-    if (window.confirm("Are you sure to delete this record?") == true) {
-      try {
-        const leadProductDel = await deleteQuery(
-          `/leadService/api/v1/product/delete?id=${statusId}`
-        )
-      } catch (err) {
-        console.log(err)
-      }
-    }
-  }
-
-  const handleFinish = async (values) => {
-    try {
-      const productData = await postQuery(
-        `/leadService/api/v1/product/createProduct`,
-        values
-      )
-      if (productData && productData.status === 200) {
-        window.location.reload()
-      }
-    } catch (err) {
-      console.log(err)
-    }
+  const handleFinish = (values) => {
+    values.userId = userid
+    dispatch(createProduct(values))
+      .then((resp) => {
+        if (resp.meta.requestStatus === "fulfilled") {
+          notification.success({ message: "Product created successfully" })
+          setOpenModal(false)
+        } else {
+          notification.error({ message: "Something went wrong!." })
+        }
+      })
+      .catch(() => notification.error({ message: "Something went wrong!." }))
   }
 
   return (
@@ -107,7 +122,7 @@ const ProductsChange = () => {
       <CommonTable
         data={filteredData}
         columns={ProductCol}
-        scroll={{ y: 500}}
+        scroll={{ y: 500 }}
       />
 
       <Modal

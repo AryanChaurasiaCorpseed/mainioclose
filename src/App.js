@@ -75,6 +75,7 @@ import MainGraphPage from "./Main/GraphDashboard/MainGraphPage"
 import Procurement from "./Main/Vendors/Procurement"
 import MainCompanyFormPage from "./Main/Accounts/MainCompanyFormPage"
 import VendorsRequestList from "./Main/Sales/Leads/VendorsRequestList"
+import ClientDesigination from "./Main/Setting/ClientDesiginations/ClientDesigination"
 
 const SpinLoading = lazy(() => import("./components/SpinLoading"))
 
@@ -474,6 +475,14 @@ function App() {
                   element={
                     <Suspense fallback={<SpinLoading />}>
                       <Procurement />
+                    </Suspense>
+                  }
+                />
+                <Route
+                  path="clientDesigination"
+                  element={
+                    <Suspense fallback={<SpinLoading />}>
+                      <ClientDesigination />
                     </Suspense>
                   }
                 />
