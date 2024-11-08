@@ -96,7 +96,7 @@ const SideBar = () => {
       ],
     },
     ...((currentUserDetail?.department === "Sales" ||
-      currentUserDetail?.department === "Quality") &&
+      currentUserDetail?.department === "Quality Team") &&
     getHighestPriorityRole(currentRoles) !== "ADMIN"
       ? [
           {
@@ -144,7 +144,7 @@ const SideBar = () => {
                       key: "lead-form",
                     },
                   ]
-                : currentUserDetail?.department === "Quality" &&
+                : currentUserDetail?.department === "Quality Team" &&
                   getHighestPriorityRole(currentRoles) !== "ADMIN"
                 ? [
                     {
@@ -200,7 +200,7 @@ const SideBar = () => {
             ],
           },
         ]
-      : currentUserDetail?.department === "Quality" &&
+      : currentUserDetail?.department === "Quality Team" &&
         getHighestPriorityRole(currentRoles) !== "ADMIN"
       ? {
           label: "Sales",
@@ -392,7 +392,7 @@ const SideBar = () => {
           },
         ]
       : []),
-    ...(currentUserDetail?.department === "Quality" &&
+    ...(currentUserDetail?.department === "Quality Team" &&
     getHighestPriorityRole(currentRoles) !== "ADMIN"
       ? [
           {
