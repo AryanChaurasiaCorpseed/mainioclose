@@ -211,19 +211,19 @@ const MainCompanyPage = () => {
     {
       dataIndex: "gstNo",
       title: "GST number",
-      checked: true,
+      checked: false,
       render: (_, props) => <ColComp data={props?.gstNo} />,
     },
     {
       dataIndex: "gstType",
       title: "GST type",
-      checked: true,
+      checked: false,
       render: (_, props) => <ColComp data={props?.gstType} />,
     },
     {
       dataIndex: "primaryContact",
       title: "Client name",
-      checked: true,
+      checked: false,
       render: (_, record) => (
         <OverFlowText>{record?.primaryContact?.name}</OverFlowText>
       ),
@@ -231,7 +231,7 @@ const MainCompanyPage = () => {
     {
       dataIndex: "projects",
       title: "Projects",
-      checked: true,
+      checked: false,
       render: (_, data) =>
         data?.project?.length > 0 && data?.project?.length === 1 ? (
           <OverFlowText>{data?.project?.[0]?.projectName}</OverFlowText>
@@ -258,7 +258,7 @@ const MainCompanyPage = () => {
     {
       dataIndex: "leads",
       title: "Leads",
-      checked: true,
+      checked: false,
       render: (_, data) =>
         data?.lead?.length > 0 && data?.lead?.length === 1 ? (
           <OverFlowText>{data?.lead?.[0]?.leadNameame}</OverFlowText>
@@ -285,7 +285,7 @@ const MainCompanyPage = () => {
     {
       dataIndex: "primarydesigination",
       title: "Desigination",
-      checked: true,
+      checked: false,
       render: (_, record) => (
         <OverFlowText>{record?.primaryContact?.designation}</OverFlowText>
       ),
@@ -293,7 +293,7 @@ const MainCompanyPage = () => {
     {
       dataIndex: "contactNo",
       title: "Contact no.",
-      checked: true,
+      checked: false,
       render: (_, record) => (
         <OverFlowText>{record?.primaryContact?.contactNo}</OverFlowText>
       ),
@@ -301,7 +301,7 @@ const MainCompanyPage = () => {
     {
       dataIndex: "emails",
       title: "Email",
-      checked: true,
+      checked: false,
       render: (_, record) => (
         <OverFlowText>{record?.primaryContact?.emails}</OverFlowText>
       ),
@@ -309,7 +309,7 @@ const MainCompanyPage = () => {
     {
       dataIndex: "whatsappNo",
       title: "Whatsapp no.",
-      checked: true,
+      checked: false,
       render: (_, record) => (
         <OverFlowText>{record?.primaryContact?.whatsappNo}</OverFlowText>
       ),
@@ -317,50 +317,50 @@ const MainCompanyPage = () => {
     {
       dataIndex: "address",
       title: "Address",
-      checked: true,
+      checked: false,
       render: (_, props) => <OverFlowText>{props?.address}</OverFlowText>,
     },
     {
       dataIndex: "city",
       title: "City",
-      checked: true,
+      checked: false,
       render: (_, props) => <ColComp data={props?.city} />,
     },
     {
       dataIndex: "state",
       title: "State",
-      checked: true,
+      checked: false,
       render: (_, props) => <ColComp data={props?.state} />,
     },
 
     {
       dataIndex: "country",
       title: "Country",
-      checked: true,
+      checked: false,
       render: (_, props) => <ColComp data={props?.country} />,
     },
     {
       dataIndex: "secAddress",
       title: "Secondary address",
-      checked: true,
+      checked: false,
       render: (_, props) => <OverFlowText>{props?.secAddress}</OverFlowText>,
     },
     {
       dataIndex: "secCity",
       title: "Secondary city",
-      checked: true,
+      checked: false,
       render: (_, props) => <ColComp data={props?.secCity} />,
     },
     {
       dataIndex: "secState",
       title: "Secondary state",
-      checked: true,
+      checked: false,
       render: (_, props) => <ColComp data={props?.secState} />,
     },
     {
       dataIndex: "seCountry",
       title: "Secondary country",
-      checked: true,
+      checked: false,
       render: (_, props) => <ColComp data={props?.seCountry} />,
     },
     {
@@ -465,7 +465,11 @@ const MainCompanyPage = () => {
 
   return (
     <TableOutlet>
-      <MainHeading data={`All company (${allCompnay?.[0]?.total})`} />
+      <MainHeading
+        data={`All company (${
+          allCompnay?.[0]?.total === undefined ? 0 : allCompnay?.[0]?.total
+        })`}
+      />
       <Flex justify="space-between" align="center">
         <div className="flex-verti-center-hori-start mt-2">
           <Search
@@ -522,7 +526,13 @@ const MainCompanyPage = () => {
           menu={{ items: columnDropDown(handleSelectColumns) }}
           dropdownRender={(menu) => (
             <div className="dropdown-content">
-              <div style={{ height: "100%", overflowY: "auto" }}>
+              <div
+                style={{
+                  height: "400px",
+                  overflow: "auto",
+                  borderRadius: "4px",
+                }}
+              >
                 {React.cloneElement(menu, {
                   style: menuStyle,
                 })}

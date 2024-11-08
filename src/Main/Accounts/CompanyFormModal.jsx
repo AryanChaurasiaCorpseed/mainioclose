@@ -536,7 +536,7 @@ const CompanyFormModal = ({
             <Input maxLength={15} />
           </Form.Item>
 
-          {/* <Form.Item
+          <Form.Item
             label="Select industry"
             name="industry"
             rules={[{ required: true, message: "please select the industry" }]}
@@ -644,7 +644,7 @@ const CompanyFormModal = ({
                 option.label.toLowerCase().includes(input.toLowerCase())
               }
             />
-          </Form.Item> */}
+          </Form.Item>
 
           <Form.Item
             label="Upload gst document"
