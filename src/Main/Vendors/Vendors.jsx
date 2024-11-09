@@ -238,19 +238,9 @@ const Vendors = ({ leadId }) => {
 
   return (
     <>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          padding: "6px 2px",
-          border: "0.5px solid #f2f2f2",
-          borderRadius: "4px",
-        }}
-      >
+      <Flex justify="space-between" align="center">
         <Select
           showSearch
-          allowClear
           size="small"
           value={vendorDetail?.id}
           placeholder="select vendor request"
@@ -273,7 +263,7 @@ const Vendors = ({ leadId }) => {
         <div className="filter-box">
           <VendorForm leadId={leadId} userId={userid} />
         </div>
-      </div>
+      </Flex>
 
       <div style={{ marginTop: "12px" }}>
         <Flex justify="space-between" style={{ margin: "8px 0px" }}>

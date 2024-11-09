@@ -118,7 +118,7 @@ const Industries = () => {
           </Form.Item>
 
           <Form.Item
-            label="Select industry"
+            label="Select sub industry"
             name="subIndustryId"
             rules={[
               {

@@ -1,15 +1,11 @@
-import React, { useEffect, useRef, useState } from "react"
+import React, { useEffect, useState } from "react"
 import "./LeadStatusPage.scss"
-import { useCustomRoute } from "../../../Routes/GetCustomRoutes"
-import SmallTableScalaton from "../../../components/Scalaton/SmallTableScalaton"
-import InputErrorComponent from "../../../components/InputErrorComponent"
-import { postQuery } from "../../../API/PostQuery"
 import { deleteQuery } from "../../../API/DeleteQuery"
 import MainHeading from "../../../components/design/MainHeading"
 import EditStatus from "./EditStatus"
 import { Button, Form, Input, Modal } from "antd"
-import { useDispatch } from "react-redux"
-import { createLead } from "../../../Toolkit/Slices/LeadSlice"
+import { useDispatch, useSelector } from "react-redux"
+import { createLead, getAllStatusData } from "../../../Toolkit/Slices/LeadSlice"
 import CommonTable from "../../../components/CommonTable"
 import { Icon } from "@iconify/react"
 import OverFlowText from "../../../components/OverFlowText"
@@ -17,19 +13,14 @@ import OverFlowText from "../../../components/OverFlowText"
 const LeadStatusPage = () => {
   const [form] = Form.useForm()
   const dispatch = useDispatch()
-  const [leadCreateDep, setLeadCreateDep] = useState(false)
-  const [deleteStatusDep, setDeleteStatusDep] = useState(false)
   const [openModal, setOpenModal] = useState(false)
-  const statusUrl = `/leadService/api/v1/status/getAllStatus`
-  const statusDep = [leadCreateDep, deleteStatusDep]
   const [searchText, setSearchText] = useState("")
   const [filteredData, setFilteredData] = useState([])
+  const statusData = useSelector((state) => state.leads.getAllStatus)
 
-
-  const { productData: statusData, loading: statusLoading } = useCustomRoute(
-    statusUrl,
-    statusDep
-  )
+  useEffect(() => {
+    dispatch(getAllStatusData())
+  }, [])
 
   const deleteStatusFun = async (statusId) => {
     if (window.confirm("Are you sure to delete this record?") == true) {
@@ -37,13 +28,11 @@ const LeadStatusPage = () => {
         const leadStatusDel = await deleteQuery(
           `/leadService/api/v1/status/deleteStaus?id=${statusId}`
         )
-        setDeleteStatusDep((prev) => !prev)
       } catch (err) {
         console.log(err)
       }
     }
   }
-
 
   useEffect(() => {
     setFilteredData(statusData)
@@ -63,8 +52,6 @@ const LeadStatusPage = () => {
   const handleFinish = (values) => {
     dispatch(createLead(values)).then(() => window.location.reload())
   }
-
-
 
   const columns = [
     {
@@ -115,7 +102,7 @@ const LeadStatusPage = () => {
       </div>
 
       <div className="setting-table">
-      <div className="flex-verti-center-hori-start mt-2">
+        <div className="flex-verti-center-hori-start mt-2">
           <Input
             value={searchText}
             size="small"
@@ -126,15 +113,11 @@ const LeadStatusPage = () => {
           />
         </div>
         <div className="table-responsive">
-          {statusLoading ? (
-            <SmallTableScalaton />
-          ) : (
-            <CommonTable
-              data={filteredData}
-              columns={columns}
-              scroll={{ y: 480 }}
-            />
-          )}
+          <CommonTable
+            data={filteredData}
+            columns={columns}
+            scroll={{ y: 480 }}
+          />
         </div>
       </div>
 

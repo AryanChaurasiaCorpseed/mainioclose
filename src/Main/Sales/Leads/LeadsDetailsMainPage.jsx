@@ -1,7 +1,11 @@
 import React, { useCallback, useEffect, useState } from "react"
 import {
   getAllChildLeads,
+  getAllContactDetails,
+  getAllOppurtunities,
+  getAllProductWithCattegory,
   getAllTaskData,
+  getAllTaskStatus,
   getVendorDetailList,
   handleViewHistory,
 } from "../../../Toolkit/Slices/LeadSlice"
@@ -16,6 +20,8 @@ import LeadHistory from "./LeadHistory"
 import Vendors from "../../Vendors/Vendors"
 import LeadChilds from "./LeadChilds"
 import LeadEstimate from "./LeadEstimate"
+import { getAllSlugList } from "../../../Toolkit/Slices/LeadSlugSlice"
+import { getAllProductData } from "../../../Toolkit/Slices/ProductSlice"
 
 const LeadsDetailsMainPage = ({
   children,
@@ -74,10 +80,10 @@ const LeadsDetailsMainPage = ({
         children: <LeadHistory leadid={currLeadId} />,
       },
       {
-        label:'Estimate',
-        key:'estimate',
-        children:<LeadEstimate leadid={currLeadId}  />
-      }
+        label: "Estimate",
+        key: "estimate",
+        children: <LeadEstimate leadid={currLeadId} />,
+      },
     ]
   }, [currLeadId, singleLeadResponseData])
 
@@ -95,6 +101,15 @@ const LeadsDetailsMainPage = ({
       }
       if (e === "vendors") {
         dispatch(getVendorDetailList({ leadId, userid }))
+      }
+      if (e === "activities") {
+        dispatch(getAllTaskStatus())
+        dispatch(getAllOppurtunities())
+        dispatch(getAllProductWithCattegory())
+      }
+      if (e === "estimate") {
+        dispatch(getAllProductData())
+        dispatch(getAllContactDetails())
       }
     },
     [dispatch, currLeadId, singleLeadResponseData, userid, leadId]
@@ -129,6 +144,7 @@ const LeadsDetailsMainPage = ({
           }
           setCurrLeadId(leadId)
           setOpenDrawer(true)
+          dispatch(getAllSlugList())
         }}
       >
         {children}

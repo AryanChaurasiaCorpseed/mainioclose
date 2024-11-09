@@ -1,16 +1,15 @@
-import React, { useEffect, useRef, useState } from "react"
+import React, { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
-import { postQuery } from "../../../API/PostQuery"
-import InputErrorComponent from "../../../components/InputErrorComponent"
-import { useCustomRoute } from "../../../Routes/GetCustomRoutes"
-import SmallTableScalaton from "../../../components/Scalaton/SmallTableScalaton"
-import { deleteQuery } from "../../../API/DeleteQuery"
 import MainHeading from "../../../components/design/MainHeading"
 import { toast } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
-import { Button, Form, Input, Modal } from "antd"
-import { useDispatch } from "react-redux"
-import { createLeadCateogry } from "../../../Toolkit/Slices/LeadSlice"
+import { Button, Form, Input, Modal, notification, Popconfirm } from "antd"
+import { useDispatch, useSelector } from "react-redux"
+import {
+  createLeadCateogry,
+  deleteLeadCategory,
+  getAllProductWithCattegory,
+} from "../../../Toolkit/Slices/LeadSlice"
 import CommonTable from "../../../components/CommonTable"
 import { Icon } from "@iconify/react"
 import OverFlowText from "../../../components/OverFlowText"
@@ -20,73 +19,28 @@ const LeadCategory = () => {
   const { userid } = useParams()
   const [form] = Form.useForm()
   const dispatch = useDispatch()
+  const categoryData = useSelector((state) => state.leads.categoryData)
   const [openModal, setOpenModal] = useState(false)
-
-  const [leadCategory, setLeadCategory] = useState({
-    name: "",
-    userId: userid,
-  })
-
-  const [deleteCategoryDep, setDeleteCategoryDep] = useState(false)
-  const [createCategoryDep, setCreateCategoryDep] = useState(false)
-
-  const [btnLoading, setBtnLoading] = useState(false)
-  const [nameError, setNameError] = useState(false)
-  const nameRef = useRef()
-
-
   const [searchText, setSearchText] = useState("")
   const [filteredData, setFilteredData] = useState([])
 
-  
-
-  const createCatFun = async (e) => {
-    e.preventDefault()
-
-    if (nameRef.current.value === "") {
-      setNameError(true)
-      return
-    }
-    setNameError(false)
-
-    setBtnLoading(true)
-    try {
-      const catDataRes = await postQuery(
-        `/leadService/api/v1/category/createCategory`,
-        leadCategory
-      )
-      setCreateCategoryDep((prev) => !prev)
-      toast.success("Category Created Succesfully")
-      setBtnLoading(false)
-      nameRef.current.value = ""
-    } catch (err) {
-      console.log(err)
-      toast.error("Something went Wrong")
-      setBtnLoading(false)
-    }
-  }
-
-  const categoryUrl = `/leadService/api/v1/category/getAllCategories`
-  const categoryDep = [createCategoryDep, deleteCategoryDep]
-
-  const { productData: categoryData, loading: categoryLoading } =
-    useCustomRoute(categoryUrl, categoryDep)
-
-  const deleteCategoryFun = async (statusId) => {
-    if (window.confirm("Are you sure to delete this record?") === true) {
-      try {
-        const leadCategoryDel = await deleteQuery(
-          `/leadService/api/v1/category/deleteCategory?categoryId=${statusId}`
-        )
-        setDeleteCategoryDep((prev) => !prev)
-      } catch (err) {
-        console.log(err)
-      }
-    }
-  }
+  useEffect(() => {
+    dispatch(getAllProductWithCattegory())
+  }, [dispatch])
 
   const handleFinish = (values) => {
-    dispatch(createLeadCateogry(values)).then(() => window.location.reload())
+    dispatch(createLeadCateogry({ userId: userid, ...values }))
+      .then((resp) => {
+        if (resp.meta.requestStatus === "fulfilled") {
+          notification.success({ message: "Category created successfully !." })
+          setOpenModal(false)
+          form.resetFields()
+          dispatch(getAllProductWithCattegory())
+        } else {
+          notification.error({ message: "Something went wrong !." })
+        }
+      })
+      .catch(() => notification.error({ message: "Something went wrong !." }))
   }
 
   useEffect(() => {
@@ -103,8 +57,6 @@ const LeadCategory = () => {
     )
     setFilteredData(filtered)
   }
-
-
 
   const columns = [
     {
@@ -132,14 +84,28 @@ const LeadCategory = () => {
       title: "Delete",
       dataIndex: "delete",
       render: (_, status) => (
-        <Button
-          type="text"
-          danger
-          onClick={() => deleteCategoryFun(status.id)}
-          size="small"
+        <Popconfirm
+          onConfirm={() =>
+            dispatch(deleteLeadCategory(status.id))
+              .then((resp) => {
+                if (resp.meta.requestStatus === "fulfilled") {
+                  notification.success({
+                    message: "Category deleted successfully !.",
+                  })
+                  dispatch(getAllProductWithCattegory())
+                } else {
+                  notification.error({ message: "Something went wrong !." })
+                }
+              })
+              .catch(() =>
+                notification.error({ message: "Something went wrong !." })
+              )
+          }
         >
-          <Icon icon="fluent:delete-20-regular" />
-        </Button>
+          <Button type="text" danger size="small">
+            <Icon icon="fluent:delete-20-regular" />
+          </Button>
+        </Popconfirm>
       ),
     },
   ]
@@ -153,7 +119,7 @@ const LeadCategory = () => {
         </Button>
       </div>
       <div className="setting-table">
-      <div className="flex-verti-center-hori-start mt-2">
+        <div className="flex-verti-center-hori-start mt-2">
           <Input
             value={searchText}
             size="small"

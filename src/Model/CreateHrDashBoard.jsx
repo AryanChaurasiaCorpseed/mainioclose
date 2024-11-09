@@ -65,8 +65,6 @@ const CreateHrDashBoard = ({ data, edit, modalTitle }) => {
     return Promise.resolve()
   }
 
-
-
   const validateEmail = (dispatch) => async (_, value) => {
     if (!value) {
       return Promise.reject(new Error("Please enter the email"))
@@ -129,11 +127,12 @@ const CreateHrDashBoard = ({ data, edit, modalTitle }) => {
       backupTeam: data?.backupTeam,
       master: data?.master,
       maritalStatus: data?.maritalStatus,
-      personalEmail:data?.personalEmail,
-      companyMobile:data?.companyMobile,
-      lockerSize:data?.lockerSize
+      personalEmail: data?.personalEmail,
+      companyMobile: data?.companyMobile,
+      lockerSize: data?.lockerSize,
+      contactNo: data?.contactNo,
     })
-  }, [data, form,dispatch])
+  }, [data, form, dispatch])
 
   const handleSubmitUser = useCallback(
     (values) => {
@@ -236,7 +235,7 @@ const CreateHrDashBoard = ({ data, edit, modalTitle }) => {
           })
       }
     },
-    [dispatch, data, edit,form]
+    [dispatch, data, edit, form]
   )
 
   return (
@@ -321,12 +320,24 @@ const CreateHrDashBoard = ({ data, edit, modalTitle }) => {
             </Col>
             <Col span={1} />
             <Col span={11}>
-              <Form.Item label="Company mobile number" name="companyMobile">
+              <Form.Item
+                label="Contact number"
+                name="contactNo"
+                rules={[
+                  { required: true, message: "please enter your number" },
+                ]}
+              >
                 <Input />
               </Form.Item>
             </Col>
           </Row>
           <Row>
+            <Col span={11}>
+              <Form.Item label="Company mobile number" name="companyMobile">
+                <Input />
+              </Form.Item>
+            </Col>
+            <Col span={1} />
             <Col span={11}>
               <Form.Item
                 label="Role"
@@ -340,7 +351,7 @@ const CreateHrDashBoard = ({ data, edit, modalTitle }) => {
               >
                 <Select
                   mode="multiple"
-                  maxTagCount='responsive'
+                  maxTagCount="responsive"
                   showSearch
                   allowClear
                   options={
@@ -357,7 +368,8 @@ const CreateHrDashBoard = ({ data, edit, modalTitle }) => {
                 />
               </Form.Item>
             </Col>
-            <Col span={1} />
+          </Row>
+          <Row>
             <Col span={11}>
               <Form.Item
                 label="Department"
@@ -390,8 +402,7 @@ const CreateHrDashBoard = ({ data, edit, modalTitle }) => {
                 />
               </Form.Item>
             </Col>
-          </Row>
-          <Row>
+            <Col span={1} />
             <Col span={11}>
               <Form.Item
                 label="Desigination"
@@ -420,14 +431,14 @@ const CreateHrDashBoard = ({ data, edit, modalTitle }) => {
                 />
               </Form.Item>
             </Col>
-            <Col span={1} />
+          </Row>
+          <Row>
             <Col span={11}>
               <Form.Item label="EPFO number" name="epfNo">
                 <Input />
               </Form.Item>
             </Col>
-          </Row>
-          <Row>
+            <Col span={1} />
             <Col span={11}>
               <Form.Item
                 label="Aadhar card no."
@@ -445,7 +456,8 @@ const CreateHrDashBoard = ({ data, edit, modalTitle }) => {
                 <Input />
               </Form.Item>
             </Col>
-            <Col span={1} />
+          </Row>
+          <Row>
             <Col span={11}>
               <Form.Item label="Manager name" name="managerId">
                 <Select
@@ -465,14 +477,14 @@ const CreateHrDashBoard = ({ data, edit, modalTitle }) => {
                 />
               </Form.Item>
             </Col>
-          </Row>
-          <Row>
+            <Col span={1} />
             <Col span={11}>
               <Form.Item label="Locker size" name="lockerSize">
                 <Input />
               </Form.Item>
             </Col>
-            <Col span={1} />
+          </Row>
+          <Row>
             <Col span={11}>
               <Form.Item
                 label={`Experience (in year)`}
@@ -487,8 +499,7 @@ const CreateHrDashBoard = ({ data, edit, modalTitle }) => {
                 <Input />
               </Form.Item>
             </Col>
-          </Row>
-          <Row>
+            <Col span={1} />
             <Col span={11}>
               <Form.Item
                 label={`Experience (in months)`}
@@ -503,7 +514,8 @@ const CreateHrDashBoard = ({ data, edit, modalTitle }) => {
                 <Input />
               </Form.Item>
             </Col>
-            <Col span={1} />
+          </Row>
+          <Row>
             <Col span={11}>
               <Form.Item
                 label="Date of joining"
@@ -513,8 +525,7 @@ const CreateHrDashBoard = ({ data, edit, modalTitle }) => {
                 <DatePicker style={{ width: "100%" }} />
               </Form.Item>
             </Col>
-          </Row>
-          <Row>
+            <Col span={1} />
             <Col span={11}>
               <Form.Item
                 label="Gender"
@@ -528,25 +539,6 @@ const CreateHrDashBoard = ({ data, edit, modalTitle }) => {
                     { label: "Male", value: "male" },
                     { label: "Female", value: "female" },
                     { label: "Others", value: "others" },
-                  ]}
-                />
-              </Form.Item>
-            </Col>
-            <Col span={1} />
-            <Col span={11}>
-              <Form.Item
-                label="Marital status"
-                name="maritalStatus"
-                rules={[
-                  { required: true, message: "please select marital status" },
-                ]}
-              >
-                <Select
-                  allowClear
-                  showSearch
-                  options={[
-                    { label: "Married", value: "Married" },
-                    { label: "Unmarried", value: "Unmarried" },
                   ]}
                 />
               </Form.Item>
@@ -588,6 +580,25 @@ const CreateHrDashBoard = ({ data, edit, modalTitle }) => {
           <Row>
             <Col span={11}>
               <Form.Item
+                label="Marital status"
+                name="maritalStatus"
+                rules={[
+                  { required: true, message: "please select marital status" },
+                ]}
+              >
+                <Select
+                  allowClear
+                  showSearch
+                  options={[
+                    { label: "Married", value: "Married" },
+                    { label: "Unmarried", value: "Unmarried" },
+                  ]}
+                />
+              </Form.Item>
+            </Col>
+            <Col span={1} />
+            <Col span={11}>
+              <Form.Item
                 label="Father's name"
                 name="fatherName"
                 rules={[
@@ -597,20 +608,21 @@ const CreateHrDashBoard = ({ data, edit, modalTitle }) => {
                 <Input />
               </Form.Item>
             </Col>
-            <Col span={1} />
+          </Row>
+          <Row>
             <Col span={11}>
               <Form.Item label="Father's occupation" name="fatherOccupation">
                 <Input />
               </Form.Item>
             </Col>
-          </Row>
-          <Row>
+            <Col span={1} />
             <Col span={11}>
               <Form.Item label="Father's contact no." name="fatherContactNo">
                 <Input />
               </Form.Item>
             </Col>
-            <Col span={1} />
+          </Row>
+          <Row>
             <Col span={11}>
               <Form.Item
                 label="Mother's name"
@@ -622,16 +634,9 @@ const CreateHrDashBoard = ({ data, edit, modalTitle }) => {
                 <Input />
               </Form.Item>
             </Col>
-          </Row>
-          <Row>
-            <Col span={11}>
-              <Form.Item label="Mother's contact no." name="motherContactNo">
-                <Input />
-              </Form.Item>
-            </Col>
             <Col span={1} />
             <Col span={11}>
-              <Form.Item label="Nationality" name="nationality">
+              <Form.Item label="Mother's contact no." name="motherContactNo">
                 <Input />
               </Form.Item>
             </Col>
@@ -639,13 +644,13 @@ const CreateHrDashBoard = ({ data, edit, modalTitle }) => {
 
           <Row>
             <Col span={11}>
-              <Form.Item label="Language" name="language">
+              <Form.Item label="Nationality" name="nationality">
                 <Input />
               </Form.Item>
             </Col>
             <Col span={1} />
             <Col span={11}>
-              <Form.Item label="Emergency contact no." name="emergencyNumber">
+              <Form.Item label="Language" name="language">
                 <Input />
               </Form.Item>
             </Col>
@@ -691,6 +696,12 @@ const CreateHrDashBoard = ({ data, edit, modalTitle }) => {
           )}
           <Row>
             <Col span={11}>
+              <Form.Item label="Emergency contact no." name="emergencyNumber">
+                <Input />
+              </Form.Item>
+            </Col>
+            <Col span={1} />
+            <Col span={11}>
               <Form.Item
                 label="Permanent address"
                 name="permanentAddress"
@@ -704,12 +715,15 @@ const CreateHrDashBoard = ({ data, edit, modalTitle }) => {
                 <Input.TextArea />
               </Form.Item>
             </Col>
-            <Col span={1} />
+          </Row>
+          <Row>
             <Col span={11}>
               <Form.Item label="Residential address" name="residentialAddress">
                 <Input.TextArea />
               </Form.Item>
             </Col>
+            <Col span={1} />
+            <Col span={11}></Col>
           </Row>
         </Form>
       </Modal>

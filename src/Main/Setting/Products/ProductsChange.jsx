@@ -1,19 +1,16 @@
 import React, { useEffect, useState } from "react"
-import { postQuery } from "../../../API/PostQuery"
-import { deleteQuery } from "../../../API/DeleteQuery"
 import MainHeading from "../../../components/design/MainHeading"
 import { Button, Form, Input, Modal, notification, Popconfirm } from "antd"
 import { useDispatch, useSelector } from "react-redux"
 import CommonTable from "../../../components/CommonTable"
 import { Icon } from "@iconify/react"
-import OverFlowText from "../../../components/OverFlowText"
 import ProductDetails from "./ProductDetails"
 import "./Product.scss"
 import { useParams } from "react-router-dom"
-import { createProduct } from "../../../Toolkit/Slices/ProductSlice"
+import { createProduct, getAllProductData } from "../../../Toolkit/Slices/ProductSlice"
 import {
   deleteProduct,
-  getAllProductData,
+
 } from "../../../Toolkit/Slices/LeadSlice"
 
 const ProductsChange = () => {
@@ -27,7 +24,7 @@ const ProductsChange = () => {
 
   useEffect(() => {
     dispatch(getAllProductData())
-  }, [])
+  }, [dispatch])
 
   useEffect(() => {
     setFilteredData(productData)

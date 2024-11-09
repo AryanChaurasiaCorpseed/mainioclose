@@ -8,17 +8,9 @@ import { toast } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
 import { getDepartmentOfUser } from "../Toolkit/Slices/AuthSlice"
 import { Layout, Menu, theme } from "antd"
-import { getAllUsers } from "../Toolkit/Slices/UsersSlice"
 import {
-  getAllContactDetails,
   getAllLeadUser,
-  getAllOppurtunities,
-  getAllProductWithCattegory,
-  getAllStatusData,
-  getAllTaskStatus,
 } from "../Toolkit/Slices/LeadSlice"
-import { getAllUrlList } from "../Toolkit/Slices/LeadUrlSlice"
-import { getAllSlugList } from "../Toolkit/Slices/LeadSlugSlice"
 const { Header, Sider, Content } = Layout
 toast.configure()
 
@@ -36,16 +28,7 @@ const MainPage = () => {
     dispatch(getAllLeadUser(userid))
   }, [dispatch, userid])
 
-  useEffect(() => {
-    dispatch(getAllUsers())
-    dispatch(getAllContactDetails())
-    dispatch(getAllStatusData())
-    dispatch(getAllSlugList())
-    dispatch(getAllTaskStatus())
-    dispatch(getAllOppurtunities())
-    dispatch(getAllProductWithCattegory())
-    dispatch(getAllUrlList())
-  }, [dispatch])
+
 
   const pathname = window.location.pathname
 

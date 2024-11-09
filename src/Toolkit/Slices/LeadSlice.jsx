@@ -92,6 +92,16 @@ export const createLeadCateogry = createAsyncThunk(
   }
 )
 
+export const deleteLeadCategory = createAsyncThunk(
+  "deleteLeadCategory",
+  async (id) => {
+    const response = await deleteQuery(
+      `/leadService/api/v1/category/deleteCategory?categoryId=${id}`
+    )
+    return response.data
+  }
+)
+
 export const createLeads = createAsyncThunk("createLeads", async (data) => {
   const response = await postQuery(`/leadService/api/v1/lead/createLead`, data)
   return response.data
@@ -170,15 +180,15 @@ export const getAllOppurtunities = createAsyncThunk(
   }
 )
 
-export const getAllProductData = createAsyncThunk(
-  "getAllProductData",
-  async () => {
-    const response = await getQuery(
-      `/leadService/api/v1/product/getAllProducts`
-    )
-    return response.data
-  }
-)
+// export const getAllProductData = createAsyncThunk(
+//   "getAllProductData",
+//   async () => {
+//     const response = await getQuery(
+//       `/leadService/api/v1/product/getAllProducts`
+//     )
+//     return response.data
+//   }
+// )
 
 export const getAllLeadUser = createAsyncThunk(
   "getAllLeadUserss",
@@ -681,6 +691,15 @@ export const vendorsRequestView = createAsyncThunk(
   }
 )
 
+
+export const createEstimate=createAsyncThunk('createEstimate',async(data)=>{
+  const response=await postQuery(`/leadService/api/v1/leadEstimate/createEstimate`,data)
+  return response.data
+})
+
+
+
+
 export const LeadSlice = createSlice({
   name: "lead",
   initialState: {
@@ -696,7 +715,7 @@ export const LeadSlice = createSlice({
     loading: "",
     allTaskStatusData: [],
     allOportunities: [],
-    allProductData: [],
+    // allProductData: [],
     getAllLeadUserData: [],
     categoryData: [],
     getAllStatus: [],
@@ -801,16 +820,16 @@ export const LeadSlice = createSlice({
     builder.addCase(getAllOppurtunities.rejected, (state, action) => {
       state.loading = "rejected"
     })
-    builder.addCase(getAllProductData.pending, (state, action) => {
-      state.loading = "pending"
-    })
-    builder.addCase(getAllProductData.fulfilled, (state, action) => {
-      state.loading = "success"
-      state.allProductData = action.payload
-    })
-    builder.addCase(getAllProductData.rejected, (state, action) => {
-      state.loading = "rejected"
-    })
+    // builder.addCase(getAllProductData.pending, (state, action) => {
+    //   state.loading = "pending"
+    // })
+    // builder.addCase(getAllProductData.fulfilled, (state, action) => {
+    //   state.loading = "success"
+    //   state.allProductData = action.payload
+    // })
+    // builder.addCase(getAllProductData.rejected, (state, action) => {
+    //   state.loading = "rejected"
+    // })
 
     builder.addCase(getAllLeadUser.pending, (state, action) => {
       state.loading = "pending"

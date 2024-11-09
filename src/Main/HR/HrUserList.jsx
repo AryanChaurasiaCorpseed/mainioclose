@@ -96,7 +96,7 @@ const HrUserList = () => {
           data={filteredData}
           columns={columns}
           rowSelection={true}
-          scroll={{ y: 580, x: 4800 }}
+          scroll={{ y: 550, x: 4800 }}
         />
       )}
     </SideBox>

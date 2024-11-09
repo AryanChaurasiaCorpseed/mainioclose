@@ -9,11 +9,12 @@ import {
   Switch,
   Upload,
 } from "antd"
-import React, { useCallback, useEffect, useState } from "react"
+import React, { useCallback,useState } from "react"
 import { Icon } from "@iconify/react"
 import { useDispatch, useSelector } from "react-redux"
 import {
   createCompanyForm,
+  getAllContactDetails,
   getCompanyByUnitId,
   getCompanyDetailsByGst,
   getCompanyDetailsByLeadId,
@@ -100,6 +101,7 @@ const CompanyFormModal = ({
   const handleButtonClick = useCallback(() => {
     dispatch(getAllMainIndustry())
     dispatch(getClientDesiginationList())
+    dispatch(getAllContactDetails())
     dispatch(
       getCompanyDetailsByLeadId(data?.id ? data?.id : data?.leadId)
     ).then((resp) => {

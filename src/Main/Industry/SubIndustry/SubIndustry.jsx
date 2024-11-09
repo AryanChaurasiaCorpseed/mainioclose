@@ -116,7 +116,7 @@ const SubIndustry = () => {
             <Input />
           </Form.Item>
           <Form.Item
-            label="Select industry"
+            label="Select sub sub industry"
             name="subsubIndustryId"
             rules={[
               {

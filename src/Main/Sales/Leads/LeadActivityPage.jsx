@@ -20,6 +20,7 @@ import {
   deleteProduct,
   deleteTask,
   getAllTaskData,
+  getAllTaskStatus,
   getSingleLeadDataByLeadID,
   updateLeadProducts,
   updateLeadTask,
@@ -42,7 +43,7 @@ export const LeadActivityPage = ({ leadid }) => {
   const singleLeadTaskList = useSelector((state) => state.leads.getSingleLeadTask)
   const allProductsList = useSelector((state) => state.leads.allProductsList)
   const allOportunities = useSelector((state) => state.leads.allOportunities)
-  const allProductData = useSelector((state) => state.leads.allProductData)
+  const allProductData = useSelector((state) => state.product.productData)
 
   const adminRole = currentUserRoles.includes("ADMIN")
 

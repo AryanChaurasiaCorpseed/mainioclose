@@ -92,7 +92,7 @@ const SubsubIndustry = () => {
         />
       </div>
       <Modal
-        title={"Add industry"}
+        title={"Add sub sub industry"}
         open={openModal}
         onCancel={() => setOpenModal(false)}
         onClose={() => setOpenModal(false)}
@@ -114,7 +114,7 @@ const SubsubIndustry = () => {
           </Form.Item>
           
           <Form.Item
-            label="Select industry"
+            label="Select industry data"
             name="industryDataId"
             rules={[
               {

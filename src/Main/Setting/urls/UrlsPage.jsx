@@ -7,7 +7,7 @@ import {
   getAllUrlCount,
 } from "../../../Toolkit/Slices/LeadUrlSlice"
 import MainHeading from "../../../components/design/MainHeading"
-import { getAllSlugAction } from "../../../Toolkit/Slices/LeadSlugSlice"
+import { getAllSlugList } from "../../../Toolkit/Slices/LeadSlugSlice"
 import {
   Button,
   Form,
@@ -29,7 +29,6 @@ const { Text } = Typography
 const UrlsPage = () => {
   const [form] = Form.useForm()
   const dispatch = useDispatch()
-  const { allLeadSlug } = useSelector((prev) => prev?.leadslug)
   const slugList = useSelector((state) => state.leadslug.slugList)
   const totalCount = useSelector((state) => state.leadurls.totalUrlCount)
   const allLeadUrl = useSelector((prev) => prev?.leadurls.allLeadUrl)
@@ -43,9 +42,9 @@ const UrlsPage = () => {
     size: 50,
   })
 
-  // useEffect(() => {
-  //   dispatch(({page:1,size:200}))
-  // }, [dispatch])
+  useEffect(() => {
+    dispatch(getAllSlugList())
+  }, [dispatch])
 
   useEffect(() => {
     dispatch(

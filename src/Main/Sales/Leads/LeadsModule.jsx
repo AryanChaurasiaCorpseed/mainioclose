@@ -9,6 +9,7 @@ import {
   deleteMultipleLeads,
   getAllLeadCount,
   getAllLeads,
+  getAllStatusData,
   getLeadNotificationCount,
   handleDeleteSingleLead,
   handleLeadassignedToSamePerson,
@@ -87,6 +88,10 @@ const LeadsModule = () => {
     dispatch(getAllLeads(allMultiFilterData))
     dispatch(getAllLeadCount(allMultiFilterData))
   }, [filterBtnNew, dispatch])
+
+  useEffect(()=>{
+    dispatch(getAllStatusData())
+  },[])
 
   const handlePagination = useCallback(
     (dataPage, size) => {

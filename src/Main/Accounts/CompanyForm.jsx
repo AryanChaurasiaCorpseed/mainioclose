@@ -34,7 +34,7 @@ import { BTN_ICON_HEIGHT, BTN_ICON_WIDTH } from "../../components/Constants"
 const { Text } = Typography
 const { Search } = Input
 
-const CompanyForm = ({ role }) => {
+const CompanyForm = () => {
   const dispatch = useDispatch()
   const { userid } = useParams()
   const [form] = Form.useForm()

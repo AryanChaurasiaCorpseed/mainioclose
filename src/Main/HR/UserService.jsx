@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react"
 import TableOutlet from "../../components/design/TableOutlet"
 import MainHeading from "../../components/design/MainHeading"
-import { useSelector } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import TableScalaton from "../../components/TableScalaton"
 import SomethingWrong from "../../components/usefulThings/SomethingWrong"
 import CreateRatingModel from "../../Model/CreateRatingModel"
@@ -9,18 +9,25 @@ import CommonTable from "../../components/CommonTable"
 import OverFlowText from "../../components/OverFlowText"
 import { Icon } from "@iconify/react"
 import { Input, Typography } from "antd"
+import { getAllUrlList } from "../../Toolkit/Slices/LeadUrlSlice"
 const { Text } = Typography
 
 const UserService = () => {
+  const dispatch=useDispatch()
   const { allLeadUrlLoading, allLeadUrlError, allUrlList } = useSelector(
     (prev) => prev?.leadurls
   )
   const [searchText, setSearchText] = useState("")
   const [filteredData, setFilteredData] = useState([])
 
+  useEffect(()=>{
+    dispatch(getAllUrlList())
+  },[dispatch])
+
   useEffect(() => {
     setFilteredData(allUrlList)
   }, [allUrlList])
+  
 
 
   const handleSearch = (e) => {
