@@ -139,7 +139,7 @@ const UrlsPage = () => {
       title: "Edit",
       dataIndex: "edit",
       width: 80,
-      render: (_, data) => <EditUrls data={data} />,
+      render: (_, data) => <EditUrls data={data}  paginationData={paginationData} />,
     },
   ]
 

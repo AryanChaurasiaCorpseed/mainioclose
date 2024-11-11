@@ -4,11 +4,11 @@ import { useDispatch, useSelector } from "react-redux"
 import { editUrls, getAllUrlAction } from "../../../Toolkit/Slices/LeadUrlSlice"
 import { Icon } from "@iconify/react"
 
-const EditUrls = ({ data }) => {
+const EditUrls = ({ data, paginationData }) => {
   const [form] = Form.useForm()
   const dispatch = useDispatch()
   const [openModal, setOpenModal] = useState(false)
-  const { allLeadSlug } = useSelector((prev) => prev?.leadslug)
+  const slugList = useSelector((state) => state.leadslug.slugList)
 
   const editFormValues = useCallback(() => {
     setOpenModal(true)
@@ -17,7 +17,7 @@ const EditUrls = ({ data }) => {
       urlSlug: data?.urlSlug?.map((item) => item?.id),
       quality: data?.quality,
     })
-  }, [data, form])
+  }, [data, form, dispatch])
 
   const handleSubmit = useCallback(
     async (values) => {
@@ -27,7 +27,7 @@ const EditUrls = ({ data }) => {
           if (resp.meta.requestStatus === "fulfilled") {
             notification.success({ message: "URL edited successfully !" })
             setOpenModal(false)
-            dispatch(getAllUrlAction({page:1,size:300}))
+            dispatch(getAllUrlAction(paginationData))
             form.resetFields()
           } else {
             notification.error({
@@ -74,10 +74,12 @@ const EditUrls = ({ data }) => {
               showSearch
               mode="multiple"
               maxTagCount="responsive"
-              options={allLeadSlug?.map((item) => ({
-                label: item?.name,
-                value: item?.id,
-              }))}
+              options={
+                slugList?.map((item) => ({
+                  label: item?.name,
+                  value: item?.id,
+                })) || []
+              }
               filterOption={(input, option) =>
                 option.label.toLowerCase().includes(input.toLowerCase())
               }

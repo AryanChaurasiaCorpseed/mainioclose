@@ -3,7 +3,8 @@ import TableOutlet from "../../../components/design/TableOutlet"
 import MainHeading from "../../../components/design/MainHeading"
 import { useDispatch, useSelector } from "react-redux"
 import {
-  getCompanyAction,
+  deleteTempAssignee,
+  getAllTempCompanies,
   searchCompany,
   updateCompanyAssignee,
   updateMultiCompanyAssignee,
@@ -38,14 +39,14 @@ const CommonTable = lazy(() => import("../../../components/CommonTable"))
 const { Search } = Input
 const { Text } = Typography
 
-const MainCompanyPage = () => {
+const TemporaryCompanies = () => {
   const dispatch = useDispatch()
   const { userid } = useParams()
   const currUser = useSelector((prev) => prev?.auth?.currentUser)
   const leadUserNew = useSelector((state) => state.leads.getAllLeadUserData)
   const currentRoles = useSelector((state) => state?.auth?.roles)
   const allUsers = useSelector((state) => state.user.allUsers)
-  const { allCompnay, loadingCompany, errorCompany } = useSelector(
+  const { allTemporaryCompanies, loadingCompany, errorCompany } = useSelector(
     (prev) => prev?.company
   )
   const [selectedRowKeys, setSelectedRowKeys] = useState([])
@@ -64,7 +65,7 @@ const MainCompanyPage = () => {
 
   useEffect(() => {
     dispatch(
-      getCompanyAction({
+      getAllTempCompanies({
         id: currUser?.id,
         page: paginationData?.page,
         size: paginationData?.size,
@@ -92,7 +93,7 @@ const MainCompanyPage = () => {
   const handlePagination = useCallback(
     (dataPage, size) => {
       dispatch(
-        getCompanyAction({
+        getAllTempCompanies({
           id: currUser?.id,
           page: dataPage,
           size: size,
@@ -118,7 +119,7 @@ const MainCompanyPage = () => {
               message: "Assignee is updated successfully",
             })
             dispatch(
-              getCompanyAction({
+              getAllTempCompanies({
                 id: currUser?.id,
                 page: paginationData?.page,
                 size: paginationData?.size,
@@ -140,7 +141,7 @@ const MainCompanyPage = () => {
     (filterUserId) => {
       if (filterUserId) {
         dispatch(
-          getCompanyAction({
+          getAllTempCompanies({
             id: currUser?.id,
             page: paginationData?.page,
             size: paginationData?.size,
@@ -392,6 +393,14 @@ const MainCompanyPage = () => {
           notification.success({
             message: "Companies assigned to user successfully",
           })
+          dispatch(
+            getAllTempCompanies({
+              id: currUser?.id,
+              page: paginationData?.page,
+              size: paginationData?.size,
+              filterUserId,
+            })
+          )
           setSelectedRowKeys([])
           setAssigneeId(null)
         } else {
@@ -420,6 +429,14 @@ const MainCompanyPage = () => {
           notification.success({
             message: "Companies assigned to user successfully",
           })
+          dispatch(
+            getAllTempCompanies({
+              id: currUser?.id,
+              page: paginationData?.page,
+              size: paginationData?.size,
+              filterUserId,
+            })
+          )
           setSelectedRowKeys([])
           setTempAssigneeId(null)
         } else {
@@ -431,7 +448,57 @@ const MainCompanyPage = () => {
         setAssignedProcessing("error")
         notification.error({ message: "Something went wrong !." })
       })
-  }, [selectedRowKeys, tempAssigneeId, dispatch, userid])
+  }, [
+    selectedRowKeys,
+    tempAssigneeId,
+    dispatch,
+    userid,
+    paginationData,
+    filterUserId,
+    currUser,
+  ])
+
+  const handleDeleteAssignee = useCallback(() => {
+    dispatch(
+      deleteTempAssignee({
+        companyId: selectedRowKeys,
+        currentUserId: userid,
+        assigneeId: userid,
+      })
+    )
+      .then((resp) => {
+        if (resp.meta.requestStatus === "fulfilled") {
+          notification.success({
+            message: "Assignee's are deleted from companies",
+          })
+          dispatch(
+            getAllTempCompanies({
+              id: currUser?.id,
+              page: paginationData?.page,
+              size: paginationData?.size,
+              filterUserId,
+            })
+          )
+          setSelectedRowKeys([])
+        } else {
+          notification.error({
+            message: "Something went wrong !.",
+          })
+        }
+      })
+      .catch(() =>
+        notification.error({
+          message: "Something went wrong !.",
+        })
+      )
+  }, [
+    dispatch,
+    selectedRowKeys,
+    userid,
+    paginationData,
+    filterUserId,
+    currUser,
+  ])
 
   const exportedData = selectedRow?.map((item) => ({
     Id: item?.companyId,
@@ -496,8 +563,10 @@ const MainCompanyPage = () => {
   return (
     <TableOutlet>
       <MainHeading
-        data={`All company (${
-          allCompnay?.[0]?.total === undefined ? 0 : allCompnay?.[0]?.total
+        data={`Temporary companies (${
+          allTemporaryCompanies?.[0]?.total === undefined
+            ? 0
+            : allTemporaryCompanies?.[0]?.total
         })`}
       />
       <Flex justify="space-between" align="center">
@@ -536,7 +605,7 @@ const MainCompanyPage = () => {
               onChange={filterCompanyBasedOnUser}
               onClear={() =>
                 dispatch(
-                  getCompanyAction({
+                  getAllTempCompanies({
                     id: currUser?.id,
                     page: paginationData?.page,
                     size: paginationData?.size,
@@ -556,13 +625,7 @@ const MainCompanyPage = () => {
           menu={{ items: columnDropDown(handleSelectColumns) }}
           dropdownRender={(menu) => (
             <div className="dropdown-content">
-              <div
-                style={{
-                  height: "400px",
-                  overflow: "auto",
-                  borderRadius: "4px",
-                }}
-              >
+              <div className="dropdown-content-container">
                 {React.cloneElement(menu, {
                   style: menuStyle,
                 })}
@@ -618,10 +681,10 @@ const MainCompanyPage = () => {
       <div className="mt-3">
         {loadingCompany && <TableScalaton />}
         {errorCompany && <SomethingWrong />}
-        {allCompnay && !loadingCompany && !errorCompany && (
+        {allTemporaryCompanies && !loadingCompany && !errorCompany && (
           <Suspense fallback={<TableScalaton />}>
             <CommonTable
-              data={allCompnay}
+              data={allTemporaryCompanies}
               columns={columns}
               scroll={{ x: 3300, y: 480 }}
               rowSelection={true}
@@ -631,7 +694,7 @@ const MainCompanyPage = () => {
               pagination={true}
               page={paginationData?.page}
               pageSize={paginationData?.size}
-              totalCount={allCompnay?.[0]?.total}
+              totalCount={allTemporaryCompanies?.[0]?.total}
               handlePagination={handlePagination}
               footerContent={
                 <div className={`bottom-line`}>
@@ -643,6 +706,14 @@ const MainCompanyPage = () => {
                     }}
                   >
                     <Flex gap={8}>
+                      <Button
+                        danger
+                        size="small"
+                        onClick={handleDeleteAssignee}
+                        disabled={selectedRowKeys?.length===0}
+                      >
+                        Delete assignee
+                      </Button>
                       <Select
                         showSearch
                         allowClear
@@ -732,4 +803,4 @@ const MainCompanyPage = () => {
   )
 }
 
-export default MainCompanyPage
+export default TemporaryCompanies

@@ -76,6 +76,7 @@ import Procurement from "./Main/Vendors/Procurement"
 import MainCompanyFormPage from "./Main/Accounts/MainCompanyFormPage"
 import VendorsRequestList from "./Main/Sales/Leads/VendorsRequestList"
 import ClientDesigination from "./Main/Setting/ClientDesiginations/ClientDesigination"
+import MainComanyModule from "./Main/Sales/company/MainComanyModule"
 
 const SpinLoading = lazy(() => import("./components/SpinLoading"))
 
@@ -255,7 +256,8 @@ function App() {
                 {/* <Route path=":id" element={<LeadDetailsPage />} /> */}
 
                 <Route path="oppurtities" element={<Opportunities />} />
-                <Route path="company" element={<MainCompanyPage />} />
+                {/* <Route path="company" element={<MainCompanyPage />} /> */}
+                <Route path="company" element={<MainComanyModule/>} />
                 <Route path="project" element={<ProjectPage />} />
                 <Route path="vendors-request" element={<VendorsRequestList />} />
                 <Route

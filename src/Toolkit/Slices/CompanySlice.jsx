@@ -2,6 +2,8 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 import { getQuery } from "../../API/GetQuery"
 import { postQuery } from "../../API/PostQuery"
 import { putQuery } from "../../API/PutQuery"
+import { deleteQuery } from "../../API/DeleteQuery"
+import { deleteQueryWithData } from "../../API/DeleteQueryWithData"
 
 export const getCompanyAction = createAsyncThunk(
   "getallCompanyData",
@@ -215,6 +217,29 @@ export const searchFormCompaniesBy = createAsyncThunk(
   }
 )
 
+export const getAllTempCompanies = createAsyncThunk(
+  "getAllTempCompanies",
+  async ({ id, page, filterUserId, size }) => {
+    const response = await getQuery(
+      `/leadService/api/v1/company/getAllTempCompany?userId=${id}&filterUserId=${filterUserId}&page=${page}&size=${size}`
+    )
+    return response.data
+  }
+)
+
+
+export const updateMultiTempCompanyAssignee=createAsyncThunk('updateMultiTempCompanyAssignee',async(data)=>{
+  const response=await putQuery(`/leadService/api/v1/company/updateMultiCompanyTempAssignee`,data)
+  return response.data
+}) 
+
+export const deleteTempAssignee=createAsyncThunk('deleteTempAssignee',async(data)=>{
+  const response=await deleteQueryWithData(`/leadService/api/v1/company/deleteTempAssignee`,data)
+  return response.data
+})
+
+
+
 const CompnaySlice = createSlice({
   name: "company",
   initialState: {
@@ -237,6 +262,7 @@ const CompnaySlice = createSlice({
     companyHistoryList: [],
     companyListWithServices: {},
     totalCompanyServiceCount: 0,
+    allTemporaryCompanies:[]
   },
   reducers: {
     handleNextPagination: (state, action) => {
@@ -420,6 +446,20 @@ const CompnaySlice = createSlice({
       state.loading = "rejected"
       state.companyListWithServices = {}
     })
+
+
+    builder.addCase(getAllTempCompanies.pending, (state, action) => {
+      state.loading = "pending"
+    })
+    builder.addCase(getAllTempCompanies.fulfilled, (state, action) => {
+      state.allTemporaryCompanies = action.payload
+      state.loading = "success"
+    })
+    builder.addCase(getAllTempCompanies.rejected, (state, action) => {
+      state.loading = "rejected"
+      state.allTemporaryCompanies = []
+    })
+
   },
 })
 

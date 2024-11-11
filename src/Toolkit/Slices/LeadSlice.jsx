@@ -691,14 +691,36 @@ export const vendorsRequestView = createAsyncThunk(
   }
 )
 
+export const createEstimate = createAsyncThunk(
+  "createEstimate",
+  async (data) => {
+    const response = await postQuery(
+      `/leadService/api/v1/leadEstimate/createEstimate`,
+      data
+    )
+    return response.data
+  }
+)
 
-export const createEstimate=createAsyncThunk('createEstimate',async(data)=>{
-  const response=await postQuery(`/leadService/api/v1/leadEstimate/createEstimate`,data)
-  return response.data
-})
+export const cancelVendorsRequest = createAsyncThunk(
+  "cancelVendorsRequest",
+  async ({ vendorRequestId, userId, cancelReason }) => {
+    const response = await deleteQuery(
+      `/leadService/api/v1/vendor/cancel-vendor-request?vendorRequestId=${vendorRequestId}&userId=${userId}&cancelReason=${cancelReason}`
+    )
+    return response.data
+  }
+)
 
-
-
+export const handleFlagByQualityTeam = createAsyncThunk(
+  "handleFlagByQualityTeam",
+  async ({ currentUerId, leadId, isMarked }) => {
+    const response = await putQuery(
+      `/leadService/api/v1/lead/addReopenByQuality?currentUerId=${currentUerId}&leadId=${leadId}&isMarked=${isMarked}`
+    )
+    return response.data
+  }
+)
 
 export const LeadSlice = createSlice({
   name: "lead",

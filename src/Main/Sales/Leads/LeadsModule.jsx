@@ -12,6 +12,7 @@ import {
   getAllStatusData,
   getLeadNotificationCount,
   handleDeleteSingleLead,
+  handleFlagByQualityTeam,
   handleLeadassignedToSamePerson,
   multiAssignedLeads,
   searchLeads,
@@ -24,6 +25,7 @@ import {
   Checkbox,
   Divider,
   Dropdown,
+  Flex,
   Input,
   notification,
   Popconfirm,
@@ -89,9 +91,9 @@ const LeadsModule = () => {
     dispatch(getAllLeadCount(allMultiFilterData))
   }, [filterBtnNew, dispatch])
 
-  useEffect(()=>{
+  useEffect(() => {
     dispatch(getAllStatusData())
-  },[])
+  }, [])
 
   const handlePagination = useCallback(
     (dataPage, size) => {
@@ -245,6 +247,19 @@ const LeadsModule = () => {
       })
   }
 
+  const handleFlag = useCallback(
+    (data) => {
+      dispatch(
+        handleFlagByQualityTeam({
+          currentUerId: userid,
+          leadId: data?.id,
+          isMarked: true,
+        })
+      )
+    },
+    [dispatch, userid]
+  )
+
   const columns = [
     {
       dataIndex: "sno",
@@ -252,7 +267,16 @@ const LeadsModule = () => {
       fixed: "left",
       width: 80,
       checked: true,
-      render: (y, x, idx) => <Text>{idx + 1}</Text>,
+      render: (y, data, idx) => (
+        <Flex gap={8} align="center">
+          <Text>{idx + 1}</Text>
+          {data?.isReopenByQuality && (
+            <Button size="small" type="text" onClick={() => handleFlag(data)}>
+              <Icon icon="fluent:flag-24-regular" />
+            </Button>
+          )}
+        </Flex>
+      ),
     },
     {
       dataIndex: "id",
