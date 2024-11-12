@@ -90,7 +90,7 @@ const DashboardSlice = createSlice({
     })
     builders.addCase(getGraphDataByUser.fulfilled, (state, action) => {
       state.loading = "success"
-      state.userGraphList = action.payload
+      state.userGraphList = action.payload?.reverse()
     })
     builders.addCase(getGraphDataByUser.rejected, (state, action) => {
       state.loading = "error"

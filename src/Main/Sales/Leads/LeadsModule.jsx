@@ -284,7 +284,7 @@ const LeadsModule = () => {
           <Button size="small" type="text" onClick={() => handleFlag(data)}>
             <Icon
               icon="fluent:flag-24-filled"
-              color={data?.reopenByQuality ? "green" : ""}
+              color={data?.reopenByQuality ? "red" : ""}
             />
           </Button>
         </Flex>
