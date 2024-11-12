@@ -92,6 +92,13 @@ const SingleVendorRequestDetails = ({ data }) => {
               })
               setOpenModal(false)
               form.resetFields()
+              dispatch(
+                getvendorHistoryByLeadId({
+                  userId: userid,
+                  leadId: data?.leadId,
+                  vendorRequestId: data?.id,
+                })
+              )
             } else {
               notification.error({
                 message: "Something went wrong  !.",

@@ -21,6 +21,11 @@ export const hrUserData = [
     render: (_, props) => <OverFlowText>{props?.email}</OverFlowText>,
   },
   {
+    dataIndex: "contactNo",
+    title: "Contact number",
+    render: (_, props) => <OverFlowText>{props?.contactNo}</OverFlowText>,
+  },
+  {
     dataIndex: "designation",
     title: "Designation",
     render: (_, data) => <OverFlowText>{data?.userDesignation?.name}</OverFlowText>,

@@ -11,7 +11,7 @@ import TableScalaton from "../../components/TableScalaton"
 import MainHeading from "../../components/design/MainHeading"
 import SingleVendorRequestDetails from "./SingleVendorRequestDetails"
 import { Icon } from "@iconify/react"
-import { Button, Flex, notification, Select, Typography } from "antd"
+import { Button, Flex, Input, notification, Select, Typography } from "antd"
 import { getProcurementAssigneeList } from "../../Toolkit/Slices/CommonSlice"
 import { getHighestPriorityRole } from "../Common/Commons"
 const { Text } = Typography
@@ -28,7 +28,8 @@ const VendorsList = () => {
     (state) => state.common.procurementAssigneeList
   )
   const totalCount = useSelector((state) => state.leads.totalVendorRequestCount)
-
+  const [searchText, setSearchText] = useState("")
+  const [filteredData, setFilteredData] = useState([])
   const [selectedRowKeys, setSelectedRowKeys] = useState([])
   const [assigneeId, setAssigneeId] = useState(null)
   const [paginationData, setPaginationData] = useState({
@@ -49,6 +50,21 @@ const VendorsList = () => {
   useEffect(() => {
     dispatch(getProcurementAssigneeList(userid))
   }, [userid, dispatch])
+
+  useEffect(() => {
+    setFilteredData(allVendorsRequestList)
+  }, [allVendorsRequestList])
+
+  const handleSearch = (e) => {
+    const value = e.target.value
+    setSearchText(value)
+    const filtered = allVendorsRequestList?.filter((item) =>
+      Object.values(item)?.some((val) =>
+        String(val)?.toLowerCase()?.includes(value?.toLowerCase())
+      )
+    )
+    setFilteredData(filtered)
+  }
 
   const handlePagination = useCallback(
     (dataPage, size) => {
@@ -101,10 +117,10 @@ const VendorsList = () => {
     {
       dataIndex: "id",
       title: "Id",
-      width: 90,
+      width: 70,
       fixed: "left",
       render: (_, data) => (
-        <Flex gap={4} align="center">
+        <Flex justify="space-between" align="center">
           <Text>{data?.id}</Text>
           <Icon
             icon="fluent:circle-16-filled"
@@ -127,6 +143,7 @@ const VendorsList = () => {
       title: "Assigned to",
       render: (_, data) => (
         <Select
+          size="small"
           placeholder="Select assignee"
           style={{ width: "95%" }}
           value={data?.assigneeId}
@@ -183,16 +200,26 @@ const VendorsList = () => {
 
   return (
     <>
-      <div className="create-user-box">
-        <MainHeading data={`Vendors request list`} />
-      </div>
+      <Flex vertical gap={8}>
+        <div className="create-user-box">
+          <MainHeading data={`Vendors request list`} />
+        </div>
+        <Input
+          value={searchText}
+          size="small"
+          onChange={handleSearch}
+          style={{ width: "220px" }}
+          placeholder="search"
+          prefix={<Icon icon="fluent:search-24-regular" />}
+        />
+      </Flex>
       {loading === "pending" ? (
         <TableScalaton />
       ) : (
         <CommonTable
-          data={allVendorsRequestList}
+          data={filteredData}
           columns={columns}
-          scroll={{ y: 520, x: 1500 }}
+          scroll={{ y: 520, x: 1700 }}
           rowSelection={true}
           onRowSelection={onSelectChange}
           selectedRowKeys={selectedRowKeys}

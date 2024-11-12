@@ -1031,6 +1031,8 @@ export const LeadSlice = createSlice({
     })
     builder.addCase(getAllVendorsRequest.rejected, (state, action) => {
       state.loading = "rejected"
+      state.totalVendorRequestCount=0
+      state.allVendorsRequestList=[]
     })
 
     builder.addCase(getvendorHistoryByLeadId.pending, (state, action) => {

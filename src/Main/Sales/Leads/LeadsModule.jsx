@@ -256,6 +256,17 @@ const LeadsModule = () => {
           isMarked: data?.reopenByQuality ? false : true,
         })
       )
+        .then((resp) => {
+          if (resp.meta.requestStatus === "fulfilled") {
+            notification.success({
+              message: "Lead status updated successfully",
+            })
+            dispatch(getAllLeads(allMultiFilterData))
+          } else {
+            notification.error({ message: "Something went wrong !." })
+          }
+        })
+        .catch(() => notification.error({ message: "Something went wrong !." }))
     },
     [dispatch, userid]
   )
@@ -268,7 +279,7 @@ const LeadsModule = () => {
       width: 80,
       checked: true,
       render: (y, data, idx) => (
-        <Flex gap={8} align="center">
+        <Flex justify="space-between" align="center">
           <Text>{idx + 1}</Text>
           <Button size="small" type="text" onClick={() => handleFlag(data)}>
             <Icon
