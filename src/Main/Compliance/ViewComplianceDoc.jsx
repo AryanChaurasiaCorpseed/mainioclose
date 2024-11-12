@@ -15,7 +15,7 @@ export const ViewComplianceDoc = ({ data }) => {
   const handleFinish = useCallback(
     (values) => {
       values.categoryId = data?.id
-      values.docList = values?.docList?.fileList?.map((item) => item?.response)
+      values.docList = values?.docList?.fileList?.map((item) => item?.response)?.[0]
       dispatch(uploadDocuments(values))
         .then((resp) => {
           if (resp?.meta.requestStatus === "fulfilled") {
