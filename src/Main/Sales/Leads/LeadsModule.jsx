@@ -253,7 +253,7 @@ const LeadsModule = () => {
         handleFlagByQualityTeam({
           currentUerId: userid,
           leadId: data?.id,
-          isMarked: true,
+          isMarked: data?.reopenByQuality ? false : true,
         })
       )
     },
@@ -270,11 +270,13 @@ const LeadsModule = () => {
       render: (y, data, idx) => (
         <Flex gap={8} align="center">
           <Text>{idx + 1}</Text>
-          {data?.isReopenByQuality && (
-            <Button size="small" type="text" onClick={() => handleFlag(data)}>
-              <Icon icon="fluent:flag-24-regular" />
-            </Button>
-          )}
+
+          <Button size="small" type="text" onClick={() => handleFlag(data)}>
+            <Icon
+              icon="fluent:flag-24-regular"
+              color={data?.reopenByQuality ? "green" : ""}
+            />
+          </Button>
         </Flex>
       ),
     },
