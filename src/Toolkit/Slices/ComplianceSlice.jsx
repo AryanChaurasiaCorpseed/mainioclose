@@ -16,8 +16,7 @@ export const uploadDocuments = createAsyncThunk(
   `uploadDocuments`,
   async (data) => {
     const response = await postQuery(
-      `/leadService/api/v1/complianceDocumnets/createDocuments?categoryId=${data?.categoryId} `,
-      data
+      `/leadService/api/v1/complianceDocumnets/createDocuments?categoryId=${data?.categoryId}&docList=${data?.docList}`,
     )
     return response.data
   }
