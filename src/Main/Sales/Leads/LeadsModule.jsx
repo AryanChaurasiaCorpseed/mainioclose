@@ -270,10 +270,9 @@ const LeadsModule = () => {
       render: (y, data, idx) => (
         <Flex gap={8} align="center">
           <Text>{idx + 1}</Text>
-
           <Button size="small" type="text" onClick={() => handleFlag(data)}>
             <Icon
-              icon="fluent:flag-24-regular"
+              icon="fluent:flag-24-filled"
               color={data?.reopenByQuality ? "green" : ""}
             />
           </Button>

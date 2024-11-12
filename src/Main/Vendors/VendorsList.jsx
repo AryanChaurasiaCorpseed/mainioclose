@@ -245,7 +245,7 @@ const VendorsList = () => {
                     Send
                   </Button>
                 </div>
-                <Text>Selected rows: {selectedRowKeys?.length}</Text>
+                <Text>Selected rows : {selectedRowKeys?.length}</Text>
               </div>
             </div>
           }
