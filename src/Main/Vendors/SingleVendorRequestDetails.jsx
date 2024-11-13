@@ -12,70 +12,70 @@ import {
   Timeline,
   Typography,
   Upload,
-} from "antd"
-import React, { useCallback, useState } from "react"
-import { Icon } from "@iconify/react"
-import { BTN_ICON_HEIGHT, BTN_ICON_WIDTH } from "../../components/Constants"
-import dayjs from "dayjs"
-import { useDispatch, useSelector } from "react-redux"
+} from "antd";
+import React, { useCallback, useState } from "react";
+import { Icon } from "@iconify/react";
+import { BTN_ICON_HEIGHT, BTN_ICON_WIDTH } from "../../components/Constants";
+import dayjs from "dayjs";
+import { useDispatch, useSelector } from "react-redux";
 import {
   cancelVendorsRequest,
   getvendorHistoryByLeadId,
   sendVendorsProposal,
   updateVendorStatus,
   vendorsRequestView,
-} from "../../Toolkit/Slices/LeadSlice"
-import { useParams } from "react-router-dom"
-import { getHighestPriorityRole } from "../Common/Commons"
-const { Text, Paragraph } = Typography
+} from "../../Toolkit/Slices/LeadSlice";
+import { useParams } from "react-router-dom";
+import { getHighestPriorityRole } from "../Common/Commons";
+const { Text, Paragraph } = Typography;
 
 const SingleVendorRequestDetails = ({ data }) => {
-  const { userid } = useParams()
-  const dispatch = useDispatch()
+  const { userid } = useParams();
+  const dispatch = useDispatch();
   const historyList = useSelector(
     (state) => state.leads.singleVendorHistoryList
-  )
-  const currentRoles = useSelector((state) => state?.auth?.roles)
-  const [openDrawer, setOpenDrawer] = useState(false)
-  const [openModal, setOpenModal] = useState(false)
-  const [openDocModal, setOpenDocModal] = useState(false)
-  const [openDocModal1, setOpenDocModal1] = useState(false)
-  const [index, setIndex] = useState(0)
+  );
+  const currentRoles = useSelector((state) => state?.auth?.roles);
+  const [openDrawer, setOpenDrawer] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
+  const [openDocModal, setOpenDocModal] = useState(false);
+  const [openDocModal1, setOpenDocModal1] = useState(false);
+  const [index, setIndex] = useState(0);
 
-  const [form] = Form.useForm()
+  const [form] = Form.useForm();
 
   const normFile = (e) => {
     if (Array.isArray(e)) {
-      return e
+      return e;
     }
-    return e?.fileList
-  }
+    return e?.fileList;
+  };
 
   const handleOpenDrawer = useCallback(() => {
-    setOpenDrawer(true)
-    dispatch(vendorsRequestView({ id: data?.id, userid }))
+    setOpenDrawer(true);
+    dispatch(vendorsRequestView({ id: data?.id, userid }));
     dispatch(
       getvendorHistoryByLeadId({
         userId: userid,
         leadId: data?.leadId,
         vendorRequestId: data?.id,
       })
-    )
-  }, [dispatch, data, userid])
+    );
+  }, [dispatch, data, userid]);
 
   const handleUpdateRequest = useCallback(
     (values) => {
-      values.quotationFilePath = values?.quotationFilePath?.[0]?.response
-      values.companyName = data?.clientCompanyName
-      values.contactPersonName = data?.contactPersonName
-      values.vendorCategoryId = data?.vendorCategoryId
-      values.subVendorCategoryId = data?.vendorSubCategoryId
+      values.quotationFilePath = values?.quotationFilePath?.[0]?.response;
+      values.companyName = data?.clientCompanyName;
+      values.contactPersonName = data?.contactPersonName;
+      values.vendorCategoryId = data?.vendorCategoryId;
+      values.subVendorCategoryId = data?.vendorSubCategoryId;
       let obj = {
         vendorId: data?.id,
         userId: userid,
         leadId: data?.leadId,
         data: values,
-      }
+      };
 
       if (values?.requestStatus === "Cancel") {
         dispatch(
@@ -89,36 +89,36 @@ const SingleVendorRequestDetails = ({ data }) => {
             if (resp.meta.requestStatus === "fulfilled") {
               notification.success({
                 message: "Vendors request cancelled successfully!.",
-              })
-              setOpenModal(false)
-              form.resetFields()
+              });
+              setOpenModal(false);
+              form.resetFields();
               dispatch(
                 getvendorHistoryByLeadId({
                   userId: userid,
                   leadId: data?.leadId,
                   vendorRequestId: data?.id,
                 })
-              )
+              );
             } else {
               notification.error({
                 message: "Something went wrong  !.",
-              })
+              });
             }
           })
           .catch(() =>
             notification.error({
               message: "Something went wrong !.",
             })
-          )
+          );
       } else {
         dispatch(updateVendorStatus(obj))
           .then((resp) => {
             if (resp.meta.requestStatus === "fulfilled") {
               notification.success({
                 message: "Vendor's status updated successfully",
-              })
-              setOpenModal(false)
-              form.resetFields()
+              });
+              setOpenModal(false);
+              form.resetFields();
               if (values?.requestStatus === "Finished") {
                 dispatch(
                   sendVendorsProposal({
@@ -138,12 +138,12 @@ const SingleVendorRequestDetails = ({ data }) => {
                     if (resp.meta.requestStatus === "fulfilled") {
                       notification.success({
                         message: "Proposal send to client.",
-                      })
+                      });
                     } else {
                       notification.error({
                         message:
                           "Something went wrong to proposal send to client !.",
-                      })
+                      });
                     }
                   })
                   .catch(() =>
@@ -151,7 +151,7 @@ const SingleVendorRequestDetails = ({ data }) => {
                       message:
                         "Something went wrong to proposal send to client !.",
                     })
-                  )
+                  );
               }
               dispatch(
                 getvendorHistoryByLeadId({
@@ -159,18 +159,18 @@ const SingleVendorRequestDetails = ({ data }) => {
                   leadId: data?.leadId,
                   vendorRequestId: data?.id,
                 })
-              )
+              );
             } else {
-              notification.error({ message: "Something went wrong !." })
+              notification.error({ message: "Something went wrong !." });
             }
           })
           .catch(() => {
-            notification.error({ message: "Something went wrong !." })
-          })
+            notification.error({ message: "Something went wrong !." });
+          });
       }
     },
     [dispatch, data, userid, form]
-  )
+  );
 
   return (
     <>
@@ -378,6 +378,8 @@ const SingleVendorRequestDetails = ({ data }) => {
                             ? "green"
                             : item?.requestStatus === "Processing"
                             ? "orange"
+                            : item?.requestStatus === "Cancel"
+                            ? "black"
                             : "blue",
                         dot:
                           item?.requestStatus === "Processing" ? (
@@ -439,7 +441,7 @@ const SingleVendorRequestDetails = ({ data }) => {
                             <Text> {item?.updateDescription}</Text>
                           </Flex>
                         ),
-                      }
+                      };
                     })
                   : []
               }
@@ -580,7 +582,7 @@ const SingleVendorRequestDetails = ({ data }) => {
         </Form>
       </Modal>
     </>
-  )
-}
+  );
+};
 
-export default SingleVendorRequestDetails
+export default SingleVendorRequestDetails;
