@@ -532,6 +532,7 @@ const CompanyForm = () => {
           rowSelection={true}
           page={paginationData?.page}
           pageSize={paginationData?.size}
+          rowKey={(record) => record?.id}
           pagination={true}
           totalCount={leadCompanyList?.[0]?.totalLeadFor}
           handlePagination={handlePagination}
