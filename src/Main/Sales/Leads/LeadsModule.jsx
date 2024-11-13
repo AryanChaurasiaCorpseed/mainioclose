@@ -52,6 +52,9 @@ const LeadsModule = () => {
   const notificationCount = useSelector(
     (state) => state.leads.notificationCount
   )
+  const currentUserDetail = useSelector(
+    (state) => state.auth.getDepartmentDetail
+  )
   const totalCount = useSelector((state) => state.leads.totalCount)
   const [multibtn, setMultibtn] = useState("")
   const [leadDelLoading, setLeadDelLoading] = useState("")
@@ -281,12 +284,15 @@ const LeadsModule = () => {
       render: (y, data, idx) => (
         <Flex justify="space-between" align="center">
           <Text>{idx + 1}</Text>
-          <Button size="small" type="text" onClick={() => handleFlag(data)}>
-            <Icon
-              icon="fluent:flag-24-filled"
-              color={data?.reopenByQuality ? "red" : ""}
-            />
-          </Button>
+          {currentUserDetail?.department === "Quality Team" && (
+            <Button size="small" type="text" onClick={() => handleFlag(data)}>
+              <Icon
+                icon="fluent:flag-24-filled"
+                color={data?.reopenByQuality ? "red" : ""}
+              />
+            </Button>
+          )}
+
         </Flex>
       ),
     },
@@ -428,85 +434,85 @@ const LeadsModule = () => {
     },
     ...(adminRole
       ? [
-          {
-            title: "Helper",
-            dataIndex: "helper",
-            checked: true,
-            render: (_, data) => (
-              <Select
-                showSearch
-                size="small"
-                value={data?.helper ? data?.helpUser?.id : ""}
-                style={{ width: "100%" }}
-                options={
-                  [
-                    { label: "NA", value: "" },
-                    ...allUsers?.map((item) => ({
-                      label: item?.fullName,
-                      value: item?.id,
-                    })),
-                  ] || []
-                }
-                filterOption={(input, option) =>
-                  option.label.toLowerCase().includes(input.toLowerCase())
-                }
-                onChange={(e) => handleHelperChange(e, data?.id)}
-              />
-            ),
-          },
-          {
-            title: "Created by",
-            dataIndex: "createdBy",
-            checked: true,
-            render: (_, data) => (
-              <OverFlowText>{data?.createdBy?.fullName}</OverFlowText>
-            ),
-          },
-          {
-            title: "Source",
-            dataIndex: "source",
-            checked: true,
-            render: (_, data) => <OverFlowText>{data?.source}</OverFlowText>,
-          },
-          {
-            title: "Create project",
-            dataIndex: "project",
-            checked: false,
-            render: (_, data) => <CompanyFormModal data={data} />,
-          },
-          {
-            title: "Lead assigned",
-            dataIndex: "assignedSame",
-            checked: false,
-            render: (_, data) => (
-              <Button size="small" onClick={() => leadAssignedToSame(data?.id)}>
-                To same{" "}
+        {
+          title: "Helper",
+          dataIndex: "helper",
+          checked: true,
+          render: (_, data) => (
+            <Select
+              showSearch
+              size="small"
+              value={data?.helper ? data?.helpUser?.id : ""}
+              style={{ width: "100%" }}
+              options={
+                [
+                  { label: "NA", value: "" },
+                  ...allUsers?.map((item) => ({
+                    label: item?.fullName,
+                    value: item?.id,
+                  })),
+                ] || []
+              }
+              filterOption={(input, option) =>
+                option.label.toLowerCase().includes(input.toLowerCase())
+              }
+              onChange={(e) => handleHelperChange(e, data?.id)}
+            />
+          ),
+        },
+        {
+          title: "Created by",
+          dataIndex: "createdBy",
+          checked: true,
+          render: (_, data) => (
+            <OverFlowText>{data?.createdBy?.fullName}</OverFlowText>
+          ),
+        },
+        {
+          title: "Source",
+          dataIndex: "source",
+          checked: true,
+          render: (_, data) => <OverFlowText>{data?.source}</OverFlowText>,
+        },
+        {
+          title: "Create project",
+          dataIndex: "project",
+          checked: false,
+          render: (_, data) => <CompanyFormModal data={data} />,
+        },
+        {
+          title: "Lead assigned",
+          dataIndex: "assignedSame",
+          checked: false,
+          render: (_, data) => (
+            <Button size="small" onClick={() => leadAssignedToSame(data?.id)}>
+              To same{" "}
+            </Button>
+          ),
+        },
+        {
+          dataIndex: "action",
+          title: "Action",
+          checked: false,
+          render: (_, data) => (
+            <Popconfirm
+              title="Delete the lead"
+              description="Are you sure to delete this lead?"
+              onConfirm={() => leadDeleteResponse(data?.id)}
+              okText="Yes"
+              cancelText="No"
+            >
+              <Button type="text" size="small" danger>
+                <Icon
+                  icon="fluent:delete-20-regular"
+                  height={18}
+                  width={18}
+                />
               </Button>
-            ),
-          },
-          {
-            dataIndex: "action",
-            title: "Action",
-            checked: false,
-            render: (_, data) => (
-              <Popconfirm
-                title="Delete the lead"
-                description="Are you sure to delete this lead?"
-                onConfirm={() => leadDeleteResponse(data?.id)}
-                okText="Yes"
-                cancelText="No"
-              >
-                <Button type="text" size="small" danger>
-                  <Icon
-                    icon="fluent:delete-20-regular"
-                    height={18}
-                    width={18}
-                  />
-                </Button>
-              </Popconfirm>
-            ),
-          },
-        ]
+            </Popconfirm>
+          ),
+        },
+      ]
       : []),
   ]
 
@@ -726,9 +732,9 @@ const LeadsModule = () => {
               options={
                 leadUserNew?.length > 0
                   ? leadUserNew?.map((item) => ({
-                      label: item?.fullName,
-                      value: item?.id,
-                    }))
+                    label: item?.fullName,
+                    value: item?.id,
+                  }))
                   : []
               }
               filterOption={(input, option) =>
@@ -748,9 +754,9 @@ const LeadsModule = () => {
             options={
               getAllStatus?.length > 0
                 ? getAllStatus?.map((item) => ({
-                    label: item?.name,
-                    value: item?.id,
-                  }))
+                  label: item?.name,
+                  value: item?.id,
+                }))
                 : []
             }
             onChange={(e) =>
@@ -871,9 +877,9 @@ const LeadsModule = () => {
                       options={
                         getAllStatus?.length > 0
                           ? getAllStatus?.map((item) => ({
-                              label: item?.name,
-                              value: item?.id,
-                            }))
+                            label: item?.name,
+                            value: item?.id,
+                          }))
                           : []
                       }
                       onChange={(e) =>
@@ -898,9 +904,9 @@ const LeadsModule = () => {
                       options={
                         leadUserNew?.length > 0
                           ? leadUserNew?.map((ele) => ({
-                              label: ele?.fullName,
-                              value: ele?.id,
-                            }))
+                            label: ele?.fullName,
+                            value: ele?.id,
+                          }))
                           : []
                       }
                       onChange={(e) =>
