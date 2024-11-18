@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 import { postQuery } from "../../API/PostQuery"
+import { getQuery } from "../../API/GetQuery"
 
 export const projectGraphData = createAsyncThunk(
   "projectGraph",
@@ -40,6 +41,36 @@ export const getGraphDataByUser=createAsyncThunk('getGraphDataByUser',async(data
   return response.data
 })
 
+export const getTotalLeadCountForGraph=createAsyncThunk('getTotalLeadCountForGraph',async()=>{
+  const response=await getQuery(`/leadService/api/v1/salesDashboard/getTotalLeadCount`)
+  return response.data
+})
+
+export const getTotalProjectCounts=createAsyncThunk('getTotalProjectCounts',async()=>{
+  const response=await getQuery(`/leadService/api/v1/salesDashboard/getTotalProjectCount`)
+  return response.data
+})
+
+export const getLeadsDataByMonth=createAsyncThunk('getLeadsDataByMonth',async({toDate,fromDate})=>{
+  const response=await getQuery(`/leadService/api/v1/salesDashboard/getAllLeadsMonthWise?toDate=${toDate}&fromDate=${fromDate}`)
+  return response.data
+})
+
+
+export const getLeadCategoryWise=createAsyncThunk('getLeadCategoryWise',async(data)=>{
+  const response=await postQuery(`/leadService/api/v1/salesDashboard/getAllTypeLeadCount`,data)
+  return response.data
+})
+
+export const totalUserCount=createAsyncThunk('totalUserCount',async()=>{
+  const response=await getQuery(`/leadService/api/v1/salesDashboard/getTotalUserCount`)
+  return response.data
+})
+
+export const totalCompanyForGraph=createAsyncThunk('totalCompanyForGraph',async()=>{
+  const response=await getQuery(`/leadService/api/v1/salesDashboard/getTotalCompanyCount`)
+  return response.data
+})
 
 
 const DashboardSlice = createSlice({
@@ -49,7 +80,13 @@ const DashboardSlice = createSlice({
     loading: "",
     projectAmountList: [],
     companyAmountList: [],
-    userGraphList:[]
+    userGraphList:[],
+    totalLeadCountForGraph:0,
+    totalProjectCountForGraph:0,
+    leadDataMonthWise:[],
+    leadDataCategoryWise:{},
+    totalUserCountForGraph:0,
+    totalCompanyForGraph:0
   },
   extraReducers: (builders) => {
     builders.addCase(projectGraphData.pending, (state, action) => {
@@ -57,7 +94,7 @@ const DashboardSlice = createSlice({
     })
     builders.addCase(projectGraphData.fulfilled, (state, action) => {
       state.loading = "success"
-      state.projectListData = action.payload?.reverse()
+      state.projectListData = action?.payload?.reverse()
     })
     builders.addCase(projectGraphData.rejected, (state, action) => {
       state.loading = "error"
@@ -68,7 +105,7 @@ const DashboardSlice = createSlice({
     })
     builders.addCase(projectGraphAmount.fulfilled, (state, action) => {
       state.loading = "success"
-      state.projectAmountList = action.payload?.reverse()
+      state.projectAmountList = action?.payload?.reverse()
     })
     builders.addCase(projectGraphAmount.rejected, (state, action) => {
       state.loading = "error"
@@ -79,7 +116,7 @@ const DashboardSlice = createSlice({
     })
     builders.addCase(getAllCompanyAmountGrapgh.fulfilled, (state, action) => {
       state.loading = "success"
-      state.companyAmountList = action.payload?.reverse()
+      state.companyAmountList = action?.payload?.reverse()
     })
     builders.addCase(getAllCompanyAmountGrapgh.rejected, (state, action) => {
       state.loading = "error"
@@ -90,11 +127,79 @@ const DashboardSlice = createSlice({
     })
     builders.addCase(getGraphDataByUser.fulfilled, (state, action) => {
       state.loading = "success"
-      state.userGraphList = action.payload?.reverse()
+      state.userGraphList = action?.payload?.reverse()
     })
     builders.addCase(getGraphDataByUser.rejected, (state, action) => {
       state.loading = "error"
     })
+
+    builders.addCase(getTotalLeadCountForGraph.pending, (state, action) => {
+      state.loading = "pending"
+    })
+    builders.addCase(getTotalLeadCountForGraph.fulfilled, (state, action) => {
+      state.loading = "success"
+      state.totalLeadCountForGraph = action?.payload
+    })
+    builders.addCase(getTotalLeadCountForGraph.rejected, (state, action) => {
+      state.loading = "error"
+    })
+
+    builders.addCase(getTotalProjectCounts.pending, (state, action) => {
+      state.loading = "pending"
+    })
+    builders.addCase(getTotalProjectCounts.fulfilled, (state, action) => {
+      state.loading = "success"
+      state.totalProjectCountForGraph = action?.payload
+    })
+    builders.addCase(getTotalProjectCounts.rejected, (state, action) => {
+      state.loading = "error"
+    })
+
+    builders.addCase(getLeadsDataByMonth.pending, (state, action) => {
+      state.loading = "pending"
+    })
+    builders.addCase(getLeadsDataByMonth.fulfilled, (state, action) => {
+      state.loading = "success"
+      state.leadDataMonthWise = action?.payload
+    })
+    builders.addCase(getLeadsDataByMonth.rejected, (state, action) => {
+      state.loading = "error"
+    })
+
+    builders.addCase(getLeadCategoryWise.pending, (state, action) => {
+      state.loading = "pending"
+    })
+    builders.addCase(getLeadCategoryWise.fulfilled, (state, action) => {
+      state.loading = "success"
+      state.leadDataCategoryWise = action?.payload
+    })
+    builders.addCase(getLeadCategoryWise.rejected, (state, action) => {
+      state.loading = "error"
+    })
+
+    builders.addCase(totalUserCount.pending, (state, action) => {
+      state.loading = "pending"
+    })
+    builders.addCase(totalUserCount.fulfilled, (state, action) => {
+      state.loading = "success"
+      state.totalUserCountForGraph = action?.payload
+    })
+    builders.addCase(totalUserCount.rejected, (state, action) => {
+      state.loading = "error"
+    })
+
+    builders.addCase(totalCompanyForGraph.pending, (state, action) => {
+      state.loading = "pending"
+    })
+    builders.addCase(totalCompanyForGraph.fulfilled, (state, action) => {
+      state.loading = "success"
+      state.totalCompanyForGraph = action?.payload
+    })
+    builders.addCase(totalCompanyForGraph.rejected, (state, action) => {
+      state.loading = "error"
+    })
+
+
   },
 })
 

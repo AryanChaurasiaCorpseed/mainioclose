@@ -97,6 +97,9 @@ function App() {
         components: {
           Card: {
             actionsLiMargin: 6,
+            paddingLG:12,
+            padding:12,
+            paddingSM:12
           },
           Typography: {
             fontSize: 12,
@@ -182,6 +185,7 @@ function App() {
             fontSizeSM: 12,
             itemSizeSM: 22,
           },
+          
         },
       }}
     >
