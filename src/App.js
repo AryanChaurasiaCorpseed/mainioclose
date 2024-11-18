@@ -77,6 +77,7 @@ import MainCompanyFormPage from "./Main/Accounts/MainCompanyFormPage"
 import VendorsRequestList from "./Main/Sales/Leads/VendorsRequestList"
 import ClientDesigination from "./Main/Setting/ClientDesiginations/ClientDesigination"
 import MainComanyModule from "./Main/Sales/company/MainComanyModule"
+import GraphMainPage from "./Main/GraphDashboard/GraphMainPage"
 
 const SpinLoading = lazy(() => import("./components/SpinLoading"))
 
@@ -234,7 +235,8 @@ function App() {
                   path="users/deactivateUser"
                   element={<AllDeactivateUser />}
                 />
-                <Route path="records" element={<MainGraphPage />} />
+                {/* <Route path="records" element={<MainGraphPage />} /> */}
+                <Route path="records" element={<GraphMainPage />} />
               </Route>
 
               {/* hr module routes */}

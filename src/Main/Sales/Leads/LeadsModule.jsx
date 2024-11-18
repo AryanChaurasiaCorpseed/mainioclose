@@ -75,7 +75,7 @@ const LeadsModule = () => {
   const { userid } = useParams()
   const dispatch = useDispatch()
   const [allMultiFilterData, setAllMultiFilterData] = useState({
-    userId: userid,
+    userId: Number(userid),
     userIdFilter: [],
     statusId: [1],
     toDate: "",

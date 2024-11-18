@@ -29,4 +29,16 @@
   .grid-box, .grid-container {
     transition: all 0.3s ease-in-out;
   }
-  
+
+
+  .main-graph-container{
+    height: 100%;
+    width: 100%;
+    overflow: auto;
+  }
+  .card-text{
+    font-size: 16px;
+  }
+  .card-text-result{
+    font-size: 20px;
+  }
