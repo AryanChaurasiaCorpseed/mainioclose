@@ -44,6 +44,11 @@ export const getAllUrlCount=createAsyncThunk('getTotalUrlCount',async()=>{
   return response.data
 })
 
+export const searchLeadUrlList=createAsyncThunk('searchLeadUrlList',async(name)=>{
+  const response=await getQuery(`/leadService/api/v1/urls/getGlobalSearchUrls?name=${name}`)
+  return response.data
+})
+
 export const LeadUrlSlice = createSlice({
   name: "leadurls",
   initialState: {
@@ -121,6 +126,22 @@ export const LeadUrlSlice = createSlice({
       state.createLeadUrlError = true
       state.createLeadUrlLoading = false
     })
+
+
+    builder.addCase(searchLeadUrlList.pending, (state, action) => {
+      state.createLeadUrlLoading = true
+      state.createLeadUrlError = false
+    })
+    builder.addCase(searchLeadUrlList.fulfilled, (state, action) => {
+      state.allLeadUrl = action.payload
+      state.createLeadUrlLoading = false
+      state.createLeadUrlError = false
+    })
+    builder.addCase(searchLeadUrlList.rejected, (state, action) => {
+      state.createLeadUrlError = true
+      state.createLeadUrlLoading = false
+    })
+
   },
 })
 export const { handleNextPagination, handlePrevPagination } =

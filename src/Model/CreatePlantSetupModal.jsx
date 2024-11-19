@@ -3,7 +3,6 @@ import React, { useCallback, useEffect, useState } from "react"
 import {
   createPlantSetup,
   getAllSlugAction,
-  getAllSlugList,
 } from "../Toolkit/Slices/LeadSlugSlice"
 import { useDispatch, useSelector } from "react-redux"
 import { Icon } from "@iconify/react"
@@ -13,10 +12,6 @@ const CreatePlantSetupModal = ({ data, paginationData }) => {
   const dispatch = useDispatch()
   const slugList = useSelector((state) => state.leadslug.slugList)
   const [openModal1, setOpenModal1] = useState(false)
-
-  useEffect(()=>{
-    dispatch(getAllSlugList())
-  },[dispatch])
 
   const handleOpenModal = useCallback(() => {
     setOpenModal1(true)

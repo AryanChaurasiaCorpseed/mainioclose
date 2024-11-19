@@ -5,6 +5,7 @@ import {
   createAllUrlAction,
   getAllUrlAction,
   getAllUrlCount,
+  searchLeadUrlList,
 } from "../../../Toolkit/Slices/LeadUrlSlice"
 import MainHeading from "../../../components/design/MainHeading"
 import { getAllSlugList } from "../../../Toolkit/Slices/LeadSlugSlice"
@@ -25,6 +26,7 @@ import OverFlowText from "../../../components/OverFlowText"
 import { Icon } from "@iconify/react"
 import { BTN_ICON_HEIGHT, BTN_ICON_WIDTH } from "../../../components/Constants"
 const { Text } = Typography
+const { Search } = Input
 
 const UrlsPage = () => {
   const [form] = Form.useForm()
@@ -143,20 +145,6 @@ const UrlsPage = () => {
     },
   ]
 
-  useEffect(() => {
-    setFilteredData(allLeadUrl)
-  }, [allLeadUrl])
-
-  const handleSearch = (e) => {
-    const value = e.target.value
-    setSearchText(value)
-    const filtered = allLeadUrl?.filter((item) =>
-      Object.values(item)?.some((val) =>
-        String(val)?.toLowerCase()?.includes(value?.toLowerCase())
-      )
-    )
-    setFilteredData(filtered)
-  }
 
   const onSelectChange = (newSelectedRowKeys) => {
     setSelectedRowKeys(newSelectedRowKeys)
@@ -191,6 +179,23 @@ const UrlsPage = () => {
       })
   }, [dispatch, selectedRowKeys, paginationData])
 
+
+  const onSearch = (e, b, c) => {
+    if (e) {
+      setSearchText(e);
+      dispatch(searchLeadUrlList(e));
+    }
+    if (!b) {
+      setSearchText("");
+      dispatch(
+        getAllUrlAction({
+          page: paginationData?.page,
+          size: paginationData?.size,
+        })
+      )
+    }
+  };
+
   return (
     <>
       <div className="create-user-box">
@@ -213,18 +218,33 @@ const UrlsPage = () => {
         </div>
       </div>
       <div className="flex-verti-center-hori-start mt-2">
-        <Input
-          value={searchText}
-          size="small"
-          onChange={handleSearch}
-          style={{ width: "220px" }}
+      <Search
           placeholder="search"
+          size="small"
+          allowClear
+          value={searchText}
+          onSearch={onSearch}
+          onChange={(e) => {
+            setSearchText(e.target.value);
+            if (!e.target.value && !e.target.value.trim()) {
+              dispatch(
+                getAllUrlAction({
+                  page: paginationData?.page,
+                  size: paginationData?.size,
+                })
+              )
+              setSearchText("");
+            }
+          }}
+          enterButton="search"
+          style={{ width: "250px" }}
           prefix={<Icon icon="fluent:search-24-regular" />}
         />
       </div>
+      
       <CommonTable
         columns={columns}
-        data={filteredData}
+        data={allLeadUrl}
         getCheckboxProps={(record) => ({
           disabled: record.product, 
         })}

@@ -46,6 +46,11 @@ export const createPlantSetup=createAsyncThunk('createPlantSetup',async(data)=>{
   return response.data
 })
 
+export const searchSlugList=createAsyncThunk('searchSlugList',async(name)=>{
+  const response=await getQuery(`/leadService/api/v1/slug/getGlobalSlug?name=${name}`)
+  return response.data
+})
+
 export const LeadSlugSlice = createSlice({
   name: "leadslug",
   initialState: {
@@ -142,6 +147,25 @@ export const LeadSlugSlice = createSlice({
       state.allLeadSlugError = true
       state.allLeadSlugLoading = false
     })
+
+    builder.addCase(searchSlugList.pending, (state, action) => {
+      state.allLeadSlugLoading = true
+      state.allLeadSlugError = false
+    })
+    builder.addCase(searchSlugList.fulfilled, (state, action) => {
+      state.allLeadSlug = action.payload
+      state.allLeadSlugLoading = false
+      state.allLeadSlugError = false
+    })
+    builder.addCase(searchSlugList.rejected, (state, action) => {
+      state.allLeadSlugError = true
+      state.allLeadSlugLoading = false
+    })
+
+
+
+
+
   },
 })
 export const { handleNextPagination, handlePrevPagination } =

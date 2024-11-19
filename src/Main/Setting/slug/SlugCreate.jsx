@@ -1,33 +1,39 @@
-import React, { useCallback, useEffect, useState } from "react"
-import MainHeading from "../../../components/design/MainHeading"
-import { useDispatch, useSelector } from "react-redux"
+import React, { useCallback, useEffect, useState } from "react";
+import MainHeading from "../../../components/design/MainHeading";
+import { useDispatch, useSelector } from "react-redux";
 import {
   getAllSlugAction,
   getAllSlugCount,
+  getAllSlugList,
   leadSlugAction,
-} from "../../../Toolkit/Slices/LeadSlugSlice"
-import EditSlugModal from "../../../Model/EditSlugModal"
-import { Button, Form, Input, Modal, notification, Tag, Tooltip } from "antd"
-import CommonTable from "../../../components/CommonTable"
-import { Icon } from "@iconify/react"
-import OverFlowText from "../../../components/OverFlowText"
-import { BTN_ICON_HEIGHT, BTN_ICON_WIDTH } from "../../../components/Constants"
-import CreatePlantSetupModal from "../../../Model/CreatePlantSetupModal"
-
+  searchSlugList,
+} from "../../../Toolkit/Slices/LeadSlugSlice";
+import EditSlugModal from "../../../Model/EditSlugModal";
+import { Button, Form, Input, Modal, notification, Tag, Tooltip } from "antd";
+import CommonTable from "../../../components/CommonTable";
+import { Icon } from "@iconify/react";
+import OverFlowText from "../../../components/OverFlowText";
+import { BTN_ICON_HEIGHT, BTN_ICON_WIDTH } from "../../../components/Constants";
+import CreatePlantSetupModal from "../../../Model/CreatePlantSetupModal";
+const { Search } = Input
 
 const SlugCreate = () => {
-  const dispatch = useDispatch()
-  const [form] = Form.useForm()
-  const totalCount = useSelector((state) => state.leadslug.totalSlugCount)
-  const allLeadSlug = useSelector((prev) => prev?.leadslug.allLeadSlug)
-  const [slugDep, setSlugDep] = useState(false)
-  const [openModal, setOpenModal] = useState(false)
-  const [searchText, setSearchText] = useState("")
-  const [filteredData, setFilteredData] = useState([])
+  const dispatch = useDispatch();
+  const [form] = Form.useForm();
+  const totalCount = useSelector((state) => state.leadslug.totalSlugCount);
+  const allLeadSlug = useSelector((prev) => prev?.leadslug.allLeadSlug);
+  const [openModal, setOpenModal] = useState(false);
+  const [searchText, setSearchText] = useState("");
+  const [filteredData, setFilteredData] = useState([]);
   const [paginationData, setPaginationData] = useState({
     page: 1,
     size: 50,
-  })
+  });
+
+  useEffect(() => {
+    dispatch(getAllSlugCount());
+    dispatch(getAllSlugList());
+  }, [dispatch]);
 
   useEffect(() => {
     dispatch(
@@ -35,9 +41,8 @@ const SlugCreate = () => {
         page: paginationData?.page,
         size: paginationData?.size,
       })
-    )
-    dispatch(getAllSlugCount())
-  }, [dispatch, slugDep])
+    );
+  }, [dispatch]);
 
   const handlePagination = useCallback(
     (dataPage, size) => {
@@ -46,26 +51,25 @@ const SlugCreate = () => {
           page: dataPage,
           size: size,
         })
-      )
-      setPaginationData({ size: size, page: dataPage })
+      );
+      setPaginationData({ size: size, page: dataPage });
     },
     [dispatch]
-  )
+  );
 
   const slugsInTooltip = (data) => {
     return data?.map((items) => {
-      return <Tag className="slug-items-tooltip">{items?.name}</Tag>
-    })
-  }
+      return <Tag className="slug-items-tooltip">{items?.name}</Tag>;
+    });
+  };
 
   const handleSubmit = async (values) => {
-    const slugCreation = await dispatch(leadSlugAction(values?.slugName))
+    const slugCreation = await dispatch(leadSlugAction(values?.slugName));
     if ((slugCreation.type = "createLeadSlugData/fulfilled")) {
-      form.resetFields()
-      setSlugDep((prev) => !prev)
-      notification.success({ message: "Slug created succesfully" })
+      form.resetFields();
+      notification.success({ message: "Slug created succesfully" });
     }
-  }
+  };
 
   const columns = [
     { title: "Id", dataIndex: "id", fixed: "left", width: 80 },
@@ -113,23 +117,23 @@ const SlugCreate = () => {
       name: "edit",
       render: (_, data) => <EditSlugModal data={data} />,
     },
-  ]
+  ];
 
-  useEffect(() => {
-    const allLeadSlugs = [...allLeadSlug]
-    setFilteredData(allLeadSlugs)
-  }, [allLeadSlug])
-
-  const handleSearch = (e) => {
-    const value = e.target.value
-    setSearchText(value)
-    const filtered = allLeadSlug?.filter((item) =>
-      Object.values(item)?.some((val) =>
-        String(val)?.toLowerCase()?.includes(value?.toLowerCase())
-      )
-    )
-    setFilteredData(filtered)
-  }
+  const onSearch = (e, b, c) => {
+    if (e) {
+      setSearchText(e);
+      dispatch(searchSlugList(e));
+    }
+    if (!b) {
+      setSearchText("");
+      dispatch(
+        getAllSlugAction({
+          page: paginationData?.page,
+          size: paginationData?.size,
+        })
+      );
+    }
+  };
 
   return (
     <div>
@@ -140,18 +144,32 @@ const SlugCreate = () => {
         </Button>
       </div>
       <div className="flex-verti-center-hori-start mt-2">
-        <Input
-          value={searchText}
-          size="small"
-          onChange={handleSearch}
-          style={{ width: "220px" }}
+        <Search
           placeholder="search"
+          size="small"
+          allowClear
+          value={searchText}
+          onSearch={onSearch}
+          onChange={(e) => {
+            setSearchText(e.target.value);
+            if (!e.target.value && !e.target.value.trim()) {
+              dispatch(
+                getAllSlugAction({
+                  page: paginationData?.page,
+                  size: paginationData?.size,
+                })
+              );
+              setSearchText("");
+            }
+          }}
+          enterButton="search"
+          style={{ width: "250px" }}
           prefix={<Icon icon="fluent:search-24-regular" />}
         />
       </div>
       <CommonTable
         columns={columns}
-        data={filteredData?.reverse()}
+        data={allLeadSlug}
         pagination={true}
         scroll={{ y: 500, x: 1200 }}
         totalCount={totalCount}
@@ -178,7 +196,7 @@ const SlugCreate = () => {
         </Form>
       </Modal>
     </div>
-  )
-}
+  );
+};
 
-export default SlugCreate
+export default SlugCreate;

@@ -614,7 +614,6 @@ const LeadsModule = () => {
       // dispatch(searchLeads({ input: "", id: userid }))
       setSearchText("")
       dispatch(getAllLeads(allMultiFilterData))
-      setSearchText("")
     }
   }
 
