@@ -78,7 +78,7 @@ const GraphMainPage = () => {
   }, [dispatch]);
 
   const config = {
-    data: leadData,
+    data: leadData?.length > 0 ? leadData : [],
     height: 300,
     xField: (data) => dayjs(data?.name).format("MMM YYYY"),
     yField: "value",
@@ -178,7 +178,7 @@ const GraphMainPage = () => {
   };
 
   const areaConfig = {
-    data: projectData,
+    data: projectData?.length > 0 ? projectData : [],
     xField: (d) => dayjs(d?.name).format("MMM"),
     yField: "value",
     height: 350,
@@ -381,8 +381,8 @@ const GraphMainPage = () => {
 
       <Flex gap={24}>
         <Card className="lead-graph-card-column">
-          <Flex justify='space-between'>
-            <Text className="card-title-text" >Leads data </Text>
+          <Flex justify="space-between">
+            <Text className="card-title-text">Leads data </Text>
             <RangePicker
               size="small"
               allowClear={true}
@@ -400,7 +400,7 @@ const GraphMainPage = () => {
           <Column {...config} />
         </Card>
         <Card className="lead-graph-card-pie">
-          <Flex justify='space-between'>
+          <Flex justify="space-between">
             <Text className="card-title-text">Leads distribution status </Text>
             <RangePicker
               size="small"
@@ -422,7 +422,7 @@ const GraphMainPage = () => {
 
       <Flex gap={24}>
         <Card className="lead-graph-card-area">
-          <Flex justify='space-between'>
+          <Flex justify="space-between">
             <Text className="card-title-text">Leads </Text>
             <RangePicker
               size="small"
@@ -492,10 +492,8 @@ const GraphMainPage = () => {
           </Flex>
         </Card>
         <Card className="lead-graph-card-pie">
-          <Flex justify='space-between'>
-            <Text className="card-title-text">
-              Projects data
-            </Text>
+          <Flex justify="space-between">
+            <Text className="card-title-text">Projects data</Text>
             <RangePicker
               size="small"
               allowClear={true}
