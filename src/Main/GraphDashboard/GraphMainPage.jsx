@@ -1,18 +1,22 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import "./Graph.scss";
-import { Card, Col, Flex, Row, Typography } from "antd";
+import { Card, Col, DatePicker, Divider, Flex, Row, Typography } from "antd";
 import { Icon } from "@iconify/react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getLeadCategoryWise,
   getLeadsDataByMonth,
+  getLeadsDistributionStatusWise,
   getTotalLeadCountForGraph,
   getTotalProjectCounts,
+  projectMontWiseDataForGraph,
   totalCompanyForGraph,
   totalUserCount,
 } from "../../Toolkit/Slices/DasboardSlice";
-import { Column, Pie } from "@ant-design/plots";
+import { Area, Column, Pie } from "@ant-design/plots";
 import dayjs from "dayjs";
+import { rangePresets } from "../Common/Commons";
+const { RangePicker } = DatePicker;
 const { Text } = Typography;
 
 const GraphMainPage = () => {
@@ -35,18 +39,42 @@ const GraphMainPage = () => {
     (state) => state.dashboard.leadDataCategoryWise
   );
 
+  const projectData = useSelector(
+    (state) => state.dashboard.projectDataForGraph
+  );
+  const leadDataStatus = useSelector(
+    (state) => state.dashboard.leadStatusWiseData
+  );
+
+  const [leadMonthDate, setLeadMonthData] = useState({
+    toDate: "2024-01-01",
+    fromDate: "2024-11-01",
+  });
+
+  const [leadCategoryDate, setLeadCategoryDate] = useState({
+    toDate: "2024-01-01",
+    fromDate: "2024-11-01",
+  });
+
+  const [leadStatusDate, setLeadStatusDate] = useState({
+    toDate: "2024-01-01",
+    fromDate: "2024-11-01",
+  });
+
+  const [projectsDate, setProjectDates] = useState({
+    toDate: "2024-01-01",
+    fromDate: "2024-11-01",
+  });
+
   useEffect(() => {
     dispatch(getTotalLeadCountForGraph());
     dispatch(getTotalProjectCounts());
-    dispatch(
-      getLeadsDataByMonth({ toDate: "2024-01-01", fromDate: "2024-11-01" })
-    );
-    dispatch(
-      //   getLeadCategoryWise({ toDate:"2024-11-01", fromDate:"2024-01-01" })
-      getLeadCategoryWise({ toDate: "2024-01-01", fromDate: "2024-11-01" })
-    );
+    dispatch(getLeadsDataByMonth(leadMonthDate));
+    dispatch(getLeadCategoryWise(leadCategoryDate));
     dispatch(totalUserCount());
     dispatch(totalCompanyForGraph());
+    dispatch(projectMontWiseDataForGraph(projectsDate));
+    dispatch(getLeadsDistributionStatusWise(leadStatusDate));
   }, [dispatch]);
 
   const config = {
@@ -54,58 +82,35 @@ const GraphMainPage = () => {
     height: 300,
     xField: (data) => dayjs(data?.name).format("MMM YYYY"),
     yField: "value",
-    // style: {
-    //   fill: ({ type }) => {
-    //     if (type === "10-30分" || type === "30+分") {
-    //       return "#22CBCC";
-    //     }
-    //     return "#2989FF";
-    //   },
-    // },
-    // label: {
-    //   text: (originData) => {
-    //     const val = parseFloat(originData.value);
-
-    //     if (val < 0.05) {
-    //       return val.toFixed(1) + "%";
-    //     }
-    //     return "";
-    //   },
-    //   offset: 10,
-    // },
+    style: {
+      fill: ({ type }) => {
+        return "#99ffff";
+      },
+    },
     tooltip: {
       title: (data) => dayjs(data?.name).format("MMM YYYY"),
     },
     legend: false,
   };
 
-  console.log("dqjhbkajsdbkajs", leadCountCategoryWise);
-
-  
-
   const pieConfig = {
-    // data: [
-    //   { type: '分类一', value: 27 },
-    //   { type: '分类二', value: 25 },
-    //   { type: '分类三', value: 18 },
-    //   { type: '分类四', value: 15 },
-    //   { type: '分类五', value: 10 },
-    //   { type: '其他', value: 5 },
-    // ],
-    data: leadCountCategoryWise?.data,
+    data:
+      leadCountCategoryWise?.data?.length > 0
+        ? leadCountCategoryWise?.data
+        : [],
     angleField: "value",
     colorField: "key",
-    // colorField: "type",
     innerRadius: 0.6,
-    height:300,
-    marginTop:25,
+    height: 300,
+    marginTop: 25,
     label: {
       text: "value",
       position: "outside",
-    //   textAlign: "center",
+      labelSpacing: 50,
       style: {
         fontWeight: "bold",
       },
+      transform: [{ type: "overlapHide" }],
     },
     legend: {
       color: {
@@ -122,12 +127,188 @@ const GraphMainPage = () => {
           x: "50%",
           y: "50%",
           textAlign: "center",
-          fontSize: 16,
+          fontSize: 14,
           fontStyle: "bold",
         },
-        tooltip:false
+        tooltip: false,
       },
     ],
+  };
+
+  const pieConfigforLeadStatus = {
+    data: leadDataStatus?.data?.length > 0 ? leadDataStatus?.data : [],
+    angleField: "value",
+    colorField: "key",
+    innerRadius: 0.5,
+    height: 300,
+    marginTop: 50,
+    label: {
+      text: "value",
+      position: "outside",
+      textAlign: "center",
+      style: {
+        fontWeight: "bold",
+      },
+      transform: [{ type: "overlapHide" }],
+    },
+    legend: {
+      color: {
+        title: false,
+        position: "right",
+        rowPadding: 5,
+      },
+    },
+    tooltip: {
+      title: (d) => d.key,
+    },
+    annotations: [
+      {
+        type: "text",
+        style: {
+          text: `Total lead status \n ${leadDataStatus?.totalCount}`,
+          x: "50%",
+          y: "50%",
+          textAlign: "center",
+          fontSize: 14,
+          fontStyle: "bold",
+        },
+        tooltip: false,
+      },
+    ],
+  };
+
+  const areaConfig = {
+    data: projectData,
+    xField: (d) => dayjs(d?.name).format("MMM"),
+    yField: "value",
+    height: 350,
+    style: {
+      fill: "linear-gradient(-90deg, lightgreen 5%, darkgreen 100%)",
+    },
+    axis: {
+      y: { labelFormatter: "~s" },
+    },
+    tooltip: {
+      title: (data) => dayjs(data?.name).format("MMM YYYY"),
+    },
+    line: {
+      style: {
+        stroke: "darkgreen",
+        strokeWidth: 2,
+      },
+    },
+  };
+
+  const onLeadRangeChange = (dates, dateStrings) => {
+    if (dates) {
+      dispatch(
+        getLeadsDataByMonth({
+          toDate: dateStrings[0],
+          fromDate: dateStrings[1],
+        })
+      );
+      setLeadMonthData((prev) => ({
+        ...prev,
+        toDate: dateStrings[0],
+        fromDate: dateStrings[1],
+      }));
+    } else {
+      dispatch(
+        getLeadsDataByMonth({
+          toDate: null,
+          fromDate: null,
+        })
+      );
+      setLeadMonthData((prev) => ({
+        ...prev,
+        toDate: null,
+        fromDate: null,
+      }));
+    }
+  };
+
+  const onLeadCategoryRangeChange = (dates, dateStrings) => {
+    if (dates) {
+      dispatch(
+        getLeadCategoryWise({
+          toDate: dateStrings[0],
+          fromDate: dateStrings[1],
+        })
+      );
+      setLeadCategoryDate((prev) => ({
+        ...prev,
+        toDate: dateStrings[0],
+        fromDate: dateStrings[1],
+      }));
+    } else {
+      dispatch(
+        getLeadCategoryWise({
+          toDate: null,
+          fromDate: null,
+        })
+      );
+      setLeadCategoryDate((prev) => ({
+        ...prev,
+        toDate: null,
+        fromDate: null,
+      }));
+    }
+  };
+
+  const onLeadStatusRangeChange = (dates, dateStrings) => {
+    if (dates) {
+      dispatch(
+        getLeadsDistributionStatusWise({
+          toDate: dateStrings[0],
+          fromDate: dateStrings[1],
+        })
+      );
+      setLeadStatusDate((prev) => ({
+        ...prev,
+        toDate: dateStrings[0],
+        fromDate: dateStrings[1],
+      }));
+    } else {
+      dispatch(
+        getLeadsDistributionStatusWise({
+          toDate: null,
+          fromDate: null,
+        })
+      );
+      setLeadStatusDate((prev) => ({
+        ...prev,
+        toDate: null,
+        fromDate: null,
+      }));
+    }
+  };
+
+  const onProjectRangeChange = (dates, dateStrings) => {
+    if (dates) {
+      dispatch(
+        projectMontWiseDataForGraph({
+          toDate: dateStrings[0],
+          fromDate: dateStrings[1],
+        })
+      );
+      setProjectDates((prev) => ({
+        ...prev,
+        toDate: dateStrings[0],
+        fromDate: dateStrings[1],
+      }));
+    } else {
+      dispatch(
+        projectMontWiseDataForGraph({
+          toDate: null,
+          fromDate: null,
+        })
+      );
+      setProjectDates((prev) => ({
+        ...prev,
+        toDate: null,
+        fromDate: null,
+      }));
+    }
   };
 
   return (
@@ -199,11 +380,137 @@ const GraphMainPage = () => {
       </Row>
 
       <Flex gap={24}>
-        <Card title="Leads monthwise" className="lead-graph-card-column">
+        <Card className="lead-graph-card-column">
+          <Flex justify='space-between'>
+            <Text className="card-title-text" >Leads data </Text>
+            <RangePicker
+              size="small"
+              allowClear={true}
+              presets={rangePresets}
+              value={[
+                leadMonthDate?.toDate ? dayjs(leadMonthDate?.toDate) : "",
+                leadMonthDate?.fromDate ? dayjs(leadMonthDate?.fromDate) : "",
+              ]}
+              disabledDate={(current) =>
+                current && current > dayjs().endOf("day")
+              }
+              onChange={onLeadRangeChange}
+            />
+          </Flex>
           <Column {...config} />
         </Card>
-        <Card title="Leads monthwise" className="lead-graph-card-pie">
+        <Card className="lead-graph-card-pie">
+          <Flex justify='space-between'>
+            <Text className="card-title-text">Leads distribution status </Text>
+            <RangePicker
+              size="small"
+              allowClear={true}
+              presets={rangePresets}
+              value={[
+                leadStatusDate?.toDate ? dayjs(leadStatusDate?.toDate) : "",
+                leadStatusDate?.fromDate ? dayjs(leadStatusDate?.fromDate) : "",
+              ]}
+              disabledDate={(current) =>
+                current && current > dayjs().endOf("day")
+              }
+              onChange={onLeadStatusRangeChange}
+            />
+          </Flex>
+          <Pie {...pieConfigforLeadStatus} />
+        </Card>
+      </Flex>
+
+      <Flex gap={24}>
+        <Card className="lead-graph-card-area">
+          <Flex justify='space-between'>
+            <Text className="card-title-text">Leads </Text>
+            <RangePicker
+              size="small"
+              allowClear={true}
+              presets={rangePresets}
+              value={[
+                leadCategoryDate?.toDate ? dayjs(leadCategoryDate?.toDate) : "",
+                leadCategoryDate?.fromDate
+                  ? dayjs(leadCategoryDate?.fromDate)
+                  : "",
+              ]}
+              disabledDate={(current) =>
+                current && current > dayjs().endOf("day")
+              }
+              onChange={onLeadCategoryRangeChange}
+            />
+          </Flex>
           <Pie {...pieConfig} />
+          <Flex align="center" justify="space-between">
+            <Flex vertical align="center">
+              <Text type="secondary" style={{ fontSize: "16px" }}>
+                Corpseed website
+              </Text>
+
+              {leadCountCategoryWise?.data?.map((obj) =>
+                obj.key === "Corpseed Website" ? (
+                  <Text style={{ fontSize: "18px" }} strong>
+                    {obj.value}
+                  </Text>
+                ) : (
+                  ""
+                )
+              )}
+            </Flex>
+            <Divider type="vertical" />
+            <Flex vertical align="center">
+              <Text type="secondary" style={{ fontSize: "16px" }}>
+                Ivr
+              </Text>
+
+              {leadCountCategoryWise?.data?.map((obj) =>
+                obj.key === "Ivr" ? (
+                  <Text style={{ fontSize: "18px" }} strong>
+                    {obj?.value}
+                  </Text>
+                ) : (
+                  ""
+                )
+              )}
+            </Flex>
+            <Divider type="vertical" />
+            <Flex vertical align="center">
+              <Text type="secondary" style={{ fontSize: "16px" }}>
+                Reopen by Quality
+              </Text>
+
+              {leadCountCategoryWise?.data?.map((obj) =>
+                obj.key === "Reopen By Quality" ? (
+                  <Text style={{ fontSize: "18px" }} strong>
+                    {obj.value}
+                  </Text>
+                ) : (
+                  ""
+                )
+              )}
+            </Flex>
+          </Flex>
+        </Card>
+        <Card className="lead-graph-card-pie">
+          <Flex justify='space-between'>
+            <Text className="card-title-text">
+              Projects data
+            </Text>
+            <RangePicker
+              size="small"
+              allowClear={true}
+              presets={rangePresets}
+              value={[
+                projectsDate?.toDate ? dayjs(projectsDate?.toDate) : "",
+                projectsDate?.fromDate ? dayjs(projectsDate?.fromDate) : "",
+              ]}
+              disabledDate={(current) =>
+                current && current > dayjs().endOf("day")
+              }
+              onChange={onProjectRangeChange}
+            />
+          </Flex>
+          <Area {...areaConfig} />
         </Card>
       </Flex>
     </div>

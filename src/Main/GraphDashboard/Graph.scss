@@ -67,12 +67,22 @@
   width: 100%;
 }
 
-.lead-graph-card-column{
+.lead-graph-card-column {
   width: 58%;
-  height: 400px;
+  height: 450px;
 }
 
-.lead-graph-card-pie{
+.lead-graph-card-pie {
   width: 40%;
-  height: 400px;
+  height: 450px;
+
+}
+
+.lead-graph-card-area {
+  width: 58%;
+  height: 450px;
+}
+.card-title-text{
+  font-size: 18px;
+  font-weight: 500;
 }
