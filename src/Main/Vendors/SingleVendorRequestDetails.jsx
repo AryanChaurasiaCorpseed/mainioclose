@@ -66,6 +66,8 @@ const SingleVendorRequestDetails = ({ data }) => {
   const handleUpdateRequest = useCallback(
     (values) => {
       values.quotationFilePath = values?.quotationFilePath?.[0]?.response;
+      values.agreementWithClientDocumentPath =
+        values?.agreementWithClientDocumentPath?.[0]?.response;
       values.companyName = data?.clientCompanyName;
       values.contactPersonName = data?.contactPersonName;
       values.vendorCategoryId = data?.vendorCategoryId;
@@ -525,6 +527,39 @@ const SingleVendorRequestDetails = ({ data }) => {
                       label="Additional email"
                       name="additionalMailId"
                       rules={[{ type: "email" }]}
+                    >
+                      <Input />
+                    </Form.Item>
+
+                    <Form.Item label="Agreement name" name="agreementName">
+                      <Input />
+                    </Form.Item>
+
+                    <Form.Item
+                      label="Agreement document attachment"
+                      name="agreementWithClientDocumentPath"
+                      getValueFromEvent={normFile}
+                      valuePropName="fileList"
+                    >
+                      <Upload
+                        action="/leadService/api/v1/upload/uploadimageToFileSystem"
+                        listType="text"
+                        multiple={true}
+                      >
+                        <Button size="small">
+                          <Icon icon="fluent:arrow-upload-20-filled" />
+                          Upload
+                        </Button>
+                      </Upload>
+                    </Form.Item>
+
+                    <Form.Item label="Research name" name="researchName">
+                      <Input />
+                    </Form.Item>
+
+                    <Form.Item
+                      label="Research document name"
+                      name="researchDocumentName"
                     >
                       <Input />
                     </Form.Item>

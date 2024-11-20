@@ -1,41 +1,72 @@
-import React, { useCallback, useEffect, useState } from "react"
-import { useParams } from "react-router-dom"
-import { useDispatch, useSelector } from "react-redux"
+import React, { useCallback, useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import {
   changeProcurementAssignee,
   getAllVendorsRequest,
-} from "../../Toolkit/Slices/LeadSlice"
-import OverFlowText from "../../components/OverFlowText"
-import CommonTable from "../../components/CommonTable"
-import TableScalaton from "../../components/TableScalaton"
-import MainHeading from "../../components/design/MainHeading"
-import SingleVendorRequestDetails from "./SingleVendorRequestDetails"
-import { Icon } from "@iconify/react"
-import { Button, Flex, Input, notification, Select, Typography } from "antd"
-import { getProcurementAssigneeList } from "../../Toolkit/Slices/CommonSlice"
-import { getHighestPriorityRole } from "../Common/Commons"
-const { Text } = Typography
+  searchInVendorsList,
+  vendorsFilteration,
+} from "../../Toolkit/Slices/LeadSlice";
+import OverFlowText from "../../components/OverFlowText";
+import CommonTable from "../../components/CommonTable";
+import TableScalaton from "../../components/TableScalaton";
+import MainHeading from "../../components/design/MainHeading";
+import SingleVendorRequestDetails from "./SingleVendorRequestDetails";
+import { Icon } from "@iconify/react";
+import {
+  Button,
+  DatePicker,
+  Flex,
+  Form,
+  Input,
+  Modal,
+  notification,
+  Select,
+  Typography,
+} from "antd";
+import { getProcurementAssigneeList } from "../../Toolkit/Slices/CommonSlice";
+import { getHighestPriorityRole, rangePresets } from "../Common/Commons";
+import dayjs from "dayjs";
+import { CSVLink } from "react-csv";
+import { BTN_ICON_HEIGHT, BTN_ICON_WIDTH } from "../../components/Constants";
+const { Text } = Typography;
+const { Search } = Input;
+const { RangePicker } = DatePicker;
 
 const VendorsList = () => {
-  const dispatch = useDispatch()
-  const loading = useSelector((state) => state.leads.loading)
-  const currentRoles = useSelector((state) => state?.auth?.roles)
-  const { userid } = useParams()
+  const dispatch = useDispatch();
+  const [form] = Form.useForm();
+  const loading = useSelector((state) => state.leads.loading);
+  const currentRoles = useSelector((state) => state?.auth?.roles);
+  const { userid } = useParams();
   const allVendorsRequestList = useSelector(
     (prev) => prev?.leads.allVendorsRequestList
-  )
+  );
   const procurementAssigneeList = useSelector(
     (state) => state.common.procurementAssigneeList
-  )
-  const totalCount = useSelector((state) => state.leads.totalVendorRequestCount)
-  const [searchText, setSearchText] = useState("")
-  const [filteredData, setFilteredData] = useState([])
-  const [selectedRowKeys, setSelectedRowKeys] = useState([])
-  const [assigneeId, setAssigneeId] = useState(null)
+  );
+  const totalCount = useSelector(
+    (state) => state.leads.totalVendorRequestCount
+  );
+  const vendorsExportData = useSelector(
+    (state) => state.leads.vendorsExportData
+  );
+  const [searchText, setSearchText] = useState("");
+  const [filteredData, setFilteredData] = useState([]);
+  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+  const [assigneeId, setAssigneeId] = useState(null);
   const [paginationData, setPaginationData] = useState({
     page: 1,
     size: 50,
-  })
+  });
+  const [openModal, setOpenModal] = useState(false);
+  const [filterQuery, setFilterQuery] = useState({
+    userIdBy: userid,
+    status: null,
+    startDate: null,
+    endDate: null,
+    userId: [],
+  });
 
   useEffect(() => {
     dispatch(
@@ -44,27 +75,27 @@ const VendorsList = () => {
         page: paginationData?.page,
         size: paginationData?.size,
       })
-    )
-  }, [dispatch, userid])
+    );
+  }, [dispatch, userid]);
 
   useEffect(() => {
-    dispatch(getProcurementAssigneeList(userid))
-  }, [userid, dispatch])
+    dispatch(getProcurementAssigneeList(userid));
+  }, [userid, dispatch]);
 
   useEffect(() => {
-    setFilteredData(allVendorsRequestList)
-  }, [allVendorsRequestList])
+    setFilteredData(allVendorsRequestList);
+  }, [allVendorsRequestList]);
 
   const handleSearch = (e) => {
-    const value = e.target.value
-    setSearchText(value)
+    const value = e.target.value;
+    setSearchText(value);
     const filtered = allVendorsRequestList?.filter((item) =>
       Object.values(item)?.some((val) =>
         String(val)?.toLowerCase()?.includes(value?.toLowerCase())
       )
-    )
-    setFilteredData(filtered)
-  }
+    );
+    setFilteredData(filtered);
+  };
 
   const handlePagination = useCallback(
     (dataPage, size) => {
@@ -74,15 +105,15 @@ const VendorsList = () => {
           page: dataPage,
           size: size,
         })
-      )
-      setPaginationData({ size: size, page: dataPage })
+      );
+      setPaginationData({ size: size, page: dataPage });
     },
     [userid, dispatch]
-  )
+  );
 
   const onSelectChange = (newSelectedRowKeys) => {
-    setSelectedRowKeys(newSelectedRowKeys)
-  }
+    setSelectedRowKeys(newSelectedRowKeys);
+  };
 
   const handleChangeAssignee = useCallback(
     (e, id) => {
@@ -95,23 +126,25 @@ const VendorsList = () => {
       )
         .then((resp) => {
           if (resp.meta.requestStatus === "fulfilled") {
-            notification.success({ message: "Assignee updated successfully." })
+            notification.success({ message: "Assignee updated successfully." });
             dispatch(
               getAllVendorsRequest({
                 id: userid,
                 ...paginationData,
               })
-            )
-            setSelectedRowKeys([])
-            setAssigneeId(null)
+            );
+            setSelectedRowKeys([]);
+            setAssigneeId(null);
           } else {
-            notification.error({ message: "Something went wrong !." })
+            notification.error({ message: "Something went wrong !." });
           }
         })
-        .catch(() => notification.error({ message: "Something went wrong !." }))
+        .catch(() =>
+          notification.error({ message: "Something went wrong !." })
+        );
     },
     [dispatch, userid, paginationData]
-  )
+  );
 
   const columns = [
     {
@@ -196,22 +229,194 @@ const VendorsList = () => {
       title: "Request status",
       render: (_, data) => <SingleVendorRequestDetails data={data} />,
     },
-  ]
+  ];
+
+  const onSearch = (e, b, c) => {
+    if (e) {
+      setSearchText(e);
+      dispatch(searchInVendorsList({ userId: userid, searchInput: e }));
+    }
+    if (!b) {
+      setSearchText("");
+      dispatch(
+        getAllVendorsRequest({
+          id: userid,
+          page: paginationData?.page,
+          size: paginationData?.size,
+        })
+      );
+    }
+  };
+
+  console.log("kdxjvhclsdh", filterQuery);
+
+  const handleFilter = useCallback(() => {
+    dispatch(vendorsFilteration(filterQuery));
+  }, [dispatch, filterQuery]);
+
+  const handleResetFilter = () => {
+    setFilterQuery({
+      userIdBy: userid,
+      status: null,
+      startDate: null,
+      endDate: null,
+      userId: [],
+    });
+    dispatch(
+      getAllVendorsRequest({
+        id: userid,
+        page: paginationData?.page,
+        size: paginationData?.size,
+      })
+    );
+  };
+
+  
+
+
+  const exportData = vendorsExportData?.map((row) => ({
+    Id: row?.id,
+    "Client name": row?.clientName,
+    Status: row?.currentStatus,
+    "Genrated by": row?.generateByPersonName,
+    "Sub Category name": row?.subCategoryName,
+    "Assigned to": row?.assignedToPersonName,
+    "Start date": row?.startDate,
+    "End date": row?.endDate,
+    "Completion date": row?.completionDate,
+    "Completion days": row?.completionDays,
+    "Research TAT": row?.vendorCategoryResearchTat,
+    "Completion TAT": row?.vendorCompletionTat,
+    "Left TAT": row?.tatDaysLeft,
+    "Over Due TAT": row?.overDueTat,
+  }));
+
+  const headers = [
+    "Id",
+    "Client name",
+    "Status",
+    "Genrated by",
+    "Sub Category name",
+    "Assigned to",
+    "Start date",
+    "End date",
+    "Completion date",
+    "Completion days",
+    "Research TAT",
+    "Completion TAT",
+    "Left TAT",
+    "Over Due TAT"
+  ];
 
   return (
     <>
-      <Flex vertical gap={8}>
-        <div className="create-user-box">
-          <MainHeading data={`Vendors request list`} />
-        </div>
-        <Input
-          value={searchText}
-          size="small"
-          onChange={handleSearch}
-          style={{ width: "220px" }}
-          placeholder="search"
-          prefix={<Icon icon="fluent:search-24-regular" />}
-        />
+      <Flex justify="space-between">
+        <Flex vertical gap={8}>
+          <div className="create-user-box">
+            <MainHeading data={`Vendors request list`} />
+          </div>
+          <Search
+            placeholder="search"
+            size="small"
+            allowClear
+            value={searchText}
+            onSearch={onSearch}
+            onChange={(e) => {
+              setSearchText(e.target.value);
+              if (!e.target.value && !e.target.value.trim()) {
+                dispatch(
+                  getAllVendorsRequest({
+                    id: userid,
+                    page: paginationData?.page,
+                    size: paginationData?.size,
+                  })
+                );
+                setSearchText("");
+              }
+            }}
+            enterButton="search"
+            style={{ width: "250px" }}
+            prefix={<Icon icon="fluent:search-24-regular" />}
+          />
+        </Flex>
+        <Flex gap={8} align="center">
+          <RangePicker
+            style={{ width: "250px", height: "32px", fontSize: "12px" }}
+            size="small"
+            presets={rangePresets}
+            disabledDate={(current) =>
+              current && current > dayjs().endOf("day")
+            }
+            value={[
+              filterQuery?.startDate ? dayjs(filterQuery?.startDate) : "",
+              filterQuery?.endDate ? dayjs(filterQuery?.endDate) : "",
+            ]}
+            onChange={(dates) => {
+              if (dates) {
+                setFilterQuery((prev) => ({
+                  ...prev,
+                  startDate: dayjs(dates[0]).format("YYYY-MM-DD"),
+                  endDate: dayjs(dates[1]).format("YYYY-MM-DD"),
+                }));
+              }
+            }}
+          />
+          <Select
+            size="small"
+            style={{ width: "200px", height: "32px" }}
+            placeholder="Select status"
+            value={filterQuery?.status}
+            onChange={(e) => setFilterQuery((prev) => ({ ...prev, status: e }))}
+          />
+          <Select
+            size="small"
+            style={{ width: "200px", height: "32px" }}
+            placeholder="Select users"
+            value={filterQuery?.userId}
+            onChange={(e) => setFilterQuery((prev) => ({ ...prev, userId: e }))}
+          />
+
+          <Button
+            size="small"
+            onClick={handleResetFilter}
+            disabled={
+              filterQuery?.startDate === null && filterQuery?.endDate === null
+            }
+          >
+            Reset filter
+          </Button>
+          <Button
+            size="small"
+            type="primary"
+            onClick={handleFilter}
+            disabled={
+              filterQuery?.startDate === null && filterQuery?.endDate === null
+            }
+          >
+            Apply filter
+          </Button>
+
+          <CSVLink
+            className="text-white"
+            data={exportData}
+            headers={headers}
+            filename={"exported_data.csv"}
+          >
+            <Button
+              size="small"
+              disabled={
+                filterQuery?.startDate === null && filterQuery?.endDate === null
+              }
+            >
+              <Icon
+                icon="fluent:arrow-upload-16-filled"
+                height={BTN_ICON_HEIGHT}
+                width={BTN_ICON_WIDTH}
+              />{" "}
+              Export
+            </Button>
+          </CSVLink>
+        </Flex>
       </Flex>
       {loading === "pending" ? (
         <TableScalaton />
@@ -278,8 +483,28 @@ const VendorsList = () => {
           }
         />
       )}
-    </>
-  )
-}
 
-export default VendorsList
+      <Modal
+        open={openModal}
+        onCancel={() => setOpenModal(false)}
+        onClose={() => setOpenModal(false)}
+        onOk={() => form.submit()}
+        okText="Submit"
+      >
+        <Form layout="vertical" form={form} onFinish={handleFilter}>
+          <Form.Item label="Select status" name="status">
+            <Select />
+          </Form.Item>
+          <Form.Item label="Select users" name="userId">
+            <Select />
+          </Form.Item>
+          <Form.Item label="Select Date range" name="rangeDate">
+            <RangePicker />
+          </Form.Item>
+        </Form>
+      </Modal>
+    </>
+  );
+};
+
+export default VendorsList;

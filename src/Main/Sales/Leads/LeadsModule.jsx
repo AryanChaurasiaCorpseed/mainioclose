@@ -1,14 +1,15 @@
-import React, { Suspense, useCallback, useEffect, useState } from "react"
-import "./LeadsModule.scss"
-import { Link, useParams } from "react-router-dom"
-import LeadCreateModel from "../../../Model/LeadCreateModel"
-import { useDispatch, useSelector } from "react-redux"
-import TableScalaton from "../../../components/TableScalaton"
-import { CSVLink } from "react-csv"
+import React, { Suspense, useCallback, useEffect, useState } from "react";
+import "./LeadsModule.scss";
+import { Link, useParams } from "react-router-dom";
+import LeadCreateModel from "../../../Model/LeadCreateModel";
+import { useDispatch, useSelector } from "react-redux";
+import TableScalaton from "../../../components/TableScalaton";
+import { CSVLink } from "react-csv";
 import {
   deleteMultipleLeads,
   getAllLeadCount,
   getAllLeads,
+  getAllLeadsForExport,
   getAllStatusData,
   getLeadNotificationCount,
   handleDeleteSingleLead,
@@ -18,8 +19,8 @@ import {
   searchLeads,
   updateAssigneeInLeadModule,
   updateHelper,
-} from "../../../Toolkit/Slices/LeadSlice"
-import MainHeading from "../../../components/design/MainHeading"
+} from "../../../Toolkit/Slices/LeadSlice";
+import MainHeading from "../../../components/design/MainHeading";
 import {
   Button,
   Checkbox,
@@ -32,48 +33,52 @@ import {
   Select,
   Space,
   Typography,
-} from "antd"
-import { Icon } from "@iconify/react"
-import CompanyFormModal from "../../Accounts/CompanyFormModal"
-import OverFlowText from "../../../components/OverFlowText"
-import { BTN_ICON_HEIGHT, BTN_ICON_WIDTH } from "../../../components/Constants"
-import { playErrorSound, playSuccessSound } from "../../Common/Commons"
-import LeadsDetailsMainPage from "./LeadsDetailsMainPage"
-const { Text } = Typography
-const { Search } = Input
+} from "antd";
+import { Icon } from "@iconify/react";
+import CompanyFormModal from "../../Accounts/CompanyFormModal";
+import OverFlowText from "../../../components/OverFlowText";
+import { BTN_ICON_HEIGHT, BTN_ICON_WIDTH } from "../../../components/Constants";
+import { playErrorSound, playSuccessSound } from "../../Common/Commons";
+import LeadsDetailsMainPage from "./LeadsDetailsMainPage";
+import dayjs from "dayjs";
+const { Text } = Typography;
+const { Search } = Input;
 
-const CommonTable = React.lazy(() => import(`../../../components/CommonTable`))
+const CommonTable = React.lazy(() => import(`../../../components/CommonTable`));
 
 const LeadsModule = () => {
-  const allLeadData = useSelector((state) => state.leads.allLeads)
-  const leadUserNew = useSelector((state) => state.leads.getAllLeadUserData)
-  const getAllStatus = useSelector((state) => state.leads.getAllStatus)
-  const leadsLoading = useSelector((state) => state.leads.leadsLoading)
+  const allLeadData = useSelector((state) => state.leads.allLeads);
+  const leadUserNew = useSelector((state) => state.leads.getAllLeadUserData);
+  const getAllStatus = useSelector((state) => state.leads.getAllStatus);
+  const leadsLoading = useSelector((state) => state.leads.leadsLoading);
   const notificationCount = useSelector(
     (state) => state.leads.notificationCount
-  )
+  );
   const currentUserDetail = useSelector(
     (state) => state.auth.getDepartmentDetail
-  )
-  const totalCount = useSelector((state) => state.leads.totalCount)
-  const [multibtn, setMultibtn] = useState("")
-  const [leadDelLoading, setLeadDelLoading] = useState("")
-  const [hideMUltiFilter, setHideMUltiFilter] = useState(false)
-  const [filterBtnNew, setFilterBtnNew] = useState(false)
-  const [openDropdown, setOpenDropdown] = useState(false)
-  const [selectedRowKeys, setSelectedRowKeys] = useState([])
-  const [selectedRow, setSelectedRow] = useState([])
-  const [dropdownData, setDropdownData] = useState([])
-  const [headerData, setHeaderData] = useState([])
-  const [searchText, setSearchText] = useState("")
+  );
+  const totalCount = useSelector((state) => state.leads.totalCount);
+  const allLeadsForExport = useSelector(
+    (state) => state.leads.allLeadsForExport
+  );
+  const [multibtn, setMultibtn] = useState("");
+  const [leadDelLoading, setLeadDelLoading] = useState("");
+  const [hideMUltiFilter, setHideMUltiFilter] = useState(false);
+  const [filterBtnNew, setFilterBtnNew] = useState(false);
+  const [openDropdown, setOpenDropdown] = useState(false);
+  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+  const [selectedRow, setSelectedRow] = useState([]);
+  const [dropdownData, setDropdownData] = useState([]);
+  const [headerData, setHeaderData] = useState([]);
+  const [searchText, setSearchText] = useState("");
 
   const onSelectChange = (newSelectedRowKeys, rowsData) => {
-    setSelectedRowKeys(newSelectedRowKeys)
-    setSelectedRow(rowsData)
-  }
+    setSelectedRowKeys(newSelectedRowKeys);
+    setSelectedRow(rowsData);
+  };
 
-  const { userid } = useParams()
-  const dispatch = useDispatch()
+  const { userid } = useParams();
+  const dispatch = useDispatch();
   const [allMultiFilterData, setAllMultiFilterData] = useState({
     userId: Number(userid),
     userIdFilter: [],
@@ -82,100 +87,125 @@ const LeadsModule = () => {
     fromDate: "",
     page: 1,
     size: 50,
-  })
+  });
 
   const [assignedLeadInfo, setAssignedLeadInfo] = useState({
     statusId: null,
     assigneId: null,
-  })
+  });
 
   useEffect(() => {
-    dispatch(getAllLeads(allMultiFilterData))
-    dispatch(getAllLeadCount(allMultiFilterData))
-  }, [filterBtnNew, dispatch])
+    dispatch(getAllLeads(allMultiFilterData));
+    dispatch(getAllLeadCount(allMultiFilterData));
+    dispatch(getAllLeadsForExport(allMultiFilterData));
+  }, [filterBtnNew, dispatch]);
 
   useEffect(() => {
-    dispatch(getAllStatusData())
-  }, [])
+    dispatch(getAllStatusData());
+  }, [dispatch]);
 
   const handlePagination = useCallback(
     (dataPage, size) => {
-      dispatch(getAllLeads({ ...allMultiFilterData, page: dataPage, size }))
-      setAllMultiFilterData((prev) => ({ ...prev, page: dataPage, size }))
+      dispatch(getAllLeads({ ...allMultiFilterData, page: dataPage, size }));
+      setAllMultiFilterData((prev) => ({ ...prev, page: dataPage, size }));
     },
     [allMultiFilterData, dispatch]
-  )
+  );
 
   const handleDeleteMutipleLeads = useCallback(() => {
     let obj = {
       leadId: selectedRowKeys,
       updatedById: Number(userid),
-    }
-    setLeadDelLoading("pending")
+    };
+    setLeadDelLoading("pending");
     dispatch(deleteMultipleLeads(obj))
       .then((response) => {
         if (response?.meta?.requestStatus === "fulfilled") {
-          notification.success({ message: "Leads deleted successfully" })
+          notification.success({ message: "Leads deleted successfully" });
           // playSuccessSound()
-          dispatch(getAllLeads(allMultiFilterData))
-          setLeadDelLoading("success")
-          setSelectedRowKeys([])
+          dispatch(getAllLeads(allMultiFilterData));
+          setLeadDelLoading("success");
+          setSelectedRowKeys([]);
         } else {
-          setLeadDelLoading("rejected")
-          notification.error({ message: "Something went wrong !." })
+          setLeadDelLoading("rejected");
+          notification.error({ message: "Something went wrong !." });
           // playErrorSound()
         }
       })
       .catch(() => {
-        setLeadDelLoading("rejected")
-        notification.error({ message: "Something went wrong !." })
+        setLeadDelLoading("rejected");
+        notification.error({ message: "Something went wrong !." });
         // playErrorSound()
-      })
-  }, [selectedRowKeys, userid, dispatch, allMultiFilterData])
+      });
+  }, [selectedRowKeys, userid, dispatch, allMultiFilterData]);
 
-  const currentUserRoles = useSelector((state) => state?.auth?.roles)
-  const adminRole = currentUserRoles.includes("ADMIN")
-  const allUsers = useSelector((state) => state.user.allUsers)
+  const currentUserRoles = useSelector((state) => state?.auth?.roles);
+  const adminRole = currentUserRoles.includes("ADMIN");
+  const allUsers = useSelector((state) => state.user.allUsers);
 
-  const exportData = selectedRow.map((row) => ({
+  const exportData = allLeadsForExport.map((row) => ({
     Id: row?.id,
     "Lead name": row?.leadName,
     "Missed task": row?.missedTaskName,
-    Status: row?.status?.name,
-    "Client name": row?.clients[0]?.name,
-    Email: row?.email,
-    "Mobile no.": row?.mobileNo,
-    "Assignee person": row?.assignee?.fullName,
-    "Created by": row?.createdBy?.fullName,
-    Helper: row?.helpUser?.fullName,
-    Date: row?.createDate,
+    Frequency: row?.count,
+    Status: row?.status,
+    "Client name": row?.clientName,
+    Email: row?.clientEmail,
+    "Mobile no.": row?.clientMobNo,
+    "Assignee person": row?.assigneeName,
+    "Assignee email": row?.assigneeEmail,
+    "Created by": row?.createdBy,
     Source: row?.source,
-  }))
+    "Updated By": row?.updatedBy,
+    "Reopen By": row?.reopenBy,
+    "Reopen By Quality": row?.isReopenByQuality,
+    "Created Date": dayjs(row?.createDate).format("YYYY-MM-DD"),
+  }));
+
+  const headers = [
+    "Id",
+    "Lead name",
+    "Missed task",
+    "Frequency",
+    "Status",
+    "Client name",
+    "Email",
+    "Mobile no.",
+    "Assignee person",
+    "Assignee email",
+    "Created by",
+    "Helper",
+    "Source",
+    "Updated By",
+    "Reopen By",
+    "Reopen By Quality",
+    "Created Date",
+  ];
 
   const handleHelperChange = useCallback(
     (id, leadId) => {
       let temp = {
         leadId: leadId,
         userId: id,
-      }
+      };
       dispatch(updateHelper(temp))
         .then((response) => {
           if (response?.meta?.requestStatus === "fulfilled") {
-            notification.success({ message: "Helper updated successfully" })
+            notification.success({ message: "Helper updated successfully" });
             // playSuccessSound()
-            dispatch(getAllLeads(allMultiFilterData))
+            dispatch(getAllLeads(allMultiFilterData));
           } else {
-            notification.error({ message: "Something went wrong !." })
+            notification.error({ message: "Something went wrong !." });
             // playErrorSound()
           }
         })
         .catch(() => {
-          notification.error({ message: "Something went wrong !." })
+          notification.error({ message: "Something went wrong !." });
           // playErrorSound()
-        })
+        });
     },
     [dispatch, allMultiFilterData]
-  )
+  );
 
   const handleUpdateAssignee = useCallback(
     (id, leadId) => {
@@ -183,52 +213,52 @@ const LeadsModule = () => {
         leadId: leadId,
         id: id,
         userid: userid,
-      }
+      };
       dispatch(updateAssigneeInLeadModule(data))
         .then((response) => {
           if (response.meta.requestStatus === "fulfilled") {
             notification.success({
               message: "Assignee is updated successfully.",
-            })
+            });
             // playSuccessSound()
-            dispatch(getAllLeads(allMultiFilterData))
+            dispatch(getAllLeads(allMultiFilterData));
           } else {
-            notification.error({ message: "Something went wrong !." })
+            notification.error({ message: "Something went wrong !." });
             // playErrorSound()
           }
         })
         .catch(() => {
-          notification.error({ message: "Something went wrong !." })
+          notification.error({ message: "Something went wrong !." });
           // playErrorSound()
-        })
+        });
     },
     [userid, allMultiFilterData, dispatch]
-  )
+  );
 
   const leadDeleteResponse = useCallback(
     (id) => {
       let obj = {
         id,
         userid,
-      }
+      };
       dispatch(handleDeleteSingleLead(obj))
         .then((response) => {
           if (response.meta.requestStatus === "fulfilled") {
-            notification.success({ message: "Lead deleted successfully." })
+            notification.success({ message: "Lead deleted successfully." });
             // playSuccessSound()
-            dispatch(getAllLeads(allMultiFilterData))
+            dispatch(getAllLeads(allMultiFilterData));
           } else {
-            notification.error({ message: "Something went wrong !." })
+            notification.error({ message: "Something went wrong !." });
             // playErrorSound()
           }
         })
         .catch(() => {
-          notification.error({ message: "Something went wrong !." })
+          notification.error({ message: "Something went wrong !." });
           // playErrorSound()
-        })
+        });
     },
     [userid, dispatch, allMultiFilterData]
-  )
+  );
 
   const leadAssignedToSame = (id) => {
     dispatch(handleLeadassignedToSamePerson(id))
@@ -236,19 +266,19 @@ const LeadsModule = () => {
         if (response.meta.requestStatus === "fulfilled") {
           notification.success({
             message: "Lead assigned to same person successfully",
-          })
+          });
           // playSuccessSound()
-          dispatch(getAllLeads(allMultiFilterData))
+          dispatch(getAllLeads(allMultiFilterData));
         } else {
-          notification.error({ message: "Something went wrong !." })
+          notification.error({ message: "Something went wrong !." });
           // playErrorSound()
         }
       })
       .catch(() => {
-        notification.error({ message: "Something went wrong !." })
+        notification.error({ message: "Something went wrong !." });
         // playErrorSound()
-      })
-  }
+      });
+  };
 
   const handleFlag = useCallback(
     (data) => {
@@ -263,16 +293,18 @@ const LeadsModule = () => {
           if (resp.meta.requestStatus === "fulfilled") {
             notification.success({
               message: "Lead status updated successfully",
-            })
-            dispatch(getAllLeads(allMultiFilterData))
+            });
+            dispatch(getAllLeads(allMultiFilterData));
           } else {
-            notification.error({ message: "Something went wrong !." })
+            notification.error({ message: "Something went wrong !." });
           }
         })
-        .catch(() => notification.error({ message: "Something went wrong !." }))
+        .catch(() =>
+          notification.error({ message: "Something went wrong !." })
+        );
     },
     [dispatch, userid]
-  )
+  );
 
   const columns = [
     {
@@ -292,7 +324,6 @@ const LeadsModule = () => {
               />
             </Button>
           )}
-
         </Flex>
       ),
     },
@@ -310,11 +341,11 @@ const LeadsModule = () => {
       checked: true,
       width: 250,
       sorter: (a, b) => {
-        const nameA = a.leadName.toLowerCase()
-        const nameB = b.leadName.toLowerCase()
-        if (nameA < nameB) return -1
-        if (nameA > nameB) return 1
-        return 0
+        const nameA = a.leadName.toLowerCase();
+        const nameB = b.leadName.toLowerCase();
+        if (nameA < nameB) return -1;
+        if (nameA > nameB) return 1;
+        return 0;
       },
       render: (_, data) => (
         <LeadsDetailsMainPage
@@ -341,12 +372,12 @@ const LeadsModule = () => {
       dataIndex: "missedTaskDate",
       checked: true,
       render: (_, data) => {
-        const taskStatus = data?.missedTaskStatus
-        const taskName = data?.missedTaskName
-        const taskDate = new Date(data?.missedTaskDate).toLocaleDateString()
-        const hours = new Date(data?.missedTaskDate).getHours()
-        const minutes = new Date(data?.missedTaskDate).getMinutes()
-        const taskCreated = data?.missedTaskCretedBy
+        const taskStatus = data?.missedTaskStatus;
+        const taskName = data?.missedTaskName;
+        const taskDate = new Date(data?.missedTaskDate).toLocaleDateString();
+        const hours = new Date(data?.missedTaskDate).getHours();
+        const minutes = new Date(data?.missedTaskDate).getMinutes();
+        const taskCreated = data?.missedTaskCretedBy;
         return taskName !== null ? (
           <OverFlowText type={taskName !== null ? "danger" : ""}>
             {taskStatus} - {taskCreated} - {taskName} | {taskDate} {hours}:
@@ -354,7 +385,7 @@ const LeadsModule = () => {
           </OverFlowText>
         ) : (
           <Text>NA</Text>
-        )
+        );
       },
     },
     {
@@ -372,11 +403,11 @@ const LeadsModule = () => {
       dataIndex: "name",
       checked: true,
       sorter: (a, b) => {
-        const nameA = a.clients[0]?.name.toLowerCase()
-        const nameB = b.clients[0]?.name.toLowerCase()
-        if (nameA < nameB) return -1
-        if (nameA > nameB) return 1
-        return 0
+        const nameA = a.clients[0]?.name.toLowerCase();
+        const nameB = b.clients[0]?.name.toLowerCase();
+        if (nameA < nameB) return -1;
+        if (nameA > nameB) return 1;
+        return 0;
       },
       render: (_, data) => (
         <OverFlowText>
@@ -434,119 +465,119 @@ const LeadsModule = () => {
     },
     ...(adminRole
       ? [
-        {
-          title: "Helper",
-          dataIndex: "helper",
-          checked: true,
-          render: (_, data) => (
-            <Select
-              showSearch
-              size="small"
-              value={data?.helper ? data?.helpUser?.id : ""}
-              style={{ width: "100%" }}
-              options={
-                [
-                  { label: "NA", value: "" },
-                  ...allUsers?.map((item) => ({
-                    label: item?.fullName,
-                    value: item?.id,
-                  })),
-                ] || []
-              }
-              filterOption={(input, option) =>
-                option.label.toLowerCase().includes(input.toLowerCase())
-              }
-              onChange={(e) => handleHelperChange(e, data?.id)}
-            />
-          ),
-        },
-        {
-          title: "Created by",
-          dataIndex: "createdBy",
-          checked: true,
-          render: (_, data) => (
-            <OverFlowText>{data?.createdBy?.fullName}</OverFlowText>
-          ),
-        },
-        {
-          title: "Source",
-          dataIndex: "source",
-          checked: true,
-          render: (_, data) => <OverFlowText>{data?.source}</OverFlowText>,
-        },
-        {
-          title: "Create project",
-          dataIndex: "project",
-          checked: false,
-          render: (_, data) => <CompanyFormModal data={data} />,
-        },
-        {
-          title: "Lead assigned",
-          dataIndex: "assignedSame",
-          checked: false,
-          render: (_, data) => (
-            <Button size="small" onClick={() => leadAssignedToSame(data?.id)}>
-              To same{" "}
-            </Button>
-          ),
-        },
-        {
-          dataIndex: "action",
-          title: "Action",
-          checked: false,
-          render: (_, data) => (
-            <Popconfirm
-              title="Delete the lead"
-              description="Are you sure to delete this lead?"
-              onConfirm={() => leadDeleteResponse(data?.id)}
-              okText="Yes"
-              cancelText="No"
-            >
-              <Button type="text" size="small" danger>
-                <Icon
-                  icon="fluent:delete-20-regular"
-                  height={18}
-                  width={18}
-                />
+          {
+            title: "Helper",
+            dataIndex: "helper",
+            checked: true,
+            render: (_, data) => (
+              <Select
+                showSearch
+                size="small"
+                value={data?.helper ? data?.helpUser?.id : ""}
+                style={{ width: "100%" }}
+                options={
+                  [
+                    { label: "NA", value: "" },
+                    ...allUsers?.map((item) => ({
+                      label: item?.fullName,
+                      value: item?.id,
+                    })),
+                  ] || []
+                }
+                filterOption={(input, option) =>
+                  option.label.toLowerCase().includes(input.toLowerCase())
+                }
+                onChange={(e) => handleHelperChange(e, data?.id)}
+              />
+            ),
+          },
+          {
+            title: "Created by",
+            dataIndex: "createdBy",
+            checked: true,
+            render: (_, data) => (
+              <OverFlowText>{data?.createdBy?.fullName}</OverFlowText>
+            ),
+          },
+          {
+            title: "Source",
+            dataIndex: "source",
+            checked: true,
+            render: (_, data) => <OverFlowText>{data?.source}</OverFlowText>,
+          },
+          {
+            title: "Create project",
+            dataIndex: "project",
+            checked: false,
+            render: (_, data) => <CompanyFormModal data={data} />,
+          },
+          {
+            title: "Lead assigned",
+            dataIndex: "assignedSame",
+            checked: false,
+            render: (_, data) => (
+              <Button size="small" onClick={() => leadAssignedToSame(data?.id)}>
+                To same{" "}
               </Button>
-            </Popconfirm>
-          ),
-        },
-      ]
+            ),
+          },
+          {
+            dataIndex: "action",
+            title: "Action",
+            checked: false,
+            render: (_, data) => (
+              <Popconfirm
+                title="Delete the lead"
+                description="Are you sure to delete this lead?"
+                onConfirm={() => leadDeleteResponse(data?.id)}
+                okText="Yes"
+                cancelText="No"
+              >
+                <Button type="text" size="small" danger>
+                  <Icon
+                    icon="fluent:delete-20-regular"
+                    height={18}
+                    width={18}
+                  />
+                </Button>
+              </Popconfirm>
+            ),
+          },
+        ]
       : []),
-  ]
+  ];
 
   const handleMultipleAssignedLeads = useCallback(() => {
     let obj = {
       leadIds: selectedRowKeys,
       updatedById: userid,
       ...assignedLeadInfo,
-    }
-    setMultibtn("pending")
+    };
+    setMultibtn("pending");
     dispatch(multiAssignedLeads(obj))
       .then((response) => {
         if (response?.meta?.requestStatus === "fulfilled") {
-          notification.success({ message: "Leads assigned successfully ." })
+          notification.success({ message: "Leads assigned successfully ." });
           // playSuccessSound()
-          dispatch(getAllLeads(allMultiFilterData))
-          setMultibtn("success")
-          setSelectedRowKeys([])
+          dispatch(getAllLeads(allMultiFilterData));
+          setMultibtn("success");
+          setSelectedRowKeys([]);
           setAssignedLeadInfo({
             statusId: null,
             assigneId: null,
-          })
+          });
         } else {
-          notification.error({ message: "Something went wrong !." })
+          notification.error({ message: "Something went wrong !." });
           // playErrorSound()
-          setMultibtn("rejected")
+          setMultibtn("rejected");
         }
       })
       .catch(() => {
-        notification.error({ message: "Something went wrong !." })
+        notification.error({ message: "Something went wrong !." });
         // playErrorSound()
-        setMultibtn("rejected")
-      })
-  }, [dispatch, selectedRowKeys, userid, assignedLeadInfo, allMultiFilterData])
+        setMultibtn("rejected");
+      });
+  }, [dispatch, selectedRowKeys, userid, assignedLeadInfo, allMultiFilterData]);
 
   useEffect(() => {
     const notifcationApi = setInterval(() => {
@@ -554,39 +585,39 @@ const LeadsModule = () => {
         if (resp.meta.requestStatus === "fulfilled") {
           // playSuccessSound()
         }
-      })
-    }, 1 * 60 * 1000)
+      });
+    }, 1 * 60 * 1000);
     dispatch(getLeadNotificationCount(userid)).then((resp) => {
       if (resp.meta.requestStatus === "fulfilled") {
         // playSuccessSound()
       }
-    })
-    return () => clearInterval(notifcationApi)
-  }, [userid, dispatch])
+    });
+    return () => clearInterval(notifcationApi);
+  }, [userid, dispatch]);
 
   const menuStyle = {
     boxShadow: "none",
-  }
+  };
 
   const handleOpenDropdown = useCallback(() => {
-    const res = [...columns]
-    let result = res?.filter((col) => col.checked === true)
-    setDropdownData(res)
-    setHeaderData(result)
-    setOpenDropdown(true)
-  }, [columns])
+    const res = [...columns];
+    let result = res?.filter((col) => col.checked === true);
+    setDropdownData(res);
+    setHeaderData(result);
+    setOpenDropdown(true);
+  }, [columns]);
 
   const handleSelectColumns = useCallback((e, key) => {
     setDropdownData((prev) => {
-      let temp = [...prev]
+      let temp = [...prev];
       let res = temp.map((ele) =>
         ele.title === key ? { ...ele, checked: e } : ele
-      )
-      let result = res?.filter((col) => col.checked === true)
-      setHeaderData(result)
-      return res
-    })
-  }, [])
+      );
+      let result = res?.filter((col) => col.checked === true);
+      setHeaderData(result);
+      return res;
+    });
+  }, []);
 
   const columnDropDown = useCallback(
     (handleSelectColumns) => {
@@ -599,23 +630,24 @@ const LeadsModule = () => {
             {item?.title}
           </Checkbox>
         ),
-      }))
-      return result
+      }));
+      return result;
     },
     [dropdownData]
-  )
+  );
 
   const onSearchLead = (e, b, c) => {
     if (e) {
-      setSearchText(e)
-      dispatch(searchLeads({ input: e, id: userid }))
+      setSearchText(e);
+      dispatch(searchLeads({ input: e, id: userid }));
     }
     if (!b) {
       // dispatch(searchLeads({ input: "", id: userid }))
-      setSearchText("")
-      dispatch(getAllLeads(allMultiFilterData))
+      setSearchText("");
+      dispatch(getAllLeads(allMultiFilterData));
     }
-  }
+  };
+
 
   return (
     <div className="lead-module small-box-padding">
@@ -629,7 +661,7 @@ const LeadsModule = () => {
           </Link>
           {adminRole && (
             <div className="d-end mr-2">
-              <Dropdown
+              {/* <Dropdown
                 disabled={selectedRow?.length === 0 ? true : false}
                 open={openDropdown}
                 // onOpenChange={(e) => setOpenDropdown(e)}
@@ -661,9 +693,9 @@ const LeadsModule = () => {
                           type="primary"
                           size="small"
                           onClick={() => {
-                            setOpenDropdown(false)
-                            setSelectedRow([])
-                            setSelectedRowKeys([])
+                            setOpenDropdown(false);
+                            setSelectedRow([]);
+                            setSelectedRowKeys([]);
                           }}
                         >
                           <CSVLink
@@ -691,7 +723,30 @@ const LeadsModule = () => {
                     width={BTN_ICON_WIDTH}
                   />
                 </Button>
-              </Dropdown>
+              </Dropdown> */}
+
+              <CSVLink
+                className="text-white"
+                data={exportData}
+                headers={headers}
+                filename={"exported_data.csv"}
+              >
+                <Button
+                  size="small"
+                  // onClick={() => {
+                  //   setOpenDropdown(false);
+                  //   setSelectedRow([]);
+                  //   setSelectedRowKeys([]);
+                  // }}
+                >
+                  <Icon
+                    icon="fluent:arrow-upload-16-filled"
+                    height={BTN_ICON_HEIGHT}
+                    width={BTN_ICON_WIDTH}
+                  />{" "}
+                  Export
+                </Button>
+              </CSVLink>
             </div>
           )}
           <Button
@@ -731,9 +786,9 @@ const LeadsModule = () => {
               options={
                 leadUserNew?.length > 0
                   ? leadUserNew?.map((item) => ({
-                    label: item?.fullName,
-                    value: item?.id,
-                  }))
+                      label: item?.fullName,
+                      value: item?.id,
+                    }))
                   : []
               }
               filterOption={(input, option) =>
@@ -753,9 +808,9 @@ const LeadsModule = () => {
             options={
               getAllStatus?.length > 0
                 ? getAllStatus?.map((item) => ({
-                  label: item?.name,
-                  value: item?.id,
-                }))
+                    label: item?.name,
+                    value: item?.id,
+                  }))
                 : []
             }
             onChange={(e) =>
@@ -810,11 +865,11 @@ const LeadsModule = () => {
           value={searchText}
           onSearch={onSearchLead}
           onChange={(e) => {
-            setSearchText(e.target.value)
+            setSearchText(e.target.value);
             if (!e.target.value && !e.target.value.trim()) {
               // dispatch(searchLeads({ input: "", id: userid }))
-              dispatch(getAllLeads(allMultiFilterData))
-              setSearchText("")
+              dispatch(getAllLeads(allMultiFilterData));
+              setSearchText("");
             }
           }}
           enterButton="search"
@@ -876,9 +931,9 @@ const LeadsModule = () => {
                       options={
                         getAllStatus?.length > 0
                           ? getAllStatus?.map((item) => ({
-                            label: item?.name,
-                            value: item?.id,
-                          }))
+                              label: item?.name,
+                              value: item?.id,
+                            }))
                           : []
                       }
                       onChange={(e) =>
@@ -903,9 +958,9 @@ const LeadsModule = () => {
                       options={
                         leadUserNew?.length > 0
                           ? leadUserNew?.map((ele) => ({
-                            label: ele?.fullName,
-                            value: ele?.id,
-                          }))
+                              label: ele?.fullName,
+                              value: ele?.id,
+                            }))
                           : []
                       }
                       onChange={(e) =>
@@ -939,7 +994,7 @@ const LeadsModule = () => {
         </Suspense>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default LeadsModule
+export default LeadsModule;

@@ -1,8 +1,9 @@
-import React, { useCallback, useState } from "react"
+import React, { useCallback, useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { getAllUrlList } from "../Toolkit/Slices/LeadUrlSlice"
 import { addNewRating, allRatingUsers } from "../Toolkit/Slices/RatingSlice"
 import { Button, Form, Modal, notification, Select } from "antd"
+import { getAllUsers } from "../Toolkit/Slices/UsersSlice"
 
 const CreateRatingModel = ({ edit, urlRating, urlId }) => {
   const dispatch = useDispatch()
@@ -18,6 +19,10 @@ const CreateRatingModel = ({ edit, urlRating, urlId }) => {
     { value: 4, label: "4" },
     { value: 5, label: "5" },
   ]
+
+  useEffect(()=>{
+    dispatch(getAllUsers())
+  },[dispatch])
 
   const handleFinish = useCallback(
     (values) => {

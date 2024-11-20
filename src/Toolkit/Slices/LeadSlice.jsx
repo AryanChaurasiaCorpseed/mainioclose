@@ -722,6 +722,24 @@ export const handleFlagByQualityTeam = createAsyncThunk(
   }
 )
 
+
+export const getAllLeadsForExport=createAsyncThunk('getAllLeadsForExport',async(data)=>{
+  const response=await postQuery(`/leadService/api/v1/lead/getAllLeadForImport`,data)
+  return response.data
+})
+
+export const searchInVendorsList=createAsyncThunk(`searchInVendorsList`,async({userId,searchInput})=>{
+  const response=await getQuery(`/leadService/api/v1/vendor/vendor-search?userId=${userId}&searchInput=${searchInput}`)
+  return response.data
+})
+
+export const vendorsFilteration=createAsyncThunk('vendorsFilteration',async(data)=>{
+  const response=await postQuery(`/leadService/api/v1/vendor/vendor-report`,data)
+  return response.data
+})
+
+
+
 export const LeadSlice = createSlice({
   name: "lead",
   initialState: {
@@ -764,6 +782,8 @@ export const LeadSlice = createSlice({
     vendorsCategoryList: [],
     singleCategoryDetail: {},
     requestListForVendors: [],
+    allLeadsForExport:[],
+    vendorsExportData:[]
   },
   reducers: {
     handleLoadingState: (state, action) => {
@@ -1021,6 +1041,15 @@ export const LeadSlice = createSlice({
       state.vendorsList = []
     })
 
+
+
+
+
+
+
+
+
+
     builder.addCase(getAllVendorsRequest.pending, (state, action) => {
       state.loading = "pending"
     })
@@ -1106,6 +1135,39 @@ export const LeadSlice = createSlice({
       state.historyLoading = "rejected"
       state.requestListForVendors = []
     })
+
+
+    
+    builder.addCase(getAllLeadsForExport.pending, (state, action) => {
+      state.loading = "pending"
+    })
+    builder.addCase(getAllLeadsForExport.fulfilled, (state, action) => {
+      state.loading = "success"
+      state.allLeadsForExport = action?.payload
+    })
+    builder.addCase(getAllLeadsForExport.rejected, (state, action) => {
+      state.loading = "rejected"
+      state.allLeadsForExport = []
+    })
+
+    builder.addCase(searchInVendorsList.pending, (state, action) => {
+    })
+    builder.addCase(searchInVendorsList.fulfilled, (state, action) => {
+      state.allVendorsRequestList = action?.payload
+    })
+    builder.addCase(searchInVendorsList.rejected, (state, action) => {
+      state.allVendorsRequestList = []
+    })
+
+    builder.addCase(vendorsFilteration.pending, (state, action) => {
+    })
+    builder.addCase(vendorsFilteration.fulfilled, (state, action) => {
+      state.vendorsExportData = action?.payload?.vendorReports
+    })
+    builder.addCase(vendorsFilteration.rejected, (state, action) => {
+      state.vendorsExportData = []
+    })
+
   },
 })
 export const {
