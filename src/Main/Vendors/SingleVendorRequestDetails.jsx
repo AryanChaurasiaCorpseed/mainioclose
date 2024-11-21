@@ -30,7 +30,7 @@ import { useParams } from "react-router-dom";
 import { getHighestPriorityRole } from "../Common/Commons";
 const { Text, Paragraph } = Typography;
 
-const SingleVendorRequestDetails = ({ data,paginationData }) => {
+const SingleVendorRequestDetails = ({ data, paginationData }) => {
   const { userid } = useParams();
   const dispatch = useDispatch();
   const historyList = useSelector(
@@ -70,6 +70,7 @@ const SingleVendorRequestDetails = ({ data,paginationData }) => {
       values.quotationFilePath = values?.quotationFilePath?.[0]?.response;
       values.agreementWithClientDocumentPath =
         values?.agreementWithClientDocumentPath?.[0]?.response;
+      values.researchDocumentPath = values?.researchDocumentPath?.[0]?.response;
       values.companyName = data?.clientCompanyName;
       values.contactPersonName = data?.contactPersonName;
       values.vendorCategoryId = data?.vendorCategoryId;
@@ -582,10 +583,21 @@ const SingleVendorRequestDetails = ({ data,paginationData }) => {
                     </Form.Item>
 
                     <Form.Item
-                      label="Research document name"
-                      name="researchDocumentName"
+                      label="Research document attachment"
+                      name="researchDocumentPath"
+                      getValueFromEvent={normFile}
+                      valuePropName="fileList"
                     >
-                      <Input />
+                      <Upload
+                        action="/leadService/api/v1/upload/uploadimageToFileSystem"
+                        listType="text"
+                        multiple={true}
+                      >
+                        <Button size="small">
+                          <Icon icon="fluent:arrow-upload-20-filled" />
+                          Upload
+                        </Button>
+                      </Upload>
                     </Form.Item>
                   </>
                 )}

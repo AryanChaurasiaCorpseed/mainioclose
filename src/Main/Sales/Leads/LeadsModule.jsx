@@ -107,7 +107,7 @@ const LeadsModule = () => {
     dispatch(getAllLeads(allMultiFilterData));
     dispatch(getAllLeadCount(allMultiFilterData));
     dispatch(getAllLeadsForExport(allMultiFilterData));
-  }, [filterBtnNew, dispatch]);
+  }, [dispatch]);
 
   useEffect(() => {
     dispatch(getAllStatusData());
@@ -695,9 +695,8 @@ const LeadsModule = () => {
       page: 1,
       size: 50,
     }));
-  }, [dispatch]);
+  }, [dispatch,userid]);
 
-  console.log("dskjcbasdhvlashgdoi", allMultiFilterData);
 
   return (
     <div className="lead-module small-box-padding">
@@ -915,7 +914,6 @@ const LeadsModule = () => {
           onChange={(e) => {
             setSearchText(e.target.value);
             if (!e.target.value && !e.target.value.trim()) {
-              // dispatch(searchLeads({ input: "", id: userid }))
               dispatch(getAllLeads(allMultiFilterData));
               setSearchText("");
             }

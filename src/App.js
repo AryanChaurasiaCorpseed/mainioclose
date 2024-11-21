@@ -188,6 +188,9 @@ function App() {
           DatePicker:{
             controlHeightSM: 28,
             contentFontSizeSM: 12,
+            borderRadius:4,
+            borderRadiusSM:4,
+            borderRadiusLG:5
           }
           
         },

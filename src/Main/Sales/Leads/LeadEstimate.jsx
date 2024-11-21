@@ -78,7 +78,7 @@ const LeadEstimate = ({ leadid }) => {
         })
         .catch(() => notification.error({ message: "Something went wrong !." }))
     },
-    [leadid]
+    [leadid,dispatch]
   )
 
   return (
@@ -112,6 +112,7 @@ const LeadEstimate = ({ leadid }) => {
             }
           />
         </Form.Item>
+
 
         <Form.List name="cc">
           {(fields, { add, remove }, { errors }) => (

@@ -18,9 +18,7 @@ import {
   Button,
   DatePicker,
   Flex,
-  Form,
   Input,
-  Modal,
   notification,
   Select,
   Typography,
@@ -36,7 +34,6 @@ const { RangePicker } = DatePicker;
 
 const VendorsList = () => {
   const dispatch = useDispatch();
-  const [form] = Form.useForm();
   const loading = useSelector((state) => state.leads.loading);
   const currentRoles = useSelector((state) => state?.auth?.roles);
   const { userid } = useParams();
@@ -52,15 +49,14 @@ const VendorsList = () => {
   const vendorsExportData = useSelector(
     (state) => state.leads.vendorsExportData
   );
+  const vendorsStatus = useSelector((state) => state.leads.vendorsStatus);
   const [searchText, setSearchText] = useState("");
-  const [filteredData, setFilteredData] = useState([]);
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [assigneeId, setAssigneeId] = useState(null);
   const [paginationData, setPaginationData] = useState({
     page: 1,
     size: 50,
   });
-  const [openModal, setOpenModal] = useState(false);
   const [filterQuery, setFilterQuery] = useState({
     userIdBy: userid,
     status: null,
@@ -81,23 +77,10 @@ const VendorsList = () => {
   }, [dispatch, userid]);
 
   useEffect(() => {
-    dispatch(getProcurementAssigneeList(userid));
+    if (getHighestPriorityRole(currentRoles) === "ADMIN") {
+      dispatch(getProcurementAssigneeList(userid));
+    }
   }, [userid, dispatch]);
-
-  useEffect(() => {
-    setFilteredData(allVendorsRequestList);
-  }, [allVendorsRequestList]);
-
-  const handleSearch = (e) => {
-    const value = e.target.value;
-    setSearchText(value);
-    const filtered = allVendorsRequestList?.filter((item) =>
-      Object.values(item)?.some((val) =>
-        String(val)?.toLowerCase()?.includes(value?.toLowerCase())
-      )
-    );
-    setFilteredData(filtered);
-  };
 
   const handlePagination = useCallback(
     (dataPage, size) => {
@@ -179,27 +162,31 @@ const VendorsList = () => {
       dataIndex: "clientCompanyName",
       title: "Client company name",
     },
-    {
-      dataIndex: "assignedTo",
-      title: "Assigned to",
-      render: (_, data) => (
-        <Select
-          size="small"
-          placeholder="Select assignee"
-          style={{ width: "95%" }}
-          value={data?.assigneeId}
-          options={
-            procurementAssigneeList?.length > 0
-              ? procurementAssigneeList?.map((item) => ({
-                  label: item?.fullName,
-                  value: item?.id,
-                }))
-              : []
-          }
-          onChange={(e) => handleChangeAssignee(e, [data?.id])}
-        />
-      ),
-    },
+    ...(getHighestPriorityRole(currentRoles) === "ADMIN"
+      ? [
+          {
+            dataIndex: "assignedTo",
+            title: "Assigned to",
+            render: (_, data) => (
+              <Select
+                size="small"
+                placeholder="Select assignee"
+                style={{ width: "95%" }}
+                value={data?.assigneeId}
+                options={
+                  procurementAssigneeList?.length > 0
+                    ? procurementAssigneeList?.map((item) => ({
+                        label: item?.fullName,
+                        value: item?.id,
+                      }))
+                    : []
+                }
+                onChange={(e) => handleChangeAssignee(e, [data?.id])}
+              />
+            ),
+          },
+        ]
+      : []),
     {
       dataIndex: "assigneeName",
       title: "Assignee name",
@@ -212,7 +199,6 @@ const VendorsList = () => {
           },
         ]
       : []),
-
     {
       dataIndex: "budgetPrice",
       title: "Client budget",
@@ -235,7 +221,12 @@ const VendorsList = () => {
     {
       dataIndex: "requestStatus",
       title: "Request status",
-      render: (_, data) => <SingleVendorRequestDetails paginationData={paginationData} data={data} />,
+      render: (_, data) => (
+        <SingleVendorRequestDetails
+          paginationData={paginationData}
+          data={data}
+        />
+      ),
     },
   ];
 
@@ -344,90 +335,113 @@ const VendorsList = () => {
             prefix={<Icon icon="fluent:search-24-regular" />}
           />
         </Flex>
-        <Flex gap={8} align="center" justify="flex-end">
-          <RangePicker
-            style={{ width: "25%" }}
-            size="small"
-            presets={rangePresets}
-            disabledDate={(current) =>
-              current && current > dayjs().endOf("day")
-            }
-            value={[
-              filterQuery?.startDate ? dayjs(filterQuery?.startDate) : "",
-              filterQuery?.endDate ? dayjs(filterQuery?.endDate) : "",
-            ]}
-            onChange={(dates, dateString) => {
-              if (dates) {
-                setFilterQuery((prev) => ({
-                  ...prev,
-                  startDate: dayjs(dateString[0]).format("YYYY-MM-DD"),
-                  endDate: dayjs(dateString[1]).format("YYYY-MM-DD"),
-                }));
+        {getHighestPriorityRole(currentRoles) === "ADMIN" && (
+          <Flex gap={8} align="center" justify="flex-end">
+            <RangePicker
+              style={{ width: "25%" }}
+              size="small"
+              presets={rangePresets}
+              disabledDate={(current) =>
+                current && current > dayjs().endOf("day")
               }
-            }}
-          />
-          <Select
-            size="small"
-            style={{ width: "15%" }}
-            placeholder="Select status"
-            value={filterQuery?.status}
-            onChange={(e) => setFilterQuery((prev) => ({ ...prev, status: e }))}
-          />
-          <Select
-            size="small"
-            style={{ width: "15%" }}
-            placeholder="Select users"
-            value={filterQuery?.userId}
-            onChange={(e) => setFilterQuery((prev) => ({ ...prev, userId: e }))}
-          />
+              value={[
+                filterQuery?.startDate ? dayjs(filterQuery?.startDate) : "",
+                filterQuery?.endDate ? dayjs(filterQuery?.endDate) : "",
+              ]}
+              onChange={(dates, dateString) => {
+                if (dates) {
+                  setFilterQuery((prev) => ({
+                    ...prev,
+                    startDate: dayjs(dateString[0]).format("YYYY-MM-DD"),
+                    endDate: dayjs(dateString[1]).format("YYYY-MM-DD"),
+                  }));
+                }
+              }}
+            />
+            <Select
+              size="small"
+              style={{ width: "15%" }}
+              placeholder="Select status"
+              options={
+                vendorsStatus?.length > 0
+                  ? vendorsStatus?.map((item) => ({
+                      label: item?.statusName,
+                      value: item?.statusName,
+                    }))
+                  : []
+              }
+              value={filterQuery?.status}
+              onChange={(e) =>
+                setFilterQuery((prev) => ({ ...prev, status: e }))
+              }
+            />
+            <Select
+              size="small"
+              style={{ width: "15%" }}
+              placeholder="Select users"
+              options={
+                procurementAssigneeList?.length > 0
+                  ? procurementAssigneeList?.map((item) => ({
+                      label: item?.fullName,
+                      value: item?.id,
+                    }))
+                  : []
+              }
+              value={filterQuery?.userId}
+              onChange={(e) =>
+                setFilterQuery((prev) => ({ ...prev, userId: e }))
+              }
+            />
 
-          <Button
-            size="small"
-            onClick={handleResetFilter}
-            disabled={
-              filterQuery?.startDate === null && filterQuery?.endDate === null
-            }
-          >
-            Reset filter
-          </Button>
-          <Button
-            size="small"
-            type="primary"
-            onClick={handleFilter}
-            disabled={
-              filterQuery?.startDate === null && filterQuery?.endDate === null
-            }
-          >
-            Apply filter
-          </Button>
-
-          <CSVLink
-            className="text-white"
-            data={exportData}
-            headers={headers}
-            filename={"exported_data.csv"}
-          >
             <Button
               size="small"
+              onClick={handleResetFilter}
               disabled={
                 filterQuery?.startDate === null && filterQuery?.endDate === null
               }
             >
-              <Icon
-                icon="fluent:arrow-upload-16-filled"
-                height={BTN_ICON_HEIGHT}
-                width={BTN_ICON_WIDTH}
-              />{" "}
-              Export
+              Reset filter
             </Button>
-          </CSVLink>
-        </Flex>
+            <Button
+              size="small"
+              type="primary"
+              onClick={handleFilter}
+              disabled={
+                filterQuery?.startDate === null && filterQuery?.endDate === null
+              }
+            >
+              Apply filter
+            </Button>
+
+            <CSVLink
+              className="text-white"
+              data={exportData}
+              headers={headers}
+              filename={"exported_data.csv"}
+            >
+              <Button
+                size="small"
+                disabled={
+                  filterQuery?.startDate === null &&
+                  filterQuery?.endDate === null
+                }
+              >
+                <Icon
+                  icon="fluent:arrow-upload-16-filled"
+                  height={BTN_ICON_HEIGHT}
+                  width={BTN_ICON_WIDTH}
+                />{" "}
+                Export
+              </Button>
+            </CSVLink>
+          </Flex>
+        )}
       </Flex>
       {loading === "pending" ? (
         <TableScalaton />
       ) : (
         <CommonTable
-          data={filteredData}
+          data={allVendorsRequestList}
           columns={columns}
           scroll={{ y: 520, x: 1700 }}
           rowSelection={true}
@@ -488,26 +502,6 @@ const VendorsList = () => {
           }
         />
       )}
-
-      <Modal
-        open={openModal}
-        onCancel={() => setOpenModal(false)}
-        onClose={() => setOpenModal(false)}
-        onOk={() => form.submit()}
-        okText="Submit"
-      >
-        <Form layout="vertical" form={form} onFinish={handleFilter}>
-          <Form.Item label="Select status" name="status">
-            <Select />
-          </Form.Item>
-          <Form.Item label="Select users" name="userId">
-            <Select />
-          </Form.Item>
-          <Form.Item label="Select Date range" name="rangeDate">
-            <RangePicker />
-          </Form.Item>
-        </Form>
-      </Modal>
     </>
   );
 };
