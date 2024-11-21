@@ -185,6 +185,10 @@ function App() {
             fontSizeSM: 12,
             itemSizeSM: 22,
           },
+          DatePicker:{
+            controlHeightSM: 28,
+            contentFontSizeSM: 12,
+          }
           
         },
       }}

@@ -35,6 +35,7 @@ const SingleVendorRequestDetails = ({ data }) => {
   const historyList = useSelector(
     (state) => state.leads.singleVendorHistoryList
   );
+  const vendorsStatus = useSelector((state) => state.leads.vendorsStatus);
   const currentRoles = useSelector((state) => state?.auth?.roles);
   const [openDrawer, setOpenDrawer] = useState(false);
   const [openModal, setOpenModal] = useState(false);
@@ -463,28 +464,36 @@ const SingleVendorRequestDetails = ({ data }) => {
         <Form layout="vertical" onFinish={handleUpdateRequest} form={form}>
           <Form.Item label="Status" name="requestStatus">
             <Select
-              options={[
-                {
-                  label: "Initiated",
-                  value: "Initiated",
-                },
-                {
-                  label: "Processing",
-                  value: "Processing",
-                },
-                {
-                  label: "Unavailable",
-                  value: "Unavailable",
-                },
-                {
-                  label: "Cancel",
-                  value: "Cancel",
-                },
-                {
-                  label: "Finished",
-                  value: "Finished",
-                },
-              ]}
+              options={
+                //   [
+                //   {
+                //     label: "Initiated",
+                //     value: "Initiated",
+                //   },
+                //   {
+                //     label: "Processing",
+                //     value: "Processing",
+                //   },
+                //   {
+                //     label: "Unavailable",
+                //     value: "Unavailable",
+                //   },
+                //   {
+                //     label: "Cancel",
+                //     value: "Cancel",
+                //   },
+                //   {
+                //     label: "Finished",
+                //     value: "Finished",
+                //   },
+                // ]
+                vendorsStatus?.length > 0
+                  ? vendorsStatus?.map((item) => ({
+                      label: item?.statusName,
+                      value: item?.statusName,
+                    }))
+                  : []
+              }
               filterOption={(input, option) =>
                 option.label.toLowerCase().includes(input.toLowerCase())
               }

@@ -738,6 +738,11 @@ export const vendorsFilteration=createAsyncThunk('vendorsFilteration',async(data
   return response.data
 })
 
+export const getAllVendorsStatus=createAsyncThunk('getAllVendorsStatus',async()=>{
+  const response=await getQuery(`/leadService/api/v1/vendor-status-all`)
+  return response.data
+})
+
 
 
 export const LeadSlice = createSlice({
@@ -784,7 +789,8 @@ export const LeadSlice = createSlice({
     singleCategoryDetail: {},
     requestListForVendors: [],
     allLeadsForExport:[],
-    vendorsExportData:[]
+    vendorsExportData:[],
+    vendorsStatus:[]
   },
   reducers: {
     handleLoadingState: (state, action) => {
@@ -1164,6 +1170,15 @@ export const LeadSlice = createSlice({
     })
     builder.addCase(vendorsFilteration.rejected, (state, action) => {
       state.vendorsExportData = []
+    })
+
+    builder.addCase(getAllVendorsStatus.pending, (state, action) => {
+    })
+    builder.addCase(getAllVendorsStatus.fulfilled, (state, action) => {
+      state.vendorsStatus = action?.payload
+    })
+    builder.addCase(getAllVendorsStatus.rejected, (state, action) => {
+      state.vendorsStatus = []
     })
 
   },

@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   changeProcurementAssignee,
   getAllVendorsRequest,
+  getAllVendorsStatus,
   searchInVendorsList,
   vendorsFilteration,
 } from "../../Toolkit/Slices/LeadSlice";
@@ -76,6 +77,7 @@ const VendorsList = () => {
         size: paginationData?.size,
       })
     );
+    dispatch(getAllVendorsStatus());
   }, [dispatch, userid]);
 
   useEffect(() => {
@@ -157,7 +159,13 @@ const VendorsList = () => {
           <Text>{data?.id}</Text>
           <Icon
             icon="fluent:circle-16-filled"
-            color={data?.proposalSentStatus ? "green" : "red"}
+            color={
+              data?.status === "Quotation Sent"
+                ? "green"
+                : data?.status === "Cancel"
+                ? "black"
+                : "red"
+            }
           />
         </Flex>
       ),
@@ -271,9 +279,6 @@ const VendorsList = () => {
     );
   };
 
-  
-
-
   const exportData = vendorsExportData?.map((row) => ({
     Id: row?.id,
     "Client name": row?.clientName,
@@ -305,7 +310,7 @@ const VendorsList = () => {
     "Research TAT",
     "Completion TAT",
     "Left TAT",
-    "Over Due TAT"
+    "Over Due TAT",
   ];
 
   return (
@@ -339,9 +344,9 @@ const VendorsList = () => {
             prefix={<Icon icon="fluent:search-24-regular" />}
           />
         </Flex>
-        <Flex gap={8} align="center">
+        <Flex gap={8} align="center" justify="flex-end">
           <RangePicker
-            style={{ width: "250px", height: "32px", fontSize: "12px" }}
+            style={{ width: "25%" }}
             size="small"
             presets={rangePresets}
             disabledDate={(current) =>
@@ -351,26 +356,26 @@ const VendorsList = () => {
               filterQuery?.startDate ? dayjs(filterQuery?.startDate) : "",
               filterQuery?.endDate ? dayjs(filterQuery?.endDate) : "",
             ]}
-            onChange={(dates) => {
+            onChange={(dates, dateString) => {
               if (dates) {
                 setFilterQuery((prev) => ({
                   ...prev,
-                  startDate: dayjs(dates[0]).format("YYYY-MM-DD"),
-                  endDate: dayjs(dates[1]).format("YYYY-MM-DD"),
+                  startDate: dayjs(dateString[0]).format("YYYY-MM-DD"),
+                  endDate: dayjs(dateString[1]).format("YYYY-MM-DD"),
                 }));
               }
             }}
           />
           <Select
             size="small"
-            style={{ width: "200px", height: "32px" }}
+            style={{ width: "15%" }}
             placeholder="Select status"
             value={filterQuery?.status}
             onChange={(e) => setFilterQuery((prev) => ({ ...prev, status: e }))}
           />
           <Select
             size="small"
-            style={{ width: "200px", height: "32px" }}
+            style={{ width: "15%" }}
             placeholder="Select users"
             value={filterQuery?.userId}
             onChange={(e) => setFilterQuery((prev) => ({ ...prev, userId: e }))}

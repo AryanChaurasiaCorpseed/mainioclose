@@ -1,7 +1,7 @@
-import React, { lazy, Suspense, useCallback, useEffect, useState } from "react"
-import TableOutlet from "../../../components/design/TableOutlet"
-import MainHeading from "../../../components/design/MainHeading"
-import { useDispatch, useSelector } from "react-redux"
+import React, { lazy, Suspense, useCallback, useEffect, useState } from "react";
+import TableOutlet from "../../../components/design/TableOutlet";
+import MainHeading from "../../../components/design/MainHeading";
+import { useDispatch, useSelector } from "react-redux";
 import {
   deleteTempAssignee,
   getAllTempCompanies,
@@ -9,12 +9,12 @@ import {
   updateCompanyAssignee,
   updateMultiCompanyAssignee,
   updateMultiTempCompanyAssignee,
-} from "../../../Toolkit/Slices/CompanySlice"
-import TableScalaton from "../../../components/TableScalaton"
-import SomethingWrong from "../../../components/usefulThings/SomethingWrong"
-import ColComp from "../../../components/small/ColComp"
-import { useParams } from "react-router-dom"
-import { getAllLeadUser } from "../../../Toolkit/Slices/LeadSlice"
+} from "../../../Toolkit/Slices/CompanySlice";
+import TableScalaton from "../../../components/TableScalaton";
+import SomethingWrong from "../../../components/usefulThings/SomethingWrong";
+import ColComp from "../../../components/small/ColComp";
+import { useParams } from "react-router-dom";
+import { getAllLeadUser } from "../../../Toolkit/Slices/LeadSlice";
 import {
   Button,
   Checkbox,
@@ -28,40 +28,40 @@ import {
   Tag,
   Tooltip,
   Typography,
-} from "antd"
-import OverFlowText from "../../../components/OverFlowText"
-import { Icon } from "@iconify/react"
-import { getHighestPriorityRole } from "../../Common/Commons"
-import { BTN_ICON_HEIGHT, BTN_ICON_WIDTH } from "../../../components/Constants"
-import CompanyHistory from "./CompanyHistory"
-import { CSVLink } from "react-csv"
-const CommonTable = lazy(() => import("../../../components/CommonTable"))
-const { Search } = Input
-const { Text } = Typography
+} from "antd";
+import OverFlowText from "../../../components/OverFlowText";
+import { Icon } from "@iconify/react";
+import { getHighestPriorityRole } from "../../Common/Commons";
+import { BTN_ICON_HEIGHT, BTN_ICON_WIDTH } from "../../../components/Constants";
+import CompanyHistory from "./CompanyHistory";
+import { CSVLink } from "react-csv";
+const CommonTable = lazy(() => import("../../../components/CommonTable"));
+const { Search } = Input;
+const { Text } = Typography;
 
 const TemporaryCompanies = () => {
-  const dispatch = useDispatch()
-  const { userid } = useParams()
-  const currUser = useSelector((prev) => prev?.auth?.currentUser)
-  const leadUserNew = useSelector((state) => state.leads.getAllLeadUserData)
-  const currentRoles = useSelector((state) => state?.auth?.roles)
-  const allUsers = useSelector((state) => state.user.allUsers)
+  const dispatch = useDispatch();
+  const { userid } = useParams();
+  const currUser = useSelector((prev) => prev?.auth?.currentUser);
+  const leadUserNew = useSelector((state) => state.leads.getAllLeadUserData);
+  const currentRoles = useSelector((state) => state?.auth?.roles);
+  const allUsers = useSelector((state) => state.user.allUsers);
   const { allTemporaryCompanies, loadingCompany, errorCompany } = useSelector(
     (prev) => prev?.company
-  )
-  const [selectedRowKeys, setSelectedRowKeys] = useState([])
-  const [selectedRow, setSelectedRow] = useState([])
-  const [assigneeId, setAssigneeId] = useState(null)
-  const [assignedProcessing, setAssignedProcessing] = useState("")
-  const [dropdownData, setDropdownData] = useState([])
-  const [openDropdown, setOpenDropdown] = useState(false)
-  const [headerData, setHeaderData] = useState([])
-  const [tempAssigneeId, setTempAssigneeId] = useState(null)
+  );
+  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+  const [selectedRow, setSelectedRow] = useState([]);
+  const [assigneeId, setAssigneeId] = useState(null);
+  const [assignedProcessing, setAssignedProcessing] = useState("");
+  const [dropdownData, setDropdownData] = useState([]);
+  const [openDropdown, setOpenDropdown] = useState(false);
+  const [headerData, setHeaderData] = useState([]);
+  const [tempAssigneeId, setTempAssigneeId] = useState(null);
   const [paginationData, setPaginationData] = useState({
     page: 1,
     size: 50,
-  })
-  const [filterUserId, setFilterUserId] = useState("")
+  });
+  const [filterUserId, setFilterUserId] = useState("");
 
   useEffect(() => {
     dispatch(
@@ -71,24 +71,24 @@ const TemporaryCompanies = () => {
         size: paginationData?.size,
         filterUserId,
       })
-    )
-  }, [dispatch, currUser])
+    );
+  }, [dispatch, currUser]);
 
   useEffect(() => {
-    dispatch(getAllLeadUser(userid))
-  }, [userid, dispatch])
+    dispatch(getAllLeadUser(userid));
+  }, [userid, dispatch]);
 
   const onSelectChange = (newSelectedRowKeys, rowsData) => {
-    setSelectedRowKeys(newSelectedRowKeys)
-    setSelectedRow(rowsData)
-  }
+    setSelectedRowKeys(newSelectedRowKeys);
+    setSelectedRow(rowsData);
+  };
 
   const onSearchLead = (e, b) => {
-    dispatch(searchCompany({ inputText: e, userId: userid }))
+    dispatch(searchCompany({ inputText: e, userId: userid }));
     if (!b) {
-      dispatch(searchCompany({ inputText: "", userId: userid }))
+      dispatch(searchCompany({ inputText: "", userId: userid }));
     }
-  }
+  };
 
   const handlePagination = useCallback(
     (dataPage, size) => {
@@ -99,11 +99,11 @@ const TemporaryCompanies = () => {
           size: size,
           filterUserId: filterUserId,
         })
-      )
-      setPaginationData({ size: size, page: dataPage })
+      );
+      setPaginationData({ size: size, page: dataPage });
     },
     [currUser, dispatch, filterUserId]
-  )
+  );
 
   const handleUpdateAssignee = useCallback(
     (assigneeId, companyId) => {
@@ -111,13 +111,13 @@ const TemporaryCompanies = () => {
         companyId: companyId,
         assigneeId: assigneeId,
         currentUserId: userid,
-      }
+      };
       dispatch(updateCompanyAssignee(data))
         .then((response) => {
           if (response.meta.requestStatus === "fulfilled") {
             notification.success({
               message: "Assignee is updated successfully",
-            })
+            });
             dispatch(
               getAllTempCompanies({
                 id: currUser?.id,
@@ -125,17 +125,17 @@ const TemporaryCompanies = () => {
                 size: paginationData?.size,
                 filterUserId,
               })
-            )
+            );
           } else {
-            notification.error({ message: "Something went wrong !." })
+            notification.error({ message: "Something went wrong !." });
           }
         })
         .catch(() => {
-          notification.error({ message: "Something went wrong !." })
-        })
+          notification.error({ message: "Something went wrong !." });
+        });
     },
     [dispatch, currUser, paginationData, filterUserId]
-  )
+  );
 
   const filterCompanyBasedOnUser = useCallback(
     (filterUserId) => {
@@ -147,12 +147,12 @@ const TemporaryCompanies = () => {
             size: paginationData?.size,
             filterUserId,
           })
-        )
-        setFilterUserId(filterUserId)
+        );
+        setFilterUserId(filterUserId);
       }
     },
     [paginationData, dispatch, currUser]
-  )
+  );
 
   const tagsInTooltip = (data, type) => {
     return data?.map((items) => {
@@ -160,9 +160,9 @@ const TemporaryCompanies = () => {
         <Tag className="slug-items-tooltip">
           {type === "lead" ? items?.leadNameame : items?.projectName}
         </Tag>
-      )
-    })
-  }
+      );
+    });
+  };
 
   const columns = [
     {
@@ -183,6 +183,14 @@ const TemporaryCompanies = () => {
           {props?.companyName}
         </OverFlowText>
       ),
+    },
+    {
+      dataIndex: "tempAssignee",
+      title: "Temp assignee",
+      checked: true,
+      render: (_, data) => {
+        return <ColComp data={data?.tempAssignee} />;
+      },
     },
     {
       dataIndex: "assignee",
@@ -372,14 +380,14 @@ const TemporaryCompanies = () => {
       checked: false,
       render: (_, props) => <CompanyHistory companyId={props.companyId} />,
     },
-  ]
+  ];
 
   const menuStyle = {
     boxShadow: "none",
-  }
+  };
 
   const updateMultiAssigneeForCompanies = useCallback(() => {
-    setAssignedProcessing("pending")
+    setAssignedProcessing("pending");
     dispatch(
       updateMultiCompanyAssignee({
         companyId: selectedRowKeys,
@@ -389,10 +397,10 @@ const TemporaryCompanies = () => {
     )
       .then((resp) => {
         if (resp.meta.requestStatus === "fulfilled") {
-          setAssignedProcessing("success")
+          setAssignedProcessing("success");
           notification.success({
             message: "Companies assigned to user successfully",
-          })
+          });
           dispatch(
             getAllTempCompanies({
               id: currUser?.id,
@@ -400,22 +408,22 @@ const TemporaryCompanies = () => {
               size: paginationData?.size,
               filterUserId,
             })
-          )
-          setSelectedRowKeys([])
-          setAssigneeId(null)
+          );
+          setSelectedRowKeys([]);
+          setAssigneeId(null);
         } else {
-          setAssignedProcessing("error")
-          notification.error({ message: "Something went wrong !." })
+          setAssignedProcessing("error");
+          notification.error({ message: "Something went wrong !." });
         }
       })
       .catch(() => {
-        setAssignedProcessing("error")
-        notification.error({ message: "Something went wrong !." })
-      })
-  }, [selectedRowKeys, assigneeId, dispatch, userid])
+        setAssignedProcessing("error");
+        notification.error({ message: "Something went wrong !." });
+      });
+  }, [selectedRowKeys, assigneeId, dispatch, userid]);
 
   const updateMultiTempAssigneeForCompanies = useCallback(() => {
-    setAssignedProcessing("pending")
+    setAssignedProcessing("pending");
     dispatch(
       updateMultiTempCompanyAssignee({
         companyId: selectedRowKeys,
@@ -425,10 +433,10 @@ const TemporaryCompanies = () => {
     )
       .then((resp) => {
         if (resp.meta.requestStatus === "fulfilled") {
-          setAssignedProcessing("success")
+          setAssignedProcessing("success");
           notification.success({
             message: "Companies assigned to user successfully",
-          })
+          });
           dispatch(
             getAllTempCompanies({
               id: currUser?.id,
@@ -436,18 +444,18 @@ const TemporaryCompanies = () => {
               size: paginationData?.size,
               filterUserId,
             })
-          )
-          setSelectedRowKeys([])
-          setTempAssigneeId(null)
+          );
+          setSelectedRowKeys([]);
+          setTempAssigneeId(null);
         } else {
-          setAssignedProcessing("error")
-          notification.error({ message: "Something went wrong !." })
+          setAssignedProcessing("error");
+          notification.error({ message: "Something went wrong !." });
         }
       })
       .catch(() => {
-        setAssignedProcessing("error")
-        notification.error({ message: "Something went wrong !." })
-      })
+        setAssignedProcessing("error");
+        notification.error({ message: "Something went wrong !." });
+      });
   }, [
     selectedRowKeys,
     tempAssigneeId,
@@ -456,7 +464,7 @@ const TemporaryCompanies = () => {
     paginationData,
     filterUserId,
     currUser,
-  ])
+  ]);
 
   const handleDeleteAssignee = useCallback(() => {
     dispatch(
@@ -470,7 +478,7 @@ const TemporaryCompanies = () => {
         if (resp.meta.requestStatus === "fulfilled") {
           notification.success({
             message: "Assignee's are deleted from companies",
-          })
+          });
           dispatch(
             getAllTempCompanies({
               id: currUser?.id,
@@ -478,19 +486,19 @@ const TemporaryCompanies = () => {
               size: paginationData?.size,
               filterUserId,
             })
-          )
-          setSelectedRowKeys([])
+          );
+          setSelectedRowKeys([]);
         } else {
           notification.error({
             message: "Something went wrong !.",
-          })
+          });
         }
       })
       .catch(() =>
         notification.error({
           message: "Something went wrong !.",
         })
-      )
+      );
   }, [
     dispatch,
     selectedRowKeys,
@@ -498,11 +506,12 @@ const TemporaryCompanies = () => {
     paginationData,
     filterUserId,
     currUser,
-  ])
+  ]);
 
   const exportedData = selectedRow?.map((item) => ({
     Id: item?.companyId,
     "Company name": item?.companyName,
+    "Temp assignee": item?.tempAssignee,
     Assignee: item?.assignee?.fullName,
     "GST number": item?.gstNo,
     "GST type": item?.gstType,
@@ -521,7 +530,7 @@ const TemporaryCompanies = () => {
     "Secondary city": item?.secCity,
     "Secondary state": item?.secState,
     "Secondary country": item?.seCountry,
-  }))
+  }));
 
   const columnDropDown = useCallback(
     (handleSelectColumns) => {
@@ -534,31 +543,31 @@ const TemporaryCompanies = () => {
             {item?.title}
           </Checkbox>
         ),
-      }))
-      return result
+      }));
+      return result;
     },
     [dropdownData]
-  )
+  );
 
   const handleSelectColumns = useCallback((e, key) => {
     setDropdownData((prev) => {
-      let temp = [...prev]
+      let temp = [...prev];
       let res = temp.map((ele) =>
         ele.title === key ? { ...ele, checked: e } : ele
-      )
-      let result = res?.filter((col) => col.checked === true)
-      setHeaderData(result)
-      return res
-    })
-  }, [])
+      );
+      let result = res?.filter((col) => col.checked === true);
+      setHeaderData(result);
+      return res;
+    });
+  }, []);
 
   const handleOpenDropdown = useCallback(() => {
-    const res = [...columns]
-    let result = res?.filter((col) => col.checked === true)
-    setDropdownData(res)
-    setHeaderData(result)
-    setOpenDropdown(true)
-  }, [columns])
+    const res = [...columns];
+    let result = res?.filter((col) => col.checked === true);
+    setDropdownData(res);
+    setHeaderData(result);
+    setOpenDropdown(true);
+  }, [columns]);
 
   return (
     <TableOutlet>
@@ -645,9 +654,9 @@ const TemporaryCompanies = () => {
                     type="primary"
                     size="small"
                     onClick={() => {
-                      setOpenDropdown(false)
-                      setSelectedRow([])
-                      setSelectedRowKeys([])
+                      setOpenDropdown(false);
+                      setSelectedRow([]);
+                      setSelectedRowKeys([]);
                     }}
                   >
                     <CSVLink
@@ -710,7 +719,7 @@ const TemporaryCompanies = () => {
                         danger
                         size="small"
                         onClick={handleDeleteAssignee}
-                        disabled={selectedRowKeys?.length===0}
+                        disabled={selectedRowKeys?.length === 0}
                       >
                         Delete assignee
                       </Button>
@@ -800,7 +809,7 @@ const TemporaryCompanies = () => {
         )}
       </div>
     </TableOutlet>
-  )
-}
+  );
+};
 
-export default TemporaryCompanies
+export default TemporaryCompanies;
