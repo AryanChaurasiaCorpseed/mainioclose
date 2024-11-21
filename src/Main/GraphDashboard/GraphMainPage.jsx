@@ -47,24 +47,25 @@ const GraphMainPage = () => {
   );
 
   const [leadMonthDate, setLeadMonthData] = useState({
-    toDate: "2024-01-01",
-    fromDate: "2024-11-01",
+    toDate: dayjs().subtract(1, "year").format("YYYY-MM-DD"),
+    fromDate: dayjs().format("YYYY-MM-DD"),
   });
 
   const [leadCategoryDate, setLeadCategoryDate] = useState({
-    toDate: "2024-01-01",
-    fromDate: "2024-11-01",
+    toDate: dayjs().subtract(1, "year").format("YYYY-MM-DD"),
+    fromDate: dayjs().format("YYYY-MM-DD"),
   });
 
   const [leadStatusDate, setLeadStatusDate] = useState({
-    toDate: "2024-01-01",
-    fromDate: "2024-11-01",
+    toDate: dayjs().subtract(1, "year").format("YYYY-MM-DD"),
+    fromDate: dayjs().format("YYYY-MM-DD"),
   });
 
   const [projectsDate, setProjectDates] = useState({
-    toDate: "2024-01-01",
-    fromDate: "2024-11-01",
+    toDate: dayjs().subtract(1, "year").format("YYYY-MM-DD"),
+    fromDate: dayjs().format("YYYY-MM-DD"),
   });
+
 
   useEffect(() => {
     dispatch(getTotalLeadCountForGraph());
@@ -385,7 +386,7 @@ const GraphMainPage = () => {
             <Text className="card-title-text">Leads data </Text>
             <RangePicker
               size="small"
-              allowClear={true}
+              // allowClear={true}
               presets={rangePresets}
               value={[
                 leadMonthDate?.toDate ? dayjs(leadMonthDate?.toDate) : "",
@@ -404,7 +405,7 @@ const GraphMainPage = () => {
             <Text className="card-title-text">Leads distribution status </Text>
             <RangePicker
               size="small"
-              allowClear={true}
+              // allowClear={true}
               presets={rangePresets}
               value={[
                 leadStatusDate?.toDate ? dayjs(leadStatusDate?.toDate) : "",
@@ -426,7 +427,7 @@ const GraphMainPage = () => {
             <Text className="card-title-text">Leads </Text>
             <RangePicker
               size="small"
-              allowClear={true}
+              // allowClear={true}
               presets={rangePresets}
               value={[
                 leadCategoryDate?.toDate ? dayjs(leadCategoryDate?.toDate) : "",
@@ -496,7 +497,7 @@ const GraphMainPage = () => {
             <Text className="card-title-text">Projects data</Text>
             <RangePicker
               size="small"
-              allowClear={true}
+              // allowClear={true}
               presets={rangePresets}
               value={[
                 projectsDate?.toDate ? dayjs(projectsDate?.toDate) : "",
