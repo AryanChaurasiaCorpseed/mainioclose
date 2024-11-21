@@ -659,6 +659,7 @@ const LeadsModule = () => {
 
   const handleApplyFilter = useCallback(() => {
     dispatch(getAllLeads(allMultiFilterData));
+    dispatch(getAllLeadsForExport(allMultiFilterData));
   }, [allMultiFilterData, dispatch]);
 
   const handleResetFilter = useCallback(() => {
@@ -673,9 +674,20 @@ const LeadsModule = () => {
         size: 50,
       })
     );
+    dispatch(
+      getAllLeadsForExport({
+        userId: Number(userid),
+        userIdFilter: [],
+        statusId: [1],
+        toDate: "",
+        fromDate: "",
+        page: 1,
+        size: 50,
+      })
+    );
   }, [dispatch]);
 
-  console.log('dskjcbasdhvlashgdoi',allMultiFilterData)
+  console.log("dskjcbasdhvlashgdoi", allMultiFilterData);
 
   return (
     <div className="lead-module small-box-padding">
@@ -875,8 +887,12 @@ const LeadsModule = () => {
             }}
           />
 
-          <Button size="small" type="primary" onClick={handleApplyFilter}>Apply filter</Button>
-          <Button size="small"  onClick={handleResetFilter}>Reset filter</Button>
+          <Button size="small" type="primary" onClick={handleApplyFilter}>
+            Apply filter
+          </Button>
+          <Button size="small" onClick={handleResetFilter}>
+            Reset filter
+          </Button>
         </div>
       </div>
       <div className="flex-verti-center-hori-start mt-2">

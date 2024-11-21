@@ -20,6 +20,7 @@ import dayjs from "dayjs";
 import { useDispatch, useSelector } from "react-redux";
 import {
   cancelVendorsRequest,
+  getAllVendorsRequest,
   getvendorHistoryByLeadId,
   sendVendorsProposal,
   updateVendorStatus,
@@ -29,7 +30,7 @@ import { useParams } from "react-router-dom";
 import { getHighestPriorityRole } from "../Common/Commons";
 const { Text, Paragraph } = Typography;
 
-const SingleVendorRequestDetails = ({ data }) => {
+const SingleVendorRequestDetails = ({ data,paginationData }) => {
   const { userid } = useParams();
   const dispatch = useDispatch();
   const historyList = useSelector(
@@ -102,6 +103,13 @@ const SingleVendorRequestDetails = ({ data }) => {
                   vendorRequestId: data?.id,
                 })
               );
+              dispatch(
+                getAllVendorsRequest({
+                  id: userid,
+                  page: paginationData?.page,
+                  size: paginationData?.size,
+                })
+              );
             } else {
               notification.error({
                 message: "Something went wrong  !.",
@@ -142,6 +150,13 @@ const SingleVendorRequestDetails = ({ data }) => {
                       notification.success({
                         message: "Proposal send to client.",
                       });
+                      dispatch(
+                        getAllVendorsRequest({
+                          id: userid,
+                          page: paginationData?.page,
+                          size: paginationData?.size,
+                        })
+                      );
                     } else {
                       notification.error({
                         message:

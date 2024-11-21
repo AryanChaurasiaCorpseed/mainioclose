@@ -179,7 +179,7 @@ function App() {
           },
           Timeline: {
             fontSize: 12,
-            itemPaddingBottom: 68,
+            itemPaddingBottom: 78,
           },
           Pagination: {
             fontSizeSM: 12,
