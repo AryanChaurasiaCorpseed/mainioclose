@@ -69,7 +69,7 @@ const SingleVendorRequestDetails = ({ data, paginationData }) => {
     (values) => {
       values.quotationFilePath = values?.quotationFilePath?.[0]?.response;
       values.agreementWithClientDocumentPath =
-        values?.agreementWithClientDocumentPath?.[0]?.response;
+      values?.agreementWithClientDocumentPath?.[0]?.response;
       values.researchDocumentPath = values?.researchDocumentPath?.[0]?.response;
       values.companyName = data?.clientCompanyName;
       values.contactPersonName = data?.contactPersonName;
@@ -81,6 +81,8 @@ const SingleVendorRequestDetails = ({ data, paginationData }) => {
         leadId: data?.leadId,
         data: values,
       };
+
+      console.log('dkjgcsjhgdkjshgkj',values)
 
       if (values?.requestStatus === "Cancel") {
         dispatch(
@@ -616,7 +618,7 @@ const SingleVendorRequestDetails = ({ data, paginationData }) => {
                 {getFieldValue("requestStatus") === "Cancel" ? (
                   <Form.Item
                     label="Reason for canceling"
-                    name="cancelReason "
+                    name="cancelReason"
                     rules={[
                       {
                         required: true,

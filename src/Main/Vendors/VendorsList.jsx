@@ -208,8 +208,36 @@ const VendorsList = () => {
       title: "Category name",
     },
     {
+      dataIndex: "receivedDate",
+      title: "Receieved date",
+    },
+    {
+      dataIndex:'completedDate',
+      title:'Completed date'
+    },
+    {
+      dataIndex:'completionDays',
+      title:'Completion days'
+    },
+    {
+      dataIndex:'tatDaysLeft',
+      title:'TAT days left'
+    },
+    {
+      dataIndex:'overDueTat',
+      title:'Overdue TAT'
+    },
+    {
+      dataIndex:'subCategoryTatDays',
+      title:'Subcategory TAT days'
+    },
+    {
       dataIndex: "vendorSubCategoryName",
       title: "Subcategory name",
+    },
+    {
+      dataIndex: "raiseBy",
+      title: "Raised by",
     },
     {
       dataIndex: "vendorComment",
@@ -443,7 +471,7 @@ const VendorsList = () => {
         <CommonTable
           data={allVendorsRequestList}
           columns={columns}
-          scroll={{ y: 520, x: 1700 }}
+          scroll={{ y: 520, x: 2500 }}
           rowSelection={true}
           onRowSelection={onSelectChange}
           selectedRowKeys={selectedRowKeys}
