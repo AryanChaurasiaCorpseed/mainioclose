@@ -660,6 +660,7 @@ const LeadsModule = () => {
   const handleApplyFilter = useCallback(() => {
     dispatch(getAllLeads(allMultiFilterData));
     dispatch(getAllLeadsForExport(allMultiFilterData));
+    dispatch(getAllLeadCount(allMultiFilterData));
   }, [allMultiFilterData, dispatch]);
 
   const handleResetFilter = useCallback(() => {
@@ -685,6 +686,15 @@ const LeadsModule = () => {
         size: 50,
       })
     );
+    dispatch(getAllLeadCount({
+      userId: Number(userid),
+      userIdFilter: [],
+      statusId: [1],
+      toDate: "",
+      fromDate: "",
+      page: 1,
+      size: 50,
+    }));
   }, [dispatch]);
 
   console.log("dskjcbasdhvlashgdoi", allMultiFilterData);
