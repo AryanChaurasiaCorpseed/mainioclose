@@ -758,7 +758,7 @@ const TemporaryCompanies = () => {
                         allowClear
                         size="small"
                         style={{ width: 200 }}
-                        value={assigneeId}
+                        value={tempAssigneeId}
                         placeholder="select temporary user"
                         options={
                           leadUserNew?.length > 0
