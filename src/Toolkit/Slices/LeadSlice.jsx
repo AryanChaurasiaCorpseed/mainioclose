@@ -743,6 +743,16 @@ export const getAllVendorsStatus=createAsyncThunk('getAllVendorsStatus',async()=
   return response.data
 })
 
+export const getDocumentsByLeadName=createAsyncThunk('getDocumentsByLeadName',async(name)=>{
+  const response=await getQuery(`/leadService/api/v1/complianceDocumnets/getComplianceDocByName?name=${name}`)
+  return response.data
+})
+
+export const leadProposalSentRequest=createAsyncThunk('leadProposalSentRequest',async(data)=>{
+  const response=await postQuery(`/leadService/api/v1/proposal/createProposal`,data)
+  return response.data
+})
+
 
 
 export const LeadSlice = createSlice({
@@ -790,7 +800,8 @@ export const LeadSlice = createSlice({
     requestListForVendors: [],
     allLeadsForExport:[],
     vendorsExportData:[],
-    vendorsStatus:[]
+    vendorsStatus:[],
+    complianceDocumentList:[]
   },
   reducers: {
     handleLoadingState: (state, action) => {
@@ -1179,6 +1190,16 @@ export const LeadSlice = createSlice({
     })
     builder.addCase(getAllVendorsStatus.rejected, (state, action) => {
       state.vendorsStatus = []
+    })
+
+
+    builder.addCase(getDocumentsByLeadName.pending, (state, action) => {
+    })
+    builder.addCase(getDocumentsByLeadName.fulfilled, (state, action) => {
+      state.complianceDocumentList = action?.payload?.productDoc
+    })
+    builder.addCase(getDocumentsByLeadName.rejected, (state, action) => {
+      state.complianceDocumentList = []
     })
 
   },

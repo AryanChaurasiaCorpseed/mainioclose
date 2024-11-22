@@ -463,7 +463,7 @@ const VendorsList = () => {
                 icon="fluent:arrow-upload-16-filled"
                 height={BTN_ICON_HEIGHT}
                 width={BTN_ICON_WIDTH}
-              />{" "}
+              />
               Export
             </Button>
           </CSVLink>

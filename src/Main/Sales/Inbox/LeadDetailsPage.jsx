@@ -1,9 +1,9 @@
-import React, { useCallback, useEffect, useState } from "react"
-import "./LeadDetailsPage.scss"
-import { useParams } from "react-router-dom"
-import { toast } from "react-toastify"
-import "react-toastify/dist/ReactToastify.css"
-import { useDispatch, useSelector } from "react-redux"
+import React, { useCallback, useEffect, useState } from "react";
+import "./LeadDetailsPage.scss";
+import { useParams } from "react-router-dom";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { useDispatch, useSelector } from "react-redux";
 import {
   changeLeadAssigneeLeads,
   changeLeadStatus,
@@ -18,8 +18,8 @@ import {
   updateLeadsContact,
   updateOriginalNameInLeads,
   updateSingleLeadName,
-} from "../../../Toolkit/Slices/LeadSlice"
-import BulkFileUploader from "../Leads/BulkFileUploader"
+} from "../../../Toolkit/Slices/LeadSlice";
+import BulkFileUploader from "../Leads/BulkFileUploader";
 import {
   Button,
   Col,
@@ -36,59 +36,64 @@ import {
   Row,
   Select,
   Space,
+  Tag,
   Typography,
-} from "antd"
-import { Icon } from "@iconify/react"
-import { playErrorSound, playSuccessSound } from "../../Common/Commons"
-import CompanyFormModal from "../../Accounts/CompanyFormModal"
-import LeadComments from "./LeadComments"
-const { Text } = Typography
+} from "antd";
+import { Icon } from "@iconify/react";
+import { playErrorSound, playSuccessSound } from "../../Common/Commons";
+import CompanyFormModal from "../../Accounts/CompanyFormModal";
+import LeadComments from "./LeadComments";
+const { Text } = Typography;
 
-toast.configure()
+toast.configure();
 
 const LeadDetailsPage = ({ leadid }) => {
-  const [form1] = Form.useForm()
-  const { userid } = useParams()
-  const dispatch = useDispatch()
-  const [descriptionText, setDescriptionText] = useState("")
-  const currentUserRoles = useSelector((state) => state?.auth?.roles)
-  const { allLeadUrl } = useSelector((prev) => prev?.leadurls)
+  const [form1] = Form.useForm();
+  const { userid } = useParams();
+  const dispatch = useDispatch();
+  const [descriptionText, setDescriptionText] = useState("");
+  const currentUserRoles = useSelector((state) => state?.auth?.roles);
+  const allLeadUrl = useSelector((prev) => prev?.leadurls.allUrlList);
   const userDataResponse = useSelector(
     (state) => state.leads.getAllLeadUserData
-  )
-  const getAllStatus = useSelector((state) => state.leads.getAllStatus)
+  );
+  const getAllStatus = useSelector((state) => state.leads.getAllStatus);
   const singleLeadResponseData = useSelector(
     (state) => state.leads.singleLeadResponseData
-  )
-  const notesApiData = useSelector((state) => state.leads.remarkData)
+  );
+  const notesApiData = useSelector((state) => state.leads.remarkData);
   const currentUserDetail = useSelector(
     (state) => state.auth.getDepartmentDetail
-  )
-  const clientsContact = useSelector((state) => state.leads.clientsContact)
-  const slugList = useSelector((state) => state.leadslug.slugList)
-  const [openModal, setOpenModal] = useState(false)
-  const [contactData, setContactData] = useState(null)
-  const [updateLeadNameToggle, setUpdateLeadNameToggle] = useState(true)
-  const [updateOriginalName, setUpdateOriginalName] = useState(false)
-  const [updatedLeadName, setUpdatedLeadName] = useState("")
-  const [showDescriptionField, setShowDescriptionField] = useState(false)
-  const [assigneValue, setAssigneValue] = useState(null)
-
+  );
+  const clientsContact = useSelector((state) => state.leads.clientsContact);
+  const complianceDocumentList = useSelector(
+    (state) => state.leads.complianceDocumentList
+  );
+  const slugList = useSelector((state) => state.leadslug.slugList);
+  const [openModal, setOpenModal] = useState(false);
+  const [contactData, setContactData] = useState(null);
+  const [updateLeadNameToggle, setUpdateLeadNameToggle] = useState(true);
+  const [updateOriginalName, setUpdateOriginalName] = useState(false);
+  const [updatedLeadName, setUpdatedLeadName] = useState("");
+  const [showDescriptionField, setShowDescriptionField] = useState(false);
+  const [assigneValue, setAssigneValue] = useState(null);
+  const [document, setDocument] = useState("");
+  const [openDocumentModal, setOpenDocumentModal] = useState(false);
   const [originalData, setOriginalData] = useState({
     leadId: leadid,
     originalName: "",
     currentUserId: userid,
-  })
+  });
 
   useEffect(() => {
-    setDescriptionText(singleLeadResponseData?.description)
-  }, [singleLeadResponseData])
+    setDescriptionText(singleLeadResponseData?.description);
+  }, [singleLeadResponseData]);
 
   const getSingleLeadData = useCallback(() => {
     if (leadid) {
-      dispatch(getSingleLeadDataByLeadID({ leadid, userid }))
+      dispatch(getSingleLeadDataByLeadID({ leadid, userid }));
     }
-  }, [leadid, userid, dispatch])
+  }, [leadid, userid, dispatch]);
 
   const updateOriginalNameFun = useCallback(() => {
     dispatch(updateOriginalNameInLeads(originalData))
@@ -96,30 +101,30 @@ const LeadDetailsPage = ({ leadid }) => {
         if (resp.meta.requestStatus === "fulfilled") {
           notification.success({
             message: "Name updated successfully",
-          })
-          getSingleLeadData()
-          setUpdateOriginalName((prev) => !prev)
+          });
+          getSingleLeadData();
+          setUpdateOriginalName((prev) => !prev);
         } else {
           notification.error({
             message: "Something went wrong !.",
-          })
+          });
         }
       })
       .catch(() => {
         notification.error({
           message: "Something went wrong !.",
-        })
-      })
-  }, [originalData, dispatch, getSingleLeadData])
+        });
+      });
+  }, [originalData, dispatch, getSingleLeadData]);
 
   useEffect(() => {
     if (leadid) {
-      dispatch(editViewData(leadid))
-      dispatch(getAllRemarkAndCommnts(leadid))
+      dispatch(editViewData(leadid));
+      dispatch(getAllRemarkAndCommnts(leadid));
     }
-  }, [dispatch, leadid])
+  }, [dispatch, leadid]);
 
-  const adminRole = currentUserRoles.includes("ADMIN")
+  const adminRole = currentUserRoles.includes("ADMIN");
 
   const changeLeadStatusFun = (statusId) => {
     dispatch(changeLeadStatus({ leadid, userid, statusId }))
@@ -127,24 +132,24 @@ const LeadDetailsPage = ({ leadid }) => {
         if (resp.meta.requestStatus === "fulfilled") {
           notification.success({
             message: "Status updated successfully",
-          })
-          getSingleLeadData()
+          });
+          getSingleLeadData();
         } else {
           notification.error({
             message: "Something went wrong !.",
-          })
+          });
         }
       })
       .catch(() => {
         notification.error({
           message: "Something went wrong !.",
-        })
-      })
-  }
+        });
+      });
+  };
 
   useEffect(() => {
-    getSingleLeadData()
-  }, [getSingleLeadData])
+    getSingleLeadData();
+  }, [getSingleLeadData]);
 
   const updateLeadNameSinglePage = useCallback(
     (e) => {
@@ -153,46 +158,46 @@ const LeadDetailsPage = ({ leadid }) => {
           if (resp.meta.requestStatus === "fulfilled") {
             notification.success({
               message: "Assignee updated successfully",
-            })
-            getSingleLeadData()
-            setUpdateLeadNameToggle(true)
+            });
+            getSingleLeadData();
+            setUpdateLeadNameToggle(true);
           } else {
             notification.error({
               message: "Something went wrong !.",
-            })
+            });
           }
         })
         .catch(() => {
           notification.error({
             message: "Something went wrong !.",
-          })
-        })
+          });
+        });
     },
     [updatedLeadName, leadid, userid, dispatch, getSingleLeadData]
-  )
+  );
 
   const changeLeadAssignee = async (id) => {
-    setAssigneValue(id)
+    setAssigneValue(id);
     dispatch(changeLeadAssigneeLeads({ leadid, id, userid }))
       .then((resp) => {
         if (resp.meta.requestStatus === "fulfilled") {
           notification.success({
             message: "Assignee updated successfully",
-          })
-          getSingleLeadData()
-          setAssigneValue(null)
+          });
+          getSingleLeadData();
+          setAssigneValue(null);
         } else {
           notification.error({
             message: "Something went wrong !.",
-          })
+          });
         }
       })
       .catch(() => {
         notification.error({
           message: "Something went wrong !.",
-        })
-      })
-  }
+        });
+      });
+  };
 
   const deleteContactFun = useCallback(
     (id) => {
@@ -200,28 +205,28 @@ const LeadDetailsPage = ({ leadid }) => {
         leadid: leadid,
         id: id,
         userid: userid,
-      }
+      };
       dispatch(deleteLeadContact(data))
         .then((resp) => {
           if (resp.meta.requestStatus === "fulfilled") {
             notification.success({
               message: "Contact deleted successfully",
-            })
-            getSingleLeadData()
+            });
+            getSingleLeadData();
           } else {
             notification.error({
               message: "Something went wrong !.",
-            })
+            });
           }
         })
         .catch(() => {
           notification.error({
             message: "Something went wrong !.",
-          })
-        })
+          });
+        });
     },
     [leadid, userid, dispatch, getSingleLeadData]
-  )
+  );
 
   const sameAssigneePresonFun = async () => {
     if (window.confirm("Aree you Want to Sure")) {
@@ -232,14 +237,14 @@ const LeadDetailsPage = ({ leadid }) => {
           status: "Badfit",
           autoSame: true,
         })
-      )
+      );
       if (autoUpdateSame.type === "auto-lead-assignee/rejected")
-        return toast.error("Something went Wrong")
+        return toast.error("Something went Wrong");
       if (autoUpdateSame.type === "auto-lead-assignee/fulfilled") {
-        toast.success("Lead Assignee Same Person Succesfully")
+        toast.success("Lead Assignee Same Person Succesfully");
       }
     }
-  }
+  };
 
   const notSameAssigneePresonFun = async () => {
     if (window.confirm("Aree you Want to Sure")) {
@@ -250,81 +255,81 @@ const LeadDetailsPage = ({ leadid }) => {
           status: "Badfit",
           autoSame: false,
         })
-      )
+      );
       if (autoUpdateNotSame.type === "auto-lead-assignee/rejected")
-        return toast.error("Something went Wrong")
+        return toast.error("Something went Wrong");
       if (autoUpdateNotSame.type === "auto-lead-assignee/fulfilled") {
-        toast.success("Lead Assignee Different Person Succesfully")
+        toast.success("Lead Assignee Different Person Succesfully");
       }
     }
-  }
+  };
 
   const handleUpdateContact = (value) => {
     form1.setFieldsValue({
       name: value?.clientName,
       email: value?.email,
       contactNo: value?.contactNo,
-    })
-    setContactData(value)
-    setOpenModal(true)
-  }
+    });
+    setContactData(value);
+    setOpenModal(true);
+  };
 
   const handleSubmitContact = useCallback(
     (values) => {
-      values.leadId = leadid
+      values.leadId = leadid;
       if (contactData) {
-        values.id = contactData?.clientId
-        values.userId = userid
+        values.id = contactData?.clientId;
+        values.userId = userid;
         dispatch(updateLeadsContact(values))
           .then((resp) => {
             if (resp.meta.requestStatus === "fulfilled") {
               notification.success({
-                message: "Contact details updated successfully.",
-              })
-              getSingleLeadData()
-              setOpenModal(false)
-              form1.resetFields()
-              dispatch(getSingleLeadDataByLeadID({ leadid, userid }))
+                message: "Contact details updated successfully !.",
+              });
+              getSingleLeadData();
+              setOpenModal(false);
+              form1.resetFields();
+              dispatch(getSingleLeadDataByLeadID({ leadid, userid }));
             } else {
               notification.error({
                 message: "Something went wrong !.",
-              })
+              });
             }
           })
           .catch(() => {
             notification.error({
               message: "Something went wrong !.",
-            })
-          })
-        setContactData(null)
+            });
+          });
+        setContactData(null);
       } else {
-        values.currentUserId = userid
+        values.currentUserId = userid;
         dispatch(createLeadContacts(values))
           .then((resp) => {
             if (resp.meta.requestStatus === "fulfilled") {
               notification.success({
                 message: "Contact details created successfully.",
-              })
-              getSingleLeadData()
-              setOpenModal(false)
-              form1.resetFields()
-              dispatch(getSingleLeadDataByLeadID({ leadid, userid }))
+              });
+              getSingleLeadData();
+              setOpenModal(false);
+              form1.resetFields();
+              dispatch(getSingleLeadDataByLeadID({ leadid, userid }));
             } else {
               notification.error({
                 message: "Something went wrong !.",
-              })
+              });
             }
           })
           .catch(() => {
             notification.error({
               message: "Something went wrong !.",
-            })
-          })
-        setContactData(null)
+            });
+          });
+        setContactData(null);
       }
     },
     [userid, leadid, contactData, dispatch, getSingleLeadData, form1]
-  )
+  );
 
   const leadAssignedToSame = (id) => {
     dispatch(handleLeadassignedToSamePerson(id))
@@ -332,42 +337,42 @@ const LeadDetailsPage = ({ leadid }) => {
         if (response.meta.requestStatus === "fulfilled") {
           notification.success({
             message: "Lead assigned to same person successfully.",
-          })
+          });
           // playSuccessSound()
-          getSingleLeadData()
-          window.location.reload()
+          getSingleLeadData();
+          window.location.reload();
         } else {
-          notification.error({ message: "Something went wrong !." })
-          playErrorSound()
+          notification.error({ message: "Something went wrong !." });
+          playErrorSound();
         }
       })
       .catch(() => {
-        notification.error({ message: "Something went wrong !." })
-        playErrorSound()
-      })
-  }
+        notification.error({ message: "Something went wrong !." });
+        playErrorSound();
+      });
+  };
 
   const handleUpdateLeadDescription = useCallback(() => {
-    let obj = { id: leadid, description: descriptionText }
+    let obj = { id: leadid, description: descriptionText };
     dispatch(updateLeadDescription(obj))
       .then((response) => {
         if (response.meta.requestStatus === "fulfilled") {
           notification.success({
             message: "Lead description successfully.",
-          })
+          });
           // playSuccessSound()
-          getSingleLeadData()
-          setShowDescriptionField(false)
+          getSingleLeadData();
+          setShowDescriptionField(false);
         } else {
-          notification.error({ message: "Something went wrong !." })
-          playErrorSound()
+          notification.error({ message: "Something went wrong !." });
+          playErrorSound();
         }
       })
       .catch(() => {
-        notification.error({ message: "Something went wrong !." })
-        playErrorSound()
-      })
-  }, [leadid, dispatch, descriptionText])
+        notification.error({ message: "Something went wrong !." });
+        playErrorSound();
+      });
+  }, [leadid, dispatch, descriptionText]);
 
   const items = [
     {
@@ -378,8 +383,8 @@ const LeadDetailsPage = ({ leadid }) => {
           size="small"
           type="text"
           onClick={(e) => {
-            e.stopPropagation()
-            setOpenModal(true)
+            e.stopPropagation();
+            setOpenModal(true);
           }}
         >
           <Icon icon="fluent:add-20-regular" />
@@ -430,7 +435,7 @@ const LeadDetailsPage = ({ leadid }) => {
         />
       ),
     },
-  ]
+  ];
 
   return Object.keys(singleLeadResponseData)?.length > 0 ? (
     <div className="lead-details cm-padding-one">
@@ -678,6 +683,28 @@ const LeadDetailsPage = ({ leadid }) => {
               <Icon icon="fluent:link-24-filled" />
               <Text type="secondary">{singleLeadResponseData?.urls} </Text>
             </div>
+
+            {complianceDocumentList?.length > 0 && (
+              <>
+                <Divider style={{ margin: "6px" }} />
+                <Flex>
+                  {complianceDocumentList?.map((item, idx) => (
+                    <>
+                      <Tag
+                        style={{ cursor: "pointer" }}
+                        onClick={() =>{ 
+                          setDocument(item?.name)
+                          setOpenDocumentModal(true)
+                        }}
+                        
+                      >
+                        Document {idx}
+                      </Tag>
+                    </>
+                  ))}
+                </Flex>
+              </>
+            )}
             <Divider style={{ margin: "6px" }} />
             <Collapse
               accordion
@@ -704,7 +731,6 @@ const LeadDetailsPage = ({ leadid }) => {
             <BulkFileUploader leadid={leadid} />
             <LeadComments list={notesApiData} leadid={leadid} />
           </Flex>
-         
         </Col>
       </Row>
       <Modal
@@ -739,6 +765,18 @@ const LeadDetailsPage = ({ leadid }) => {
           </Form.Item>
         </Form>
       </Modal>
+      <Modal
+        open={openDocumentModal}
+        onCancel={() => setOpenDocumentModal(false)}
+        onClose={() => setOpenDocumentModal(false)}
+        title="Document modal"
+        footer={false}
+        height={600}
+        width={900}
+        centered
+      >
+        <iframe src={document} height={580} width={"100%"} />
+      </Modal>
     </div>
   ) : (
     <Result
@@ -746,7 +784,7 @@ const LeadDetailsPage = ({ leadid }) => {
       title="404"
       subTitle="Sorry, the data is not available."
     />
-  )
-}
+  );
+};
 
-export default LeadDetailsPage
+export default LeadDetailsPage;

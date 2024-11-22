@@ -5,6 +5,7 @@ import {
   createAllUrlAction,
   getAllUrlAction,
   getAllUrlCount,
+  getAllUrlList,
   searchLeadUrlList,
 } from "../../../Toolkit/Slices/LeadUrlSlice"
 import MainHeading from "../../../components/design/MainHeading"
@@ -25,6 +26,7 @@ import CommonTable from "../../../components/CommonTable"
 import OverFlowText from "../../../components/OverFlowText"
 import { Icon } from "@iconify/react"
 import { BTN_ICON_HEIGHT, BTN_ICON_WIDTH } from "../../../components/Constants"
+import UrlChilds from "./UrlChilds"
 const { Text } = Typography
 const { Search } = Input
 
@@ -46,6 +48,7 @@ const UrlsPage = () => {
 
   useEffect(() => {
     dispatch(getAllSlugList())
+    dispatch(getAllUrlList())
   }, [dispatch])
 
   useEffect(() => {
@@ -96,7 +99,7 @@ const UrlsPage = () => {
       title: "Url name",
       dataIndex: "urlsName",
       fixed: "left",
-      render: (_, data) => <OverFlowText>{data?.urlsName}</OverFlowText>,
+      render: (_, data) => <UrlChilds data={data}>{data?.urlsName}</UrlChilds>,
     },
     {
       title: "Slugs",

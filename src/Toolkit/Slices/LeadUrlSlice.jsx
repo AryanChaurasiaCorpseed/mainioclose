@@ -49,10 +49,29 @@ export const searchLeadUrlList=createAsyncThunk('searchLeadUrlList',async(name)=
   return response.data
 })
 
+export const getChildSlugBySlugId=createAsyncThunk('getChildSlugBySlugId',async(id)=>{
+  const response=await getQuery(`/leadService/api/v1/urls/getSlugByUrlId?id=${id}`)
+  return response.data
+})
+
+export const getSimilarSlugByUrlId=createAsyncThunk(`getSimilarSlugByUrlId`,async(id)=>{
+  const response=await getQuery(`/leadService/api/v1/urls/getSimilarSlugByUrlId?id=${id}`)
+  return response.data
+})
+
+export const addSimilarSlugByUrls=createAsyncThunk('addSimilarSlugByUrls',async(data)=>{
+  const response=await postQuery(`/leadService/api/v1/urls/addSimilarSlug`,data)
+  return response.data
+})
+
+
+
+
 export const LeadUrlSlice = createSlice({
   name: "leadurls",
   initialState: {
     createLeadUrl: [],
+    loading:'',
     createLeadUrlLoading: false,
     createLeadUrlError: false,
     allLeadUrl: [],
@@ -60,7 +79,9 @@ export const LeadUrlSlice = createSlice({
     allLeadUrlError: false,
     page: 0,
     allUrlList:[],
-    totalUrlCount:0
+    totalUrlCount:0,
+    childSlugList:[],
+    similarSlugList:[]
   },
   reducers: {
     handleNextPagination: (state, action) => {
@@ -140,6 +161,31 @@ export const LeadUrlSlice = createSlice({
     builder.addCase(searchLeadUrlList.rejected, (state, action) => {
       state.createLeadUrlError = true
       state.createLeadUrlLoading = false
+    })
+
+
+    builder.addCase(getChildSlugBySlugId.pending, (state, action) => {
+      state.loading = 'pending'
+    })
+    builder.addCase(getChildSlugBySlugId.fulfilled, (state, action) => {
+      state.childSlugList = action.payload
+      state.loading = 'success'
+    })
+    builder.addCase(getChildSlugBySlugId.rejected, (state, action) => {
+     state.childSlugList = []
+      state.loading = 'rejected'
+    })
+
+    builder.addCase(getSimilarSlugByUrlId.pending, (state, action) => {
+      state.loading = 'pending'
+    })
+    builder.addCase(getSimilarSlugByUrlId.fulfilled, (state, action) => {
+      state.similarSlugList = action.payload
+      state.loading = 'success'
+    })
+    builder.addCase(getSimilarSlugByUrlId.rejected, (state, action) => {
+     state.similarSlugList = []
+      state.loading = 'rejected'
     })
 
   },

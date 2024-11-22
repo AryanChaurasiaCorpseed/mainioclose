@@ -392,6 +392,14 @@ const MainCompanyPage = () => {
           notification.success({
             message: "Companies assigned to user successfully",
           })
+          dispatch(
+            getCompanyAction({
+              id: currUser?.id,
+              page: paginationData?.page,
+              size: paginationData?.size,
+              filterUserId,
+            })
+          )
           setSelectedRowKeys([])
           setAssigneeId(null)
         } else {
@@ -403,7 +411,7 @@ const MainCompanyPage = () => {
         setAssignedProcessing("error")
         notification.error({ message: "Something went wrong !." })
       })
-  }, [selectedRowKeys, assigneeId, dispatch, userid])
+  }, [selectedRowKeys, assigneeId, dispatch, userid,currUser,filterUserId])
 
   const updateMultiTempAssigneeForCompanies = useCallback(() => {
     setAssignedProcessing("pending")
@@ -420,6 +428,14 @@ const MainCompanyPage = () => {
           notification.success({
             message: "Companies assigned to user successfully",
           })
+          dispatch(
+            getCompanyAction({
+              id: currUser?.id,
+              page: paginationData?.page,
+              size: paginationData?.size,
+              filterUserId,
+            })
+          )
           setSelectedRowKeys([])
           setTempAssigneeId(null)
         } else {
@@ -431,7 +447,7 @@ const MainCompanyPage = () => {
         setAssignedProcessing("error")
         notification.error({ message: "Something went wrong !." })
       })
-  }, [selectedRowKeys, tempAssigneeId, dispatch, userid])
+  }, [selectedRowKeys, tempAssigneeId, dispatch, userid,currUser,filterUserId])
 
   const exportedData = selectedRow?.map((item) => ({
     Id: item?.companyId,

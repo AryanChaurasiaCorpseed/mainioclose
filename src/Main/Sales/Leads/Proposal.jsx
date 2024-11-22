@@ -8,47 +8,55 @@ import {
   Radio,
   Row,
   Select,
-} from "antd"
-import React, { useCallback, useState } from "react"
-import { useDispatch, useSelector } from "react-redux"
-import { Icon } from "@iconify/react"
-import { getSingleProductByProductId } from "../../../Toolkit/Slices/ProductSlice"
-import { createEstimate } from "../../../Toolkit/Slices/LeadSlice"
+  Upload,
+} from "antd";
+import React, { useCallback, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Icon } from "@iconify/react";
+import { getSingleProductByProductId } from "../../../Toolkit/Slices/ProductSlice";
+import { leadProposalSentRequest } from "../../../Toolkit/Slices/LeadSlice";
 
-const LeadEstimate = ({ leadid }) => {
-  const [form] = Form.useForm()
-  const dispatch = useDispatch()
-  const productList = useSelector((state) => state.product.productData)
-  const contactList = useSelector((state) => state?.leads?.allContactList)
-  const leadUserNew = useSelector((state) => state.leads.getAllLeadUserData)
-  const [productData, setProductData] = useState([])
+const Proposal = ({ leadid }) => {
+  const [form] = Form.useForm();
+  const dispatch = useDispatch();
+  const productList = useSelector((state) => state.product.productData);
+  const contactList = useSelector((state) => state?.leads?.allContactList);
+  const leadUserNew = useSelector((state) => state.leads.getAllLeadUserData);
+  const [productData, setProductData] = useState([]);
+
+  const normFile = (e) => {
+    if (Array.isArray(e)) {
+      return e;
+    }
+    return e?.fileList;
+  };
 
   const handleGetProduct = (e) => {
     dispatch(getSingleProductByProductId(e)).then((resp) => {
       if (resp.meta.requestStatus === "fulfilled") {
-        setProductData(resp?.payload?.productAmount)
-        const data = resp?.payload?.productAmount
+        setProductData(resp?.payload?.productAmount);
+        const data = resp?.payload?.productAmount;
         data?.map((item) => {
           if (item?.name === "Government") {
             form.setFieldsValue({
               govermentfees: item?.fees,
               govermentCode: item?.hsnNo,
               govermentGst: item?.taxAmount,
-            })
+            });
           }
           if (item?.name === "Professional fees") {
             form.setFieldsValue({
               professionalFees: item?.fees,
               professionalCode: item?.hsnNo,
               profesionalGst: item?.taxAmount,
-            })
+            });
           }
           if (item?.name === "Service charges") {
             form.setFieldsValue({
               serviceCharge: item?.fees,
               serviceCode: item?.hsnNo,
               serviceGst: item?.taxAmount,
-            })
+            });
           }
 
           if (item?.name === "Other fees") {
@@ -56,31 +64,33 @@ const LeadEstimate = ({ leadid }) => {
               otherFees: item?.fees,
               otherCode: item?.hsnNo,
               otherGst: item?.taxAmount,
-            })
+            });
           }
-        })
+        });
       }
-    })
-  }
+    });
+  };
 
   const handleFinish = useCallback(
     (values) => {
-      values.leadId = leadid
-      dispatch(createEstimate(values))
+      values.leadId = leadid;
+      values.gstDocuments = values?.gstDocuments?.[0]?.response;
+      dispatch(leadProposalSentRequest(values))
         .then((resp) => {
           if (resp.meta.requestStatus === "fulfilled") {
             notification.success({
               message: "Estimate created successfully !.",
-            })
+            });
           } else {
-            notification.error({ message: "Something went wrong !." })
+            notification.error({ message: "Something went wrong !." });
           }
         })
-        .catch(() => notification.error({ message: "Something went wrong !." }))
+        .catch(() =>
+          notification.error({ message: "Something went wrong !." })
+        );
     },
-    [leadid,dispatch]
-  )
-
+    [leadid, dispatch]
+  );
   return (
     <Flex>
       <Form
@@ -112,7 +122,6 @@ const LeadEstimate = ({ leadid }) => {
             }
           />
         </Form.Item>
-
 
         <Form.List name="cc">
           {(fields, { add, remove }, { errors }) => (
@@ -169,6 +178,71 @@ const LeadEstimate = ({ leadid }) => {
             </>
           )}
         </Form.List>
+        <Form.Item label="Pan number" name="panNo">
+          <Input maxLength={10} />
+        </Form.Item>
+
+        <Row>
+          <Form.Item
+            label="Primary contact"
+            name="primaryContact"
+            layout="horizontal"
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item
+            label="Secondary contact"
+            name="secondaryContact"
+            layout="horizontal"
+          >
+            <Input />
+          </Form.Item>
+        </Row>
+
+        <Row>
+          <Form.Item
+            label="Company name"
+            name="companyName"
+            layout="horizontal"
+          >
+            <Input />
+          </Form.Item>
+
+          <Form.Item label="GST number" name="gstNo" layout="horizontal">
+            <Input />
+          </Form.Item>
+        </Row>
+        <Row>
+          <Form.Item label="GST type" name="gstType" layout="horizontal">
+            <Input />
+          </Form.Item>
+          <Form.Item label="Company age" name="companyAge" layout="horizontal">
+            <Input />
+          </Form.Item>
+        </Row>
+        <Row>
+          <Form.Item label="Unit name" name="unitName" layout="horizontal">
+            <Input />
+          </Form.Item>
+          <Form.Item
+            label="GST documents"
+            name="gstDocuments"
+            layout="horizontal"
+            getValueFromEvent={normFile}
+            valuePropName="fileList"
+          >
+            <Upload
+              action="/leadService/api/v1/upload/uploadimageToFileSystem"
+              listType="text"
+              multiple={true}
+            >
+              <Button size="small">
+                <Icon icon="fluent:arrow-upload-20-filled" />
+                Upload
+              </Button>
+            </Upload>
+          </Form.Item>
+        </Row>
 
         <Form.Item
           label="Sales type"
@@ -343,7 +417,7 @@ const LeadEstimate = ({ leadid }) => {
                   </Form.Item>
                 </Flex>
               </Row>
-            ) : null
+            ) : null;
           })}
         </Row>
 
@@ -410,7 +484,7 @@ const LeadEstimate = ({ leadid }) => {
         </Form.Item>
       </Form>
     </Flex>
-  )
-}
+  );
+};
 
-export default LeadEstimate
+export default Proposal;
