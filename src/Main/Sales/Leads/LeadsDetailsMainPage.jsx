@@ -6,13 +6,15 @@ import {
   getAllProductWithCattegory,
   getAllTaskData,
   getAllTaskStatus,
+  getCompanyDetailsByLeadId,
+  getCompanyUnitsById,
   getDocumentsByLeadName,
   getVendorDetailList,
   handleViewHistory,
 } from "../../../Toolkit/Slices/LeadSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useParams } from "react-router-dom";
-import { Drawer, Tabs } from "antd";
+import { Drawer, notification, Tabs } from "antd";
 import LeadDetailsPage from "../Inbox/LeadDetailsPage";
 import { getAllHistory } from "../../../Toolkit/Slices/HistorySlice";
 import SingleLeadTaskList from "./SingleLeadTaskList";
@@ -118,10 +120,44 @@ const LeadsDetailsMainPage = ({
       if (e === "estimate") {
         dispatch(getAllProductData());
         dispatch(getAllContactDetails());
+        dispatch(
+          getCompanyDetailsByLeadId(data?.id ? data?.id : data?.leadId)
+        ).then((resp) => {
+          if (resp.meta.requestStatus === "fulfilled") {
+            if (Object.keys(resp.payload)?.length > 0) {
+              if (resp.payload.assignee?.id != userid) {
+                notification.warning({
+                  message: `This lead is already assigned to "${resp?.payload?.assignee?.fullName}" for company id "${resp?.payload?.id}" company name " ${resp?.payload?.name}"`,
+                });
+              } else {
+                dispatch(getCompanyUnitsById(resp?.payload?.id));
+              }
+            } else {
+            }
+          } else {
+          }
+        });
       }
       if (e === "proposal") {
         dispatch(getAllProductData());
         dispatch(getAllContactDetails());
+        dispatch(
+          getCompanyDetailsByLeadId(data?.id ? data?.id : data?.leadId)
+        ).then((resp) => {
+          if (resp.meta.requestStatus === "fulfilled") {
+            if (Object.keys(resp.payload)?.length > 0) {
+              if (resp.payload.assignee?.id != userid) {
+                notification.warning({
+                  message: `This lead is already assigned to "${resp?.payload?.assignee?.fullName}" for company id "${resp?.payload?.id}" company name " ${resp?.payload?.name}"`,
+                });
+              } else {
+                dispatch(getCompanyUnitsById(resp?.payload?.id));
+              }
+            } else {
+            }
+          } else {
+          }
+        });
       }
     },
     [dispatch, currLeadId, singleLeadResponseData, userid, leadId]

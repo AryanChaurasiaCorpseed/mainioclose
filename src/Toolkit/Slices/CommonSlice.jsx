@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 import { getQuery } from "../../API/GetQuery"
+import { postQuery } from "../../API/PostQuery"
 
 export const emailChecker = createAsyncThunk("emailChecker", async (email) => {
   const response = await getQuery(
@@ -26,6 +27,11 @@ export const getManagerById = createAsyncThunk("getManagerById", async (id) => {
 
 export const getProcurementAssigneeList=createAsyncThunk('getProcurementAssigneeList',async(id)=>{
   const response=await getQuery(`/leadService/api/v1/users/fetchProcurementUsers?userId=${id}`)
+  return response.data
+})
+
+export const createContacts=createAsyncThunk('createContacts',async(data)=>{
+  const response=await postQuery(`/leadService/api/v1/contact/createContact`,data)
   return response.data
 })
 

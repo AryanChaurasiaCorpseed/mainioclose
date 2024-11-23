@@ -4,51 +4,98 @@ import {
   Flex,
   Form,
   Input,
+  Modal,
   notification,
   Radio,
   Row,
   Select,
-} from "antd"
-import React, { useCallback, useState } from "react"
-import { useDispatch, useSelector } from "react-redux"
-import { Icon } from "@iconify/react"
-import { getSingleProductByProductId } from "../../../Toolkit/Slices/ProductSlice"
-import { createEstimate } from "../../../Toolkit/Slices/LeadSlice"
+  Typography,
+  Switch,
+  Col,
+  Upload,
+} from "antd";
+import React, { useCallback, useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Icon } from "@iconify/react";
+import { getSingleProductByProductId } from "../../../Toolkit/Slices/ProductSlice";
+import {
+  createEstimate,
+  getAllContactDetails,
+} from "../../../Toolkit/Slices/LeadSlice";
+import { createContacts } from "../../../Toolkit/Slices/CommonSlice";
+const { Text } = Typography;
 
 const LeadEstimate = ({ leadid }) => {
-  const [form] = Form.useForm()
-  const dispatch = useDispatch()
-  const productList = useSelector((state) => state.product.productData)
-  const contactList = useSelector((state) => state?.leads?.allContactList)
-  const leadUserNew = useSelector((state) => state.leads.getAllLeadUserData)
-  const [productData, setProductData] = useState([])
+  const [form] = Form.useForm();
+  const [contactForm] = Form.useForm();
+  const dispatch = useDispatch();
+  const productList = useSelector((state) => state.product.productData);
+  const contactList = useSelector((state) => state?.leads?.allContactList);
+  const leadUserNew = useSelector((state) => state.leads.getAllLeadUserData);
+  const companyUnits = useSelector((state) => state?.leads?.companyUnits);
+  const companyDetails = useSelector(
+    (state) => state?.leads?.companyDetailsById
+  );
+  const [productData, setProductData] = useState([]);
+  const [openModal, setOpenModal] = useState(false);
+
+  useEffect(() => {
+    if (Object.keys(companyDetails) > 0) {
+      form.setFieldsValue({
+        companyId: companyDetails?.name,
+        isUnit: false,
+      });
+    }
+  }, [companyDetails]);
+
+  const handleFinishContact = (values) => {
+    dispatch(createContacts(values))
+      .then((resp) => {
+        if (resp.meta.requestStatus === "fulfilled") {
+          notification.success({ message: "Contact created successfully !." });
+          setOpenModal(false);
+          contactForm.resetFields();
+          dispatch(getAllContactDetails());
+        } else {
+          notification.error({ message: "Something went wrong !." });
+        }
+      })
+      .catch(() => notification.error({ message: "Something went wrong !." }));
+  };
+
+  const normFile = (e) => {
+    if (Array.isArray(e)) {
+      return e;
+    }
+    return e?.fileList;
+  };
 
   const handleGetProduct = (e) => {
     dispatch(getSingleProductByProductId(e)).then((resp) => {
       if (resp.meta.requestStatus === "fulfilled") {
-        setProductData(resp?.payload?.productAmount)
-        const data = resp?.payload?.productAmount
-        data?.map((item) => {
+        setProductData(resp?.payload?.productAmount);
+        const data = resp?.payload?.productAmount;
+        data?.forEach((item) => {
           if (item?.name === "Government") {
             form.setFieldsValue({
               govermentfees: item?.fees,
               govermentCode: item?.hsnNo,
               govermentGst: item?.taxAmount,
-            })
+            });
           }
           if (item?.name === "Professional fees") {
             form.setFieldsValue({
               professionalFees: item?.fees,
               professionalCode: item?.hsnNo,
               profesionalGst: item?.taxAmount,
-            })
+            });
           }
           if (item?.name === "Service charges") {
             form.setFieldsValue({
               serviceCharge: item?.fees,
               serviceCode: item?.hsnNo,
               serviceGst: item?.taxAmount,
-            })
+            });
           }
 
           if (item?.name === "Other fees") {
@@ -56,33 +103,36 @@ const LeadEstimate = ({ leadid }) => {
               otherFees: item?.fees,
               otherCode: item?.hsnNo,
               otherGst: item?.taxAmount,
-            })
+            });
           }
-        })
+        });
       }
-    })
-  }
+    });
+  };
 
   const handleFinish = useCallback(
     (values) => {
-      values.leadId = leadid
+      values.leadId = leadid;
+      values.gstDocuments=values.gstDocuments?.[0]?.response
       dispatch(createEstimate(values))
         .then((resp) => {
           if (resp.meta.requestStatus === "fulfilled") {
             notification.success({
               message: "Estimate created successfully !.",
-            })
+            });
           } else {
-            notification.error({ message: "Something went wrong !." })
+            notification.error({ message: "Something went wrong !." });
           }
         })
-        .catch(() => notification.error({ message: "Something went wrong !." }))
+        .catch(() =>
+          notification.error({ message: "Something went wrong !." })
+        );
     },
-    [leadid,dispatch]
-  )
+    [leadid, dispatch]
+  );
 
   return (
-    <Flex>
+    <Flex style={{maxHeight:'90vh',overflow:'auto'}}>
       <Form
         form={form}
         layout="vertical"
@@ -112,7 +162,6 @@ const LeadEstimate = ({ leadid }) => {
             }
           />
         </Form.Item>
-
 
         <Form.List name="cc">
           {(fields, { add, remove }, { errors }) => (
@@ -170,6 +219,140 @@ const LeadEstimate = ({ leadid }) => {
           )}
         </Form.List>
 
+        {Object.keys(companyDetails)?.length > 0 ? (
+          <Form.Item
+            label="Company name"
+            name="companyId"
+            rules={[
+              { required: true, message: "please enter the company name" },
+            ]}
+          >
+            <Input disabled />
+          </Form.Item>
+        ) : (
+          <Form.Item
+            label="Company name"
+            name="companyName"
+            rules={[
+              { required: true, message: "please enter the company name" },
+            ]}
+          >
+            <Input />
+          </Form.Item>
+        )}
+
+        {Object.keys(companyDetails)?.length > 0 && (
+          <>
+            <Form.Item
+              label="New units"
+              name="isUnit"
+              rules={[{ required: true }]}
+            >
+              <Switch size="small" />
+            </Form.Item>
+
+            <Form.Item
+              shouldUpdate={(prevValues, currentValues) =>
+                prevValues.isUnit !== currentValues.isUnit
+              }
+              noStyle
+            >
+              {({ getFieldValue }) => (
+                <>
+                  {getFieldValue("isUnit") ? (
+                    <Form.Item
+                      label="Select company unit"
+                      name="unitId"
+                      rules={[
+                        {
+                          required: true,
+                          message: "please select company unit",
+                        },
+                      ]}
+                    >
+                      <Select
+                        showSearch
+                        allowClear
+                        // onChange={(e) => dispatch(getCompanyByUnitId(e))}
+                        options={
+                          companyUnits?.length > 0
+                            ? companyUnits?.map((item) => ({
+                                label: item?.companyName,
+                                value: item?.id,
+                              }))
+                            : []
+                        }
+                        filterOption={(input, option) =>
+                          option.label
+                            .toLowerCase()
+                            .includes(input.toLowerCase())
+                        }
+                      />
+                    </Form.Item>
+                  ) : (
+                    <Form.Item
+                      label="Enter new company unit"
+                      name="unitName"
+                      rules={[
+                        {
+                          required: true,
+                          message: "please enter the company unit",
+                        },
+                      ]}
+                    >
+                      <Input />
+                    </Form.Item>
+                  )}
+                </>
+              )}
+            </Form.Item>
+          </>
+        )}
+        <Form.Item label="Pan number" name="panNo">
+          <Input maxLength={10} />
+        </Form.Item>
+
+        <Row>
+          <Col span={11}>
+            <Form.Item label="GST type" name="gstType">
+              <Input />
+            </Form.Item>
+          </Col>
+          <Col span={2} />
+          <Col span={11}>
+            <Form.Item label="Company age" name="companyAge">
+              <Input />
+            </Form.Item>
+          </Col>
+        </Row>
+        <Row>
+          <Col span={11}>
+            <Form.Item label="GST number" name="gstNo">
+              <Input />
+            </Form.Item>
+          </Col>
+          <Col span={2} />
+          <Col span={11}>
+            <Form.Item
+              label="GST documents"
+              name="gstDocuments"
+              getValueFromEvent={normFile}
+              valuePropName="fileList"
+            >
+              <Upload
+                action="/leadService/api/v1/upload/uploadimageToFileSystem"
+                listType="text"
+                multiple={true}
+              >
+                <Button size="small">
+                  <Icon icon="fluent:arrow-upload-20-filled" />
+                  Upload
+                </Button>
+              </Upload>
+            </Form.Item>
+          </Col>
+        </Row>
+
         <Form.Item
           label="Sales type"
           name="salesType"
@@ -180,6 +363,58 @@ const LeadEstimate = ({ leadid }) => {
             <Radio value={"Consulting Sale"}>Consulting Sale</Radio>
           </Radio.Group>
         </Form.Item>
+
+        <Flex vertical style={{ width: "100%" }}>
+          <Flex justify="space-between">
+            <Text className="heading-text">Contacts</Text>
+            <Button onClick={() => setOpenModal(true)}>Add new contact</Button>
+          </Flex>
+          <Form.Item
+            label="Primary contacts"
+            name="primaryContact"
+            rules={[
+              { required: true, message: "please select primary contacts" },
+            ]}
+          >
+            <Select
+              showSearch
+              options={
+                contactList?.length > 0
+                  ? contactList?.map((item) => ({
+                      label: `${item?.emails} || ${item?.contactNo} `,
+                      value: item?.id,
+                    }))
+                  : []
+              }
+              filterOption={(input, option) =>
+                option.label.toLowerCase().includes(input.toLowerCase())
+              }
+            />
+          </Form.Item>
+          <Form.Item
+            label="Secondary contacts"
+            name="secondaryContact"
+            rules={[
+              { required: true, message: "please select secondary contacts" },
+            ]}
+          >
+            <Select
+              showSearch
+              options={
+                contactList?.length > 0
+                  ? contactList?.map((item) => ({
+                      label: `${item?.emails} || ${item?.contactNo} `,
+                      value: item?.id,
+                    }))
+                  : []
+              }
+              filterOption={(input, option) =>
+                option.label.toLowerCase().includes(input.toLowerCase())
+              }
+            />
+          </Form.Item>
+        </Flex>
+
         <Form.Item
           label="Product name"
           name="productId"
@@ -343,7 +578,7 @@ const LeadEstimate = ({ leadid }) => {
                   </Form.Item>
                 </Flex>
               </Row>
-            ) : null
+            ) : null;
           })}
         </Row>
 
@@ -368,7 +603,7 @@ const LeadEstimate = ({ leadid }) => {
         </Form.Item>
 
         <Row>
-          <Flex gap={30} align="center">
+          <Flex gap={30} align="center" justify="space-between">
             <Form.Item
               label="Order number"
               name="orderNumber"
@@ -409,8 +644,55 @@ const LeadEstimate = ({ leadid }) => {
           </Button>
         </Form.Item>
       </Form>
+      <Modal
+        title="Add new contact"
+        open={openModal}
+        onCancel={() => setOpenModal(false)}
+        onClose={() => setOpenModal(false)}
+        onOk={() => contactForm.submit()}
+        okText="Submit"
+      >
+        <Form
+          layout="vertical"
+          form={contactForm}
+          onFinish={handleFinishContact}
+        >
+          <Form.Item
+            label="Name"
+            name="name"
+            rules={[{ required: true, message: "please enter name" }]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item
+            label="Email"
+            name="emails"
+            rules={[
+              { required: true, type: "email", message: "please enter email" },
+            ]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item
+            label="Contact number"
+            name="contactNo"
+            rules={[{ required: true, message: "please enter contact number" }]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item
+            label="Whatsapp number"
+            name="whatsappNo"
+            rules={[
+              { required: true, message: "please enter whatsapp number" },
+            ]}
+          >
+            <Input />
+          </Form.Item>
+        </Form>
+      </Modal>
     </Flex>
-  )
-}
+  );
+};
 
-export default LeadEstimate
+export default LeadEstimate;

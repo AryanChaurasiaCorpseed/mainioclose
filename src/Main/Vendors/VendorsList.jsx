@@ -340,7 +340,7 @@ const VendorsList = () => {
       <Flex justify="space-between">
         <Flex vertical gap={8}>
           <div className="create-user-box">
-            <MainHeading data={`Vendors request list`} />
+            <MainHeading data={`Vendors request list ${totalCount}`} />
           </div>
           <Search
             placeholder="search"

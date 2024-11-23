@@ -9,20 +9,60 @@ import {
   Row,
   Select,
   Upload,
+  Modal,
+  Typography,
+  Col,
+  Switch
 } from "antd";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Icon } from "@iconify/react";
 import { getSingleProductByProductId } from "../../../Toolkit/Slices/ProductSlice";
-import { leadProposalSentRequest } from "../../../Toolkit/Slices/LeadSlice";
+import {
+  getAllContactDetails,
+  leadProposalSentRequest,
+} from "../../../Toolkit/Slices/LeadSlice";
+import { createContacts } from "../../../Toolkit/Slices/CommonSlice";
+const { Text } = Typography;
 
 const Proposal = ({ leadid }) => {
   const [form] = Form.useForm();
+  const [contactForm] = Form.useForm();
   const dispatch = useDispatch();
   const productList = useSelector((state) => state.product.productData);
   const contactList = useSelector((state) => state?.leads?.allContactList);
   const leadUserNew = useSelector((state) => state.leads.getAllLeadUserData);
+  const companyUnits = useSelector((state) => state?.leads?.companyUnits);
+  const companyDetails = useSelector(
+    (state) => state?.leads?.companyDetailsById
+  );
   const [productData, setProductData] = useState([]);
+  const [openModal, setOpenModal] = useState(false);
+
+
+  useEffect(() => {
+    if (Object.keys(companyDetails) > 0) {
+      form.setFieldsValue({
+        companyId: companyDetails?.name,
+        isUnit: false,
+      });
+    }
+  }, [companyDetails,form]);
+
+  const handleFinishContact = (values) => {
+    dispatch(createContacts(values))
+      .then((resp) => {
+        if (resp.meta.requestStatus === "fulfilled") {
+          notification.success({ message: "Contact created successfully !." });
+          setOpenModal(false);
+          contactForm.resetFields();
+          dispatch(getAllContactDetails());
+        } else {
+          notification.error({ message: "Something went wrong !." });
+        }
+      })
+      .catch(() => notification.error({ message: "Something went wrong !." }));
+  };
 
   const normFile = (e) => {
     if (Array.isArray(e)) {
@@ -36,7 +76,7 @@ const Proposal = ({ leadid }) => {
       if (resp.meta.requestStatus === "fulfilled") {
         setProductData(resp?.payload?.productAmount);
         const data = resp?.payload?.productAmount;
-        data?.map((item) => {
+        data?.forEach((item) => {
           if (item?.name === "Government") {
             form.setFieldsValue({
               govermentfees: item?.fees,
@@ -79,7 +119,7 @@ const Proposal = ({ leadid }) => {
         .then((resp) => {
           if (resp.meta.requestStatus === "fulfilled") {
             notification.success({
-              message: "Estimate created successfully !.",
+              message: "Proposal sent successfully !.",
             });
           } else {
             notification.error({ message: "Something went wrong !." });
@@ -178,71 +218,191 @@ const Proposal = ({ leadid }) => {
             </>
           )}
         </Form.List>
+
+        {Object.keys(companyDetails)?.length > 0 ? (
+          <Form.Item
+            label="Company name"
+            name="companyId"
+            rules={[
+              { required: true, message: "please enter the company name" },
+            ]}
+          >
+            <Input disabled />
+          </Form.Item>
+        ) : (
+          <Form.Item
+            label="Company name"
+            name="companyName"
+            rules={[
+              { required: true, message: "please enter the company name" },
+            ]}
+          >
+            <Input />
+          </Form.Item>
+        )}
+
+        {Object.keys(companyDetails)?.length > 0 && (
+          <>
+            <Form.Item
+              label="New units"
+              name="isUnit"
+              rules={[{ required: true }]}
+            >
+              <Switch size="small" />
+            </Form.Item>
+
+            <Form.Item
+              shouldUpdate={(prevValues, currentValues) =>
+                prevValues.isUnit !== currentValues.isUnit
+              }
+              noStyle
+            >
+              {({ getFieldValue }) => (
+                <>
+                  {getFieldValue("isUnit") ? (
+                    <Form.Item
+                      label="Select company unit"
+                      name="unitId"
+                      rules={[
+                        {
+                          required: true,
+                          message: "please select company unit",
+                        },
+                      ]}
+                    >
+                      <Select
+                        showSearch
+                        allowClear
+                        // onChange={(e) => dispatch(getCompanyByUnitId(e))}
+                        options={
+                          companyUnits?.length > 0
+                            ? companyUnits?.map((item) => ({
+                                label: item?.companyName,
+                                value: item?.id,
+                              }))
+                            : []
+                        }
+                        filterOption={(input, option) =>
+                          option.label
+                            .toLowerCase()
+                            .includes(input.toLowerCase())
+                        }
+                      />
+                    </Form.Item>
+                  ) : (
+                    <Form.Item
+                      label="Enter new company unit"
+                      name="unitName"
+                      rules={[
+                        {
+                          required: true,
+                          message: "please enter the company unit",
+                        },
+                      ]}
+                    >
+                      <Input />
+                    </Form.Item>
+                  )}
+                </>
+              )}
+            </Form.Item>
+          </>
+        )}
         <Form.Item label="Pan number" name="panNo">
           <Input maxLength={10} />
         </Form.Item>
 
         <Row>
-          <Form.Item
-            label="Primary contact"
-            name="primaryContact"
-            layout="horizontal"
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item
-            label="Secondary contact"
-            name="secondaryContact"
-            layout="horizontal"
-          >
-            <Input />
-          </Form.Item>
-        </Row>
-
-        <Row>
-          <Form.Item
-            label="Company name"
-            name="companyName"
-            layout="horizontal"
-          >
-            <Input />
-          </Form.Item>
-
-          <Form.Item label="GST number" name="gstNo" layout="horizontal">
-            <Input />
-          </Form.Item>
+          <Col span={11}>
+            <Form.Item label="GST type" name="gstType">
+              <Input />
+            </Form.Item>
+          </Col>
+          <Col span={2} />
+          <Col span={11}>
+            <Form.Item label="Company age" name="companyAge">
+              <Input />
+            </Form.Item>
+          </Col>
         </Row>
         <Row>
-          <Form.Item label="GST type" name="gstType" layout="horizontal">
-            <Input />
-          </Form.Item>
-          <Form.Item label="Company age" name="companyAge" layout="horizontal">
-            <Input />
-          </Form.Item>
-        </Row>
-        <Row>
-          <Form.Item label="Unit name" name="unitName" layout="horizontal">
-            <Input />
-          </Form.Item>
-          <Form.Item
-            label="GST documents"
-            name="gstDocuments"
-            layout="horizontal"
-            getValueFromEvent={normFile}
-            valuePropName="fileList"
-          >
-            <Upload
-              action="/leadService/api/v1/upload/uploadimageToFileSystem"
-              listType="text"
-              multiple={true}
+          <Col span={11}>
+            <Form.Item label="GST number" name="gstNo">
+              <Input />
+            </Form.Item>
+          </Col>
+          <Col span={2} />
+          <Col span={11}>
+            <Form.Item
+              label="GST documents"
+              name="gstDocuments"
+              getValueFromEvent={normFile}
+              valuePropName="fileList"
             >
-              <Button size="small">
-                <Icon icon="fluent:arrow-upload-20-filled" />
-                Upload
-              </Button>
-            </Upload>
-          </Form.Item>
+              <Upload
+                action="/leadService/api/v1/upload/uploadimageToFileSystem"
+                listType="text"
+                multiple={true}
+              >
+                <Button size="small">
+                  <Icon icon="fluent:arrow-upload-20-filled" />
+                  Upload
+                </Button>
+              </Upload>
+            </Form.Item>
+          </Col>
         </Row>
+
+        <Flex vertical style={{ width: "100%" }}>
+          <Flex justify="space-between">
+            <Text className="heading-text">Contacts</Text>
+            <Button onClick={() => setOpenModal(true)}>Add new contact</Button>
+          </Flex>
+          <Form.Item
+            label="Primary contacts"
+            name="primaryContact"
+            rules={[
+              { required: true, message: "please select primary contacts" },
+            ]}
+          >
+            <Select
+              showSearch
+              options={
+                contactList?.length > 0
+                  ? contactList?.map((item) => ({
+                      label: `${item?.emails} || ${item?.contactNo} `,
+                      value: item?.id,
+                    }))
+                  : []
+              }
+              filterOption={(input, option) =>
+                option.label.toLowerCase().includes(input.toLowerCase())
+              }
+            />
+          </Form.Item>
+          <Form.Item
+            label="Secondary contacts"
+            name="secondaryContact"
+            rules={[
+              { required: true, message: "please select secondary contacts" },
+            ]}
+          >
+            <Select
+              showSearch
+              options={
+                contactList?.length > 0
+                  ? contactList?.map((item) => ({
+                      label: `${item?.emails} || ${item?.contactNo} `,
+                      value: item?.id,
+                    }))
+                  : []
+              }
+              filterOption={(input, option) =>
+                option.label.toLowerCase().includes(input.toLowerCase())
+              }
+            />
+          </Form.Item>
+        </Flex>
 
         <Form.Item
           label="Sales type"
@@ -442,7 +602,7 @@ const Proposal = ({ leadid }) => {
         </Form.Item>
 
         <Row>
-          <Flex gap={30} align="center">
+          <Col span={11}>
             <Form.Item
               label="Order number"
               name="orderNumber"
@@ -450,7 +610,10 @@ const Proposal = ({ leadid }) => {
             >
               <Input />
             </Form.Item>
+          </Col>
+          <Col span={2} />
 
+          <Col span={11}>
             <Form.Item
               label="Purchase date"
               name="purchaseDate"
@@ -458,7 +621,7 @@ const Proposal = ({ leadid }) => {
             >
               <DatePicker />
             </Form.Item>
-          </Flex>
+          </Col>
         </Row>
 
         <Form.Item
@@ -483,6 +646,53 @@ const Proposal = ({ leadid }) => {
           </Button>
         </Form.Item>
       </Form>
+      <Modal
+        title="Add new contact"
+        open={openModal}
+        onCancel={() => setOpenModal(false)}
+        onClose={() => setOpenModal(false)}
+        onOk={() => contactForm.submit()}
+        okText="Submit"
+      >
+        <Form
+          layout="vertical"
+          form={contactForm}
+          onFinish={handleFinishContact}
+        >
+          <Form.Item
+            label="Name"
+            name="name"
+            rules={[{ required: true, message: "please enter name" }]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item
+            label="Email"
+            name="emails"
+            rules={[
+              { required: true, type: "email", message: "please enter email" },
+            ]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item
+            label="Contact number"
+            name="contactNo"
+            rules={[{ required: true, message: "please enter contact number" }]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item
+            label="Whatsapp number"
+            name="whatsappNo"
+            rules={[
+              { required: true, message: "please enter whatsapp number" },
+            ]}
+          >
+            <Input />
+          </Form.Item>
+        </Form>
+      </Modal>
     </Flex>
   );
 };
