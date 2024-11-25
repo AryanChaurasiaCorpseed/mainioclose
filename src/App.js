@@ -1,88 +1,90 @@
-import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom"
-import "./App.css"
-import MainPage from "./Main/MainPage"
-import DashBoard from "./Main/DashBoard/DashBoard"
-import HRMod from "./Main/HR/HRMod"
-import SalesMod from "./Main/Sales/SalesMod"
-import InboxPage from "./Main/Sales/Inbox/InboxPage"
-import ContactModule from "./Main/Sales/Contacts/ContactModule"
-import Estimate from "./Main/Sales/Estimate/Estimate"
-import LeadsModule from "./Main/Sales/Leads/LeadsModule"
-import Opportunities from "./Main/Sales/Opportunities/Opportunities"
-import OrdersModule from "./Main/Sales/Orders/OrdersModule"
-import Login from "./Login/Login"
-import SignUp from "./Login/SignUp"
-import LeadDetailsPage from "./Main/Sales/Inbox/LeadDetailsPage"
-import HomePage from "./Home/HomePage"
-import FrontMainPage from "./Home/FrontMainPage"
-import MainLoginRouter from "./Login/MainLoginRouter"
-import OtpPage from "./Login/OtpPage"
-import ForgetPassword from "./Login/ForgetPassword"
-import ChangePassword from "./Login/ChangePassword"
-import ForgetOtpPage from "./Login/ForgetOtpPage"
-import DisplayDashboardUser from "./Main/DashBoard/DisplayDashboardUser"
-import DisplayUserTwo from "./Main/DashBoard/DisplayUserTwo"
-import SetNewPasswordPage from "./Login/SetNewPasswordPage"
-import EstimateCreatePage from "./Main/Sales/Leads/EstimateCreatePage"
-import TableScalaton from "./components/TableScalaton"
-import LeadHistory from "./Main/Sales/Leads/LeadHistory"
-import NewGetFile from "./Routes/NewGetFile"
-import PaswordUpdateMessage from "./Login/PaswordUpdateMessage"
-import ComingSoonPage from "./Home/ComingSoonPage"
-import SettingMainPage from "./Main/Setting/SettingMainPage"
-import LeadStatusPage from "./Main/Setting/LeadStatus/LeadStatusPage"
-import ProductsChange from "./Main/Setting/Products/ProductsChange"
-import NotFoundPage from "./components/NotFoundPage"
-import LeadCategory from "./Main/Setting/Category/LeadCategory"
-import AllNotificationPage from "./Main/Sales/Leads/AllNotificationPage"
-import AllDeactivateUser from "./Main/DashBoard/AllDeactivateUser"
-import { useSelector } from "react-redux"
-import GetAllTaskList from "./Main/Sales/Leads/GetAllTaskList"
-import AllTickets from "./Main/DashBoard/AllTickets"
-import HrUserList from "./Main/HR/HrUserList"
-import AllManagerApprovals from "./Main/DashBoard/AllManagerApprovals"
-import HRApprovalList from "./Main/HR/HRApprovalList"
-import UserRating from "./Main/HR/UserRating"
-import SlugCreate from "./Main/Setting/slug/SlugCreate"
-import UrlsPage from "./Main/Setting/urls/UrlsPage"
-import SingleUserHistory from "./Main/DashBoard/SingleUserHistory"
-import MainCompanyPage from "./Main/Sales/company/MainCompanyPage"
-import ProjectPage from "./Main/Sales/Project/ProjectPage"
-import UserService from "./Main/HR/UserService"
-import Compliances from "./Main/Compliance/Compliances"
-import QualityModule from "./Main/Quality/QualityModule"
-import IVR from "./Main/Quality/IVR"
-import Accounts from "./Main/Accounts/Accounts"
-import { AccountsList } from "./Main/Accounts/AccountsList"
-import { ConfigProvider } from "antd"
-import Comments from "./Main/Setting/Comments/Comments"
-import { lazy, Suspense } from "react"
-import Desigination from "./Main/Setting/Desigination/Desigination"
-import Department from "./Main/Setting/Department/Department"
-import CompanyForm from "./Main/Accounts/CompanyForm"
-import CompanyPageLayout from "./Main/Sales/company/CompanyPageLayout"
-import Industry from "./Main/Industry/Industry"
-import SubIndustry from "./Main/Industry/SubIndustry/SubIndustry"
-import SubsubIndustry from "./Main/Industry/SubsubIndustry/SubsubIndustry"
-import IndustryData from "./Main/Industry/IndustryData/IndustryData"
-import Industries from "./Main/Industry/Industries/Industries"
-import HomePageFile from "./Home/HomePageFile"
-import LandingPage from "./Home/LandingPage"
-import IpAddress from "./Main/Setting/IpAddress/IpAddress"
-import VendorsList from "./Main/Vendors/VendorsList"
-import ProjectGraph from "./Main/GraphDashboard/ProjectGraph"
-import MainGraphPage from "./Main/GraphDashboard/MainGraphPage"
-import Procurement from "./Main/Vendors/Procurement"
-import MainCompanyFormPage from "./Main/Accounts/MainCompanyFormPage"
-import VendorsRequestList from "./Main/Sales/Leads/VendorsRequestList"
-import ClientDesigination from "./Main/Setting/ClientDesiginations/ClientDesigination"
-import MainComanyModule from "./Main/Sales/company/MainComanyModule"
-import GraphMainPage from "./Main/GraphDashboard/GraphMainPage"
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import "./App.css";
+import MainPage from "./Main/MainPage";
+import DashBoard from "./Main/DashBoard/DashBoard";
+import HRMod from "./Main/HR/HRMod";
+import SalesMod from "./Main/Sales/SalesMod";
+import InboxPage from "./Main/Sales/Inbox/InboxPage";
+import ContactModule from "./Main/Sales/Contacts/ContactModule";
+import Estimate from "./Main/Sales/Estimate/Estimate";
+import LeadsModule from "./Main/Sales/Leads/LeadsModule";
+import Opportunities from "./Main/Sales/Opportunities/Opportunities";
+import OrdersModule from "./Main/Sales/Orders/OrdersModule";
+import Login from "./Login/Login";
+import SignUp from "./Login/SignUp";
+import LeadDetailsPage from "./Main/Sales/Inbox/LeadDetailsPage";
+import HomePage from "./Home/HomePage";
+import FrontMainPage from "./Home/FrontMainPage";
+import MainLoginRouter from "./Login/MainLoginRouter";
+import OtpPage from "./Login/OtpPage";
+import ForgetPassword from "./Login/ForgetPassword";
+import ChangePassword from "./Login/ChangePassword";
+import ForgetOtpPage from "./Login/ForgetOtpPage";
+import DisplayDashboardUser from "./Main/DashBoard/DisplayDashboardUser";
+import DisplayUserTwo from "./Main/DashBoard/DisplayUserTwo";
+import SetNewPasswordPage from "./Login/SetNewPasswordPage";
+import EstimateCreatePage from "./Main/Sales/Leads/EstimateCreatePage";
+import TableScalaton from "./components/TableScalaton";
+import LeadHistory from "./Main/Sales/Leads/LeadHistory";
+import NewGetFile from "./Routes/NewGetFile";
+import PaswordUpdateMessage from "./Login/PaswordUpdateMessage";
+import ComingSoonPage from "./Home/ComingSoonPage";
+import SettingMainPage from "./Main/Setting/SettingMainPage";
+import LeadStatusPage from "./Main/Setting/LeadStatus/LeadStatusPage";
+import ProductsChange from "./Main/Setting/Products/ProductsChange";
+import NotFoundPage from "./components/NotFoundPage";
+import LeadCategory from "./Main/Setting/Category/LeadCategory";
+import AllNotificationPage from "./Main/Sales/Leads/AllNotificationPage";
+import AllDeactivateUser from "./Main/DashBoard/AllDeactivateUser";
+import { useSelector } from "react-redux";
+import GetAllTaskList from "./Main/Sales/Leads/GetAllTaskList";
+import AllTickets from "./Main/DashBoard/AllTickets";
+import HrUserList from "./Main/HR/HrUserList";
+import AllManagerApprovals from "./Main/DashBoard/AllManagerApprovals";
+import HRApprovalList from "./Main/HR/HRApprovalList";
+import UserRating from "./Main/HR/UserRating";
+import SlugCreate from "./Main/Setting/slug/SlugCreate";
+import UrlsPage from "./Main/Setting/urls/UrlsPage";
+import SingleUserHistory from "./Main/DashBoard/SingleUserHistory";
+import MainCompanyPage from "./Main/Sales/company/MainCompanyPage";
+import ProjectPage from "./Main/Sales/Project/ProjectPage";
+import UserService from "./Main/HR/UserService";
+import Compliances from "./Main/Compliance/Compliances";
+import QualityModule from "./Main/Quality/QualityModule";
+import IVR from "./Main/Quality/IVR";
+import Accounts from "./Main/Accounts/Accounts";
+import { AccountsList } from "./Main/Accounts/AccountsList";
+import { ConfigProvider } from "antd";
+import Comments from "./Main/Setting/Comments/Comments";
+import { lazy, Suspense } from "react";
+import Desigination from "./Main/Setting/Desigination/Desigination";
+import Department from "./Main/Setting/Department/Department";
+import CompanyForm from "./Main/Accounts/CompanyForm";
+import CompanyPageLayout from "./Main/Sales/company/CompanyPageLayout";
+import Industry from "./Main/Industry/Industry";
+import SubIndustry from "./Main/Industry/SubIndustry/SubIndustry";
+import SubsubIndustry from "./Main/Industry/SubsubIndustry/SubsubIndustry";
+import IndustryData from "./Main/Industry/IndustryData/IndustryData";
+import Industries from "./Main/Industry/Industries/Industries";
+import HomePageFile from "./Home/HomePageFile";
+import LandingPage from "./Home/LandingPage";
+import IpAddress from "./Main/Setting/IpAddress/IpAddress";
+import VendorsList from "./Main/Vendors/VendorsList";
+import ProjectGraph from "./Main/GraphDashboard/ProjectGraph";
+import MainGraphPage from "./Main/GraphDashboard/MainGraphPage";
+import Procurement from "./Main/Vendors/Procurement";
+import MainCompanyFormPage from "./Main/Accounts/MainCompanyFormPage";
+import VendorsRequestList from "./Main/Sales/Leads/VendorsRequestList";
+import ClientDesigination from "./Main/Setting/ClientDesiginations/ClientDesigination";
+import MainComanyModule from "./Main/Sales/company/MainComanyModule";
+import GraphMainPage from "./Main/GraphDashboard/GraphMainPage";
+import EstimatePage from "./Main/Sales/Leads/EstimatePage";
+import ProposalsPage from "./Main/Sales/Leads/ProposalsPage";
 
-const SpinLoading = lazy(() => import("./components/SpinLoading"))
+const SpinLoading = lazy(() => import("./components/SpinLoading"));
 
 function App() {
-  const authStatus = useSelector((state) => state.auth.isAuth)
+  const authStatus = useSelector((state) => state.auth.isAuth);
 
   return (
     <ConfigProvider
@@ -97,9 +99,9 @@ function App() {
         components: {
           Card: {
             actionsLiMargin: 6,
-            paddingLG:12,
-            padding:12,
-            paddingSM:12
+            paddingLG: 12,
+            padding: 12,
+            paddingSM: 12,
           },
           Typography: {
             fontSize: 12,
@@ -185,14 +187,13 @@ function App() {
             fontSizeSM: 12,
             itemSizeSM: 22,
           },
-          DatePicker:{
+          DatePicker: {
             controlHeightSM: 28,
             contentFontSizeSM: 12,
-            borderRadius:4,
-            borderRadiusSM:4,
-            borderRadiusLG:5
-          }
-          
+            borderRadius: 4,
+            borderRadiusSM: 4,
+            borderRadiusLG: 5,
+          },
         },
       }}
     >
@@ -270,13 +271,15 @@ function App() {
 
                 <Route path="oppurtities" element={<Opportunities />} />
                 {/* <Route path="company" element={<MainCompanyPage />} /> */}
-                <Route path="company" element={<MainComanyModule/>} />
+                <Route path="company" element={<MainComanyModule />} />
                 <Route path="project" element={<ProjectPage />} />
-                <Route path="vendors-request" element={<VendorsRequestList />} />
                 <Route
-                  path="lead-form"
-                  element={<CompanyForm/>}
+                  path="vendors-request"
+                  element={<VendorsRequestList />}
                 />
+                <Route path="lead-form" element={<CompanyForm />} />
+                <Route path="estimate" element={<EstimatePage />} />
+                <Route path="proposal" element={<ProposalsPage />} />
                 <Route
                   path="company/:companyId/details"
                   element={<CompanyPageLayout />}
@@ -525,7 +528,7 @@ function App() {
         </BrowserRouter>
       </div>
     </ConfigProvider>
-  )
+  );
 }
 
-export default App
+export default App;

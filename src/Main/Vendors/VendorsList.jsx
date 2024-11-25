@@ -5,6 +5,7 @@ import {
   changeProcurementAssignee,
   getAllVendorsRequest,
   getAllVendorsStatus,
+  handleVendorsLoading,
   searchInVendorsList,
   vendorsFilteration,
 } from "../../Toolkit/Slices/LeadSlice";
@@ -48,6 +49,9 @@ const VendorsList = () => {
   );
   const vendorsExportData = useSelector(
     (state) => state.leads.vendorsExportData
+  );
+  const vendorFilterationLoading = useSelector(
+    (state) => state.leads.vendorFilterationLoading
   );
   const vendorsStatus = useSelector((state) => state.leads.vendorsStatus);
   const [searchText, setSearchText] = useState("");
@@ -143,7 +147,7 @@ const VendorsList = () => {
           <Icon
             icon="fluent:circle-16-filled"
             color={
-              data?.status === "Quotation Sent"
+              data?.status === "Finished"
                 ? "green"
                 : data?.status === "Cancel"
                 ? "black"
@@ -157,6 +161,11 @@ const VendorsList = () => {
       dataIndex: "clientName",
       title: "Client name",
       fixed: "left",
+      render: (_, data) => (
+        <SingleVendorRequestDetails paginationData={paginationData} data={data}>
+          {data?.clientName}
+        </SingleVendorRequestDetails>
+      ),
     },
     {
       dataIndex: "clientCompanyName",
@@ -247,16 +256,6 @@ const VendorsList = () => {
         <OverFlowText>{info?.requirementDescription}</OverFlowText>
       ),
     },
-    {
-      dataIndex: "requestStatus",
-      title: "Request status",
-      render: (_, data) => (
-        <SingleVendorRequestDetails
-          paginationData={paginationData}
-          data={data}
-        />
-      ),
-    },
   ];
 
   const onSearch = (e, b, c) => {
@@ -290,6 +289,7 @@ const VendorsList = () => {
       endDate: null,
       userId: [],
     });
+    dispatch(handleVendorsLoading(""));
     dispatch(
       getAllVendorsRequest({
         id: userid,
@@ -333,7 +333,7 @@ const VendorsList = () => {
     "Over Due TAT",
   ];
 
-  console.log('sajchgsajkdg',filterQuery)
+  console.log("sajchgsajkdg", filterQuery);
 
   return (
     <>
@@ -368,8 +368,14 @@ const VendorsList = () => {
         </Flex>
 
         <Flex gap={8} align="center" justify="flex-end">
+          <Icon
+            icon="fluent:filter-24-filled"
+            height={32}
+            width={32}
+            color={vendorFilterationLoading === "success" ? "#0958d9" : "gray"}
+          />
           <RangePicker
-            style={{ width: "25%" }}
+            style={{ width: "35%" }}
             size="small"
             presets={rangePresets}
             disabledDate={(current) =>
@@ -409,8 +415,8 @@ const VendorsList = () => {
             <Select
               size="small"
               style={{ width: "15%" }}
-              mode='multiple'
-              maxTagCount={'responsive'}
+              mode="multiple"
+              maxTagCount={"responsive"}
               placeholder="Select users"
               options={
                 procurementAssigneeList?.length > 0
@@ -440,8 +446,13 @@ const VendorsList = () => {
             size="small"
             type="primary"
             onClick={handleFilter}
+            loading={vendorFilterationLoading === "pending" ? true : false}
             disabled={
-              filterQuery?.startDate === null && filterQuery?.endDate === null
+              (filterQuery?.startDate === null &&
+                filterQuery?.endDate === null) ||
+              vendorFilterationLoading === "success"
+                ? true
+                : false
             }
           >
             Apply filter

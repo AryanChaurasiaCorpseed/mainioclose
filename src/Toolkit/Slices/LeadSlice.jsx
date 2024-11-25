@@ -788,6 +788,51 @@ export const leadProposalSentRequest = createAsyncThunk(
   }
 );
 
+export const getAllProposalByUserId = createAsyncThunk(
+  "getAllProposalByUserId",
+  async ({ id, page, size }) => {
+    const response = await getQuery(
+      `/leadService/api/v1/proposal/getAllProposalByUserId?userId=${id}&page=${page}&size=${size}`
+    );
+    return response.data;
+  }
+);
+
+export const getAllEstimateByUserId = createAsyncThunk(
+  "getAllEstimateByUserId",
+  async (id) => {
+    const response = await getQuery(
+      `/leadService/api/v1/leadEstimate/getEstimateByUserId?userId=${id}`
+    );
+    return response.data;
+  }
+);
+
+export const getEstimateByLeadId = createAsyncThunk(
+  "getEstimateByLeadId",
+  async (id) => {
+    const response = await getQuery(
+      `/leadService/api/v1/leadEstimate/getEstimateByLeadId?leadId=${id}`
+    );
+    return response.data;
+  }
+);
+
+export const getProposalByLeadId=createAsyncThunk('getProposalByLeadId',async(id)=>{
+  const response=await getQuery(`/leadService/api/v1/proposal/getProposalById?id=${id}`)
+  return response.data
+})
+
+export const getAllPropsalListCount = createAsyncThunk(
+  "getAllPropsalListCount",
+  async (id) => {
+    const response = await getQuery(
+      `/leadService/api/v1/proposal/getAllProposalByUserIdCount?userId=${id}`
+    );
+    return response.data;
+  }
+);
+
 export const LeadSlice = createSlice({
   name: "lead",
   initialState: {
@@ -835,10 +880,23 @@ export const LeadSlice = createSlice({
     vendorsExportData: [],
     vendorsStatus: [],
     complianceDocumentList: [],
+    proposalList: [],
+    proposalLoading: "",
+    estimateList: [],
+    estimateLoading: "",
+    estimateDetail: {},
+    estimateDetailLoading: "",
+    proposalCount: 0,
+    vendorFilterationLoading: "",
+    leadDetailLoading:"",
+    proposalDetails:{}
   },
   reducers: {
     handleLoadingState: (state, action) => {
       state.loading = action.payload;
+    },
+    handleVendorsLoading: (state, action) => {
+      state.vendorFilterationLoading = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -1032,16 +1090,16 @@ export const LeadSlice = createSlice({
     });
 
     builder.addCase(getSingleLeadDataByLeadID.pending, (state, action) => {
-      state.loading = "pending";
+      state.leadDetailLoading = "pending";
     });
     builder.addCase(getSingleLeadDataByLeadID.fulfilled, (state, action) => {
-      state.loading = "success";
+      state.leadDetailLoading = "success";
       state.singleLeadResponseData = action.payload;
       state.allProductsList = action?.payload?.serviceDetails;
       state.clientsContact = action?.payload?.clients?.reverse();
     });
     builder.addCase(getSingleLeadDataByLeadID.rejected, (state, action) => {
-      state.loading = "rejected";
+      state.leadDetailLoading = "rejected";
     });
 
     builder.addCase(getLeadNotificationCount.pending, (state, action) => {
@@ -1196,11 +1254,15 @@ export const LeadSlice = createSlice({
       state.allVendorsRequestList = [];
     });
 
-    builder.addCase(vendorsFilteration.pending, (state, action) => {});
+    builder.addCase(vendorsFilteration.pending, (state, action) => {
+      state.vendorFilterationLoading = "pending";
+    });
     builder.addCase(vendorsFilteration.fulfilled, (state, action) => {
+      state.vendorFilterationLoading = "success";
       state.vendorsExportData = action?.payload?.vendorReports;
     });
     builder.addCase(vendorsFilteration.rejected, (state, action) => {
+      state.vendorFilterationLoading = "rejected";
       state.vendorsExportData = [];
     });
 
@@ -1219,6 +1281,65 @@ export const LeadSlice = createSlice({
     builder.addCase(getDocumentsByLeadName.rejected, (state, action) => {
       state.complianceDocumentList = [];
     });
+
+    builder.addCase(getAllProposalByUserId.pending, (state, action) => {
+      state.proposalLoading = "pending";
+    });
+    builder.addCase(getAllProposalByUserId.fulfilled, (state, action) => {
+      state.proposalLoading = "success";
+      state.proposalList = action?.payload;
+    });
+    builder.addCase(getAllProposalByUserId.rejected, (state, action) => {
+      state.proposalList = [];
+      state.proposalLoading = "rejected";
+    });
+
+    builder.addCase(getAllEstimateByUserId.pending, (state, action) => {
+      state.estimateLoading = "pending";
+    });
+    builder.addCase(getAllEstimateByUserId.fulfilled, (state, action) => {
+      state.estimateLoading = "success";
+      state.estimateList = action?.payload;
+    });
+    builder.addCase(getAllEstimateByUserId.rejected, (state, action) => {
+      state.estimateList = [];
+      state.estimateLoading = "rejected";
+    });
+
+    builder.addCase(getEstimateByLeadId.pending, (state, action) => {
+      state.estimateDetailLoading = "pending";
+    });
+    builder.addCase(getEstimateByLeadId.fulfilled, (state, action) => {
+      state.estimateDetailLoading = "success";
+      state.estimateDetail = action?.payload;
+    });
+    builder.addCase(getEstimateByLeadId.rejected, (state, action) => {
+      state.estimateList = [];
+      state.estimateDetailLoading = "rejected";
+    });
+
+    builder.addCase(getAllPropsalListCount.pending, (state, action) => {
+      state.proposalLoading = "pending";
+    });
+    builder.addCase(getAllPropsalListCount.fulfilled, (state, action) => {
+      state.proposalLoading = "success";
+      state.proposalCount = action?.payload;
+    });
+    builder.addCase(getAllPropsalListCount.rejected, (state, action) => {
+      state.proposalCount = 0;
+      state.proposalLoading = "rejected";
+    });
+
+    builder.addCase(getProposalByLeadId.pending, (state, action) => {
+      state.proposalLoading = "pending";
+    });
+    builder.addCase(getProposalByLeadId.fulfilled, (state, action) => {
+      state.proposalLoading = "success";
+      state.proposalDetails = action?.payload;
+    });
+    builder.addCase(getProposalByLeadId.rejected, (state, action) => {
+      state.proposalLoading = "rejected";
+    });
   },
 });
 export const {
@@ -1226,5 +1347,6 @@ export const {
   handleNextPagination,
   handlePrevPagination,
   handlePagination,
+  handleVendorsLoading
 } = LeadSlice.actions;
 export default LeadSlice.reducer;

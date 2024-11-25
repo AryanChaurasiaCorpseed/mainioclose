@@ -1,34 +1,34 @@
-import React, { useEffect } from "react"
-import "./SideBar.scss"
-import { Link, useParams } from "react-router-dom"
-import { useDispatch, useSelector } from "react-redux"
-import { toast } from "react-toastify"
-import "react-toastify/dist/ReactToastify.css"
-import { getUserProfilePhoto } from "../Toolkit/Slices/UserProfileSlice"
-import { Icon } from "@iconify/react"
+import React, { useEffect } from "react";
+import "./SideBar.scss";
+import { Link, useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { getUserProfilePhoto } from "../Toolkit/Slices/UserProfileSlice";
+import { Icon } from "@iconify/react";
 import {
   SIDE_BAR_ICON_HEIGHT,
   SIDE_BAR_ICON_WIDTH,
-} from "../components/Constants"
-import { getHighestPriorityRole } from "./Common/Commons"
-toast.configure()
+} from "../components/Constants";
+import { getHighestPriorityRole } from "./Common/Commons";
+toast.configure();
 
 const SideBar = () => {
-  const dispatch = useDispatch()
-  const { userid } = useParams()
-  const currentRoles = useSelector((state) => state?.auth?.roles)
+  const dispatch = useDispatch();
+  const { userid } = useParams();
+  const currentRoles = useSelector((state) => state?.auth?.roles);
   const currentUserDetail = useSelector(
     (state) => state.auth.getDepartmentDetail
-  )
-  const currentUserId = useSelector((state) => state.auth?.currentUser?.id)
+  );
+  const currentUserId = useSelector((state) => state.auth?.currentUser?.id);
 
   useEffect(() => {
     if (currentUserId !== undefined) {
-      dispatch(getUserProfilePhoto(currentUserId))
+      dispatch(getUserProfilePhoto(currentUserId));
     }
-  }, [dispatch, currentUserId])
+  }, [dispatch, currentUserId]);
 
-  console.log("sdklgfksdjhflkjasdlkfjhg", currentUserDetail)
+  console.log("sdklgfksdjhflkjasdlkfjhg", currentUserDetail);
 
   const items = [
     {
@@ -122,7 +122,11 @@ const SideBar = () => {
                       key: "inbox",
                     },
                     {
-                      label: <Link to={`${userid}/sales/vendors-request`}>Vendors request</Link>,
+                      label: (
+                        <Link to={`${userid}/sales/vendors-request`}>
+                          Vendors request
+                        </Link>
+                      ),
                       key: "vendors-request",
                     },
                     {
@@ -142,6 +146,14 @@ const SideBar = () => {
                         <Link to={`${userid}/sales/lead-form`}>Lead form</Link>
                       ),
                       key: "lead-form",
+                    },
+                    {
+                      label: <Link to={`${userid}/sales/estimate`}>Estimate</Link>,
+                      key: "estimate",
+                    },
+                    {
+                      label: <Link to={`${userid}/sales/proposal`}>Proposal</Link>,
+                      key: "proposal",
                     },
                   ]
                 : currentUserDetail?.department === "Quality Team" &&
@@ -196,6 +208,14 @@ const SideBar = () => {
               {
                 label: <Link to={`${userid}/sales/lead-form`}>Lead form</Link>,
                 key: "lead-form",
+              },
+              {
+                label: <Link to={`${userid}/sales/estimate`}>Estimate</Link>,
+                key: "estimate",
+              },
+              {
+                label: <Link to={`${userid}/sales/proposal`}>Proposal</Link>,
+                key: "proposal",
               },
             ],
           },
@@ -518,9 +538,9 @@ const SideBar = () => {
           },
         ]
       : []),
-  ]
+  ];
 
-  return items
-}
+  return items;
+};
 
-export default SideBar
+export default SideBar;

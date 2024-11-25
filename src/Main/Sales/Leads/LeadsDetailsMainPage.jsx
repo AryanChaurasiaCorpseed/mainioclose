@@ -9,6 +9,8 @@ import {
   getCompanyDetailsByLeadId,
   getCompanyUnitsById,
   getDocumentsByLeadName,
+  getEstimateByLeadId,
+  getProposalByLeadId,
   getVendorDetailList,
   handleViewHistory,
 } from "../../../Toolkit/Slices/LeadSlice";
@@ -137,10 +139,12 @@ const LeadsDetailsMainPage = ({
           } else {
           }
         });
+        dispatch(getEstimateByLeadId(data?.id ? data?.id : data?.leadId));
       }
       if (e === "proposal") {
         dispatch(getAllProductData());
         dispatch(getAllContactDetails());
+        dispatch(getProposalByLeadId(data?.id ? data?.id : data?.leadId))
         dispatch(
           getCompanyDetailsByLeadId(data?.id ? data?.id : data?.leadId)
         ).then((resp) => {

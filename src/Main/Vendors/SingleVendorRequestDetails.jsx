@@ -26,11 +26,11 @@ import {
   updateVendorStatus,
   vendorsRequestView,
 } from "../../Toolkit/Slices/LeadSlice";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { getHighestPriorityRole } from "../Common/Commons";
 const { Text, Paragraph } = Typography;
 
-const SingleVendorRequestDetails = ({ data, paginationData }) => {
+const SingleVendorRequestDetails = ({ data, paginationData,children }) => {
   const { userid } = useParams();
   const dispatch = useDispatch();
   const historyList = useSelector(
@@ -69,7 +69,7 @@ const SingleVendorRequestDetails = ({ data, paginationData }) => {
     (values) => {
       values.quotationFilePath = values?.quotationFilePath?.[0]?.response;
       values.agreementWithClientDocumentPath =
-      values?.agreementWithClientDocumentPath?.[0]?.response;
+        values?.agreementWithClientDocumentPath?.[0]?.response;
       values.researchDocumentPath = values?.researchDocumentPath?.[0]?.response;
       values.companyName = data?.clientCompanyName;
       values.contactPersonName = data?.contactPersonName;
@@ -82,7 +82,7 @@ const SingleVendorRequestDetails = ({ data, paginationData }) => {
         data: values,
       };
 
-      console.log('dkjgcsjhgdkjshgkj',values)
+      console.log("dkjgcsjhgdkjshgkj", values);
 
       if (values?.requestStatus === "Cancel") {
         dispatch(
@@ -195,9 +195,10 @@ const SingleVendorRequestDetails = ({ data, paginationData }) => {
 
   return (
     <>
-      <Button size="small" shape="round" onClick={handleOpenDrawer}>
-        Status
-      </Button>
+      <Link className="link-heading" onClick={handleOpenDrawer}>
+        {children}
+      </Link>
+
       <Drawer
         open={openDrawer}
         width={"80%"}
