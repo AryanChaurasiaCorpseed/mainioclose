@@ -421,6 +421,7 @@ const LeadEstimate = ({ leadid }) => {
                 </Form.Item>
               </>
             )}
+
             <Form.Item label="Pan number" name="panNo">
               <Input maxLength={10} />
             </Form.Item>

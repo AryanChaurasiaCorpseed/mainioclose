@@ -389,6 +389,7 @@ const LeadDetailsPage = ({ leadid }) => {
           onClick={(e) => {
             e.stopPropagation();
             setOpenModal(true);
+            form1.resetFields();
           }}
         >
           <Icon icon="fluent:add-20-regular" />
@@ -442,378 +443,366 @@ const LeadDetailsPage = ({ leadid }) => {
   ];
 
   return (
-    <>
-      <Spin
-        size="large"
-        spinning={leadDetailLoading === "pending" ? true : false}
-      >
-        {Object.keys(singleLeadResponseData)?.length > 0 ? (
-          <div className="lead-details cm-padding-one">
-            <Row gutter={16}>
-              <Col span={9}>
-                <div className="left-lead-section">
-                  {updateOriginalName ? (
-                    <div className="comp-container">
-                      <Select
-                        size="small"
-                        className="comp-component-1"
-                        style={{ width: "100%" }}
-                        placeholder="select urls"
-                        options={allLeadUrl?.map((item) => ({
-                          label: item?.urlsName,
-                          value: item?.urlsName,
-                        }))}
-                        onChange={(e) =>
-                          setOriginalData((prev) => ({
-                            ...prev,
-                            originalName: e,
-                          }))
-                        }
-                        filterOption={(input, option) =>
-                          option.label
-                            .toLowerCase()
-                            .includes(input.toLowerCase())
-                        }
-                      />
-                      <Space className="comp-component-2">
-                        <Button
-                          type="primary"
-                          size="small"
-                          onClick={(e) => updateOriginalNameFun(e)}
-                        >
-                          Save
-                        </Button>
-                        <Button
-                          size="small"
-                          onClick={() => setUpdateOriginalName(false)}
-                        >
-                          Cancel
-                        </Button>
-                      </Space>
-                    </div>
-                  ) : (
-                    <div className="comp-container">
-                      <div className="flex-vert-hori-center">
-                        {singleLeadResponseData?.originalName ? (
-                          <Icon
-                            icon="fluent:circle-20-filled"
-                            height={12}
-                            width={12}
-                            color="red"
-                          />
-                        ) : (
-                          <Icon
-                            icon="fluent:circle-20-filled"
-                            height={12}
-                            width={12}
-                            color="green"
-                          />
-                        )}
-                        {singleLeadResponseData?.count !== undefined && (
-                          <Text className="heading-text">
-                            {`(${singleLeadResponseData?.count})`}
-                          </Text>
-                        )}
-                        <Text className="heading-text">
-                          {singleLeadResponseData?.originalName
-                            ? singleLeadResponseData?.originalName
-                            : "NA"}
-                        </Text>
-                        <Button
-                          type="text"
-                          size="small"
-                          onClick={() => setUpdateOriginalName(true)}
-                        >
-                          <Icon icon="fluent:edit-20-regular" />
-                        </Button>
-                      </div>
-                    </div>
-                  )}
-
-                  {updateLeadNameToggle ? (
-                    <div className="comp-container">
-                      <div className="flex-vert-hori-center">
-                        <Text className="heading-text">
-                          {singleLeadResponseData?.leadName}
-                        </Text>
-                        <Button
-                          type="text"
-                          size="small"
-                          onClick={() => setUpdateLeadNameToggle(false)}
-                        >
-                          <Icon icon="fluent:edit-20-regular" />
-                        </Button>
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="comp-container">
-                      <Select
-                        showSearch
-                        allowClear
-                        size="small"
-                        style={{ width: "100%" }}
-                        className="comp-component-1"
-                        placeholder="select the slug"
-                        options={slugList?.map((item) => ({
-                          label: item?.name,
-                          value: item?.name,
-                        }))}
-                        onChange={(e) => setUpdatedLeadName(e)}
-                        filterOption={(input, option) =>
-                          option.label
-                            .toLowerCase()
-                            .includes(input.toLowerCase())
-                        }
-                      />
-                      <Space className="comp-component-2">
-                        <Button
-                          type="primary"
-                          size="small"
-                          onClick={(e) => updateLeadNameSinglePage(e)}
-                        >
-                          Save
-                        </Button>
-                        <Button
-                          size="small"
-                          onClick={() => setUpdateLeadNameToggle(true)}
-                        >
-                          Cancel
-                        </Button>
-                      </Space>
-                    </div>
-                  )}
-                  <div className="flex-vert-hori-center">
-                    <Icon icon="fluent:location-24-regular" />
-                    <Text type="secondary">
-                      {singleLeadResponseData?.city
-                        ? singleLeadResponseData?.city
-                        : "Address"}
-                    </Text>
-                  </div>
-                  <Divider style={{ margin: "6px" }} />
-                  <div className="lead-assignee-container">
-                    <Text className="heading-text">Update assignee</Text>
+    <Spin
+      size="large"
+      spinning={leadDetailLoading === "pending" ? true : false}
+    >
+      {Object.keys(singleLeadResponseData)?.length > 0 ? (
+        <div className="lead-details cm-padding-one">
+          <Row gutter={16}>
+            <Col span={9}>
+              <div className="left-lead-section">
+                {updateOriginalName ? (
+                  <div className="comp-container">
                     <Select
-                      placeholder="Change assignee"
                       size="small"
-                      showSearch
-                      style={{ width: "100%", margin: "6px 0px" }}
-                      value={assigneValue}
-                      options={
-                        userDataResponse?.map((ele) => ({
-                          label: ele?.fullName,
-                          value: ele?.id,
-                        })) || []
+                      className="comp-component-1"
+                      style={{ width: "100%" }}
+                      placeholder="select urls"
+                      options={allLeadUrl?.map((item) => ({
+                        label: item?.urlsName,
+                        value: item?.urlsName,
+                      }))}
+                      onChange={(e) =>
+                        setOriginalData((prev) => ({
+                          ...prev,
+                          originalName: e,
+                        }))
                       }
                       filterOption={(input, option) =>
                         option.label.toLowerCase().includes(input.toLowerCase())
                       }
-                      onChange={(e) => changeLeadAssignee(e)}
                     />
+                    <Space className="comp-component-2">
+                      <Button
+                        type="primary"
+                        size="small"
+                        onClick={(e) => updateOriginalNameFun(e)}
+                      >
+                        Save
+                      </Button>
+                      <Button
+                        size="small"
+                        onClick={() => setUpdateOriginalName(false)}
+                      >
+                        Cancel
+                      </Button>
+                    </Space>
                   </div>
-                  <div className="flex-vert-hori-center">
-                    <Icon icon="fluent:person-24-regular" />
-                    <Text>
-                      Assignee Person -{" "}
-                      {singleLeadResponseData?.assigne?.fullName}
-                    </Text>
+                ) : (
+                  <div className="comp-container">
+                    <div className="flex-vert-hori-center">
+                      {singleLeadResponseData?.originalName ? (
+                        <Icon
+                          icon="fluent:circle-20-filled"
+                          height={12}
+                          width={12}
+                          color="red"
+                        />
+                      ) : (
+                        <Icon
+                          icon="fluent:circle-20-filled"
+                          height={12}
+                          width={12}
+                          color="green"
+                        />
+                      )}
+                      {singleLeadResponseData?.count !== undefined && (
+                        <Text className="heading-text">
+                          {`(${singleLeadResponseData?.count})`}
+                        </Text>
+                      )}
+                      <Text className="heading-text">
+                        {singleLeadResponseData?.originalName
+                          ? singleLeadResponseData?.originalName
+                          : "NA"}
+                      </Text>
+                      <Button
+                        type="text"
+                        size="small"
+                        onClick={() => setUpdateOriginalName(true)}
+                      >
+                        <Icon icon="fluent:edit-20-regular" />
+                      </Button>
+                    </div>
                   </div>
-                  <Divider style={{ margin: "6px" }} />
-                  <Select
-                    showSearch
-                    size="small"
-                    placeholder="change status"
-                    value={singleLeadResponseData?.status?.id}
-                    options={
-                      getAllStatus?.map((item) => ({
+                )}
+
+                {updateLeadNameToggle ? (
+                  <div className="comp-container">
+                    <div className="flex-vert-hori-center">
+                      <Text className="heading-text">
+                        {singleLeadResponseData?.leadName}
+                      </Text>
+                      <Button
+                        type="text"
+                        size="small"
+                        onClick={() => setUpdateLeadNameToggle(false)}
+                      >
+                        <Icon icon="fluent:edit-20-regular" />
+                      </Button>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="comp-container">
+                    <Select
+                      showSearch
+                      allowClear
+                      size="small"
+                      style={{ width: "100%" }}
+                      className="comp-component-1"
+                      placeholder="select the slug"
+                      options={slugList?.map((item) => ({
                         label: item?.name,
-                        value: item?.id,
+                        value: item?.name,
+                      }))||[]}
+                      onChange={(e) => setUpdatedLeadName(e)}
+                      filterOption={(input, option) =>
+                        option.label.toLowerCase().includes(input.toLowerCase())
+                      }
+                    />
+                    <Space className="comp-component-2">
+                      <Button
+                        type="primary"
+                        size="small"
+                        onClick={(e) => updateLeadNameSinglePage(e)}
+                      >
+                        Save
+                      </Button>
+                      <Button
+                        size="small"
+                        onClick={() => setUpdateLeadNameToggle(true)}
+                      >
+                        Cancel
+                      </Button>
+                    </Space>
+                  </div>
+                )}
+                <div className="flex-vert-hori-center">
+                  <Icon icon="fluent:location-24-regular" />
+                  <Text type="secondary">
+                    {singleLeadResponseData?.city
+                      ? singleLeadResponseData?.city
+                      : "Address"}
+                  </Text>
+                </div>
+                <Divider style={{ margin: "6px" }} />
+                <div className="lead-assignee-container">
+                  <Text className="heading-text">Update assignee</Text>
+                  <Select
+                    placeholder="Change assignee"
+                    size="small"
+                    showSearch
+                    style={{ width: "100%", margin: "6px 0px" }}
+                    value={assigneValue}
+                    options={
+                      userDataResponse?.map((ele) => ({
+                        label: ele?.fullName,
+                        value: ele?.id,
                       })) || []
                     }
                     filterOption={(input, option) =>
                       option.label.toLowerCase().includes(input.toLowerCase())
                     }
-                    onChange={(e) => changeLeadStatusFun(e)}
-                  />
-                  <div className="flex-vert-hori-center">
-                    <Icon icon="fluent:bookmark-24-regular" />
-                    <Text>Status - {singleLeadResponseData?.status?.name}</Text>
-                  </div>
-                  <Space>
-                    <Button
-                      size="small"
-                      type="primary"
-                      onClick={sameAssigneePresonFun}
-                    >
-                      Same
-                    </Button>
-                    <Button size="small" onClick={notSameAssigneePresonFun}>
-                      Not same
-                    </Button>
-                  </Space>
-
-                  {singleLeadResponseData?.source === "IVR" && (
-                    <>
-                      <Divider style={{ margin: "6px" }} />
-                      <Text className="heading-text">Lead description</Text>
-                      {showDescriptionField ? (
-                        <div className="comp-container">
-                          <Input.TextArea
-                            value={descriptionText}
-                            onChange={(e) => setDescriptionText(e.target.value)}
-                          />
-                        </div>
-                      ) : (
-                        <div className="description-container">
-                          <Text>{descriptionText}</Text>
-                        </div>
-                      )}
-
-                      {(currentUserDetail?.department === "Quality Team" ||
-                        currentUserRoles?.includes("ADMIN")) && (
-                        <Space>
-                          <Button
-                            size="small"
-                            onClick={() =>
-                              setShowDescriptionField(!showDescriptionField)
-                            }
-                          >
-                            {showDescriptionField ? "Cancel" : "Edit"}
-                          </Button>
-                          <Button
-                            type="primary"
-                            size="small"
-                            disabled={!showDescriptionField}
-                            onClick={handleUpdateLeadDescription}
-                          >
-                            Submit
-                          </Button>
-                        </Space>
-                      )}
-                    </>
-                  )}
-
-                  <Divider style={{ margin: "6px" }} />
-                  <div className="flex-vert-hori-center">
-                    <Icon icon="fluent:link-24-filled" />
-                    <Text type="secondary">
-                      {singleLeadResponseData?.urls}{" "}
-                    </Text>
-                  </div>
-
-                  {complianceDocumentList?.length > 0 && (
-                    <>
-                      <Divider style={{ margin: "6px" }} />
-                      <Flex>
-                        {complianceDocumentList?.map((item, idx) => (
-                          <>
-                            <Tag
-                              style={{ cursor: "pointer" }}
-                              onClick={() => {
-                                setDocument(item?.name);
-                                setOpenDocumentModal(true);
-                              }}
-                            >
-                              Document {idx}
-                            </Tag>
-                          </>
-                        ))}
-                      </Flex>
-                    </>
-                  )}
-                  <Divider style={{ margin: "6px" }} />
-                  <Collapse
-                    accordion
-                    defaultActiveKey={["1"]}
-                    items={items}
-                    bordered={false}
+                    onChange={(e) => changeLeadAssignee(e)}
                   />
                 </div>
-              </Col>
-              <Col span={15}>
-                <div className="flex-justify-end">
-                  <div className="btn-view-container">
-                    <Button
-                      size="small"
-                      onClick={() => leadAssignedToSame(leadid)}
-                    >
-                      Assign to same person
-                    </Button>
-                    <CompanyFormModal
-                      detailView={true}
-                      data={singleLeadResponseData}
-                    />
-                  </div>
+                <div className="flex-vert-hori-center">
+                  <Icon icon="fluent:person-24-regular" />
+                  <Text>
+                    Assignee Person -{" "}
+                    {singleLeadResponseData?.assigne?.fullName}
+                  </Text>
+                </div>
+                <Divider style={{ margin: "6px" }} />
+                <Select
+                  showSearch
+                  size="small"
+                  placeholder="change status"
+                  value={singleLeadResponseData?.status?.id}
+                  options={
+                    getAllStatus?.map((item) => ({
+                      label: item?.name,
+                      value: item?.id,
+                    })) || []
+                  }
+                  filterOption={(input, option) =>
+                    option.label.toLowerCase().includes(input.toLowerCase())
+                  }
+                  onChange={(e) => changeLeadStatusFun(e)}
+                />
+                <div className="flex-vert-hori-center">
+                  <Icon icon="fluent:bookmark-24-regular" />
+                  <Text>Status - {singleLeadResponseData?.status?.name}</Text>
+                </div>
+                <Space>
+                  <Button
+                    size="small"
+                    type="primary"
+                    onClick={sameAssigneePresonFun}
+                  >
+                    Same
+                  </Button>
+                  <Button size="small" onClick={notSameAssigneePresonFun}>
+                    Not same
+                  </Button>
+                </Space>
+
+                {singleLeadResponseData?.source === "IVR" && (
+                  <>
+                    <Divider style={{ margin: "6px" }} />
+                    <Text className="heading-text">Lead description</Text>
+                    {showDescriptionField ? (
+                      <div className="comp-container">
+                        <Input.TextArea
+                          value={descriptionText}
+                          onChange={(e) => setDescriptionText(e.target.value)}
+                        />
+                      </div>
+                    ) : (
+                      <div className="description-container">
+                        <Text>{descriptionText}</Text>
+                      </div>
+                    )}
+
+                    {(currentUserDetail?.department === "Quality Team" ||
+                      currentUserRoles?.includes("ADMIN")) && (
+                      <Space>
+                        <Button
+                          size="small"
+                          onClick={() =>
+                            setShowDescriptionField(!showDescriptionField)
+                          }
+                        >
+                          {showDescriptionField ? "Cancel" : "Edit"}
+                        </Button>
+                        <Button
+                          type="primary"
+                          size="small"
+                          disabled={!showDescriptionField}
+                          onClick={handleUpdateLeadDescription}
+                        >
+                          Submit
+                        </Button>
+                      </Space>
+                    )}
+                  </>
+                )}
+
+                <Divider style={{ margin: "6px" }} />
+                <div className="flex-vert-hori-center">
+                  <Icon icon="fluent:link-24-filled" />
+                  <Text type="secondary">{singleLeadResponseData?.urls} </Text>
                 </div>
 
-                <Flex vertical gap={12}>
-                  <BulkFileUploader leadid={leadid} />
-                  <LeadComments list={notesApiData} leadid={leadid} />
-                </Flex>
-              </Col>
-            </Row>
-            <Modal
-              title={contactData ? "Edit contact details" : "Create contact"}
-              open={openModal}
-              onCancel={() => setOpenModal(false)}
-              onClose={() => setOpenModal(false)}
-              onOk={() => form1.submit()}
-              okText="Submit"
-            >
-              <Form
-                layout="vertical"
-                form={form1}
-                onFinish={handleSubmitContact}
+                {complianceDocumentList?.length > 0 && (
+                  <>
+                    <Divider style={{ margin: "6px" }} />
+                    <Flex>
+                      {complianceDocumentList?.map((item, idx) => (
+                        <>
+                          <Tag
+                            style={{ cursor: "pointer" }}
+                            onClick={() => {
+                              setDocument(item?.name);
+                              setOpenDocumentModal(true);
+                            }}
+                          >
+                            Document {idx}
+                          </Tag>
+                        </>
+                      ))}
+                    </Flex>
+                  </>
+                )}
+                <Divider style={{ margin: "6px" }} />
+                <Collapse
+                  accordion
+                  defaultActiveKey={["1"]}
+                  items={items}
+                  bordered={false}
+                />
+              </div>
+            </Col>
+            <Col span={15}>
+              <div className="flex-justify-end">
+                <div className="btn-view-container">
+                  <Button
+                    size="small"
+                    onClick={() => leadAssignedToSame(leadid)}
+                  >
+                    Assign to same person
+                  </Button>
+                  <CompanyFormModal
+                    detailView={true}
+                    data={singleLeadResponseData}
+                  />
+                </div>
+              </div>
+
+              <Flex vertical gap={12}>
+                <BulkFileUploader leadid={leadid} />
+                <LeadComments list={notesApiData} leadid={leadid} />
+              </Flex>
+            </Col>
+          </Row>
+          <Modal
+            title={contactData ? "Edit contact details" : "Create contact"}
+            open={openModal}
+            onCancel={() => setOpenModal(false)}
+            onClose={() => setOpenModal(false)}
+            onOk={() => form1.submit()}
+            okText="Submit"
+          >
+            <Form layout="vertical" form={form1} onFinish={handleSubmitContact}>
+              <Form.Item
+                label="Name"
+                name="name"
+                rules={[
+                  { required: true, message: "name field can not blank" },
+                ]}
               >
-                <Form.Item
-                  label="Name"
-                  name="name"
-                  rules={[
-                    { required: true, message: "name field can not blank" },
-                  ]}
-                >
-                  <Input />
-                </Form.Item>
-                <Form.Item
-                  label="Email"
-                  name="email"
-                  // rules={[{ required: true, message: "please give email" }]}
-                >
-                  <Input />
-                </Form.Item>
-                <Form.Item
-                  label="Phone number"
-                  name="contactNo"
-                  rules={[
-                    { required: true, message: "please enter phone number" },
-                  ]}
-                >
-                  <Input />
-                </Form.Item>
-              </Form>
-            </Modal>
-            <Modal
-              open={openDocumentModal}
-              onCancel={() => setOpenDocumentModal(false)}
-              onClose={() => setOpenDocumentModal(false)}
-              title="Document modal"
-              footer={false}
-              height={600}
-              width={900}
-              centered
-            >
-              <iframe src={document} height={580} width={"100%"} />
-            </Modal>
-          </div>
-        ) : (
-          <Result
-            status="404"
-            title="404"
-            subTitle="Sorry, the data is not available."
-          />
-        )}
-      </Spin>
-    </>
+                <Input />
+              </Form.Item>
+              <Form.Item
+                label="Email"
+                name="email"
+                // rules={[{ required: true, message: "please give email" }]}
+              >
+                <Input />
+              </Form.Item>
+              <Form.Item
+                label="Phone number"
+                name="contactNo"
+                rules={[
+                  { required: true, message: "please enter phone number" },
+                ]}
+              >
+                <Input />
+              </Form.Item>
+            </Form>
+          </Modal>
+          <Modal
+            open={openDocumentModal}
+            onCancel={() => setOpenDocumentModal(false)}
+            onClose={() => setOpenDocumentModal(false)}
+            title="Document modal"
+            footer={false}
+            height={600}
+            width={900}
+            centered
+          >
+            <iframe src={document} height={580} width={"100%"} />
+          </Modal>
+        </div>
+      ) : (
+        <Result
+          status="404"
+          title="404"
+          subTitle="Sorry, the data is not available."
+        />
+      )}
+    </Spin>
   );
 };
 

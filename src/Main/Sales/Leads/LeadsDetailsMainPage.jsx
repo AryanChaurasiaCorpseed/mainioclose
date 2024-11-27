@@ -144,7 +144,7 @@ const LeadsDetailsMainPage = ({
       if (e === "proposal") {
         dispatch(getAllProductData());
         dispatch(getAllContactDetails());
-        dispatch(getProposalByLeadId(data?.id ? data?.id : data?.leadId))
+        dispatch(getProposalByLeadId(data?.id ? data?.id : data?.leadId));
         dispatch(
           getCompanyDetailsByLeadId(data?.id ? data?.id : data?.leadId)
         ).then((resp) => {
@@ -198,9 +198,8 @@ const LeadsDetailsMainPage = ({
           setOpenDrawer(true);
           dispatch(getAllSlugList());
           dispatch(getAllUrlList());
-          if (data?.originalName) {
-            dispatch(getDocumentsByLeadName(data?.originalName));
-          }
+          dispatch(getDocumentsByLeadName(data?.originalName));
+          setTabKey("leadDetail");
         }}
       >
         {children}
