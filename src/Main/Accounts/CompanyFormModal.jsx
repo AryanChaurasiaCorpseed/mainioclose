@@ -8,10 +8,10 @@ import {
   Select,
   Switch,
   Upload,
-} from "antd"
-import React, { useCallback,useState } from "react"
-import { Icon } from "@iconify/react"
-import { useDispatch, useSelector } from "react-redux"
+} from "antd";
+import React, { useCallback, useState } from "react";
+import { Icon } from "@iconify/react";
+import { useDispatch, useSelector } from "react-redux";
 import {
   createCompanyForm,
   getAllContactDetails,
@@ -20,27 +20,29 @@ import {
   getCompanyDetailsByLeadId,
   getCompanyUnitsById,
   getContactById,
-} from "../../Toolkit/Slices/LeadSlice"
-import { getAllUsers } from "../../Toolkit/Slices/UsersSlice"
+} from "../../Toolkit/Slices/LeadSlice";
+import { getAllUsers } from "../../Toolkit/Slices/UsersSlice";
 import {
   getAllCompanyByStatus,
   getCompanyDetailsById,
   updateCompanyForm,
-} from "../../Toolkit/Slices/CompanySlice"
-import { useParams } from "react-router-dom"
+} from "../../Toolkit/Slices/CompanySlice";
+import { useParams } from "react-router-dom";
 import {
   getHighestPriorityRole,
+  maskEmail,
+  maskMobileNumber,
   playErrorSound,
   playSuccessSound,
   playWarningSound,
-} from "../Common/Commons"
+} from "../Common/Commons";
 import {
   getAllMainIndustry,
   getIndustryDataBySubSubIndustryId,
   getSubIndustryByIndustryId,
   getSubSubIndustryBySubIndustryId,
-} from "../../Toolkit/Slices/IndustrySlice"
-import { getClientDesiginationList } from "../../Toolkit/Slices/SettingSlice"
+} from "../../Toolkit/Slices/IndustrySlice";
+import { getClientDesiginationList } from "../../Toolkit/Slices/SettingSlice";
 
 const CompanyFormModal = ({
   edit,
@@ -49,103 +51,103 @@ const CompanyFormModal = ({
   selectedFilter,
   detailView,
 }) => {
-  const [form] = Form.useForm()
-  const dispatch = useDispatch()
-  const { userid } = useParams()
+  const [form] = Form.useForm();
+  const dispatch = useDispatch();
+  const { userid } = useParams();
   const companyDetails = useSelector(
     (state) => state?.leads?.companyDetailsById
-  )
-  const allUsers = useSelector((state) => state.user.allUsers)
-  const companyUnits = useSelector((state) => state?.leads?.companyUnits)
+  );
+  const allUsers = useSelector((state) => state.user.allUsers);
+  const companyUnits = useSelector((state) => state?.leads?.companyUnits);
   const companyDetailByUnitId = useSelector(
     (state) => state?.leads?.companyDetailByUnitId
-  )
+  );
   const singleLeadResponseData = useSelector(
     (state) => state.leads.singleLeadResponseData
-  )
-  const currentRoles = useSelector((state) => state?.auth?.roles)
-  const contactList = useSelector((state) => state?.leads?.allContactList)
-  const contactDetail = useSelector((state) => state?.leads?.contactDetail)
-  const companyDetail = useSelector((state) => state?.company?.companyDetail)
-  const page = useSelector((state) => state.company.page)
-  const allIndustry = useSelector((state) => state.industry.allMainIndustry)
+  );
+  const currentRoles = useSelector((state) => state?.auth?.roles);
+  const contactList = useSelector((state) => state?.leads?.allContactList);
+  const contactDetail = useSelector((state) => state?.leads?.contactDetail);
+  const companyDetail = useSelector((state) => state?.company?.companyDetail);
+  const page = useSelector((state) => state.company.page);
+  const allIndustry = useSelector((state) => state.industry.allMainIndustry);
   const subIndustryListById = useSelector(
     (state) => state.industry.subIndustryListByIndustryId
-  )
+  );
   const subSubIndustryListById = useSelector(
     (state) => state.industry.subSubIndustryListBySubIndustryId
-  )
+  );
   const industryDataListById = useSelector(
     (state) => state.industry.industryDataListBySubSubIndustryId
-  )
+  );
   const desiginationList = useSelector(
     (state) => state.setting.clientDesiginationList
-  )
-  const [openModal, setOpenModal] = useState(false)
-  const [formLoading, setFormLoading] = useState("")
-  const [gstMand, setGstMand] = useState("")
+  );
+  const [openModal, setOpenModal] = useState(false);
+  const [formLoading, setFormLoading] = useState("");
+  const [gstMand, setGstMand] = useState("");
   const [newPrimaryAddress, setNewPrimaryAddress] = useState(
     Object.keys(companyDetails)?.length === 0 ? true : false
-  )
+  );
   const [newSecondaryAddress, setNewSecondaryAddress] = useState(
     Object.keys(companyDetails)?.length === 0 ? true : false
-  )
+  );
 
   const handlePanNumberChange = (e) => {
-    const value = e.target.value
-    const upperCaseValue = value.toUpperCase()
-    const isValid = /^[A-Z0-9]+$/.test(upperCaseValue)
-    form.setFieldsValue({ panNo: isValid ? upperCaseValue : value })
-  }
+    const value = e.target.value;
+    const upperCaseValue = value.toUpperCase();
+    const isValid = /^[A-Z0-9]+$/.test(upperCaseValue);
+    form.setFieldsValue({ panNo: isValid ? upperCaseValue : value });
+  };
 
   const handleButtonClick = useCallback(() => {
-    dispatch(getAllMainIndustry())
-    dispatch(getClientDesiginationList())
-    dispatch(getAllContactDetails())
+    dispatch(getAllMainIndustry());
+    dispatch(getClientDesiginationList());
+    dispatch(getAllContactDetails());
     dispatch(
       getCompanyDetailsByLeadId(data?.id ? data?.id : data?.leadId)
     ).then((resp) => {
       if (resp.meta.requestStatus === "fulfilled") {
         if (Object.keys(resp.payload)?.length > 0) {
           if (resp.payload.assignee?.id != userid) {
-            playWarningSound()
+            playWarningSound();
             notification.warning({
               message: `This lead is already assigned to "${resp?.payload?.assignee?.fullName}" for company id "${resp?.payload?.id}" company name " ${resp?.payload?.name}"`,
-            })
+            });
           } else {
             form.setFieldsValue({
               companyId: resp?.payload.name,
               isUnit: false,
-            })
-            dispatch(getCompanyUnitsById(resp?.payload?.id))
-            setOpenModal(true)
+            });
+            dispatch(getCompanyUnitsById(resp?.payload?.id));
+            setOpenModal(true);
           }
         } else {
-          form.setFieldsValue({ isUnit: true })
-          setOpenModal(true)
+          form.setFieldsValue({ isUnit: true });
+          setOpenModal(true);
         }
       } else {
-        setOpenModal(true)
+        setOpenModal(true);
       }
-    })
-  }, [form, data, dispatch, userid])
+    });
+  }, [form, data, dispatch, userid]);
 
   function getFileName(file) {
     if (file) {
-      let temp = file?.split("/")
-      return temp[temp?.length - 1]
+      let temp = file?.split("/");
+      return temp[temp?.length - 1];
     }
   }
 
   const handleEditBtnClick = useCallback(() => {
     if (editInfo?.id !== undefined) {
-      dispatch(getAllMainIndustry())
-      dispatch(getClientDesiginationList())
+      dispatch(getAllMainIndustry());
+      dispatch(getClientDesiginationList());
       dispatch(getCompanyDetailsById(editInfo?.id)).then((resp) => {
         if (resp.meta.requestStatus === "fulfilled") {
-          let editData = resp?.payload
-          dispatch(getSubIndustryByIndustryId(editData?.industry))
-          dispatch(getSubSubIndustryBySubIndustryId(editData?.subIndustry))
+          let editData = resp?.payload;
+          dispatch(getSubIndustryByIndustryId(editData?.industry));
+          dispatch(getSubSubIndustryBySubIndustryId(editData?.subIndustry));
           form.setFieldsValue({
             isPresent: editData?.isPresent,
             companyName: editData?.companyName,
@@ -199,49 +201,49 @@ const CompanyFormModal = ({
             subIndustry: editData?.subIndustry,
             subsubIndustry: editData?.subsubIndustry,
             industrydata: editData?.industryDataList,
-          })
+          });
         }
-      })
-      setOpenModal(true)
+      });
+      setOpenModal(true);
     }
-  }, [dispatch, editInfo, form])
+  }, [dispatch, editInfo, form]);
 
   const validateGstNumber = (dispatch) => async (_, value) => {
     if (!value) {
-      return Promise.reject(new Error("please enter the GST number"))
+      return Promise.reject(new Error("please enter the GST number"));
     }
 
-    const pattern = /^[a-zA-Z0-9]{15}$/
+    const pattern = /^[a-zA-Z0-9]{15}$/;
     if (!pattern.test(value)) {
       return Promise.reject(
         new Error("please enter 15 digit alphanumeric characters")
-      )
+      );
     }
     try {
-      const resp = await dispatch(getCompanyDetailsByGst(value))
+      const resp = await dispatch(getCompanyDetailsByGst(value));
       if (resp.meta.requestStatus === "fulfilled") {
-        const temp = resp?.payload
+        const temp = resp?.payload;
         if (temp?.length === 0) {
-          return Promise.resolve()
+          return Promise.resolve();
         } else {
           return Promise.reject(
             new Error("company already exists with this GST number")
-          )
+          );
         }
       } else {
-        return Promise.reject(new Error("error validating GST"))
+        return Promise.reject(new Error("error validating GST"));
       }
     } catch (error) {
-      return Promise.reject(new Error("error validating GST"))
+      return Promise.reject(new Error("error validating GST"));
     }
-  }
+  };
 
   const normFile = (e) => {
     if (Array.isArray(e)) {
-      return e
+      return e;
     }
-    return e?.fileList
-  }
+    return e?.fileList;
+  };
 
   const handleSetFields = useCallback(
     (checked) => {
@@ -259,7 +261,7 @@ const CompanyFormModal = ({
           "contactNo",
           "contactWhatsappNo",
           "contactId",
-        ])
+        ]);
         if (
           !formFieldValue?.primaryContact &&
           formFieldValue?.secondaryContact
@@ -269,7 +271,7 @@ const CompanyFormModal = ({
             sContactEmails: contactDetail?.emails,
             sContactNo: contactDetail?.contactNo,
             sContactWhatsappNo: contactDetail?.whatsappNo,
-          })
+          });
         } else if (
           formFieldValue?.primaryContact &&
           formFieldValue?.secondaryContact
@@ -283,7 +285,7 @@ const CompanyFormModal = ({
             sCity: formFieldValue?.city,
             sState: formFieldValue?.state,
             sCountry: formFieldValue?.country,
-          })
+          });
         }
 
         if (formFieldValue?.isUnit && formFieldValue?.secondaryContact) {
@@ -292,7 +294,7 @@ const CompanyFormModal = ({
             sCity: companyDetailByUnitId?.city,
             sState: companyDetailByUnitId?.state,
             sCountry: companyDetailByUnitId?.country,
-          })
+          });
         } else if (
           !formFieldValue?.isUnit &&
           formFieldValue?.secondaryContact
@@ -302,7 +304,7 @@ const CompanyFormModal = ({
             sCity: formFieldValue?.city,
             sState: formFieldValue?.state,
             sCountry: formFieldValue?.country,
-          })
+          });
         }
       } else {
         // form.resetFields([
@@ -314,84 +316,88 @@ const CompanyFormModal = ({
       }
     },
     [form, contactDetail, companyDetailByUnitId]
-  )
+  );
 
   const handleFinish = useCallback(
     (values) => {
-      values.gstDocuments = values.gstDocuments?.[0]?.response
+      values.gstDocuments = values.gstDocuments?.[0]?.response;
       values.assigneeId =
         getHighestPriorityRole(currentRoles) === "ADMIN"
           ? values?.assigneeId
-          : userid
-      setFormLoading("pending")
+          : userid;
+      setFormLoading("pending");
       if (edit) {
-        values.companyFormId = companyDetail?.id
-        values.isPresent = companyDetail?.isPresent
+        values.companyFormId = companyDetail?.id;
+        values.isPresent = companyDetail?.isPresent;
         values.leadId = singleLeadResponseData?.parent
           ? values?.leadId
-          : companyDetail?.lead?.id
-        values.companyId = companyDetail?.companyId
+          : companyDetail?.lead?.id;
+        values.companyId = companyDetail?.companyId;
         dispatch(updateCompanyForm(values))
           .then((response) => {
             if (response.meta.requestStatus === "fulfilled") {
-              setFormLoading("success")
-              playSuccessSound()
+              setFormLoading("success");
+              playSuccessSound();
               dispatch(
                 getAllCompanyByStatus({
                   id: userid,
                   status: selectedFilter,
                   page,
                 })
-              )
-              notification.success({ message: "Company created successfully." })
-              setOpenModal(false)
+              );
+              notification.success({
+                message: "Company created successfully.",
+              });
+              setOpenModal(false);
             } else {
-              setFormLoading("rejected")
-              playErrorSound()
-              notification.error({ message: "Something went wrong !." })
-              form.resetFields()
+              setFormLoading("rejected");
+              playErrorSound();
+              notification.error({ message: "Something went wrong !." });
+              form.resetFields();
             }
           })
           .catch(() => {
-            setFormLoading("rejected")
-            playErrorSound()
-            notification.error({ message: "Something went wrong !." })
-          })
+            setFormLoading("rejected");
+            playErrorSound();
+            notification.error({ message: "Something went wrong !." });
+          });
       } else {
-        const formData = form.getFieldsValue(["companyId", "companyName"])
+        const formData = form.getFieldsValue(["companyId", "companyName"]);
         values.leadId = singleLeadResponseData?.parent
           ? values?.leadId
           : data?.id
           ? data?.id
-          : data?.leadId
+          : data?.leadId;
         if (Object.keys(companyDetails)?.length > 0) {
-          values.isPresent = true
+          values.isPresent = true;
         } else {
-          values.isPresent = false
+          values.isPresent = false;
         }
         if (formData?.companyId) {
-          values.companyId = companyDetails?.id
+          values.companyId = companyDetails?.id;
         }
         dispatch(createCompanyForm(values))
           .then((response) => {
             if (response.meta.requestStatus === "fulfilled") {
-              setFormLoading("success")
-              dispatch(getAllUsers())
-              notification.success({ message: "Company created successfully." })
-              playSuccessSound()
-              setOpenModal(false)
-              form.resetFields()
+              setFormLoading("success");
+              dispatch(getAllUsers());
+              notification.success({
+                message: "Company created successfully.",
+              });
+              playSuccessSound();
+              setOpenModal(false);
+              form.resetFields();
             } else {
-              setFormLoading("rejected")
-              playErrorSound()
-              notification.error({ message: "Something went wrong !." })
+              setFormLoading("rejected");
+              playErrorSound();
+              notification.error({ message: "Something went wrong !." });
             }
           })
           .catch(() => {
-            setFormLoading("rejected")
-            playErrorSound()
-            notification.error({ message: "Something went wrong !." })
-          })
+            setFormLoading("rejected");
+            playErrorSound();
+            notification.error({ message: "Something went wrong !." });
+          });
       }
     },
     [
@@ -405,7 +411,7 @@ const CompanyFormModal = ({
       edit,
       singleLeadResponseData,
     ]
-  )
+  );
 
   return (
     <>
@@ -558,12 +564,12 @@ const CompanyFormModal = ({
                 option.label.toLowerCase().includes(input.toLowerCase())
               }
               onChange={(e) => {
-                dispatch(getSubIndustryByIndustryId(e))
+                dispatch(getSubIndustryByIndustryId(e));
                 form.resetFields([
                   "industrydata",
                   "subsubIndustry",
                   "subIndustry",
-                ])
+                ]);
               }}
             />
           </Form.Item>
@@ -589,8 +595,8 @@ const CompanyFormModal = ({
                 option.label.toLowerCase().includes(input.toLowerCase())
               }
               onChange={(e) => {
-                dispatch(getSubSubIndustryBySubIndustryId(e))
-                form.resetFields(["industrydata", "subsubIndustry"])
+                dispatch(getSubSubIndustryBySubIndustryId(e));
+                form.resetFields(["industrydata", "subsubIndustry"]);
               }}
             />
           </Form.Item>
@@ -616,8 +622,8 @@ const CompanyFormModal = ({
                 option.label.toLowerCase().includes(input.toLowerCase())
               }
               onChange={(e) => {
-                dispatch(getIndustryDataBySubSubIndustryId(e))
-                form.resetFields(["industrydata"])
+                dispatch(getIndustryDataBySubSubIndustryId(e));
+                form.resetFields(["industrydata"]);
               }}
             />
           </Form.Item>
@@ -934,13 +940,22 @@ const CompanyFormModal = ({
                       options={
                         contactList?.length > 0
                           ? contactList?.map((item) => ({
-                              label: `${item?.emails} || ${item?.contactNo} `,
+                              label: `${maskEmail(
+                                item?.emails
+                              )} || ${maskMobileNumber(item?.contactNo)} `,
                               value: item?.id,
+                              email: item?.emails,
+                              contact: item?.contactNo,
                             }))
                           : []
                       }
                       filterOption={(input, option) =>
-                        option.label.toLowerCase().includes(input.toLowerCase())
+                        option?.email
+                          ?.toLowerCase()
+                          ?.includes(input?.toLowerCase()) ||
+                        option?.contact
+                          ?.toLowerCase()
+                          ?.includes(input?.toLowerCase())
                       }
                     />
                   </Form.Item>
@@ -1163,13 +1178,22 @@ const CompanyFormModal = ({
                       options={
                         contactList?.length > 0
                           ? contactList?.map((item) => ({
-                              label: `${item?.emails} || ${item?.contactNo} `,
+                              label: `${maskEmail(
+                                item?.emails
+                              )} || ${maskMobileNumber(item?.contactNo)} `,
                               value: item?.id,
+                              email: item?.emails,
+                              contact: item?.contactNo,
                             }))
                           : []
                       }
                       filterOption={(input, option) =>
-                        option.label.toLowerCase().includes(input.toLowerCase())
+                        option?.email
+                          ?.toLowerCase()
+                          ?.includes(input?.toLowerCase()) ||
+                        option?.contact
+                          ?.toLowerCase()
+                          ?.includes(input?.toLowerCase())
                       }
                     />
                   </Form.Item>
@@ -1223,7 +1247,7 @@ const CompanyFormModal = ({
         </Form>
       </Modal>
     </>
-  )
-}
+  );
+};
 
-export default CompanyFormModal
+export default CompanyFormModal;

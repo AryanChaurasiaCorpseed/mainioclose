@@ -21,11 +21,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { Icon } from "@iconify/react";
 import { getSingleProductByProductId } from "../../../Toolkit/Slices/ProductSlice";
 import {
+  editLeadPropposal,
   getAllContactDetails,
   leadProposalSentRequest,
 } from "../../../Toolkit/Slices/LeadSlice";
 import { createContacts } from "../../../Toolkit/Slices/CommonSlice";
 import dayjs from "dayjs";
+import { maskEmail, maskMobileNumber } from "../../Common/Commons";
 const { Text } = Typography;
 
 const Proposal = ({ leadid }) => {
@@ -75,6 +77,13 @@ const Proposal = ({ leadid }) => {
     return e?.fileList;
   };
 
+  function getFileName(file) {
+    if (file) {
+      let temp = file?.split("/");
+      return temp[temp?.length - 1];
+    }
+  }
+
   const handleGetProduct = (e) => {
     dispatch(getSingleProductByProductId(e)).then((resp) => {
       if (resp.meta.requestStatus === "fulfilled") {
@@ -115,39 +124,110 @@ const Proposal = ({ leadid }) => {
     });
   };
 
+  const handleEditProposal = useCallback(() => {
+    form.setFieldsValue({
+      admin: details?.admin,
+      cc: details?.cc,
+      companyId: details?.companyId,
+      companyName: details?.companyName,
+      isUnit: details?.isUnit,
+      unitId: details?.unitId,
+      unitName: details?.unitName,
+      panNo: details?.panNo,
+      gstType: details?.gstType,
+      companyAge: details?.companyAge,
+      gstNo: details?.gstNo,
+      gstDocuments: [
+        {
+          uid: "-1",
+          name: getFileName(details?.gstDocuments),
+          status: "done",
+          response: details?.gstDocuments,
+        },
+      ],
+      salesType: details?.salesType,
+      secondaryContact: details?.secondaryContact?.id,
+      primaryContact: details?.primaryContact?.id,
+      productId: details?.product?.id,
+      professionalFees: details?.professionalFees,
+      professionalCode: details?.professionalCode,
+      profesionalGst: details?.profesionalGst,
+      serviceCharge: details?.serviceCharge,
+      serviceCode: details?.serviceCode,
+      serviceGst: details?.serviceGst,
+      govermentfees: details?.govermentfees,
+      govermentCode: details?.govermentCode,
+      govermentGst: details?.govermentGst,
+      otherFees: details?.otherFees,
+      otherCode: details?.otherCode,
+      otherGst: details?.otherGst,
+      assigneeId: details?.assigneeId,
+      orderNumber: details?.orderNumber,
+      purchaseDate: dayjs(details?.purchaseDate),
+      invoiceNote: details?.invoiceNote,
+      remarksForOption: details?.remarksForOption,
+      address: details?.address,
+    });
+  }, [details, form]);
+
   const handleFinish = useCallback(
     (values) => {
       values.leadId = leadid;
       values.gstDocuments = values?.gstDocuments?.[0]?.response;
-      dispatch(leadProposalSentRequest(values))
-        .then((resp) => {
-          if (resp.meta.requestStatus === "fulfilled") {
-            notification.success({
-              message: "Proposal sent successfully !.",
-            });
-          } else {
-            notification.error({ message: "Something went wrong !." });
-          }
-        })
-        .catch(() =>
-          notification.error({ message: "Something went wrong !." })
-        );
+      if (editProposal) {
+        values.id = details?.id
+        dispatch(editLeadPropposal(values))
+          .then((resp) => {
+            if (resp.meta.requestStatus === "fulfilled") {
+              notification.success({
+                message: "Proposal updated successfully !.",
+              });
+            } else {
+              notification.error({ message: "Something went wrong !." });
+            }
+          })
+          .catch(() =>
+            notification.error({ message: "Something went wrong !." })
+          );
+      } else {
+        dispatch(leadProposalSentRequest(values))
+          .then((resp) => {
+            if (resp.meta.requestStatus === "fulfilled") {
+              notification.success({
+                message: "Proposal sent successfully !.",
+              });
+            } else {
+              notification.error({ message: "Something went wrong !." });
+            }
+          })
+          .catch(() =>
+            notification.error({ message: "Something went wrong !." })
+          );
+      }
     },
-    [leadid, dispatch]
+    [leadid, details, editProposal, dispatch]
   );
   return (
     <>
       <Flex justify="space-between" align="center" style={{ width: "100%" }}>
         <Text className="heading-text">
-          {editProposal ? "Create / Edit proposal" : "Proposal details"}
+          {Object.keys(details)?.length > 0
+            ? "Proposal details"
+            : editProposal
+            ? "Edit proposal"
+            : "Create proposal"}
         </Text>
         <Flex justify="flex-end">
-          <Button onClick={() => setEditProposal((prev) => !prev)}>
-            {editProposal ? "Show proposal" : "Create proposal"}
-          </Button>
+          {Object.keys(details)?.length > 0 ? (
+            <Button onClick={handleEditProposal}>Edit</Button>
+          ) : (
+            <Button onClick={() => setEditProposal((prev) => !prev)}>
+              {editProposal ? "Show proposal" : "Create proposal"}
+            </Button>
+          )}
         </Flex>
       </Flex>
-      {editProposal ? (
+      {editProposal || Object.keys(details)?.length === 0 ? (
         <Flex>
           <Form
             form={form}
@@ -170,13 +250,20 @@ const Proposal = ({ leadid }) => {
                 options={
                   contactList?.length > 0
                     ? contactList?.map((item) => ({
-                        label: `${item?.emails} || ${item?.contactNo} `,
+                        label: `${maskEmail(
+                          item?.emails
+                        )} || ${maskMobileNumber(item?.contactNo)} `,
                         value: item?.id,
+                        email: item?.emails,
+                        contact: item?.contactNo,
                       }))
                     : []
                 }
                 filterOption={(input, option) =>
-                  option.label.toLowerCase().includes(input.toLowerCase())
+                  option?.email
+                    ?.toLowerCase()
+                    ?.includes(input?.toLowerCase()) ||
+                  option?.contact?.toLowerCase()?.includes(input?.toLowerCase())
                 }
               />
             </Form.Item>
@@ -335,7 +422,16 @@ const Proposal = ({ leadid }) => {
             <Row>
               <Col span={11}>
                 <Form.Item label="GST type" name="gstType">
-                  <Input />
+                  <Select
+                    showSearch
+                    allowClear
+                    options={[
+                      { label: "Registered", value: "Registered" },
+                      { label: "Unregisterded", value: "Unregistered" },
+                      { label: "SE2", value: "SE2" },
+                      { label: "International", value: "International" },
+                    ]}
+                  />
                 </Form.Item>
               </Col>
               <Col span={2} />
@@ -392,13 +488,22 @@ const Proposal = ({ leadid }) => {
                   options={
                     contactList?.length > 0
                       ? contactList?.map((item) => ({
-                          label: `${item?.emails} || ${item?.contactNo} `,
+                          label: `${maskEmail(
+                            item?.emails
+                          )} || ${maskMobileNumber(item?.contactNo)} `,
                           value: item?.id,
+                          email: item?.emails,
+                          contact: item?.contactNo,
                         }))
                       : []
                   }
                   filterOption={(input, option) =>
-                    option.label.toLowerCase().includes(input.toLowerCase())
+                    option?.email
+                      ?.toLowerCase()
+                      ?.includes(input?.toLowerCase()) ||
+                    option?.contact
+                      ?.toLowerCase()
+                      ?.includes(input?.toLowerCase())
                   }
                 />
               </Form.Item>
@@ -417,13 +522,22 @@ const Proposal = ({ leadid }) => {
                   options={
                     contactList?.length > 0
                       ? contactList?.map((item) => ({
-                          label: `${item?.emails} || ${item?.contactNo} `,
+                          label: `${maskEmail(
+                            item?.emails
+                          )} || ${maskMobileNumber(item?.contactNo)} `,
                           value: item?.id,
+                          email: item?.emails,
+                          contact: item?.contactNo,
                         }))
                       : []
                   }
                   filterOption={(input, option) =>
-                    option.label.toLowerCase().includes(input.toLowerCase())
+                    option?.email
+                      ?.toLowerCase()
+                      ?.includes(input?.toLowerCase()) ||
+                    option?.contact
+                      ?.toLowerCase()
+                      ?.includes(input?.toLowerCase())
                   }
                 />
               </Form.Item>
@@ -674,6 +788,14 @@ const Proposal = ({ leadid }) => {
             <Form.Item
               label="Remarks For Operation"
               name="remarksForOption"
+              rules={[{ required: true, message: "please write remarks" }]}
+            >
+              <Input.TextArea />
+            </Form.Item>
+
+            <Form.Item
+              label="Address"
+              name="address"
               rules={[{ required: true, message: "please write remarks" }]}
             >
               <Input.TextArea />

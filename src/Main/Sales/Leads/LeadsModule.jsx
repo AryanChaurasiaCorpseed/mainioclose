@@ -371,11 +371,15 @@ const LeadsModule = () => {
       title: "Lead freq.",
       dataIndex: "count",
     },
-    {
-      title: "Mobile no.",
-      dataIndex: "mobileNo",
-      checked: true,
-    },
+    ...(adminRole
+      ? [
+          {
+            title: "Mobile no.",
+            dataIndex: "mobileNo",
+            checked: true,
+          },
+        ]
+      : []),
     {
       title: "Missed task",
       dataIndex: "missedTaskDate",
@@ -424,13 +428,16 @@ const LeadsModule = () => {
         </OverFlowText>
       ),
     },
-
-    {
-      title: "Email",
-      dataIndex: "email",
-      checked: true,
-      render: (_, record) => <OverFlowText>{record?.email}</OverFlowText>,
-    },
+    ...(adminRole
+      ? [
+          {
+            title: "Email",
+            dataIndex: "email",
+            checked: true,
+            render: (_, record) => <OverFlowText>{record?.email}</OverFlowText>,
+          },
+        ]
+      : []),
     {
       title: "Assignee person",
       dataIndex: "assigneeName",
@@ -500,20 +507,26 @@ const LeadsModule = () => {
               />
             ),
           },
-          {
-            title: "Created by",
-            dataIndex: "createdBy",
-            checked: true,
-            render: (_, data) => (
-              <OverFlowText>{data?.createdBy?.fullName}</OverFlowText>
-            ),
-          },
-          {
-            title: "Source",
-            dataIndex: "source",
-            checked: true,
-            render: (_, data) => <OverFlowText>{data?.source}</OverFlowText>,
-          },
+          ...(adminRole
+            ? [
+                {
+                  title: "Created by",
+                  dataIndex: "createdBy",
+                  checked: true,
+                  render: (_, data) => (
+                    <OverFlowText>{data?.createdBy?.fullName}</OverFlowText>
+                  ),
+                },
+                {
+                  title: "Source",
+                  dataIndex: "source",
+                  checked: true,
+                  render: (_, data) => (
+                    <OverFlowText>{data?.source}</OverFlowText>
+                  ),
+                },
+              ]
+            : []),
           {
             title: "Create project",
             dataIndex: "project",
@@ -686,17 +699,18 @@ const LeadsModule = () => {
         size: 50,
       })
     );
-    dispatch(getAllLeadCount({
-      userId: Number(userid),
-      userIdFilter: [],
-      statusId: [1],
-      toDate: "",
-      fromDate: "",
-      page: 1,
-      size: 50,
-    }));
-  }, [dispatch,userid]);
-
+    dispatch(
+      getAllLeadCount({
+        userId: Number(userid),
+        userIdFilter: [],
+        statusId: [1],
+        toDate: "",
+        fromDate: "",
+        page: 1,
+        size: 50,
+      })
+    );
+  }, [dispatch, userid]);
 
   return (
     <div className="lead-module small-box-padding">

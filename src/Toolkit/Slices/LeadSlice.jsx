@@ -818,10 +818,15 @@ export const getEstimateByLeadId = createAsyncThunk(
   }
 );
 
-export const getProposalByLeadId=createAsyncThunk('getProposalByLeadId',async(id)=>{
-  const response=await getQuery(`/leadService/api/v1/proposal/getProposalById?id=${id}`)
-  return response.data
-})
+export const getProposalByLeadId = createAsyncThunk(
+  "getProposalByLeadId",
+  async (id) => {
+    const response = await getQuery(
+      `/leadService/api/v1/proposal/getProposalById?id=${id}`
+    );
+    return response.data;
+  }
+);
 
 export const getAllPropsalListCount = createAsyncThunk(
   "getAllPropsalListCount",
@@ -832,6 +837,22 @@ export const getAllPropsalListCount = createAsyncThunk(
     return response.data;
   }
 );
+
+export const editLeadEstimate = createAsyncThunk("editEstimate", async (data) => {
+  const response = await putQuery(
+    `/leadService/api/v1/leadEstimate/editEstimateInvoice`,
+    data
+  );
+  return response.data;
+});
+
+export const editLeadPropposal = createAsyncThunk("editPropposal", async (data) => {
+  const response = await putQuery(
+    `/leadService/api/v1/proposal/editProposal`,
+    data
+  );
+  return response.data;
+});
 
 export const LeadSlice = createSlice({
   name: "lead",
@@ -888,8 +909,8 @@ export const LeadSlice = createSlice({
     estimateDetailLoading: "",
     proposalCount: 0,
     vendorFilterationLoading: "",
-    leadDetailLoading:"",
-    proposalDetails:{}
+    leadDetailLoading: "",
+    proposalDetails: {},
   },
   reducers: {
     handleLoadingState: (state, action) => {
@@ -1347,6 +1368,6 @@ export const {
   handleNextPagination,
   handlePrevPagination,
   handlePagination,
-  handleVendorsLoading
+  handleVendorsLoading,
 } = LeadSlice.actions;
 export default LeadSlice.reducer;

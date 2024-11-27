@@ -15,6 +15,7 @@ import {
   Upload,
   Space,
   Card,
+  Badge,
 } from "antd";
 import React, { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -22,11 +23,13 @@ import { Icon } from "@iconify/react";
 import { getSingleProductByProductId } from "../../../Toolkit/Slices/ProductSlice";
 import {
   createEstimate,
+  editLeadEstimate,
   getAllContactDetails,
 } from "../../../Toolkit/Slices/LeadSlice";
 import { createContacts } from "../../../Toolkit/Slices/CommonSlice";
 import dayjs from "dayjs";
 import "./EstimateDesignPage.scss";
+import { maskEmail, maskMobileNumber } from "../../Common/Commons";
 const { Text } = Typography;
 
 const LeadEstimate = ({ leadid }) => {
@@ -52,7 +55,7 @@ const LeadEstimate = ({ leadid }) => {
         isUnit: false,
       });
     }
-  }, [companyDetails]);
+  }, [companyDetails, form]);
 
   const handleFinishContact = (values) => {
     dispatch(createContacts(values))
@@ -75,6 +78,13 @@ const LeadEstimate = ({ leadid }) => {
     }
     return e?.fileList;
   };
+
+  function getFileName(file) {
+    if (file) {
+      let temp = file?.split("/");
+      return temp[temp?.length - 1];
+    }
+  }
 
   const handleGetProduct = (e) => {
     dispatch(getSingleProductByProductId(e)).then((resp) => {
@@ -116,41 +126,112 @@ const LeadEstimate = ({ leadid }) => {
     });
   };
 
+  const handleEditEstimate = useCallback(() => {
+    form.setFieldsValue({
+      admin: details?.admin,
+      cc: details?.cc,
+      companyId: details?.companyId,
+      companyName: details?.companyName,
+      isUnit: details?.isUnit,
+      unitId: details?.unitId,
+      unitName: details?.unitName,
+      panNo: details?.panNo,
+      gstType: details?.gstType,
+      companyAge: details?.companyAge,
+      gstNo: details?.gstNo,
+      gstDocuments: [
+        {
+          uid: "-1",
+          name: getFileName(details?.gstDocuments),
+          status: "done",
+          response: details?.gstDocuments,
+        },
+      ],
+      salesType: details?.salesType,
+      secondaryContact: details?.secondaryContact?.id,
+      primaryContact: details?.primaryContact?.id,
+      productId: details?.product?.id,
+      professionalFees: details?.professionalFees,
+      professionalCode: details?.professionalCode,
+      profesionalGst: details?.profesionalGst,
+      serviceCharge: details?.serviceCharge,
+      serviceCode: details?.serviceCode,
+      serviceGst: details?.serviceGst,
+      govermentfees: details?.govermentfees,
+      govermentCode: details?.govermentCode,
+      govermentGst: details?.govermentGst,
+      otherFees: details?.otherFees,
+      otherCode: details?.otherCode,
+      otherGst: details?.otherGst,
+      assigneeId: details?.assigneeId,
+      orderNumber: details?.orderNumber,
+      purchaseDate: dayjs(details?.purchaseDate),
+      invoiceNote: details?.invoiceNote,
+      remarksForOption: details?.remarksForOption,
+      address: details?.address,
+    });
+  }, [details, form]);
+
   const handleFinish = useCallback(
     (values) => {
       values.leadId = leadid;
       values.gstDocuments = values.gstDocuments?.[0]?.response;
-      dispatch(createEstimate(values))
-        .then((resp) => {
-          if (resp.meta.requestStatus === "fulfilled") {
-            notification.success({
-              message: "Estimate created successfully !.",
-            });
-          } else {
-            notification.error({ message: "Something went wrong !." });
-          }
-        })
-        .catch(() =>
-          notification.error({ message: "Something went wrong !." })
-        );
+      if (editEstimate) {
+        values.id = details?.id;
+        dispatch(editLeadEstimate(values))
+          .then((resp) => {
+            if (resp.meta.requestStatus === "fulfilled") {
+              notification.success({
+                message: "Estimate updated successfully !.",
+              });
+            } else {
+              notification.error({ message: "Something went wrong !." });
+            }
+          })
+          .catch(() =>
+            notification.error({ message: "Something went wrong !." })
+          );
+      } else {
+        dispatch(createEstimate(values))
+          .then((resp) => {
+            if (resp.meta.requestStatus === "fulfilled") {
+              notification.success({
+                message: "Estimate created successfully !.",
+              });
+            } else {
+              notification.error({ message: "Something went wrong !." });
+            }
+          })
+          .catch(() =>
+            notification.error({ message: "Something went wrong !." })
+          );
+      }
     },
-    [leadid, dispatch]
+    [leadid, details, editEstimate, dispatch]
   );
 
   return (
     <>
       <Flex justify="space-between" align="center" style={{ width: "100%" }}>
         <Text className="heading-text">
-          {editEstimate ? "Create / Edit estimate" : "Estimate details"}
+          {Object.keys(details)?.length > 0
+            ? "Estimate details"
+            : editEstimate
+            ? "Edit estimate"
+            : "Create estimate"}
         </Text>
         <Flex justify="flex-end">
-          <Button onClick={() => setEditEstimate((prev) => !prev)}>
-            {editEstimate ? "Show estimate" : "Create estimate"}
-          </Button>
+          {Object.keys(details)?.length > 0 ? (
+            <Button onClick={handleEditEstimate}>Edit</Button>
+          ) : (
+            <Button onClick={() => setEditEstimate((prev) => !prev)}>
+              {editEstimate ? "Show estimate" : "Create estimate"}
+            </Button>
+          )}
         </Flex>
       </Flex>
 
-      {editEstimate ? (
+      {editEstimate || Object.keys(details)?.length === 0 ? (
         <Flex style={{ maxHeight: "86vh", overflow: "auto" }}>
           <Form
             form={form}
@@ -173,13 +254,22 @@ const LeadEstimate = ({ leadid }) => {
                 options={
                   contactList?.length > 0
                     ? contactList?.map((item) => ({
-                        label: `${item?.emails} || ${item?.contactNo} `,
+                        label: `${maskEmail(
+                          item?.emails
+                        )} || ${maskMobileNumber(item?.contactNo)} `,
                         value: item?.id,
+                        email: item?.emails,
+                        contact: item?.contactNo,
                       }))
                     : []
                 }
                 filterOption={(input, option) =>
-                  option.label.toLowerCase().includes(input.toLowerCase())
+                  option?.email
+                    ?.toLowerCase()
+                    ?.includes(input?.toLowerCase()) ||
+                  option?.contact
+                    ?.toLowerCase()
+                    ?.includes(input?.toLowerCase())
                 }
               />
             </Form.Item>
@@ -338,7 +428,16 @@ const LeadEstimate = ({ leadid }) => {
             <Row>
               <Col span={11}>
                 <Form.Item label="GST type" name="gstType">
-                  <Input />
+                  <Select
+                    showSearch
+                    allowClear
+                    options={[
+                      { label: "Registered", value: "Registered" },
+                      { label: "Unregisterded", value: "Unregistered" },
+                      { label: "SE2", value: "SE2" },
+                      { label: "International", value: "International" },
+                    ]}
+                  />
                 </Form.Item>
               </Col>
               <Col span={2} />
@@ -406,13 +505,22 @@ const LeadEstimate = ({ leadid }) => {
                   options={
                     contactList?.length > 0
                       ? contactList?.map((item) => ({
-                          label: `${item?.emails} || ${item?.contactNo} `,
+                          label: `${maskEmail(
+                            item?.emails
+                          )} || ${maskMobileNumber(item?.contactNo)} `,
                           value: item?.id,
+                          email: item?.emails,
+                          contact: item?.contactNo,
                         }))
                       : []
                   }
                   filterOption={(input, option) =>
-                    option.label.toLowerCase().includes(input.toLowerCase())
+                    option?.email
+                      ?.toLowerCase()
+                      ?.includes(input?.toLowerCase()) ||
+                    option?.contact
+                      ?.toLowerCase()
+                      ?.includes(input?.toLowerCase())
                   }
                 />
               </Form.Item>
@@ -431,13 +539,22 @@ const LeadEstimate = ({ leadid }) => {
                   options={
                     contactList?.length > 0
                       ? contactList?.map((item) => ({
-                          label: `${item?.emails} || ${item?.contactNo} `,
+                          label: `${maskEmail(
+                            item?.emails
+                          )} || ${maskMobileNumber(item?.contactNo)} `,
                           value: item?.id,
+                          email: item?.emails,
+                          contact: item?.contactNo,
                         }))
                       : []
                   }
                   filterOption={(input, option) =>
-                    option.label.toLowerCase().includes(input.toLowerCase())
+                    option?.email
+                      ?.toLowerCase()
+                      ?.includes(input?.toLowerCase()) ||
+                    option?.contact
+                      ?.toLowerCase()
+                      ?.includes(input?.toLowerCase())
                   }
                 />
               </Form.Item>
@@ -680,6 +797,14 @@ const LeadEstimate = ({ leadid }) => {
               <Input.TextArea />
             </Form.Item>
 
+            <Form.Item
+              label="Address"
+              name="address"
+              rules={[{ required: true, message: "please write remarks" }]}
+            >
+              <Input.TextArea />
+            </Form.Item>
+
             <Form.Item>
               <Button htmlType="submit" type="primary">
                 {" "}
@@ -745,7 +870,7 @@ const LeadEstimate = ({ leadid }) => {
         <Flex>
           <Flex style={{ width: "60%" }} gap={24} vertical>
             {details?.productName && (
-              <Flex gap={4}>
+              <Flex gap={4} align="center">
                 <Text className="heading-text">Product name</Text>
                 <Text className="heading-text">:</Text>
                 <Text>{details?.productName}</Text>
@@ -814,59 +939,61 @@ const LeadEstimate = ({ leadid }) => {
                 </Card>
               )}
             </Flex>
-            <Flex>
-              <table className="custom-table">
-                <thead>
-                  <tr>
-                    <th>#</th>
-                    <th>Item and description</th>
-                    <th>HSN</th>
-                    <th>Rate</th>
-                    <th>GST %</th>
-                    <th>GST amount</th>
-                    <th>Amount</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>1</td>
-                    <td>Government fee</td>
-                    <td>{details?.govermentCode}</td>
-                    <td>{""}</td>
-                    <td>{details?.govermentGst}</td>
-                    <td>{""}</td>
-                    <td>{details?.govermentfees}</td>
-                  </tr>
-                  <tr>
-                    <td>2</td>
-                    <td>Professional fee</td>
-                    <td>{details?.professionalCode}</td>
-                    <td>{""}</td>
-                    <td>{details?.profesionalGst}</td>
-                    <td>{""}</td>
-                    <td>{details?.professionalFees}</td>
-                  </tr>
-                  <tr>
-                    <td>3</td>
-                    <td>Service fee</td>
-                    <td>{details?.serviceCode}</td>
-                    <td>{""}</td>
-                    <td>{details?.serviceGst}</td>
-                    <td>{""}</td>
-                    <td>{details?.serviceCharge}</td>
-                  </tr>
-                  <tr>
-                    <td>4</td>
-                    <td>Other fee</td>
-                    <td>{details?.otherCode}</td>
-                    <td>{""}</td>
-                    <td>{details?.otherGst}</td>
-                    <td>{""}</td>
-                    <td>{details?.otherFees}</td>
-                  </tr>
-                </tbody>
-              </table>
-            </Flex>
+            <Badge.Ribbon text="Estimate" placement="start" color="magenta">
+              <Flex>
+                <table className="custom-table">
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>Item and description</th>
+                      <th>HSN</th>
+                      <th>Rate</th>
+                      <th>GST %</th>
+                      <th>GST amount</th>
+                      <th>Amount</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>1</td>
+                      <td>Government fee</td>
+                      <td>{details?.govermentCode}</td>
+                      <td>{""}</td>
+                      <td>{details?.govermentGst}</td>
+                      <td>{""}</td>
+                      <td>{details?.govermentfees}</td>
+                    </tr>
+                    <tr>
+                      <td>2</td>
+                      <td>Professional fee</td>
+                      <td>{details?.professionalCode}</td>
+                      <td>{""}</td>
+                      <td>{details?.profesionalGst}</td>
+                      <td>{""}</td>
+                      <td>{details?.professionalFees}</td>
+                    </tr>
+                    <tr>
+                      <td>3</td>
+                      <td>Service fee</td>
+                      <td>{details?.serviceCode}</td>
+                      <td>{""}</td>
+                      <td>{details?.serviceGst}</td>
+                      <td>{""}</td>
+                      <td>{details?.serviceCharge}</td>
+                    </tr>
+                    <tr>
+                      <td>4</td>
+                      <td>Other fee</td>
+                      <td>{details?.otherCode}</td>
+                      <td>{""}</td>
+                      <td>{details?.otherGst}</td>
+                      <td>{""}</td>
+                      <td>{details?.otherFees}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </Flex>
+            </Badge.Ribbon>
 
             <Flex align="center">
               {details?.companyName && (

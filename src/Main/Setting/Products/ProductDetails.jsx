@@ -20,7 +20,7 @@ const ProductDetails = ({ children, data }) => {
         {children}
       </Link>
       <Drawer
-        open={openDrawer}
+        open={openDrawer}   
         onClose={() => setOpenDrawer(false)}
         closeIcon={null}
         width={"80%"}
