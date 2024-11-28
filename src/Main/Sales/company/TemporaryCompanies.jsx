@@ -231,14 +231,14 @@ const TemporaryCompanies = () => {
       checked: false,
       render: (_, props) => <ColComp data={props?.gstType} />,
     },
-    {
-      dataIndex: "primaryContact",
-      title: "Client name",
-      checked: false,
-      render: (_, record) => (
-        <OverFlowText>{record?.primaryContact?.name}</OverFlowText>
-      ),
-    },
+    // {
+    //   dataIndex: "primaryContact",
+    //   title: "Client name",
+    //   checked: false,
+    //   render: (_, record) => (
+    //     <OverFlowText>{record?.primaryContact?.name}</OverFlowText>
+    //   ),
+    // },
     {
       dataIndex: "projects",
       title: "Projects",
@@ -293,14 +293,14 @@ const TemporaryCompanies = () => {
           "N/A"
         ),
     },
-    {
-      dataIndex: "primarydesigination",
-      title: "Desigination",
-      checked: false,
-      render: (_, record) => (
-        <OverFlowText>{record?.primaryContact?.designation}</OverFlowText>
-      ),
-    },
+    // {
+    //   dataIndex: "primarydesigination",
+    //   title: "Desigination",
+    //   checked: false,
+    //   render: (_, record) => (
+    //     <OverFlowText>{record?.primaryContact?.designation}</OverFlowText>
+    //   ),
+    // },
     // {
     //   dataIndex: "contactNo",
     //   title: "Contact no.",

@@ -29,6 +29,21 @@ const CompanyUnits = () => {
       ),
     },
     {
+      dataIndex: "primaryContact",
+      title: "Client name",
+      render: (_, record) => (
+        <OverFlowText>{record?.primaryContact?.name}</OverFlowText>
+      ),
+    },
+    {
+      dataIndex: "primarydesigination",
+      title: "Desigination",
+      checked: false,
+      render: (_, record) => (
+        <OverFlowText>{record?.primaryContact?.designation}</OverFlowText>
+      ),
+    },
+    {
       title: "Contact no.",
       dataIndex: "primaryContact",
       render:(_,data)=><OverFlowText>{data?.primaryContact?.contactNo}</OverFlowText>
