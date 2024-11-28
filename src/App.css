@@ -1061,3 +1061,11 @@ select.form-control:not([size]):not([multiple]) {
 .ant-pagination {
   font-size: 12;
 }
+
+
+.ant-select-multiple.ant-select-sm .ant-select-selection-overflow-item {
+  max-height: 28px !important;
+  /* opacity: 1 !important; */
+  position: unset !important;
+  /* overflow-y: hidden !important; */
+}
