@@ -189,7 +189,7 @@ const TemporaryCompanies = () => {
       title: "Temp assignee",
       checked: true,
       render: (_, data) => {
-        return <ColComp data={data?.tempAssignee} />;
+        return <ColComp data={data?.tempAssignee?.fullName} />;
       },
     },
     {
@@ -378,7 +378,7 @@ const TemporaryCompanies = () => {
       dataIndex: "History",
       title: "Company history",
       checked: false,
-      render: (_, props) => <CompanyHistory companyId={props.companyId} />,
+      render: (_, props) => <CompanyHistory companyId={props?.companyId} />,
     },
   ];
 
