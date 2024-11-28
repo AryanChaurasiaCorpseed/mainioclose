@@ -445,6 +445,7 @@ const CompanyFormModal = ({
         <Form
           form={form}
           layout="vertical"
+          size="small"
           style={{ maxHeight: "75vh", overflow: "auto" }}
           scrollToFirstError
           onFinish={handleFinish}

@@ -41,6 +41,7 @@ const CreateCompanyModal = () => {
         <Form
           form={form}
           layout="vertical"
+          size="small"
           style={{ height: "80vh", overflow: "auto", padding: "0px 12px" }}
           onFinish={handleSubmit}
         >
