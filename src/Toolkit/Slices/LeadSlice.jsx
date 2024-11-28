@@ -838,21 +838,27 @@ export const getAllPropsalListCount = createAsyncThunk(
   }
 );
 
-export const editLeadEstimate = createAsyncThunk("editEstimate", async (data) => {
-  const response = await putQuery(
-    `/leadService/api/v1/leadEstimate/editEstimateInvoice`,
-    data
-  );
-  return response.data;
-});
+export const editLeadEstimate = createAsyncThunk(
+  "editEstimate",
+  async (data) => {
+    const response = await putQuery(
+      `/leadService/api/v1/leadEstimate/editEstimateInvoice`,
+      data
+    );
+    return response.data;
+  }
+);
 
-export const editLeadPropposal = createAsyncThunk("editPropposal", async (data) => {
-  const response = await putQuery(
-    `/leadService/api/v1/proposal/editProposal`,
-    data
-  );
-  return response.data;
-});
+export const editLeadPropposal = createAsyncThunk(
+  "editPropposal",
+  async (data) => {
+    const response = await putQuery(
+      `/leadService/api/v1/proposal/editProposal`,
+      data
+    );
+    return response.data;
+  }
+);
 
 export const LeadSlice = createSlice({
   name: "lead",
@@ -1335,7 +1341,7 @@ export const LeadSlice = createSlice({
       state.estimateDetail = action?.payload;
     });
     builder.addCase(getEstimateByLeadId.rejected, (state, action) => {
-      state.estimateList = [];
+      state.estimateDetail = {};
       state.estimateDetailLoading = "rejected";
     });
 
@@ -1360,6 +1366,7 @@ export const LeadSlice = createSlice({
     });
     builder.addCase(getProposalByLeadId.rejected, (state, action) => {
       state.proposalLoading = "rejected";
+      state.proposalDetails = {};
     });
   },
 });

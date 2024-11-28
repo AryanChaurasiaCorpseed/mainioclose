@@ -371,7 +371,7 @@ const LeadsModule = () => {
       title: "Lead freq.",
       dataIndex: "count",
     },
-    ...(adminRole
+    ...(true
       ? [
           {
             title: "Mobile no.",
@@ -428,7 +428,7 @@ const LeadsModule = () => {
         </OverFlowText>
       ),
     },
-    ...(adminRole
+    ...(true
       ? [
           {
             title: "Email",

@@ -16,6 +16,7 @@ import {
   Space,
   Card,
   Badge,
+  Spin,
 } from "antd";
 import React, { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -30,7 +31,8 @@ import { createContacts } from "../../../Toolkit/Slices/CommonSlice";
 import dayjs from "dayjs";
 import "./EstimateDesignPage.scss";
 import { maskEmail, maskMobileNumber } from "../../Common/Commons";
-const { Text } = Typography;
+import logo from "../../../Images/CORPSEED.webp";
+const { Text, Title } = Typography;
 
 const LeadEstimate = ({ leadid }) => {
   const [form] = Form.useForm();
@@ -41,6 +43,9 @@ const LeadEstimate = ({ leadid }) => {
   const leadUserNew = useSelector((state) => state.leads.getAllLeadUserData);
   const companyUnits = useSelector((state) => state?.leads?.companyUnits);
   const details = useSelector((state) => state.leads.estimateDetail);
+  const estimateDetailLoading = useSelector(
+    (state) => state.leads.estimateDetailLoading
+  );
   const companyDetails = useSelector(
     (state) => state?.leads?.companyDetailsById
   );
@@ -170,6 +175,7 @@ const LeadEstimate = ({ leadid }) => {
       remarksForOption: details?.remarksForOption,
       address: details?.address,
     });
+    setEditEstimate((prev) => !prev);
   }, [details, form]);
 
   const handleFinish = useCallback(
@@ -211,28 +217,31 @@ const LeadEstimate = ({ leadid }) => {
   );
 
   return (
-    <>
+    <Spin
+      size="large"
+      spinning={estimateDetailLoading === "pending" ? true : false}
+    >
       <Flex justify="space-between" align="center" style={{ width: "100%" }}>
         <Text className="heading-text">
-          {Object.keys(details)?.length > 0
+          {Object.keys(details)?.length > 0 && !editEstimate
             ? "Estimate details"
             : editEstimate
             ? "Edit estimate"
             : "Create estimate"}
         </Text>
         <Flex justify="flex-end">
-          {Object.keys(details)?.length > 0 ? (
-            <Button onClick={handleEditEstimate}>Edit</Button>
-          ) : (
-            <Button onClick={() => setEditEstimate((prev) => !prev)}>
-              {editEstimate ? "Show estimate" : "Create estimate"}
+          {Object.keys(details)?.length > 0 && (
+            <Button onClick={handleEditEstimate}>
+              {editEstimate ? "Show estimate" : "Edit"}
             </Button>
           )}
         </Flex>
       </Flex>
 
-      {editEstimate || Object.keys(details)?.length === 0 ? (
-        <Flex style={{ maxHeight: "86vh", overflow: "auto" }}>
+      {Object.keys(details)?.length === 0 || editEstimate ? (
+        <Flex
+          style={{ maxHeight: "86vh", overflow: "auto", marginTop: "24px" }}
+        >
           <Form
             form={form}
             layout="vertical"
@@ -267,9 +276,7 @@ const LeadEstimate = ({ leadid }) => {
                   option?.email
                     ?.toLowerCase()
                     ?.includes(input?.toLowerCase()) ||
-                  option?.contact
-                    ?.toLowerCase()
-                    ?.includes(input?.toLowerCase())
+                  option?.contact?.toLowerCase()?.includes(input?.toLowerCase())
                 }
               />
             </Form.Item>
@@ -940,59 +947,157 @@ const LeadEstimate = ({ leadid }) => {
                 </Card>
               )}
             </Flex>
-            <Badge.Ribbon text="Estimate" placement="start" color="magenta">
-              <Flex>
-                <table className="custom-table">
-                  <thead>
-                    <tr>
-                      <th>#</th>
-                      <th>Item and description</th>
-                      <th>HSN</th>
-                      <th>Rate</th>
-                      <th>GST %</th>
-                      <th>GST amount</th>
-                      <th>Amount</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td>1</td>
-                      <td>Government fee</td>
-                      <td>{details?.govermentCode}</td>
-                      <td>{""}</td>
-                      <td>{details?.govermentGst}</td>
-                      <td>{""}</td>
-                      <td>{details?.govermentfees}</td>
-                    </tr>
-                    <tr>
-                      <td>2</td>
-                      <td>Professional fee</td>
-                      <td>{details?.professionalCode}</td>
-                      <td>{""}</td>
-                      <td>{details?.profesionalGst}</td>
-                      <td>{""}</td>
-                      <td>{details?.professionalFees}</td>
-                    </tr>
-                    <tr>
-                      <td>3</td>
-                      <td>Service fee</td>
-                      <td>{details?.serviceCode}</td>
-                      <td>{""}</td>
-                      <td>{details?.serviceGst}</td>
-                      <td>{""}</td>
-                      <td>{details?.serviceCharge}</td>
-                    </tr>
-                    <tr>
-                      <td>4</td>
-                      <td>Other fee</td>
-                      <td>{details?.otherCode}</td>
-                      <td>{""}</td>
-                      <td>{details?.otherGst}</td>
-                      <td>{""}</td>
-                      <td>{details?.otherFees}</td>
-                    </tr>
-                  </tbody>
-                </table>
+            <Badge.Ribbon text="Estimate" placement="start" color="green">
+              <Flex
+                vertical
+                style={{
+                  padding: "42px 24px 24px 24px",
+                  boxShadow:
+                    "rgba(9, 30, 66, 0.25) 0px 4px 8px -2px, rgba(9, 30, 66, 0.08) 0px 0px 0px 1px",
+                  borderRadius: "4px",
+                }}
+                gap={24}
+              >
+                <Flex justify="space-between">
+                  <Flex vertical>
+                    <Flex>
+                      <img src={logo} alt="corpseed" />
+                    </Flex>
+                    <Flex vertical>
+                      {" "}
+                      <Text type="secondary">
+                        Corpseed Ites Private Limited
+                      </Text>
+                      <Text>CN U74999UP2018PTC101873</Text>
+                      <Text>2nd floor, A-154A, A Block, sector 63</Text>
+                      <Text>Noida, Uttar Pradesh - 2013</Text>
+                    </Flex>
+                  </Flex>
+                  <Flex vertical gap={24}>
+                    <Flex vertical>
+                      <Title style={{ color: "#41d744" }} level={4}>
+                        Estimate
+                      </Title>
+                      <Text strong>#ESTD07300</Text>
+                    </Flex>
+                    <Flex vertical>
+                      <Title style={{ color: "#41d744" }} level={4}>
+                        Order No.
+                      </Title>
+                      <Text strong>#MB7779</Text>
+                    </Flex>
+                  </Flex>
+                </Flex>
+                <Flex vertical gap={8}>
+                  <Text type="secondary">Bill To : </Text>
+                  <Text style={{ fontWeight: "bold" }}>MICRO LABS LTD</Text>
+                </Flex>
+                <Flex justify="space-between">
+                  <Flex vertical gap={8}>
+                    <Text type="secondary">Ship To : </Text>
+                    <Flex>
+                      <Text>MICRO LABS LTD</Text>
+                      <Text>{details?.address}</Text>
+                    </Flex>
+                  </Flex>
+                  <Flex vertical gap={8}>
+                    <Flex gap={8}>
+                      <Text type="secondary">Estimate Date</Text>
+                      <Text type="secondary">:</Text>
+                      <Text>
+                        {dayjs(details?.estimateDate).format("DD-MM-YYYY")}
+                      </Text>
+                    </Flex>
+                    <Flex gap={8}>
+                      <Text type="secondary">Order Date</Text>
+                      <Text type="secondary">:</Text>
+                      <Text>
+                        {dayjs(details?.createDate).format("DD-MM-YYYY")}
+                      </Text>
+                    </Flex>
+                  </Flex>
+                </Flex>
+
+                <Flex>
+                  <table className="custom-table">
+                    <thead>
+                      <tr>
+                        <th>#</th>
+                        <th>Item and description</th>
+                        <th>HSN</th>
+                        <th>Rate</th>
+                        <th>GST %</th>
+                        <th>GST amount</th>
+                        <th>Amount</th>
+                      </tr>
+                    </thead>
+
+                    <tbody>
+                      <tr>
+                        <td>1</td>
+                        <td>
+                          <Text style={{ fontWeight: "bold" }}>
+                            {details?.productName}
+                          </Text>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td></td>
+                        <td>Government fee</td>
+                        <td>{details?.govermentCode}</td>
+                        <td>{""}</td>
+                        <td>{details?.govermentGst}</td>
+                        <td>{""}</td>
+                        <td>{details?.govermentfees}</td>
+                      </tr>
+                      <tr>
+                        <td></td>
+                        <td>Professional fee</td>
+                        <td>{details?.professionalCode}</td>
+                        <td>{""}</td>
+                        <td>{details?.profesionalGst}</td>
+                        <td>{""}</td>
+                        <td>{details?.professionalFees}</td>
+                      </tr>
+                      <tr>
+                        <td></td>
+                        <td>Service fee</td>
+                        <td>{details?.serviceCode}</td>
+                        <td>{""}</td>
+                        <td>{details?.serviceGst}</td>
+                        <td>{""}</td>
+                        <td>{details?.serviceCharge}</td>
+                      </tr>
+                      <tr>
+                        <td></td>
+                        <td>Other fee</td>
+                        <td>{details?.otherCode}</td>
+                        <td>{""}</td>
+                        <td>{details?.otherGst}</td>
+                        <td>{""}</td>
+                        <td>{details?.otherFees}</td>
+                      </tr>
+                      <tr
+                        style={{
+                          borderTop: "1px solid black",
+                          borderBottom: "1px solid black",
+                        }}
+                      >
+                        <td></td>
+                        <td>
+                          <Text strong>Total Qty. : 1</Text>
+                        </td>
+                        <td>{""}</td>
+                        <td>{""}</td>
+                        <td>{""}</td>
+                        <td>{""}</td>
+                        <td>
+                          <Text strong>{details?.totalAmount}</Text>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </Flex>
               </Flex>
             </Badge.Ribbon>
 
@@ -1098,7 +1203,7 @@ const LeadEstimate = ({ leadid }) => {
           </Flex>
         </Flex>
       )}
-    </>
+    </Spin>
   );
 };
 

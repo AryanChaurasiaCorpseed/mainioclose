@@ -15,6 +15,7 @@ import {
   Switch,
   Card,
   Space,
+  Spin,
 } from "antd";
 import React, { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -39,6 +40,7 @@ const Proposal = ({ leadid }) => {
   const leadUserNew = useSelector((state) => state.leads.getAllLeadUserData);
   const companyUnits = useSelector((state) => state?.leads?.companyUnits);
   const details = useSelector((state) => state.leads.proposalDetails);
+  const proposalLoading = useSelector((state) => state.leads.proposalLoading);
   const companyDetails = useSelector(
     (state) => state?.leads?.companyDetailsById
   );
@@ -175,7 +177,7 @@ const Proposal = ({ leadid }) => {
       values.leadId = leadid;
       values.gstDocuments = values?.gstDocuments?.[0]?.response;
       if (editProposal) {
-        values.id = details?.id
+        values.id = details?.id;
         dispatch(editLeadPropposal(values))
           .then((resp) => {
             if (resp.meta.requestStatus === "fulfilled") {
@@ -208,27 +210,27 @@ const Proposal = ({ leadid }) => {
     [leadid, details, editProposal, dispatch]
   );
   return (
-    <>
+    <Spin size="large" spinning={proposalLoading === "pending" ? true : false}>
       <Flex justify="space-between" align="center" style={{ width: "100%" }}>
         <Text className="heading-text">
-          {Object.keys(details)?.length > 0
+          {Object.keys(details)?.length > 0 && !editProposal
             ? "Proposal details"
             : editProposal
             ? "Edit proposal"
             : "Create proposal"}
         </Text>
         <Flex justify="flex-end">
-          {Object.keys(details)?.length > 0 ? (
-            <Button onClick={handleEditProposal}>Edit</Button>
-          ) : (
-            <Button onClick={() => setEditProposal((prev) => !prev)}>
-              {editProposal ? "Show proposal" : "Create proposal"}
+          {Object.keys(details)?.length > 0 && (
+            <Button onClick={handleEditProposal}>
+              {editProposal ? "Show proposal detail" : "Edit"}
             </Button>
           )}
         </Flex>
       </Flex>
       {editProposal || Object.keys(details)?.length === 0 ? (
-        <Flex>
+        <Flex
+          style={{ maxHeight: "86vh", overflow: "auto", marginTop: "24px" }}
+        >
           <Form
             form={form}
             layout="vertical"
@@ -1091,7 +1093,7 @@ const Proposal = ({ leadid }) => {
           </Flex>
         </Flex>
       )}
-    </>
+    </Spin>
   );
 };
 

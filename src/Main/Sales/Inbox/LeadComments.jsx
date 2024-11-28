@@ -164,7 +164,7 @@ const LeadComments = ({ list, leadid }) => {
                 }
                 title={item?.updatedBy?.fullName}
                 description={dayjs(item?.latestUpdated).format(
-                  "YYYY-MM-DD hh:mm A"
+                  "YYYY-MM-DD , hh:mm a"
                 )}
               />
               <Text>{item?.message}</Text>
