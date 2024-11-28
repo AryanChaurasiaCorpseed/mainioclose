@@ -31,6 +31,17 @@ const CompanyUnits = () => {
     {
       title: "Contact no.",
       dataIndex: "primaryContact",
+      render:(_,data)=><OverFlowText>{data?.primaryContact?.contactNo}</OverFlowText>
+    },
+    {
+      title: "Email",
+      dataIndex: "emails",
+      render:(_,data)=><OverFlowText>{data?.primaryContact?.emails}</OverFlowText>
+    },
+    {
+      title: "Whtasapp",
+      dataIndex: "Whtasapp",
+      render:(_,data)=><OverFlowText>{data?.primaryContact?.whatsappNo}</OverFlowText>
     },
     {
       title: "Address",
@@ -53,6 +64,7 @@ const CompanyUnits = () => {
     {
       title: "Sec contact no.",
       dataIndex: "secondaryContact",
+      render:(_,data)=><OverFlowText>{data?.secondaryContact?.contactNo}</OverFlowText>
     },
     {
       title: "Sec address",

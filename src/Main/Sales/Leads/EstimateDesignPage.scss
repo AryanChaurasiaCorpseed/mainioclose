@@ -132,9 +132,9 @@
   }
   
 
-  .custom-table tbody tr:nth-child(odd) {
-    background-color: #f9f9f9; 
-  }
+//   .custom-table tbody tr:nth-child(odd) {
+//     background-color: #f9f9f9; 
+//   }
   
   .custom-table tbody tr:nth-child(even) {
     background-color: #fff; 
@@ -143,5 +143,39 @@
 
   .custom-table tbody tr:hover {
     background-color: #f1f1f1; 
+    // cursor: pointer; 
   }
+  
+
+
+  .gst-table {
+    width: 100%;
+    font-size: 12px;
+    margin: 20px 0px;
+    border-collapse: collapse; 
+    font-family: Arial, sans-serif;
+  }
+
+  .gst-table tr{
+    border: 1px solid rgb(31, 31, 31);
+  }
+  
+  .gst-table th,
+  .gst-table td {
+    padding: 8px 15px; 
+    text-align: left; 
+  }
+  
+  .gst-table th {
+    // background-color: #f4f4f4; 
+    font-weight: bold; 
+  }
+  
+  .gst-table tr:nth-child(even) {
+    background-color: #f9f9f9; 
+  }
+  
+//   .gst-table tr:hover {
+//     background-color: #f1f1f1; 
+//   }
   

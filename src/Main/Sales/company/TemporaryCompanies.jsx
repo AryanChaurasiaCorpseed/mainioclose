@@ -301,30 +301,30 @@ const TemporaryCompanies = () => {
         <OverFlowText>{record?.primaryContact?.designation}</OverFlowText>
       ),
     },
-    {
-      dataIndex: "contactNo",
-      title: "Contact no.",
-      checked: false,
-      render: (_, record) => (
-        <OverFlowText>{record?.primaryContact?.contactNo}</OverFlowText>
-      ),
-    },
-    {
-      dataIndex: "emails",
-      title: "Email",
-      checked: false,
-      render: (_, record) => (
-        <OverFlowText>{record?.primaryContact?.emails}</OverFlowText>
-      ),
-    },
-    {
-      dataIndex: "whatsappNo",
-      title: "Whatsapp no.",
-      checked: false,
-      render: (_, record) => (
-        <OverFlowText>{record?.primaryContact?.whatsappNo}</OverFlowText>
-      ),
-    },
+    // {
+    //   dataIndex: "contactNo",
+    //   title: "Contact no.",
+    //   checked: false,
+    //   render: (_, record) => (
+    //     <OverFlowText>{record?.primaryContact?.contactNo}</OverFlowText>
+    //   ),
+    // },
+    // {
+    //   dataIndex: "emails",
+    //   title: "Email",
+    //   checked: false,
+    //   render: (_, record) => (
+    //     <OverFlowText>{record?.primaryContact?.emails}</OverFlowText>
+    //   ),
+    // },
+    // {
+    //   dataIndex: "whatsappNo",
+    //   title: "Whatsapp no.",
+    //   checked: false,
+    //   render: (_, record) => (
+    //     <OverFlowText>{record?.primaryContact?.whatsappNo}</OverFlowText>
+    //   ),
+    // },
     {
       dataIndex: "address",
       title: "Address",
