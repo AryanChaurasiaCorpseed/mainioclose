@@ -1,14 +1,14 @@
-import React, { useCallback, useEffect, useState } from "react"
-import MainHeading from "../../components/design/MainHeading"
-import CommonTable from "../../components/CommonTable"
-import TableOutlet from "../../components/design/TableOutlet"
-import { useDispatch, useSelector } from "react-redux"
+import React, { useCallback, useEffect, useState } from "react";
+import MainHeading from "../../components/design/MainHeading";
+import CommonTable from "../../components/CommonTable";
+import TableOutlet from "../../components/design/TableOutlet";
+import { useDispatch, useSelector } from "react-redux";
 import {
   addCommentCompanyForm,
   getAllCompanyByStatus,
   getFormComment,
   searchCompanyForm,
-} from "../../Toolkit/Slices/CompanySlice"
+} from "../../Toolkit/Slices/CompanySlice";
 import {
   Button,
   Form,
@@ -17,42 +17,47 @@ import {
   notification,
   Radio,
   Select,
+  Tooltip,
   Typography,
-} from "antd"
+} from "antd";
 import {
   getAllContactDetails,
   updateStatusById,
-} from "../../Toolkit/Slices/LeadSlice"
-import { Icon } from "@iconify/react"
-import { useParams } from "react-router-dom"
-import OverFlowText from "../../components/OverFlowText"
-import ColComp from "../../components/small/ColComp"
-import CompanyFormModal from "./CompanyFormModal"
-import { getAllUsers } from "../../Toolkit/Slices/UsersSlice"
-import { getHighestPriorityRole } from "../Common/Commons"
-import { BTN_ICON_HEIGHT, BTN_ICON_WIDTH } from "../../components/Constants"
-const { Text } = Typography
-const { Search } = Input
+} from "../../Toolkit/Slices/LeadSlice";
+import { Icon } from "@iconify/react";
+import { useParams } from "react-router-dom";
+import OverFlowText from "../../components/OverFlowText";
+import ColComp from "../../components/small/ColComp";
+import CompanyFormModal from "./CompanyFormModal";
+import { getAllUsers } from "../../Toolkit/Slices/UsersSlice";
+import {
+  getHighestPriorityRole,
+  maskEmail,
+  maskMobileNumber,
+} from "../Common/Commons";
+import { BTN_ICON_HEIGHT, BTN_ICON_WIDTH } from "../../components/Constants";
+const { Text } = Typography;
+const { Search } = Input;
 
 const CompanyForm = () => {
-  const dispatch = useDispatch()
-  const { userid } = useParams()
-  const [form] = Form.useForm()
+  const dispatch = useDispatch();
+  const { userid } = useParams();
+  const [form] = Form.useForm();
   const leadCompanyList = useSelector(
     (state) => state.company.allLeadCompanyList
-  )
-  const page = useSelector((state) => state.company.page)
-  const currentRoles = useSelector((state) => state?.auth?.roles)
+  );
+  const page = useSelector((state) => state.company.page);
+  const currentRoles = useSelector((state) => state?.auth?.roles);
   const currentUserDetail = useSelector(
     (state) => state.auth.getDepartmentDetail
-  )
-  const [selectedFilter, setSelectedFilter] = useState("initiated")
-  const [openModal, setOpenModal] = useState(false)
-  const [formId, setFormId] = useState(null)
+  );
+  const [selectedFilter, setSelectedFilter] = useState("initiated");
+  const [openModal, setOpenModal] = useState(false);
+  const [formId, setFormId] = useState(null);
   const [paginationData, setPaginationData] = useState({
     page: 1,
     size: 50,
-  })
+  });
 
   useEffect(() => {
     dispatch(
@@ -62,13 +67,13 @@ const CompanyForm = () => {
         page: paginationData?.page,
         size: paginationData?.size,
       })
-    )
-  }, [dispatch, selectedFilter, userid])
+    );
+  }, [dispatch, selectedFilter, userid]);
 
   useEffect(() => {
-    dispatch(getAllUsers())
-    dispatch(getAllContactDetails())
-  }, [dispatch])
+    dispatch(getAllUsers());
+    dispatch(getAllContactDetails());
+  }, [dispatch]);
 
   const handlePagination = useCallback(
     (dataPage, size) => {
@@ -79,11 +84,11 @@ const CompanyForm = () => {
           page: dataPage,
           size: size,
         })
-      )
-      setPaginationData({ size: size, page: dataPage })
+      );
+      setPaginationData({ size: size, page: dataPage });
     },
     [userid, selectedFilter, dispatch]
-  )
+  );
 
   const onSearchLead = (e, b, c) => {
     dispatch(
@@ -94,7 +99,7 @@ const CompanyForm = () => {
         size: paginationData?.size,
         status: selectedFilter,
       })
-    )
+    );
     if (!b) {
       dispatch(
         searchCompanyForm({
@@ -104,9 +109,9 @@ const CompanyForm = () => {
           size: paginationData?.size,
           status: selectedFilter,
         })
-      )
+      );
     }
-  }
+  };
 
   const columns = [
     {
@@ -167,17 +172,29 @@ const CompanyForm = () => {
     {
       title: "Contact number",
       dataIndex: "contactNo",
-      render: (_, data) => <ColComp data={data?.contactNo} />,
+      render: (_, data) => (
+        <Tooltip title={`${data?.contactNo}`}>
+          <Text>{maskMobileNumber(data?.contactNo) || "NA"}</Text>
+        </Tooltip>
+      ),
     },
     {
       title: "Contact whatsapp",
       dataIndex: "contactWhatsappNo",
-      render: (_, data) => <ColComp data={data?.contactWhatsappNo} />,
+      render: (_, data) => (
+        <Tooltip title={`${data?.contactWhatsappNo}`}>
+          <Text>{maskMobileNumber(data?.contactWhatsappNo) || "NA"}</Text>
+        </Tooltip>
+      ),
     },
     {
       title: "Contact email",
       dataIndex: "contactEmails",
-      render: (_, data) => <OverFlowText>{data?.contactEmails}</OverFlowText>,
+      render: (_, data) => (
+        <Tooltip title={`${data?.contactEmails}`}>
+          <Text>{maskEmail(data?.contactEmails) || "NA"}</Text>
+        </Tooltip>
+      ),
     },
     {
       title: "Address",
@@ -217,17 +234,31 @@ const CompanyForm = () => {
     {
       title: "SContact number",
       dataIndex: "secondaryContactNo",
-      render: (_, data) => <ColComp data={data?.secondaryContactNo} />,
+      render: (_, data) => (
+        <Tooltip title={`${data?.secondaryContactNo}`}>
+          <Text>{maskMobileNumber(data?.secondaryContactNo) || "NA"}</Text>
+        </Tooltip>
+      ),
     },
     {
       title: "SContact whatsapp",
       dataIndex: "secondaryContactWhatsappNo",
-      render: (_, data) => <ColComp data={data?.secondaryContactWhatsappNo} />,
+      render: (_, data) => (
+        <Tooltip title={`${data?.secondaryContactWhatsappNo}`}>
+          <Text>
+            {maskMobileNumber(data?.secondaryContactWhatsappNo) || "NA"}
+          </Text>
+        </Tooltip>
+      ),
     },
     {
       title: "SContact email",
       dataIndex: "secondaryContactEmails",
-      render: (_, data) => <ColComp data={data?.secondaryContactEmails} />,
+      render: (_, data) => (
+        <Tooltip title={`${data?.secondaryContactEmails}`}>
+          <Text>{maskEmail(data?.secondaryContactEmails) || "NA"}</Text>
+        </Tooltip>
+      ),
     },
     {
       title: "Secondary address",
@@ -320,17 +351,16 @@ const CompanyForm = () => {
                     size="small"
                     type="text"
                     onClick={() => {
-                      setFormId(value?.id)
-                      setOpenModal(true)
+                      setFormId(value?.id);
+                      setOpenModal(true);
                       dispatch(getFormComment(value?.id)).then((resp) => {
                         if (resp.meta.requestStatus === "fulfilled") {
                           form.setFieldsValue({
                             comment: resp?.payload,
                             status: value?.status,
-
-                          })
+                          });
                         }
-                      })
+                      });
                     }}
                   >
                     <Icon
@@ -418,12 +448,12 @@ const CompanyForm = () => {
                     </Button>
                   </Tooltip> */}
                 </>
-              )
+              );
             },
           },
         ]
       : []),
-  ]
+  ];
 
   const handleSubmit = useCallback(
     (values) => {
@@ -438,51 +468,51 @@ const CompanyForm = () => {
           if (resp.meta.requestStatus === "fulfilled") {
             notification.success({
               message: "Status update successfully",
-            })
-            setOpenModal(false)
+            });
+            setOpenModal(false);
             getAllCompanyByStatus({
               id: userid,
               status: selectedFilter,
               page: page,
-            })
+            });
           } else {
             notification.error({
               message: "Something went wrong in status !.",
-            })
+            });
           }
         })
         .catch(() => {
           notification.error({
             message: "Something went wrong in status !.",
-          })
-        })
+          });
+        });
       dispatch(addCommentCompanyForm({ id: formId, comment: values?.comment }))
         .then((resp) => {
           if (resp.meta.requestStatus === "fulfilled") {
             notification.success({
               message: "Comment update successfully",
-            })
-            setOpenModal(false)
+            });
+            setOpenModal(false);
           } else {
             notification.error({
               message: "Something went wrong in comment !.",
-            })
+            });
           }
         })
         .catch(() => {
           notification.error({
             message: "Something went wrong in comment !.",
-          })
-        })
+          });
+        });
     },
     [formId, userid, dispatch]
-  )
+  );
 
   return (
     <TableOutlet>
-      {/* <div className="create-user-box">
-        <MainHeading data={"Company list"} />
-      </div> */}
+      <div className="create-user-box">
+        <MainHeading data={"Lead forms"} />
+      </div>
       <div className="mt-3">
         <div className="flex-verti-center-hori-start">
           <Search
@@ -517,11 +547,11 @@ const CompanyForm = () => {
               { label: "Disapproved", value: "disapproved" },
             ]}
             onChange={(e) => {
-              setSelectedFilter(e)
+              setSelectedFilter(e);
               setPaginationData({
                 page: 1,
                 size: 50,
-              })
+              });
             }}
           />
         </div>
@@ -567,7 +597,7 @@ const CompanyForm = () => {
         </Form>
       </Modal>
     </TableOutlet>
-  )
-}
+  );
+};
 
-export default CompanyForm
+export default CompanyForm;

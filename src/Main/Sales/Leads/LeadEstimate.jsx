@@ -137,9 +137,10 @@ const LeadEstimate = ({ leadid }) => {
   };
 
   const handleEditEstimate = useCallback(() => {
+    handleGetProduct(details?.product?.id);
     form.setFieldsValue({
-      admin: details?.admin,
-      cc: details?.cc,
+      admin: details?.primaryContact?.id,
+      cc: details?.ccMail,
       companyId: details?.companyId,
       companyName: details?.companyName,
       isUnit: details?.isUnit,
@@ -173,12 +174,21 @@ const LeadEstimate = ({ leadid }) => {
       otherFees: details?.otherFees,
       otherCode: details?.otherCode,
       otherGst: details?.otherGst,
-      assigneeId: details?.assigneeId,
+      assigneeId: details?.assigneeId?.id,
       orderNumber: details?.orderNumber,
       purchaseDate: dayjs(details?.purchaseDate),
       invoiceNote: details?.invoiceNote,
       remarksForOption: details?.remarksForOption,
       address: details?.address,
+      city: details?.city,
+      state: details?.state,
+      country: details?.country,
+      primaryPinCode: details?.primaryPinCode,
+      secondaryAddress: details?.secondaryAddress,
+      secondaryCity: details?.secondaryCity,
+      secondaryState: details?.secondaryState,
+      secondaryCountry: details?.country,
+      secondaryPinCode: details?.secondaryPinCode,
     });
     setEditEstimate((prev) => !prev);
   }, [details, form]);
@@ -225,17 +235,14 @@ const LeadEstimate = ({ leadid }) => {
     const element = pdfRef.current;
 
     const canvas = await html2canvas(element, {
-      scale: 1.5, // Improves resolution
-      useCORS: true, // Handles cross-origin images
+      scale: 2,
+      useCORS: true,
     });
-
     const imgData = canvas.toDataURL("image/png");
     const pdf = new jsPDF("p", "mm", "a4");
-    const imgWidth = 210; // A4 width in mm
+    const imgWidth = 210;
     const imgHeight = (canvas.height * imgWidth) / canvas.width;
-
     pdf.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight);
-
     pdf.save("document.pdf");
   };
 
@@ -244,7 +251,11 @@ const LeadEstimate = ({ leadid }) => {
       size="large"
       spinning={estimateDetailLoading === "pending" ? true : false}
     >
-      <Flex justify="space-between" align="center" style={{ width: "100%",paddingLeft:'24px' }}>
+      <Flex
+        justify="space-between"
+        align="center"
+        style={{ width: "100%", paddingLeft: "24px" }}
+      >
         <Text className="heading-text">
           {Object.keys(details)?.length > 0 && !editEstimate
             ? "Estimate details"
@@ -271,6 +282,7 @@ const LeadEstimate = ({ leadid }) => {
           <Form
             form={form}
             layout="vertical"
+            size="small"
             style={{ width: "60%" }}
             initialValues={{
               cc: [""],
@@ -386,6 +398,66 @@ const LeadEstimate = ({ leadid }) => {
                 <Input />
               </Form.Item>
             )}
+
+            {Object.keys(companyDetails)?.length > 0 &&
+              companyDetails?.isConsultant && (
+                <>
+                  <Form.Item
+                    label="Are you consultant ?"
+                    name="isConsultant"
+                    rules={[{ required: true }]}
+                  >
+                    <Switch size="small" />
+                  </Form.Item>
+
+                  <Form.Item
+                    shouldUpdate={(prevValues, currentValues) =>
+                      prevValues.isConsultant !== currentValues.isConsultant
+                    }
+                    noStyle
+                  >
+                    {({ getFieldValue }) => (
+                      <>
+                        {getFieldValue("isConsultant") && (
+                          <>
+                            <Form.Item
+                              label="Original company name"
+                              name="originalCompanyName"
+                              rules={[
+                                {
+                                  required: true,
+                                  message: "please enter company name",
+                                },
+                              ]}
+                            >
+                              <Input />
+                            </Form.Item>
+
+                            <Form.Item
+                              label="Original Company email"
+                              name="originalEmail"
+                            >
+                              <Input />
+                            </Form.Item>
+                            <Form.Item
+                              label="Original phone number"
+                              name="originalContact"
+                            >
+                              <Input />
+                            </Form.Item>
+                            <Form.Item
+                              label="Original company address"
+                              name="originalAddress"
+                            >
+                              <Input.TextArea />
+                            </Form.Item>
+                          </>
+                        )}
+                      </>
+                    )}
+                  </Form.Item>
+                </>
+              )}
 
             {Object.keys(companyDetails)?.length > 0 && (
               <>
@@ -617,7 +689,7 @@ const LeadEstimate = ({ leadid }) => {
             </Form.Item>
 
             <Row>
-              <Flex gap={30} align="center">
+              {/* <Flex gap={30} align="center">
                 <Form.Item layout="horizontal" label="Select jurisdiction">
                   <Input />
                 </Form.Item>
@@ -627,7 +699,7 @@ const LeadEstimate = ({ leadid }) => {
                     <Radio value="Renewal">Renewal</Radio>
                   </Radio.Group>
                 </Form.Item>
-              </Flex>
+              </Flex> */}
 
               {productData?.map((ele) => {
                 return ele?.name === "Professional fees" ? (
@@ -834,14 +906,92 @@ const LeadEstimate = ({ leadid }) => {
             <Form.Item
               label="Address"
               name="address"
-              rules={[{ required: true, message: "please write remarks" }]}
+              rules={[{ required: true, message: "please enter address" }]}
             >
               <Input.TextArea />
             </Form.Item>
 
+            <Form.Item
+              label="City"
+              name="city"
+              rules={[{ required: true, message: "please city name" }]}
+            >
+              <Input />
+            </Form.Item>
+            <Form.Item
+              label="State"
+              name="state"
+              rules={[{ required: true, message: "please enter state" }]}
+            >
+              <Input />
+            </Form.Item>
+            <Form.Item
+              label="Country"
+              name="country"
+              rules={[{ required: true, message: "please enter country" }]}
+            >
+              <Input />
+            </Form.Item>
+            <Form.Item
+              label="Pin code"
+              name="primaryPinCode"
+              rules={[{ required: true, message: "please enter pincode" }]}
+            >
+              <Input />
+            </Form.Item>
+
+            <Form.Item
+              label="Secondary address"
+              name="secondaryAddress"
+              rules={[
+                { required: true, message: "please enter secondary address" },
+              ]}
+            >
+              <Input.TextArea />
+            </Form.Item>
+
+            <Form.Item
+              label="Secondary add. city"
+              name="secondaryCity"
+              rules={[
+                { required: true, message: "please enter secondary city" },
+              ]}
+            >
+              <Input />
+            </Form.Item>
+            <Form.Item
+              label="Secondary add. state"
+              name="secondaryState"
+              rules={[
+                { required: true, message: "please enter secondary state" },
+              ]}
+            >
+              <Input />
+            </Form.Item>
+            <Form.Item
+              label="Secondary add. country"
+              name="secondaryCountry"
+              rules={[
+                {
+                  required: true,
+                  message: "please enter secondary address country",
+                },
+              ]}
+            >
+              <Input />
+            </Form.Item>
+            <Form.Item
+              label="Secondary add. pincode"
+              name="secondaryPinCode"
+              rules={[
+                { required: true, message: "please enter secondary pincode" },
+              ]}
+            >
+              <Input />
+            </Form.Item>
+
             <Form.Item>
               <Button htmlType="submit" type="primary">
-                {" "}
                 Submit
               </Button>
             </Form.Item>
@@ -901,7 +1051,14 @@ const LeadEstimate = ({ leadid }) => {
           </Modal>
         </Flex>
       ) : (
-        <Flex style={{ maxHeight: "84vh", overflow: "auto",marginTop:'12px', padding:'24px' }}>
+        <Flex
+          style={{
+            maxHeight: "84vh",
+            overflow: "auto",
+            marginTop: "12px",
+            padding: "24px",
+          }}
+        >
           <Flex style={{ width: "60%" }} gap={24} vertical>
             {details?.productName && (
               <Flex gap={4} align="center">
@@ -1015,13 +1172,26 @@ const LeadEstimate = ({ leadid }) => {
                       </Flex>
                     </Flex>
                   </Flex>
-                  <Flex vertical gap={8}>
+                  <Flex vertical>
                     <Text type="secondary">Bill To : </Text>
-                    {details?.companyName && (
-                      <Text style={{ fontWeight: "bold" }}>
-                        {details?.companyName}
-                      </Text>
-                    )}
+                    <Flex vertical>
+                      {details?.companyName && (
+                        <Text style={{ fontWeight: "bold" }}>
+                          {details?.companyName}
+                        </Text>
+                      )}
+                      {details?.address && <Text>{details?.address}</Text>}
+                      <Flex vertical>
+                        <Flex>
+                          {details?.city && <Text>{details?.city},</Text>}
+                          {details?.state && <Text>{details?.state},</Text>}
+                          {details?.country && <Text>{details?.country}</Text>}
+                        </Flex>
+                      </Flex>
+                      {details?.primaryPinCode && (
+                        <Text>{details?.primaryPinCode}</Text>
+                      )}
+                    </Flex>
                   </Flex>
                   <Flex justify="space-between">
                     <Flex vertical gap={8}>
@@ -1030,13 +1200,26 @@ const LeadEstimate = ({ leadid }) => {
                         {details?.companyName && (
                           <Text>{details?.companyName}</Text>
                         )}
-                        {details?.address && <Text>{details?.address}</Text>}
-                        <Flex gap={3}>
-                          {details?.city && <Text>{details?.city},</Text>}
-                          {details?.state && <Text>{details?.state},</Text>}
-                          {details?.country && <Text>{details?.country}</Text>}
+                        <Flex vertical>
+                          {details?.secondaryAddress && (
+                            <Text>{details?.secondaryAddress}</Text>
+                          )}
+
+                          <Flex>
+                            {details?.secondaryCity && (
+                              <Text>{details?.secondaryCity},</Text>
+                            )}
+                            {details?.secondaryState && (
+                              <Text>{details?.secondaryState},</Text>
+                            )}
+                            {details?.secondaryCountry && (
+                              <Text>{details?.secondaryCountry}</Text>
+                            )}
+                          </Flex>
                         </Flex>
-                        {details?.pinCode && <Text>{details?.pinCode}</Text>}
+                        {details?.secondaryPinCode && (
+                          <Text>{details?.secondaryPinCode}</Text>
+                        )}
                       </Flex>
                     </Flex>
                     <Flex vertical gap={8}>
@@ -1093,7 +1276,7 @@ const LeadEstimate = ({ leadid }) => {
                             <td>{""}</td>
                             <td>{details?.govermentGst}</td>
                             <td>{""}</td>
-                            <td>{details?.govermentfees}</td>
+                            <td>{details?.govermentFees}</td>
                           </tr>
                         )}
                         {details?.professionalCode && (
@@ -1150,8 +1333,8 @@ const LeadEstimate = ({ leadid }) => {
                       </tbody>
                     </table>
                     {details?.totalAmount > 0 && (
-                      <Flex justify="flex-end">
-                        <Text>Total in words</Text>
+                      <Flex justify="flex-end" gap={4}>
+                        <Text type="secondary">Total in words</Text>
                         <Text>:</Text>
                         <Text>{numWords(details?.totalAmount)}</Text>
                       </Flex>

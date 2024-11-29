@@ -29,6 +29,7 @@ import { getAllSlugList } from "../../../Toolkit/Slices/LeadSlugSlice";
 import { getAllProductData } from "../../../Toolkit/Slices/ProductSlice";
 import { getAllUrlList } from "../../../Toolkit/Slices/LeadUrlSlice";
 import Proposal from "./Proposal";
+import { getAllUsers } from "../../../Toolkit/Slices/UsersSlice";
 
 const LeadsDetailsMainPage = ({
   children,
@@ -200,6 +201,7 @@ const LeadsDetailsMainPage = ({
           dispatch(getAllUrlList());
           dispatch(getDocumentsByLeadName(data?.originalName));
           setTabKey("leadDetail");
+          dispatch(getAllUsers())
         }}
       >
         {children}

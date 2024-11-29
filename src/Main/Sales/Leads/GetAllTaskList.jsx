@@ -91,16 +91,6 @@ const GetAllTaskList = () => {
       title: "Name",
       render: (_, props) => {
         return (
-          // <Link className="link-heading" to={`/erp/${userid}/sales/leads/${props?.leadId}`}>{props?.name}</Link>
-          // <Link
-          //   className="link-heading"
-          //   onClick={() => {
-          //     setLeadId(props?.leadId)
-          //     setOpenDrawer(true)
-          //   }}
-          // >
-          //   {props?.name}
-          // </Link>
           <LeadsDetailsMainPage leadId={props?.leadId} data={props}>
             {props?.name}
           </LeadsDetailsMainPage>

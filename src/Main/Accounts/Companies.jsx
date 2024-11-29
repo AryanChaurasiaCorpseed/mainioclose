@@ -1,13 +1,13 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react"
-import CommonTable from "../../components/CommonTable"
-import MainHeading from "../../components/design/MainHeading"
-import { useDispatch, useSelector } from "react-redux"
-import { useParams } from "react-router-dom"
+import React, { useCallback, useEffect, useMemo, useState } from "react";
+import CommonTable from "../../components/CommonTable";
+import MainHeading from "../../components/design/MainHeading";
+import { useDispatch, useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
 import {
   getAllCompanyFormForMultipleServices,
   searchFormCompaniesBy,
   updateMultiCompanyFormStatus,
-} from "../../Toolkit/Slices/CompanySlice"
+} from "../../Toolkit/Slices/CompanySlice";
 import {
   Button,
   Collapse,
@@ -19,34 +19,40 @@ import {
   Pagination,
   Radio,
   Select,
+  Tooltip,
   Typography,
-} from "antd"
-import OverFlowText from "../../components/OverFlowText"
-import ColComp from "../../components/small/ColComp"
-import { Icon } from "@iconify/react"
-import { modifyObject, updateKeysAtIndex } from "../Common/Commons"
-import { BTN_ICON_HEIGHT, BTN_ICON_WIDTH } from "../../components/Constants"
-const { Text } = Typography
-const { Search } = Input
+} from "antd";
+import OverFlowText from "../../components/OverFlowText";
+import ColComp from "../../components/small/ColComp";
+import { Icon } from "@iconify/react";
+import {
+  maskEmail,
+  maskMobileNumber,
+  modifyObject,
+  updateKeysAtIndex,
+} from "../Common/Commons";
+import { BTN_ICON_HEIGHT, BTN_ICON_WIDTH } from "../../components/Constants";
+const { Text } = Typography;
+const { Search } = Input;
 
 const Companies = () => {
-  const dispatch = useDispatch()
-  const { userid } = useParams()
-  const [form] = Form.useForm()
+  const dispatch = useDispatch();
+  const { userid } = useParams();
+  const [form] = Form.useForm();
   const companiesData = useSelector(
     (state) => state.company.companyListWithServices
-  )
+  );
   const totalCompanyServiceCount = useSelector(
     (state) => state.company.totalCompanyServiceCount
-  )
-  const [selectedFilter, setSelectedFilter] = useState("initiated")
+  );
+  const [selectedFilter, setSelectedFilter] = useState("initiated");
   const [paginationData, setPaginationData] = useState({
     page: 1,
     size: 50,
-  })
-  const [selectedRowKeys, setSelectedRowKeys] = useState([])
-  const [openModal, setOpenModal] = useState(false)
-  const [data, setData] = useState({})
+  });
+  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+  const [openModal, setOpenModal] = useState(false);
+  const [data, setData] = useState({});
 
   useEffect(() => {
     dispatch(
@@ -56,21 +62,21 @@ const Companies = () => {
         page: paginationData?.page,
         size: paginationData?.size,
       })
-    )
-  }, [dispatch, userid, selectedFilter])
+    );
+  }, [dispatch, userid, selectedFilter]);
 
   useEffect(() => {
-    let tempData = { ...companiesData }
-    setData(modifyObject(tempData))
-  }, [companiesData])
+    let tempData = { ...companiesData };
+    setData(modifyObject(tempData));
+  }, [companiesData]);
 
   const onSelectChange = useCallback(
     (newSelectedRowKeys, idx) => {
-      setSelectedRowKeys(newSelectedRowKeys)
-      setData(updateKeysAtIndex(data, idx, newSelectedRowKeys))
+      setSelectedRowKeys(newSelectedRowKeys);
+      setData(updateKeysAtIndex(data, idx, newSelectedRowKeys));
     },
     [data]
-  )
+  );
 
   const handleUpdateCompaniesStatus = useCallback(
     (values) => {
@@ -85,23 +91,23 @@ const Companies = () => {
           if (resp.meta.requestStatus === "fulfilled") {
             notification.success({
               message: "Company status updated successfully.",
-            })
-            setOpenModal(false)
-            form.resetFields()
+            });
+            setOpenModal(false);
+            form.resetFields();
           } else {
             notification.error({
               message: "Something went wrong !.",
-            })
+            });
           }
         })
         .catch(() =>
           notification.error({
             message: "Something went wrong !.",
           })
-        )
+        );
     },
     [selectedRowKeys, userid, dispatch, form]
-  )
+  );
 
   const items = useMemo(() => {
     const columns = [
@@ -164,17 +170,29 @@ const Companies = () => {
       {
         title: "Contact number",
         dataIndex: "contactNo",
-        render: (_, data) => <ColComp data={data?.contactNo} />,
+        render: (_, data) => (
+          <Tooltip title={`${data?.contactNo}`}>
+            <Text>{maskMobileNumber(data?.contactNo)}</Text>
+          </Tooltip>
+        ),
       },
       {
         title: "Contact whatsapp",
         dataIndex: "contactWhatsappNo",
-        render: (_, data) => <ColComp data={data?.contactWhatsappNo} />,
+        render: (_, data) => (
+          <Tooltip title={`${data?.contactWhatsappNo}`}>
+            {maskMobileNumber(data?.contactWhatsappNo)}
+          </Tooltip>
+        ),
       },
       {
         title: "Contact email",
         dataIndex: "contactEmails",
-        render: (_, data) => <OverFlowText>{data?.contactEmails}</OverFlowText>,
+        render: (_, data) => (
+          <Tooltip title={`${data?.contactEmails}`}>
+            <Text>{maskEmail(data?.contactEmails)}</Text>
+          </Tooltip>
+        ),
       },
       {
         title: "Address",
@@ -214,19 +232,29 @@ const Companies = () => {
       {
         title: "SContact number",
         dataIndex: "secondaryContactNo",
-        render: (_, data) => <ColComp data={data?.secondaryContactNo} />,
+        render: (_, data) => (
+          <Tooltip title={`${data?.secondaryContactNo}`}>
+            <Text>{maskMobileNumber(data?.secondaryContactNo)}</Text>
+          </Tooltip>
+        ),
       },
       {
         title: "SContact whatsapp",
         dataIndex: "secondaryContactWhatsappNo",
         render: (_, data) => (
-          <ColComp data={data?.secondaryContactWhatsappNo} />
+          <Tooltip title={`${data?.secondaryContactWhatsappNo}`}>
+            <Text>{maskMobileNumber(data?.secondaryContactWhatsappNo)}</Text>
+          </Tooltip>
         ),
       },
       {
         title: "SContact email",
         dataIndex: "secondaryContactEmails",
-        render: (_, data) => <ColComp data={data?.secondaryContactEmails} />,
+        render: (_, data) => (
+          <Tooltip title={`${data?.secondaryContactEmails}`}>
+            <Text>{maskEmail(data?.secondaryContactEmails)}</Text>
+          </Tooltip>
+        ),
       },
       {
         title: "Secondary address",
@@ -283,9 +311,9 @@ const Companies = () => {
             size="small"
             type="text"
             onClick={() => {
-              setOpenModal(true)
-              setSelectedRowKeys([data?.id])
-              form.setFieldsValue({ status: data?.status })
+              setOpenModal(true);
+              setSelectedRowKeys([data?.id]);
+              form.setFieldsValue({ status: data?.status });
             }}
           >
             <Icon
@@ -296,7 +324,7 @@ const Companies = () => {
           </Button>
         ),
       },
-    ]
+    ];
 
     return Object?.entries(data).map(([key, value], idx) => ({
       key: idx,
@@ -307,8 +335,8 @@ const Companies = () => {
           type="primary"
           disabled={value?.selectedKeys?.length === 0 ? true : false}
           onClick={(e) => {
-            e.stopPropagation()
-            setOpenModal(true)
+            e.stopPropagation();
+            setOpenModal(true);
           }}
         >
           Update status
@@ -325,8 +353,8 @@ const Companies = () => {
           rowKey={(record) => record?.id}
         />
       ),
-    }))
-  }, [data, form, onSelectChange])
+    }));
+  }, [data, form, onSelectChange]);
 
   const handlePagination = useCallback(
     (page, size) => {
@@ -337,11 +365,11 @@ const Companies = () => {
           page,
           size,
         })
-      )
-      setPaginationData((prev) => ({ ...prev, page, size }))
+      );
+      setPaginationData((prev) => ({ ...prev, page, size }));
     },
     [userid, selectedFilter, dispatch]
-  )
+  );
 
   const handleOnSearch = (e) => {
     dispatch(
@@ -350,8 +378,8 @@ const Companies = () => {
         userId: userid,
         status: selectedFilter,
       })
-    )
-  }
+    );
+  };
 
   return (
     <Flex vertical gap={8}>
@@ -400,11 +428,11 @@ const Companies = () => {
               { label: "Disapproved", value: "disapproved" },
             ]}
             onChange={(e) => {
-              setSelectedFilter(e)
+              setSelectedFilter(e);
               setPaginationData({
                 page: 1,
                 size: 50,
-              })
+              });
             }}
           />
         </div>
@@ -462,7 +490,7 @@ const Companies = () => {
         </Form>
       </Modal>
     </Flex>
-  )
-}
+  );
+};
 
-export default Companies
+export default Companies;

@@ -552,10 +552,12 @@ const LeadDetailsPage = ({ leadid }) => {
                       style={{ width: "100%" }}
                       className="comp-component-1"
                       placeholder="select the slug"
-                      options={slugList?.map((item) => ({
-                        label: item?.name,
-                        value: item?.name,
-                      }))||[]}
+                      options={
+                        slugList?.map((item) => ({
+                          label: item?.name,
+                          value: item?.name,
+                        })) || []
+                      }
                       onChange={(e) => setUpdatedLeadName(e)}
                       filterOption={(input, option) =>
                         option.label.toLowerCase().includes(input.toLowerCase())
@@ -702,11 +704,14 @@ const LeadDetailsPage = ({ leadid }) => {
                       {complianceDocumentList?.map((item, idx) => (
                         <>
                           <Tag
-                            style={{ cursor: "pointer" }}
+                            style={{ cursor: "pointer",display:'flex',alignItems:'center',gap:'8px' }}
                             onClick={() => {
                               setDocument(item?.name);
                               setOpenDocumentModal(true);
                             }}
+                            icon={
+                              <Icon icon="fluent:document-pdf-24-regular" height={18} width={18} color="red" />
+                            }
                           >
                             Document {idx}
                           </Tag>

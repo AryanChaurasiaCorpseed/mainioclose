@@ -177,7 +177,17 @@ const Proposal = ({ leadid }) => {
       invoiceNote: details?.invoiceNote,
       remarksForOption: details?.remarksForOption,
       address: details?.address,
+      city: details?.city,
+      state: details?.state,
+      country: details?.country,
+      primaryPinCode: details?.primaryPinCode,
+      secondaryAddress: details?.secondaryAddress,
+      secondaryCity: details?.secondaryCity,
+      secondaryState: details?.secondaryState,
+      country: details?.country,
+      secondaryPinCode: details?.secondaryPinCode,
     });
+    setEditProposal((prev) => !prev);
   }, [details, form]);
 
   const handleFinish = useCallback(
@@ -238,7 +248,11 @@ const Proposal = ({ leadid }) => {
 
   return (
     <Spin size="large" spinning={proposalLoading === "pending" ? true : false}>
-      <Flex justify="space-between" align="center" style={{ width: "100%",paddingLeft:'24px' }}>
+      <Flex
+        justify="space-between"
+        align="center"
+        style={{ width: "100%", paddingLeft: "24px" }}
+      >
         <Text className="heading-text">
           {Object.keys(details)?.length > 0 && !editProposal
             ? "Proposal details"
@@ -379,6 +393,66 @@ const Proposal = ({ leadid }) => {
                 <Input />
               </Form.Item>
             )}
+
+            {Object.keys(companyDetails)?.length > 0 &&
+              companyDetails?.isConsultant && (
+                <>
+                  <Form.Item
+                    label="Are you consultant ?"
+                    name="isConsultant"
+                    rules={[{ required: true }]}
+                  >
+                    <Switch size="small" />
+                  </Form.Item>
+
+                  <Form.Item
+                    shouldUpdate={(prevValues, currentValues) =>
+                      prevValues.isConsultant !== currentValues.isConsultant
+                    }
+                    noStyle
+                  >
+                    {({ getFieldValue }) => (
+                      <>
+                        {getFieldValue("isConsultant") && (
+                          <>
+                            <Form.Item
+                              label="Original company name"
+                              name="originalCompanyName"
+                              rules={[
+                                {
+                                  required: true,
+                                  message: "please enter company name",
+                                },
+                              ]}
+                            >
+                              <Input />
+                            </Form.Item>
+
+                            <Form.Item
+                              label="Original Company email"
+                              name="originalEmail"
+                            >
+                              <Input />
+                            </Form.Item>
+                            <Form.Item
+                              label="Original phone number"
+                              name="originalContact"
+                            >
+                              <Input />
+                            </Form.Item>
+                            <Form.Item
+                              label="Original company address"
+                              name="originalAddress"
+                            >
+                              <Input.TextArea />
+                            </Form.Item>
+                          </>
+                        )}
+                      </>
+                    )}
+                  </Form.Item>
+                </>
+              )}
 
             {Object.keys(companyDetails)?.length > 0 && (
               <>
@@ -828,9 +902,88 @@ const Proposal = ({ leadid }) => {
             <Form.Item
               label="Address"
               name="address"
-              rules={[{ required: true, message: "please write remarks" }]}
+              rules={[{ required: true, message: "please enter address" }]}
             >
               <Input.TextArea />
+            </Form.Item>
+
+            <Form.Item
+              label="City"
+              name="city"
+              rules={[{ required: true, message: "please city name" }]}
+            >
+              <Input />
+            </Form.Item>
+            <Form.Item
+              label="State"
+              name="state"
+              rules={[{ required: true, message: "please enter state" }]}
+            >
+              <Input />
+            </Form.Item>
+            <Form.Item
+              label="Country"
+              name="country"
+              rules={[{ required: true, message: "please enter country" }]}
+            >
+              <Input />
+            </Form.Item>
+            <Form.Item
+              label="Pin code"
+              name="primaryPinCode"
+              rules={[{ required: true, message: "please enter pincode" }]}
+            >
+              <Input />
+            </Form.Item>
+
+            <Form.Item
+              label="Secondary address"
+              name="secondaryAddress"
+              rules={[
+                { required: true, message: "please enter secondary address" },
+              ]}
+            >
+              <Input.TextArea />
+            </Form.Item>
+
+            <Form.Item
+              label="Secondary add. city"
+              name="secondaryCity"
+              rules={[
+                { required: true, message: "please enter secondary city" },
+              ]}
+            >
+              <Input />
+            </Form.Item>
+            <Form.Item
+              label="Secondary add. state"
+              name="secondaryState"
+              rules={[
+                { required: true, message: "please enter secondary state" },
+              ]}
+            >
+              <Input />
+            </Form.Item>
+            <Form.Item
+              label="Secondary add. country"
+              name="secondaryCountry"
+              rules={[
+                {
+                  required: true,
+                  message: "please enter secondary address country",
+                },
+              ]}
+            >
+              <Input />
+            </Form.Item>
+            <Form.Item
+              label="Secondary add. pincode"
+              name="secondaryPinCode"
+              rules={[
+                { required: true, message: "please enter secondary pincode" },
+              ]}
+            >
+              <Input />
             </Form.Item>
 
             <Form.Item>
@@ -895,7 +1048,14 @@ const Proposal = ({ leadid }) => {
           </Modal>
         </Flex>
       ) : (
-        <Flex style={{ maxHeight: "84vh", overflow: "auto",marginTop:'12px',padding:'24px' }}>
+        <Flex
+          style={{
+            maxHeight: "84vh",
+            overflow: "auto",
+            marginTop: "12px",
+            padding: "24px",
+          }}
+        >
           <Flex style={{ width: "60%" }} gap={24} vertical>
             {details?.productName && (
               <Flex gap={4}>
@@ -1087,7 +1247,7 @@ const Proposal = ({ leadid }) => {
                             <td>{""}</td>
                             <td>{details?.govermentGst}</td>
                             <td>{""}</td>
-                            <td>{details?.govermentfees}</td>
+                            <td>{details?.govermentFees}</td>
                           </tr>
                         )}
                         {details?.professionalCode && (

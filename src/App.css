@@ -1069,3 +1069,14 @@ select.form-control:not([size]):not([multiple]) {
   position: unset !important;
   /* overflow-y: hidden !important; */
 }
+.ant-select-multiple.ant-select .ant-select-selection-overflow-item {
+  max-height: 32px !important;
+  /* opacity: 1 !important; */
+  position: unset !important;
+  /* overflow-y: hidden !important; */
+}
+
+
+.common-text-color{
+  color: #fff;
+}
