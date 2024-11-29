@@ -186,6 +186,11 @@ const Proposal = ({ leadid }) => {
       secondaryState: details?.secondaryState,
       country: details?.country,
       secondaryPinCode: details?.secondaryPinCode,
+      isConsultant: details?.isConsultant,
+      originalCompanyName: details?.consultantByCompany?.name,
+      originalContact: details?.consultantByCompany?.originalContact,
+      originalEmail: details?.consultantByCompany?.originalEmail,
+      originalAddress: details?.consultantByCompany?.address,
     });
     setEditProposal((prev) => !prev);
   }, [details, form]);

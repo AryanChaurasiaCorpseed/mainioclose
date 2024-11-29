@@ -62,7 +62,8 @@ const LeadEstimate = ({ leadid }) => {
     if (Object.keys(companyDetails) > 0) {
       form.setFieldsValue({
         companyId: companyDetails?.name,
-        isUnit: false,
+        isUnit: companyDetails?.isUnit,
+        isConsultant: companyDetails?.isConsultant,
       });
     }
   }, [companyDetails, form]);
@@ -189,6 +190,10 @@ const LeadEstimate = ({ leadid }) => {
       secondaryState: details?.secondaryState,
       secondaryCountry: details?.country,
       secondaryPinCode: details?.secondaryPinCode,
+      originalCompanyName: details?.consultantByCompany?.name,
+      originalContact: details?.consultantByCompany?.originalContact,
+      originalEmail: details?.consultantByCompany?.originalEmail,
+      originalAddress: details?.consultantByCompany?.address,
     });
     setEditEstimate((prev) => !prev);
   }, [details, form]);

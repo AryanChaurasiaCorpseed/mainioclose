@@ -1,14 +1,12 @@
 import React, { useEffect, useState } from "react"
 import { useCustomRoute } from "../../../Routes/GetCustomRoutes"
-import { Link, useParams } from "react-router-dom"
-import UserLeadComponent from "../../../Tables/UserLeadComponent"
+import { useParams } from "react-router-dom"
 import MainHeading from "../../../components/design/MainHeading"
 import CommonTable from "../../../components/CommonTable"
-import { Drawer, Input, Tag, Typography } from "antd"
+import { Input, Tag, Typography } from "antd"
 import OverFlowText from "../../../components/OverFlowText"
 import { Icon } from "@iconify/react"
 import dayjs from "dayjs"
-import LeadDetailsPage from "../Inbox/LeadDetailsPage"
 import LeadsDetailsMainPage from "./LeadsDetailsMainPage"
 import { useDispatch } from "react-redux"
 import { getAllUsers } from "../../../Toolkit/Slices/UsersSlice"
@@ -21,8 +19,6 @@ const GetAllTaskList = () => {
   const [dateInput, setDateInput] = useState("")
   const [searchText, setSearchText] = useState("")
   const [filteredData, setFilteredData] = useState([])
-  const [openDrawer, setOpenDrawer] = useState(false)
-  const [leadId, setLeadId] = useState(null)
 
   const allTasksByUser = `/leadService/api/v1/task/getAllTaskByAssignee?assigneeId=${userid}`
   const allTaskDep = [dateInput]

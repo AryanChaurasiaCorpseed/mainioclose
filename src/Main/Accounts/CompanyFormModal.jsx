@@ -9,7 +9,7 @@ import {
   Switch,
   Upload,
 } from "antd";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Icon } from "@iconify/react";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -99,6 +99,7 @@ const CompanyFormModal = ({
     const isValid = /^[A-Z0-9]+$/.test(upperCaseValue);
     form.setFieldsValue({ panNo: isValid ? upperCaseValue : value });
   };
+
 
   const handleButtonClick = useCallback(() => {
     dispatch(getAllMainIndustry());
