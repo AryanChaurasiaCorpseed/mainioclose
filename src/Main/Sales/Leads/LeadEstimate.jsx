@@ -179,7 +179,7 @@ const LeadEstimate = ({ leadid }) => {
       orderNumber: details?.orderNumber,
       purchaseDate: dayjs(details?.purchaseDate),
       invoiceNote: details?.invoiceNote,
-      remarksForOption: details?.remarksForOption,
+      remarksForOption: details?.getRemarkForOperation,
       address: details?.address,
       city: details?.city,
       state: details?.state,
@@ -236,19 +236,55 @@ const LeadEstimate = ({ leadid }) => {
     [leadid, details, editEstimate, dispatch]
   );
 
+  // const generatePDF = async () => {
+  //   const element = pdfRef.current;
+  //   const canvas = await html2canvas(element, {
+  //     scale: 2,
+  //     useCORS: true,
+  //   });
+  //   const imgData = canvas.toDataURL("image/png");
+  //   const pdf = new jsPDF("p", "mm", "a4");
+  //   const imgWidth = 210;
+  //   const imgHeight = (canvas.height * imgWidth) / canvas.width;
+  //   pdf.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight);
+  //   pdf.save("estimate.pdf");
+  // };
+
   const generatePDF = async () => {
     const element = pdfRef.current;
 
+    // Render the HTML content to a canvas
     const canvas = await html2canvas(element, {
-      scale: 2,
-      useCORS: true,
+      scale: 2, // Improve resolution
+      useCORS: true, // Allow cross-origin images
     });
+
+    // Get image data from the canvas
     const imgData = canvas.toDataURL("image/png");
+
+    // Create a new jsPDF instance
     const pdf = new jsPDF("p", "mm", "a4");
-    const imgWidth = 210;
-    const imgHeight = (canvas.height * imgWidth) / canvas.width;
-    pdf.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight);
-    pdf.save("document.pdf");
+    const imgWidth = 210; // Width in mm for A4
+    const imgHeight = (canvas.height * imgWidth) / canvas.width; // Maintain aspect ratio
+
+    const pageHeight = 297; // Height in mm for A4
+    let yPosition = 0; // Starting Y position
+
+    while (yPosition < imgHeight) {
+      // Add the portion of the image that fits in the current page
+      pdf.addImage(imgData, "PNG", 0, -yPosition, imgWidth, imgHeight);
+
+      // If there's more content, add a new page
+      if (yPosition + pageHeight < imgHeight) {
+        pdf.addPage();
+      }
+
+      // Move to the next page
+      yPosition += pageHeight;
+    }
+
+    // Save the PDF
+    pdf.save("estimate.pdf");
   };
 
   return (
@@ -405,64 +441,123 @@ const LeadEstimate = ({ leadid }) => {
             )}
 
             {Object.keys(companyDetails)?.length > 0 &&
-              companyDetails?.isConsultant && (
-                <>
-                  <Form.Item
-                    label="Are you consultant ?"
-                    name="isConsultant"
-                    rules={[{ required: true }]}
-                  >
-                    <Switch size="small" />
-                  </Form.Item>
+            companyDetails?.isConsultant ? (
+              <>
+                <Form.Item
+                  label="Are you consultant ?"
+                  name="isConsultant"
+                  rules={[{ required: true }]}
+                >
+                  <Switch size="small" />
+                </Form.Item>
 
-                  <Form.Item
-                    shouldUpdate={(prevValues, currentValues) =>
-                      prevValues.isConsultant !== currentValues.isConsultant
-                    }
-                    noStyle
-                  >
-                    {({ getFieldValue }) => (
-                      <>
-                        {getFieldValue("isConsultant") && (
-                          <>
-                            <Form.Item
-                              label="Original company name"
-                              name="originalCompanyName"
-                              rules={[
-                                {
-                                  required: true,
-                                  message: "please enter company name",
-                                },
-                              ]}
-                            >
-                              <Input />
-                            </Form.Item>
+                <Form.Item
+                  shouldUpdate={(prevValues, currentValues) =>
+                    prevValues.isConsultant !== currentValues.isConsultant
+                  }
+                  noStyle
+                >
+                  {({ getFieldValue }) => (
+                    <>
+                      {getFieldValue("isConsultant") && (
+                        <>
+                          <Form.Item
+                            label="Original company name"
+                            name="originalCompanyName"
+                            rules={[
+                              {
+                                required: true,
+                                message: "please enter company name",
+                              },
+                            ]}
+                          >
+                            <Input />
+                          </Form.Item>
 
-                            <Form.Item
-                              label="Original Company email"
-                              name="originalEmail"
-                            >
-                              <Input />
-                            </Form.Item>
-                            <Form.Item
-                              label="Original phone number"
-                              name="originalContact"
-                            >
-                              <Input />
-                            </Form.Item>
-                            <Form.Item
-                              label="Original company address"
-                              name="originalAddress"
-                            >
-                              <Input.TextArea />
-                            </Form.Item>
-                          </>
-                        )}
-                      </>
-                    )}
-                  </Form.Item>
-                </>
-              )}
+                          <Form.Item
+                            label="Original Company email"
+                            name="originalEmail"
+                          >
+                            <Input />
+                          </Form.Item>
+                          <Form.Item
+                            label="Original phone number"
+                            name="originalContact"
+                          >
+                            <Input />
+                          </Form.Item>
+                          <Form.Item
+                            label="Original company address"
+                            name="originalAddress"
+                          >
+                            <Input.TextArea />
+                          </Form.Item>
+                        </>
+                      )}
+                    </>
+                  )}
+                </Form.Item>
+              </>
+            ) : Object.keys(companyDetails)?.length === 0 ? (
+              <>
+                <Form.Item
+                  label="Are you consultant ?"
+                  name="isConsultant"
+                  rules={[{ required: true }]}
+                >
+                  <Switch size="small" />
+                </Form.Item>
+
+                <Form.Item
+                  shouldUpdate={(prevValues, currentValues) =>
+                    prevValues.isConsultant !== currentValues.isConsultant
+                  }
+                  noStyle
+                >
+                  {({ getFieldValue }) => (
+                    <>
+                      {getFieldValue("isConsultant") && (
+                        <>
+                          <Form.Item
+                            label="Original company name"
+                            name="originalCompanyName"
+                            rules={[
+                              {
+                                required: true,
+                                message: "please enter company name",
+                              },
+                            ]}
+                          >
+                            <Input />
+                          </Form.Item>
+
+                          <Form.Item
+                            label="Original Company email"
+                            name="originalEmail"
+                          >
+                            <Input />
+                          </Form.Item>
+                          <Form.Item
+                            label="Original phone number"
+                            name="originalContact"
+                          >
+                            <Input />
+                          </Form.Item>
+                          <Form.Item
+                            label="Original company address"
+                            name="originalAddress"
+                          >
+                            <Input.TextArea />
+                          </Form.Item>
+                        </>
+                      )}
+                    </>
+                  )}
+                </Form.Item>
+              </>
+            ) : (
+              ""
+            )}
 
             {Object.keys(companyDetails)?.length > 0 && (
               <>
@@ -1400,6 +1495,9 @@ const LeadEstimate = ({ leadid }) => {
                         days from the date of issue .
                       </Text>
                       <Text type="secondary">{details?.invoiceNote} </Text>
+                      <Text type="secondary">
+                        Remark : {details?.getRemarkForOperation}
+                      </Text>
                     </Flex>
                     <Divider style={{ margin: "0px 0px" }} />
                     <Flex>
@@ -1501,7 +1599,7 @@ const LeadEstimate = ({ leadid }) => {
                 <Space>
                   <Text type="secondary">State</Text>
                   <Text type="secondary">:</Text>
-                  <Text>{details?.State}</Text>
+                  <Text>{details?.state}</Text>
                 </Space>
               )}
             </Flex>
