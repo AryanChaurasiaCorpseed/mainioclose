@@ -22,6 +22,12 @@ export const uploadDocuments = createAsyncThunk(
   }
 )
 
+
+export const addKnowledgeDocument=createAsyncThunk('addKnowledgeDocument',async(data)=>{
+  const response=await postQuery(`/leadService/api/v1/product/addKnowledgeDocumentsInProduct`,data)
+  return response.data
+})
+
 const complianceSlice = createSlice({
   name: "compliance",
   initialState: {

@@ -3,7 +3,7 @@ import React, { useCallback, useState } from "react"
 import { Icon } from "@iconify/react"
 import { useDispatch } from "react-redux"
 import { BTN_ICON_HEIGHT, BTN_ICON_WIDTH } from "../../components/Constants"
-import { getAllCompliances, uploadDocuments } from "../../Toolkit/Slices/ComplianceSlice"
+import { addKnowledgeDocument, getAllCompliances, uploadDocuments } from "../../Toolkit/Slices/ComplianceSlice"
 
 export const ViewComplianceDoc = ({ data }) => {
   const [form] = Form.useForm()
@@ -14,9 +14,9 @@ export const ViewComplianceDoc = ({ data }) => {
 
   const handleFinish = useCallback(
     (values) => {
-      values.categoryId = data?.id
-      values.docList = values?.docList?.fileList?.map((item) => item?.response)?.[0]
-      dispatch(uploadDocuments(values))
+      values.productId = data?.id
+      values.name = values?.docList?.fileList?.map((item) => item?.response)?.[0]
+      dispatch(addKnowledgeDocument(values))
         .then((resp) => {
           if (resp?.meta.requestStatus === "fulfilled") {
             notification.success({ message: "Document uploaded successfully" })
