@@ -367,118 +367,125 @@ const VendorsList = () => {
           />
         </Flex>
 
-        <Flex gap={8} align="center" justify="flex-end">
-          <Icon
-            icon="fluent:filter-24-filled"
-            height={32}
-            width={32}
-            color={vendorFilterationLoading === "success" ? "#0958d9" : "gray"}
-          />
-          <RangePicker
-            style={{ width: "35%" }}
-            size="small"
-            presets={rangePresets}
-            disabledDate={(current) =>
-              current && current > dayjs().endOf("day")
-            }
-            value={[
-              filterQuery?.startDate ? dayjs(filterQuery?.startDate) : "",
-              filterQuery?.endDate ? dayjs(filterQuery?.endDate) : "",
-            ]}
-            onChange={(dates, dateString) => {
-              if (dates) {
-                setFilterQuery((prev) => ({
-                  ...prev,
-                  startDate: dayjs(dateString[0]).format("YYYY-MM-DD"),
-                  endDate: dayjs(dateString[1]).format("YYYY-MM-DD"),
-                }));
+        {getHighestPriorityRole(currentRoles) === "ADMIN" && (
+          <Flex gap={8} align="center" justify="flex-end">
+            <Icon
+              icon="fluent:filter-24-filled"
+              height={32}
+              width={32}
+              color={
+                vendorFilterationLoading === "success" ? "#0958d9" : "gray"
               }
-            }}
-          />
-          <Select
-            size="small"
-            style={{ width: "15%" }}
-            placeholder="Select status"
-            options={
-              vendorsStatus?.length > 0
-                ? vendorsStatus?.map((item) => ({
-                    label: item?.statusName,
-                    value: item?.statusName,
-                  }))
-                : []
-            }
-            value={filterQuery?.status}
-            onChange={(e) => setFilterQuery((prev) => ({ ...prev, status: e }))}
-          />
-
-          {getHighestPriorityRole(currentRoles) === "ADMIN" && (
+            />
+            <RangePicker
+              style={{ width: "35%" }}
+              size="small"
+              presets={rangePresets}
+              disabledDate={(current) =>
+                current && current > dayjs().endOf("day")
+              }
+              value={[
+                filterQuery?.startDate ? dayjs(filterQuery?.startDate) : "",
+                filterQuery?.endDate ? dayjs(filterQuery?.endDate) : "",
+              ]}
+              onChange={(dates, dateString) => {
+                if (dates) {
+                  setFilterQuery((prev) => ({
+                    ...prev,
+                    startDate: dayjs(dateString[0]).format("YYYY-MM-DD"),
+                    endDate: dayjs(dateString[1]).format("YYYY-MM-DD"),
+                  }));
+                }
+              }}
+            />
             <Select
               size="small"
               style={{ width: "15%" }}
-              mode="multiple"
-              maxTagCount={"responsive"}
-              placeholder="Select users"
+              placeholder="Select status"
               options={
-                procurementAssigneeList?.length > 0
-                  ? procurementAssigneeList?.map((item) => ({
-                      label: item?.fullName,
-                      value: item?.id,
+                vendorsStatus?.length > 0
+                  ? vendorsStatus?.map((item) => ({
+                      label: item?.statusName,
+                      value: item?.statusName,
                     }))
                   : []
               }
-              value={filterQuery?.userId}
+              value={filterQuery?.status}
               onChange={(e) =>
-                setFilterQuery((prev) => ({ ...prev, userId: e }))
+                setFilterQuery((prev) => ({ ...prev, status: e }))
               }
             />
-          )}
 
-          <Button
-            size="small"
-            onClick={handleResetFilter}
-            disabled={
-              filterQuery?.startDate === null && filterQuery?.endDate === null
-            }
-          >
-            Reset filter
-          </Button>
-          <Button
-            size="small"
-            type="primary"
-            onClick={handleFilter}
-            loading={vendorFilterationLoading === "pending" ? true : false}
-            disabled={
-              (filterQuery?.startDate === null &&
-                filterQuery?.endDate === null) ||
-              vendorFilterationLoading === "success"
-                ? true
-                : false
-            }
-          >
-            Apply filter
-          </Button>
+            {getHighestPriorityRole(currentRoles) === "ADMIN" && (
+              <Select
+                size="small"
+                style={{ width: "15%" }}
+                mode="multiple"
+                maxTagCount={"responsive"}
+                placeholder="Select users"
+                options={
+                  procurementAssigneeList?.length > 0
+                    ? procurementAssigneeList?.map((item) => ({
+                        label: item?.fullName,
+                        value: item?.id,
+                      }))
+                    : []
+                }
+                value={filterQuery?.userId}
+                onChange={(e) =>
+                  setFilterQuery((prev) => ({ ...prev, userId: e }))
+                }
+              />
+            )}
 
-          <CSVLink
-            className="text-white"
-            data={exportData}
-            headers={headers}
-            filename={"exported_data.csv"}
-          >
             <Button
               size="small"
+              onClick={handleResetFilter}
               disabled={
                 filterQuery?.startDate === null && filterQuery?.endDate === null
               }
             >
-              <Icon
-                icon="fluent:arrow-upload-16-filled"
-                height={BTN_ICON_HEIGHT}
-                width={BTN_ICON_WIDTH}
-              />
-              Export
+              Reset filter
             </Button>
-          </CSVLink>
-        </Flex>
+            <Button
+              size="small"
+              type="primary"
+              onClick={handleFilter}
+              loading={vendorFilterationLoading === "pending" ? true : false}
+              disabled={
+                (filterQuery?.startDate === null &&
+                  filterQuery?.endDate === null) ||
+                vendorFilterationLoading === "success"
+                  ? true
+                  : false
+              }
+            >
+              Apply filter
+            </Button>
+
+            <CSVLink
+              className="text-white"
+              data={exportData}
+              headers={headers}
+              filename={"exported_data.csv"}
+            >
+              <Button
+                size="small"
+                disabled={
+                  filterQuery?.startDate === null &&
+                  filterQuery?.endDate === null
+                }
+              >
+                <Icon
+                  icon="fluent:arrow-upload-16-filled"
+                  height={BTN_ICON_HEIGHT}
+                  width={BTN_ICON_WIDTH}
+                />
+                Export
+              </Button>
+            </CSVLink>
+          </Flex>
+        )}
       </Flex>
       {loading === "pending" ? (
         <TableScalaton />
