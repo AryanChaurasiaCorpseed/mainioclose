@@ -4,6 +4,7 @@ import MainCompanyPage from "./MainCompanyPage"
 import TemporaryCompanies from "./TemporaryCompanies"
 import { useDispatch } from "react-redux"
 import { getAllUsers } from "../../../Toolkit/Slices/UsersSlice"
+import ConsultantCompanies from "./ConsultantCompanies"
 
 const MainComanyModule = () => {
     const dispatch=useDispatch()
@@ -21,6 +22,11 @@ const MainComanyModule = () => {
         label: "Temporary companies",
         key: "temporaryCompanies",
         children: <TemporaryCompanies />,
+      },
+      {
+        label: "Consultant companies",
+        key: "consultantCompanies",
+        children: <ConsultantCompanies />,
       },
     ]
   }, [])

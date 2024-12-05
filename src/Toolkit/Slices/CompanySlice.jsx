@@ -253,9 +253,19 @@ export const getAllConsultantByCompany = createAsyncThunk(
   "getAllConsultantByCompany",
   async (data) => {
     const response = await getQuery(
-      `/leadService/api/v1/company/getAllConsultantByCompany?userId=${data?.userId}&filterUserId=${data?.filterUserId}&page=${data?.size}&size=${data?.size}`
+      `/leadService/api/v1/company/getAllConsultantByCompany?userId=${data?.id}&filterUserId=${data?.filterUserId}&page=${data?.page}&size=${data?.size}`
     );
-    return response.data
+    return response.data;
+  }
+);
+
+export const getAllConsultantByCompanyCount = createAsyncThunk(
+  "getAllConsultantByCompanyCount",
+  async (id) => {
+    const response = await getQuery(
+      `/leadService/api/v1/company/getAllConsultantByCompanyCount?userId=${id}`
+    );
+    return response.data;
   }
 );
 
@@ -282,8 +292,9 @@ const CompnaySlice = createSlice({
     companyListWithServices: {},
     totalCompanyServiceCount: 0,
     allTemporaryCompanies: [],
-    consultantCompanyList:[],
-    consultantLoading:""
+    consultantCompanyList: [],
+    consultantLoading: "",
+    consultantCompanyCount: 0,
   },
   reducers: {
     handleNextPagination: (state, action) => {
@@ -491,6 +502,24 @@ const CompnaySlice = createSlice({
       state.consultantLoading = "rejected";
       state.consultantCompanyList = [];
     });
+
+    builder.addCase(getAllConsultantByCompanyCount.pending, (state, action) => {
+      state.consultantLoading = "pending";
+    });
+    builder.addCase(
+      getAllConsultantByCompanyCount.fulfilled,
+      (state, action) => {
+        state.consultantCompanyCount = action.payload;
+        state.consultantLoading = "success";
+      }
+    );
+    builder.addCase(
+      getAllConsultantByCompanyCount.rejected,
+      (state, action) => {
+        state.consultantLoading = "rejected";
+        state.consultantCompanyCount = 0;
+      }
+    );
   },
 });
 

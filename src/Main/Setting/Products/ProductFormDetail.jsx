@@ -1,26 +1,57 @@
-import { Button, Flex, notification, Popconfirm, Typography } from "antd"
-import React from "react"
-import CommonTable from "../../../components/CommonTable"
-import DocumentModal from "./ProductModals/DocumentModal"
-import MilestoneModal from "./ProductModals/MilestoneModal"
-import { useDispatch, useSelector } from "react-redux"
-import PriceModal from "./ProductModals/PriceModal"
-import TatModal from "./ProductModals/TatModal"
-import "./Product.scss"
+import {
+  Button,
+  Flex,
+  Modal,
+  notification,
+  Popconfirm,
+  Tag,
+  Typography,
+} from "antd";
+import React, { useState } from "react";
+import CommonTable from "../../../components/CommonTable";
+import DocumentModal from "./ProductModals/DocumentModal";
+import MilestoneModal from "./ProductModals/MilestoneModal";
+import { useDispatch, useSelector } from "react-redux";
+import PriceModal from "./ProductModals/PriceModal";
+import TatModal from "./ProductModals/TatModal";
+import "./Product.scss";
 import {
   deleteDocumentForProduct,
   deleteMileStoneForProduct,
   deletePriceForProduct,
   getSingleProductByProductId,
-} from "../../../Toolkit/Slices/ProductSlice"
-import { Icon } from "@iconify/react"
-const { Text } = Typography
+} from "../../../Toolkit/Slices/ProductSlice";
+import { Icon } from "@iconify/react";
+import OverFlowText from "../../../components/OverFlowText";
+const { Text } = Typography;
+
+const DocumentViewModal = ({ data }) => {
+  const [openModal, setOpenModal] = useState(false);
+  return (
+    <>
+      <Button size="small" onClick={() => setOpenModal(true)}>
+        view
+      </Button>
+      <Modal
+        title="View document"
+        open={openModal}
+        centered
+        onCancel={() => setOpenModal(false)}
+        onClose={() => setOpenModal(false)}
+        width={800}
+        height={600}
+      >
+        <iframe src={data?.name} width={750} height={500} />
+      </Modal>
+    </>
+  );
+};
 
 const ProductFormDetail = ({ data }) => {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const productDetail = useSelector(
     (state) => state.product.singleProductDetail
-  )
+  );
 
   const priceColumns = [
     {
@@ -50,10 +81,12 @@ const ProductFormDetail = ({ data }) => {
             dispatch(deletePriceForProduct(record?.id))
               .then((resp) => {
                 if (resp.meta.requestStatus === "fulfilled") {
-                  notification.success({ message: "Task deleted successfully" })
-                  dispatch(getSingleProductByProductId(data?.id))
+                  notification.success({
+                    message: "Task deleted successfully",
+                  });
+                  dispatch(getSingleProductByProductId(data?.id));
                 } else {
-                  notification.error({ message: "Something went wrong !." })
+                  notification.error({ message: "Something went wrong !." });
                 }
               })
               .catch(() =>
@@ -67,7 +100,7 @@ const ProductFormDetail = ({ data }) => {
         </Popconfirm>
       ),
     },
-  ]
+  ];
 
   const milestoneColumns = [
     {
@@ -101,10 +134,12 @@ const ProductFormDetail = ({ data }) => {
             dispatch(deleteMileStoneForProduct(record?.id))
               .then((resp) => {
                 if (resp.meta.requestStatus === "fulfilled") {
-                  notification.success({ message: "Task deleted successfully" })
-                  dispatch(getSingleProductByProductId(data?.id))
+                  notification.success({
+                    message: "Task deleted successfully",
+                  });
+                  dispatch(getSingleProductByProductId(data?.id));
                 } else {
-                  notification.error({ message: "Something went wrong !." })
+                  notification.error({ message: "Something went wrong !." });
                 }
               })
               .catch(() =>
@@ -118,12 +153,18 @@ const ProductFormDetail = ({ data }) => {
         </Popconfirm>
       ),
     },
-  ]
+  ];
 
   const documentColumns = [
     {
       title: "Document name",
       dataIndex: "name",
+      render: (_, data) => <OverFlowText>{data?.name}</OverFlowText>,
+    },
+    {
+      title: "View",
+      dataIndex: "view",
+      render: (_, data) => <DocumentViewModal data={data} />,
     },
     {
       title: "Description",
@@ -144,10 +185,12 @@ const ProductFormDetail = ({ data }) => {
             dispatch(deleteDocumentForProduct(record?.id))
               .then((resp) => {
                 if (resp.meta.requestStatus === "fulfilled") {
-                  notification.success({ message: "Task deleted successfully" })
-                  dispatch(getSingleProductByProductId(data?.id))
+                  notification.success({
+                    message: "Task deleted successfully",
+                  });
+                  dispatch(getSingleProductByProductId(data?.id));
                 } else {
-                  notification.error({ message: "Something went wrong !." })
+                  notification.error({ message: "Something went wrong !." });
                 }
               })
               .catch(() =>
@@ -161,7 +204,7 @@ const ProductFormDetail = ({ data }) => {
         </Popconfirm>
       ),
     },
-  ]
+  ];
 
   return (
     <Flex vertical gap={16}>
@@ -217,20 +260,14 @@ const ProductFormDetail = ({ data }) => {
       </Flex>
 
       <Flex vertical className="product-container">
-        <Flex
-          vertical
-          className="product-container-header"
-          gap={24}
-        >
+        <Flex vertical className="product-container-header" gap={24}>
           <Text className="heading-text">Turn around time</Text>
 
           <TatModal data={data} productData={productDetail} />
         </Flex>
-
-       
       </Flex>
     </Flex>
-  )
-}
+  );
+};
 
-export default ProductFormDetail
+export default ProductFormDetail;
