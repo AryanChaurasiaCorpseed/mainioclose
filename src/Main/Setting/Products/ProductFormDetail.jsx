@@ -30,7 +30,7 @@ const DocumentViewModal = ({ data }) => {
   return (
     <>
       <Button size="small" onClick={() => setOpenModal(true)}>
-        view
+        Doc {data?.id}
       </Button>
       <Modal
         title="View document"
@@ -162,11 +162,6 @@ const ProductFormDetail = ({ data }) => {
       render: (_, data) => <OverFlowText>{data?.name}</OverFlowText>,
     },
     {
-      title: "View",
-      dataIndex: "view",
-      render: (_, data) => <DocumentViewModal data={data} />,
-    },
-    {
       title: "Description",
       dataIndex: "description",
     },
@@ -257,6 +252,12 @@ const ProductFormDetail = ({ data }) => {
           columns={documentColumns}
           scroll={{ y: 120 }}
         />
+      </Flex>
+
+      <Flex style={{ width: "100%" }} gap={2} justify="flex-end">
+        {productDetail?.doc?.map((item) => (
+          <DocumentViewModal data={item} />
+        ))}
       </Flex>
 
       <Flex vertical className="product-container">
