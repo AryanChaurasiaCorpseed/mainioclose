@@ -29,6 +29,11 @@ export const editUrls = createAsyncThunk("editUrls", async (data) => {
   return respose.data
 })
 
+export const removeSlugFromUrls=createAsyncThunk('removeSlugFromUrls',async(data)=>{
+  const response=await putQuery('/leadService/api/v1/urls/removeSlugFromUrls',data)
+  return response.data
+})
+
 export const getAllUrlList=createAsyncThunk('allUrlsList',async()=>{
   const response=await getQuery(`/leadService/api/v1/urls/getAllUrls`)
   return response.data

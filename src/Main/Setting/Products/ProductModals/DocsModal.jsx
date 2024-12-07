@@ -2,18 +2,25 @@ import { Button, Form, Input, Modal, notification, Select, Upload } from "antd"
 import React, { useCallback, useState } from "react"
 import { Icon } from "@iconify/react"
 import { useDispatch } from "react-redux"
-import { addDocumentProduct, getSingleProductByProductId } from "../../../../Toolkit/Slices/ProductSlice"
+import { addDocsInProduct, addDocumentProduct, getSingleProductByProductId } from "../../../../Toolkit/Slices/ProductSlice"
 
-const DocumentModal = ({ data }) => {
+const DocsModal = ({ data }) => {
   const dispatch = useDispatch()
   const [form] = Form.useForm()
   const [openModal, setOpenModal] = useState(false)
 
+  const normFile = (e) => {
+    if (Array.isArray(e)) {
+      return e
+    }
+    return e?.fileList
+  }
 
   const handleFinish = useCallback(
     (values) => {
       values.productId = data?.id
-      dispatch(addDocumentProduct(values))
+      values.name=values?.name?.[0]?.response
+      dispatch(addDocsInProduct(values))
         .then((resp) => {
           if (resp.meta.requestStatus === "fulfilled") {
             notification.success({ message: "Document is added successfully." })
@@ -49,15 +56,6 @@ const DocumentModal = ({ data }) => {
           form={form}
           onFinish={handleFinish}
         >
-          <Form.Item
-            label="Document name"
-            name="name"
-            rules={[
-              { required: true, message: "please enter the document name" },
-            ]}
-          >
-            <Input />
-          </Form.Item>
 
           <Form.Item
             label="Description"
@@ -82,7 +80,22 @@ const DocumentModal = ({ data }) => {
             />
           </Form.Item>
 
-          
+          <Form.Item
+            label="Document attachement"
+            name="name"
+            getValueFromEvent={normFile}
+            valuePropName="fileList"
+          >
+            <Upload
+              action="/leadService/api/v1/upload/uploadimageToFileSystem"
+              listType="text"
+            >
+              <Button size="small">
+                <Icon icon="fluent:arrow-upload-20-filled" />
+                Upload
+              </Button>
+            </Upload>
+          </Form.Item>
           
         </Form>
       </Modal>
@@ -90,4 +103,4 @@ const DocumentModal = ({ data }) => {
   )
 }
 
-export default DocumentModal
+export default DocsModal

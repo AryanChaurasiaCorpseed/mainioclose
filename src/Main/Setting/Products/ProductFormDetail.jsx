@@ -23,6 +23,7 @@ import {
 } from "../../../Toolkit/Slices/ProductSlice";
 import { Icon } from "@iconify/react";
 import OverFlowText from "../../../components/OverFlowText";
+import DocsModal from "./ProductModals/DocsModal";
 const { Text } = Typography;
 
 const DocumentViewModal = ({ data }) => {
@@ -254,10 +255,20 @@ const ProductFormDetail = ({ data }) => {
         />
       </Flex>
 
-      <Flex style={{ width: "100%" }} gap={2} justify="flex-end">
-        {productDetail?.doc?.map((item) => (
-          <DocumentViewModal data={item} />
-        ))}
+      <Flex vertical className="product-container">
+        <Flex
+          justify="space-between"
+          align="center"
+          className="product-container-header"
+        >
+          <Text className="heading-text">Attached documents</Text>
+          <DocsModal data={data} />
+        </Flex>
+        <Flex style={{ width: "100%",padding:4 }} gap={3} >
+          {productDetail?.doc?.map((item) => (
+            <DocumentViewModal data={item} />
+          ))}
+        </Flex>
       </Flex>
 
       <Flex vertical className="product-container">

@@ -99,7 +99,7 @@ const UrlsPage = () => {
       title: "Url name",
       dataIndex: "urlsName",
       fixed: "left",
-      render: (_, data) => <UrlChilds data={data}>{data?.urlsName}</UrlChilds>,
+      render: (_, data) => <UrlChilds data={data} paginationData={paginationData}>{data?.urlsName}</UrlChilds>,
     },
     {
       title: "Slugs",

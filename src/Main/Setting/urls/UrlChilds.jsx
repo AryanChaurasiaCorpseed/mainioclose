@@ -6,7 +6,7 @@ import SimilarSlugsInUrls from "./SimilarSlugsInUrls";
 import { useDispatch } from "react-redux";
 import { getChildSlugBySlugId, getSimilarSlugByUrlId } from "../../../Toolkit/Slices/LeadUrlSlice";
 
-const UrlChilds = ({ children, data }) => {
+const UrlChilds = ({ children, data,paginationData }) => {
   const dispatch = useDispatch();
   const [openDrawer, setOpenDrawer] = useState(false);
 
@@ -29,7 +29,7 @@ const UrlChilds = ({ children, data }) => {
       >
         <Tabs
           items={[
-            { label: "Slugs", key: "slugs", children: <SlugsInUrls data={data} /> },
+            { label: "Slugs", key: "slugs", children: <SlugsInUrls paginationData={paginationData} data={data} /> },
             {
               label: "Similar Slugs",
               key: "similarSlugs",

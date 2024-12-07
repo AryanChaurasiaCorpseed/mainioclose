@@ -44,6 +44,11 @@ export const addDocumentProduct = createAsyncThunk(
   }
 )
 
+export const addDocsInProduct=createAsyncThunk('addDocsInProduct',async(data)=>{
+  const response=await postQuery(`/leadService/api/v1/product/addProductDocumentsInProduct`,data)
+  return response.data
+})
+
 export const addMilestoneForProduct = createAsyncThunk(
   "addMilestoneForProduct",
   async (data) => {
