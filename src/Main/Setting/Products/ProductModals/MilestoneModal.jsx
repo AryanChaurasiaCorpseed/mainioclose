@@ -1,34 +1,48 @@
-import React, { useCallback, useState } from "react"
-import { Button, Form, Input, InputNumber, Modal, notification, Select, Upload } from "antd"
-import { Icon } from "@iconify/react"
-import { useDispatch } from "react-redux"
-import { addMilestoneForProduct, getSingleProductByProductId } from "../../../../Toolkit/Slices/ProductSlice"
+import React, { useCallback, useState } from "react";
+import {
+  Button,
+  Form,
+  Input,
+  InputNumber,
+  Modal,
+  notification,
+  Select,
+  Upload,
+} from "antd";
+import { Icon } from "@iconify/react";
+import { useDispatch } from "react-redux";
+import {
+  addMilestoneForProduct,
+  getSingleProductByProductId,
+} from "../../../../Toolkit/Slices/ProductSlice";
 
 const MilestoneModal = ({ data }) => {
-  const dispatch = useDispatch()
-  const [form] = Form.useForm()
-  const [openModal, setOpenModal] = useState(false)
+  const dispatch = useDispatch();
+  const [form] = Form.useForm();
+  const [openModal, setOpenModal] = useState(false);
 
   const handleFinish = useCallback(
     (values) => {
-      values.productId = data?.id
+      values.productId = data?.id;
       dispatch(addMilestoneForProduct(values))
         .then((resp) => {
           if (resp.meta.requestStatus === "fulfilled") {
             notification.success({
               message: "Milestone is added successfully .",
-            })
-            dispatch(getSingleProductByProductId(data?.id))
-            setOpenModal(false)
-            form.resetFields()
+            });
+            dispatch(getSingleProductByProductId(data?.id));
+            setOpenModal(false);
+            form.resetFields();
           } else {
-            notification.error({ message: "Something went wrong !." })
+            notification.error({ message: "Something went wrong !." });
           }
         })
-        .catch(() => notification.error({ message: "Something went wrong !." }))
+        .catch(() =>
+          notification.error({ message: "Something went wrong !." })
+        );
     },
-    [data, dispatch,form]
-  )
+    [data, dispatch, form]
+  );
   return (
     <>
       <Button size="small" type="text" onClick={() => setOpenModal(true)}>
@@ -43,12 +57,7 @@ const MilestoneModal = ({ data }) => {
         onOk={() => form.submit()}
         okText="Submit"
       >
-        <Form
-          layout="vertical"
-          size="small"
-          form={form}
-          onFinish={handleFinish}
-        >
+        <Form layout="vertical" form={form} onFinish={handleFinish}>
           <Form.Item
             label="Milestone name"
             name="name"
@@ -64,7 +73,11 @@ const MilestoneModal = ({ data }) => {
             name="noOfDays"
             rules={[{ required: true, message: "please enter the duration" }]}
           >
-            <InputNumber />
+            <InputNumber
+              style={{
+                width: "100%",
+              }}
+            />
           </Form.Item>
 
           <Form.Item
@@ -72,7 +85,11 @@ const MilestoneModal = ({ data }) => {
             name="stageNo"
             rules={[{ required: true, message: "please enter the steps" }]}
           >
-            <InputNumber />
+            <InputNumber
+              style={{
+                width: "100%",
+              }}
+            />
           </Form.Item>
 
           <Form.Item
@@ -80,20 +97,28 @@ const MilestoneModal = ({ data }) => {
             name="transferPercent"
             rules={[{ required: true, message: "please enter the assign %" }]}
           >
-            <InputNumber />
+            <InputNumber
+              style={{
+                width: "100%",
+              }}
+            />
           </Form.Item>
-          
+
           <Form.Item
             label="Price %"
             name="pricePercent"
             rules={[{ required: true, message: "please enter the price %" }]}
           >
-            <InputNumber />
+            <InputNumber
+              style={{
+                width: "100%",
+              }}
+            />
           </Form.Item>
         </Form>
       </Modal>
     </>
-  )
-}
+  );
+};
 
-export default MilestoneModal
+export default MilestoneModal;

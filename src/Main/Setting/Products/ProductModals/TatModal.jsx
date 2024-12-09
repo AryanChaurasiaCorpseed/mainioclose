@@ -1,5 +1,5 @@
-import { Button, Form, Input, InputNumber, Modal, notification } from "antd";
-import React, { useCallback, useEffect, useState } from "react";
+import { Button, Form, Input, InputNumber,  notification } from "antd";
+import React, { useCallback, useEffect, } from "react";
 import { useDispatch } from "react-redux";
 import {
   addTATforProduct,
@@ -36,18 +36,22 @@ const TatModal = ({ data, productData }) => {
           notification.error({ message: "Something went wrong !." })
         );
     },
-    [data, dispatch, form]
+    [data, dispatch]
   );
 
   return (
     <>
-      <Form layout="inline" size="small" form={form} onFinish={handleFinish}>
+      <Form layout="inline"  form={form} onFinish={handleFinish}>
         <Form.Item
           label="Tat duration"
           name="tatValue"
           rules={[{ required: true, message: "please enter the Tat" }]}
         >
-          <InputNumber />
+          <InputNumber
+            style={{
+              width: "100%",
+            }}
+          />
         </Form.Item>
 
         <Form.Item
@@ -55,7 +59,11 @@ const TatModal = ({ data, productData }) => {
           name="tatType"
           rules={[{ required: true, message: "please enter the type of TAT" }]}
         >
-          <Input />
+          <Input
+            style={{
+              width: "100%",
+            }}
+          />
         </Form.Item>
 
         <Form.Item
@@ -63,7 +71,7 @@ const TatModal = ({ data, productData }) => {
           name="remarks"
           rules={[{ required: true, message: "please give remarks" }]}
         >
-          <Input.TextArea autoSize={{ maxRows: 3, minRows: 2 }} />
+          <Input.TextArea  />
         </Form.Item>
         <Form.Item>
           <Button type="primary" htmlType="submit">
