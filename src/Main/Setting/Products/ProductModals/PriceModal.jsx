@@ -1,4 +1,4 @@
-import { Button, Form, Input, Modal, notification, Select } from "antd";
+import { Button, Form, Input, InputNumber, Modal, notification, Select } from "antd";
 import React, { useCallback, useState } from "react";
 import { useDispatch } from "react-redux";
 import {
@@ -78,7 +78,7 @@ const PriceModal = ({ data }) => {
             name="fees"
             rules={[{ required: true, message: "please enter the fees" }]}
           >
-            <Input />
+            <InputNumber />
           </Form.Item>
 
           <Form.Item
@@ -94,7 +94,7 @@ const PriceModal = ({ data }) => {
             name="taxAmount"
             rules={[{ required: true, message: "please enter the tax amount" }]}
           >
-            <Input />
+            <InputNumber />
           </Form.Item>
         </Form>
       </Modal>

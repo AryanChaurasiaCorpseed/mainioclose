@@ -1,42 +1,44 @@
-import { Button, Form, Input, Modal, notification } from "antd"
-import React, { useCallback, useEffect, useState } from "react"
-import { useDispatch } from "react-redux"
+import { Button, Form, Input, InputNumber, Modal, notification } from "antd";
+import React, { useCallback, useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import {
   addTATforProduct,
   getSingleProductByProductId,
-} from "../../../../Toolkit/Slices/ProductSlice"
+} from "../../../../Toolkit/Slices/ProductSlice";
 
 const TatModal = ({ data, productData }) => {
-  const dispatch = useDispatch()
-  const [form] = Form.useForm()
+  const dispatch = useDispatch();
+  const [form] = Form.useForm();
 
   useEffect(() => {
     form.setFieldsValue({
       tatValue: productData?.tatValue,
       tatType: productData?.tatType,
       remarks: productData?.description,
-    })
-  }, [form, productData])
+    });
+  }, [form, productData]);
 
   const handleFinish = useCallback(
     (values) => {
-      values.productId = data?.id
+      values.productId = data?.id;
       dispatch(addTATforProduct(values))
         .then((resp) => {
           if (resp.meta.requestStatus === "fulfilled") {
             notification.success({
               message: "TAT added successfully .",
-            })
-            dispatch(getSingleProductByProductId(data?.id))
+            });
+            dispatch(getSingleProductByProductId(data?.id));
           } else {
-            notification.error({ message: "Something went wrong !." })
+            notification.error({ message: "Something went wrong !." });
           }
         })
-        .catch(() => notification.error({ message: "Something went wrong !." }))
+        .catch(() =>
+          notification.error({ message: "Something went wrong !." })
+        );
     },
     [data, dispatch, form]
-  )
-  
+  );
+
   return (
     <>
       <Form layout="inline" size="small" form={form} onFinish={handleFinish}>
@@ -45,7 +47,7 @@ const TatModal = ({ data, productData }) => {
           name="tatValue"
           rules={[{ required: true, message: "please enter the Tat" }]}
         >
-          <Input variant="borderless" />
+          <InputNumber />
         </Form.Item>
 
         <Form.Item
@@ -53,7 +55,7 @@ const TatModal = ({ data, productData }) => {
           name="tatType"
           rules={[{ required: true, message: "please enter the type of TAT" }]}
         >
-          <Input variant="borderless" />
+          <Input />
         </Form.Item>
 
         <Form.Item
@@ -61,10 +63,7 @@ const TatModal = ({ data, productData }) => {
           name="remarks"
           rules={[{ required: true, message: "please give remarks" }]}
         >
-          <Input.TextArea
-            variant="borderless"
-            autoSize={{ maxRows: 3, minRows: 2 }}
-          />
+          <Input.TextArea autoSize={{ maxRows: 3, minRows: 2 }} />
         </Form.Item>
         <Form.Item>
           <Button type="primary" htmlType="submit">
@@ -73,7 +72,7 @@ const TatModal = ({ data, productData }) => {
         </Form.Item>
       </Form>
     </>
-  )
-}
+  );
+};
 
-export default TatModal
+export default TatModal;

@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from "react"
-import { Button, Form, Input, Modal, notification, Select, Upload } from "antd"
+import { Button, Form, Input, InputNumber, Modal, notification, Select, Upload } from "antd"
 import { Icon } from "@iconify/react"
 import { useDispatch } from "react-redux"
 import { addMilestoneForProduct, getSingleProductByProductId } from "../../../../Toolkit/Slices/ProductSlice"
@@ -64,7 +64,7 @@ const MilestoneModal = ({ data }) => {
             name="noOfDays"
             rules={[{ required: true, message: "please enter the duration" }]}
           >
-            <Input />
+            <InputNumber />
           </Form.Item>
 
           <Form.Item
@@ -72,7 +72,7 @@ const MilestoneModal = ({ data }) => {
             name="stageNo"
             rules={[{ required: true, message: "please enter the steps" }]}
           >
-            <Input />
+            <InputNumber />
           </Form.Item>
 
           <Form.Item
@@ -80,7 +80,7 @@ const MilestoneModal = ({ data }) => {
             name="transferPercent"
             rules={[{ required: true, message: "please enter the assign %" }]}
           >
-            <Input />
+            <InputNumber />
           </Form.Item>
           
           <Form.Item
@@ -88,7 +88,7 @@ const MilestoneModal = ({ data }) => {
             name="pricePercent"
             rules={[{ required: true, message: "please enter the price %" }]}
           >
-            <Input />
+            <InputNumber />
           </Form.Item>
         </Form>
       </Modal>
