@@ -129,7 +129,7 @@ const IVR = () => {
           <CommonTable
             data={filteredData}
             columns={columns}
-            scroll={{ y: 600, x: 1200 }}
+            scroll={{ y: 550, x: 1200 }}
             pagination={true}
             page={paginationData?.page}
             pageSize={paginationData?.size}
