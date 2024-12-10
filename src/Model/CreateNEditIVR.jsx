@@ -1,40 +1,53 @@
-import { Button, Form, Input, Modal, TimePicker } from "antd"
-import React, { useCallback, useState } from "react"
-import { useDispatch } from "react-redux"
-import { createIvr, getAllIvr } from "../Toolkit/Slices/IvrSlice"
-import dayjs from "dayjs"
+import { Button, Form, Input, Modal, notification, TimePicker } from "antd";
+import React, { useCallback, useState } from "react";
+import { useDispatch } from "react-redux";
+import { createIvr, getAllIvrWithPage } from "../Toolkit/Slices/IvrSlice";
+import dayjs from "dayjs";
 
-const CreateNEditIVR = () => {
-  const [form] = Form.useForm()
-  const dispatch = useDispatch()
-  const [openModal, setOpenModal] = useState(false)
+const CreateNEditIVR = ({ paginationData }) => {
+  const [form] = Form.useForm();
+  const dispatch = useDispatch();
+  const [openModal, setOpenModal] = useState(false);
 
   const validatePhoneNumber = (_, value) => {
     if (!value || /^\d{10}$/.test(value)) {
-      return Promise.resolve()
+      return Promise.resolve();
     }
     return Promise.reject(
       new Error("Phone number must be exactly 10 digits and should be number")
-    )
-  }
+    );
+  };
 
   const handleFinish = useCallback(
     (values) => {
       values.startTime = dayjs(values?.startTime).format(
         "ddd, MMM DD YYYY HH:mm:ss"
-      )
+      );
       values.endTime = dayjs(values?.endTime).format(
         "ddd, MMM DD YYYY HH:mm:ss"
-      )
+      );
       dispatch(createIvr(values))
-      setOpenModal(false)
-      dispatch(getAllIvr())
+        .then((resp) => {
+          if (resp.meta.requestStatus === "fulfilled") {
+            notification.success({ message: "Ivr created successfully !." });
+            setOpenModal(false);
+            form.resetFields();
+            dispatch(getAllIvrWithPage(paginationData));
+          } else {
+            notification.error({ message: "Something went wrong !." });
+          }
+        })
+        .catch(() =>
+          notification.error({ message: "Something went wrong !." })
+        )
     },
-    [dispatch]
-  )
+    [dispatch,form]
+  );
   return (
     <>
-      <Button type="primary" onClick={() => setOpenModal(true)}>Add ivr</Button>
+      <Button type="primary" onClick={() => setOpenModal(true)}>
+        Add ivr
+      </Button>
       <Modal
         title="Add ivr"
         open={openModal}
@@ -72,7 +85,7 @@ const CreateNEditIVR = () => {
               { validator: validatePhoneNumber },
             ]}
           >
-            <Input />
+            <Input maxLength={10} />
           </Form.Item>
 
           <Form.Item
@@ -112,7 +125,7 @@ const CreateNEditIVR = () => {
         </Form>
       </Modal>
     </>
-  )
-}
+  );
+};
 
-export default CreateNEditIVR
+export default CreateNEditIVR;
