@@ -198,10 +198,10 @@ const CompanyFormModal = ({
             primaryDesignation: editData?.primaryDesignation,
             primaryTitle: editData?.primaryTitle,
             secondaryTitle: editData?.secondaryTitle,
-            industry: editData?.industry,
-            subIndustry: editData?.subIndustry,
-            subsubIndustry: editData?.subsubIndustry,
-            industrydata: editData?.industryDataList,
+            industryId: editData?.industryId,
+            subIndustryId: editData?.subIndustryId,
+            subsubIndustryId: editData?.subsubIndustryId,
+            industrydataId: editData?.industrydataId,
           });
         }
       });
@@ -548,7 +548,7 @@ const CompanyFormModal = ({
 
           <Form.Item
             label="Select industry"
-            name="industry"
+            name="industryId"
             rules={[{ required: true, message: "please select the industry" }]}
           >
             <Select
@@ -568,16 +568,16 @@ const CompanyFormModal = ({
               onChange={(e) => {
                 dispatch(getSubIndustryByIndustryId(e));
                 form.resetFields([
-                  "industrydata",
-                  "subsubIndustry",
-                  "subIndustry",
+                  "industrydataId",
+                  "subsubIndustryId",
+                  "subIndustryId",
                 ]);
               }}
             />
           </Form.Item>
           <Form.Item
             label="Select sub-industry"
-            name="subIndustry"
+            name="subIndustryId"
             rules={[
               { required: true, message: "please select the sub industry" },
             ]}
@@ -598,13 +598,13 @@ const CompanyFormModal = ({
               }
               onChange={(e) => {
                 dispatch(getSubSubIndustryBySubIndustryId(e));
-                form.resetFields(["industrydata", "subsubIndustry"]);
+                form.resetFields(["industrydataId", "subsubIndustryId"]);
               }}
             />
           </Form.Item>
           <Form.Item
             label="Select sub-sub-industry"
-            name="subsubIndustry"
+            name="subsubIndustryId"
             rules={[
               { required: true, message: "please select the sub sub industry" },
             ]}
@@ -625,14 +625,14 @@ const CompanyFormModal = ({
               }
               onChange={(e) => {
                 dispatch(getIndustryDataBySubSubIndustryId(e));
-                form.resetFields(["industrydata"]);
+                form.resetFields(["industrydataId"]);
               }}
             />
           </Form.Item>
 
           <Form.Item
             label="Select industry data"
-            name="industrydata"
+            name="industrydataId"
             rules={[
               { required: true, message: "please select the industry data" },
             ]}

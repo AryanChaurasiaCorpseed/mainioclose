@@ -11,6 +11,7 @@ import {
 } from "../../Toolkit/Slices/CompanySlice";
 import {
   Button,
+  Flex,
   Form,
   Input,
   Modal,
@@ -294,6 +295,33 @@ const CompanyForm = () => {
       title: "Comment",
       dataIndex: "comment",
       render: (_, data) => <OverFlowText>{data?.comment}</OverFlowText>,
+    },
+
+    {
+      title: "Industry",
+      dataIndex: "industry",
+      render: (_, data) => <OverFlowText>{data?.industry}</OverFlowText>,
+    },
+    {
+      title: "Sub industry",
+      dataIndex: "subIndustry",
+      render: (_, data) => <OverFlowText>{data?.subIndustry}</OverFlowText>,
+    },
+    {
+      title: "Sub sub industry",
+      dataIndex: "subSubIndustry",
+      render: (_, data) => <OverFlowText>{data?.subSubIndustry}</OverFlowText>,
+    },
+    {
+      title: "Industry data",
+      dataIndex: "industryData",
+      render: (_, data) => (
+        <Flex gap={2} wrap>
+          {data?.industryData?.length > 0
+            ? data?.industryData?.map((item) => <Text>{item?.name}</Text>)
+            : "NA"}
+        </Flex>
+      ),
     },
 
     {
