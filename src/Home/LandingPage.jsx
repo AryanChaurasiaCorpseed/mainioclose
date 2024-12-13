@@ -2426,14 +2426,14 @@ const LandingPage = () => {
 
                 <div className="w-50-l pl5-l mb4 mb0-l">
                   <div className="flex-m flex-row-m pt4-l">
-                    <div className="w-100 w-50-m w-33-l ph2-l">
+                    <div className="w-100 w-50-m w-33-l ph2-l" style={{display:"flex",justifyContent:'flex-end'}}>
                       <div className="white f5 ">
                         <h2 className="mt3 o-7 h2-uppercase white">Company</h2>
 
                         <ul className="list pl0 lh-copy">
                           <li className="pt4-ns pt2 pb2">
                             <a
-                              href="brightpearl-history.html"
+                              href="http://www.corpseed.com"
                               className="link"
                               data-wpel-link="internal"
                             >
@@ -2442,27 +2442,19 @@ const LandingPage = () => {
                           </li>
                           <li className="pb2">
                             <a
-                              href="opportunities.html"
+                             href="http://www.corpseed.com"
                               className="link"
                               data-wpel-link="internal"
                             >
                               Opportunities
                             </a>
                           </li>
-                          <li className="pb2">
-                            <a
-                              href="press-and-media.html"
-                              className="link"
-                              data-wpel-link="internal"
-                            >
-                              Press
-                            </a>
-                          </li>
+                          
                         </ul>
                       </div>
                     </div>
 
-                    <div className="w-100 w-50-m w-33-l ph2-m">
+                    {/* <div className="w-100 w-50-m w-33-l ph2-m">
                       <div className="white f5 ">
                         <h2 className="mt3 o-7 h2-uppercase white">
                           Partner Services
@@ -2507,9 +2499,9 @@ const LandingPage = () => {
                           </li>
                         </ul>
                       </div>
-                    </div>
+                    </div> */}
 
-                    <div className="w-100 w-50-m w-33-l ph2-m">
+                    {/* <div className="w-100 w-50-m w-33-l ph2-m">
                       <div className="white f5">
                         <h2 className="h2-uppercase mt3 o-7 white">Support</h2>
                         <ul className="list pl0 lh-copy">
@@ -2555,7 +2547,7 @@ const LandingPage = () => {
                           </li>
                         </ul>
                       </div>
-                    </div>
+                    </div> */}
                   </div>
                 </div>
               </div>
@@ -2568,7 +2560,7 @@ const LandingPage = () => {
                     </p>
                   </div>
 
-                  <div className="w-50-l pl5-l pr4-l flex-l flex-row-l justify-between-l">
+                  {/* <div className="w-50-l pl5-l pr4-l flex-l flex-row-l justify-between-l">
                     <a
                       href="privacy-policy.html"
                       className="db dib-m link white pr3-m"
@@ -2597,7 +2589,7 @@ const LandingPage = () => {
                     >
                       Security
                     </a>
-                  </div>
+                  </div> */}
                 </div>
               </div>
             </div>
