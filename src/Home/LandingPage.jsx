@@ -1,30 +1,37 @@
-import React, { useEffect, useState } from "react"
-import { Link } from "react-router-dom"
-import logo from "../Images/CORPSEED.webp"
-import img1 from "../Images/COMPLIANCE_RISK_MANAGEMENT.png"
-import im2 from "../Images/COMPLIANCE_MONITORING_FRAMEWORK.png"
-import img3 from "../Images/OUTSOURCE_AND_MANAGE_TASKS.png"
-import img4 from "../Images/AUTOMATED_TRIGGERS_AND_ALERTS.png"
-import masterImg from '../Images/ERP2.png'
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import logo from "../Images/CORPSEED.webp";
+import img1 from "../Images/COMPLIANCE_RISK_MANAGEMENT.png";
+import im2 from "../Images/COMPLIANCE_MONITORING_FRAMEWORK.png";
+import img3 from "../Images/OUTSOURCE_AND_MANAGE_TASKS.png";
+import img4 from "../Images/AUTOMATED_TRIGGERS_AND_ALERTS.png";
+import masterImg from "../Images/ERP2.png";
 // import img5 from "../Images/SECURED_CLOU_DOCUMENTS.svg"
-import img6 from "../Images/COMPREHENSIV_DASHBOARDS_AND_REPORTS-01.png"
-import erpNew from '../Images/erp-new.webp'
-import "./LandingPage.scss"
+import img6 from "../Images/COMPREHENSIV_DASHBOARDS_AND_REPORTS-01.png";
+import erpNew from "../Images/erp-new.webp";
+import facebook from "../Images/facebook.png";
+import instagram from "../Images/instagram.png";
+import twitterX from "../Images/twitter_x.png";
+import linkedin from "../Images/linkedin.png";
+import pintrest from "../Images/pintrest.png";
+import youtube from "../Images/youtube.png";
+import "./LandingPage.scss";
+import { Icon } from "@iconify/react";
 
 const LandingPage = () => {
-  const [prevScrollPos, setPrevScrollPos] = useState(window.scrollY)
-  const [visible, setVisible] = useState(true)
+  const [prevScrollPos, setPrevScrollPos] = useState(window.scrollY);
+  const [visible, setVisible] = useState(true);
 
   const handleScroll = () => {
-    const currentScrollPos = window.scrollY
-    setVisible(prevScrollPos > currentScrollPos)
-    setPrevScrollPos(currentScrollPos)
-  }
+    const currentScrollPos = window.scrollY;
+    setVisible(prevScrollPos > currentScrollPos);
+    setPrevScrollPos(currentScrollPos);
+  };
 
   useEffect(() => {
-    window.addEventListener("scroll", handleScroll)
-    return () => window.removeEventListener("scroll", handleScroll)
-  }, [prevScrollPos])
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [prevScrollPos]);
   return (
     <>
       <div id="page" className="site m-transparent-header">
@@ -667,25 +674,38 @@ const LandingPage = () => {
                       </h1>
 
                       <h2 className="as-header-1 white pb3">
-                        Navigating business approvals has never been easier.
+                        Streamline Customer Process Integration
                       </h2>
 
                       <div className="cms m-checks-list white">
                         <p>
-                          We simplify the process of securing essential licenses
-                          and permits, <strong>streamline operations</strong>,{" "}
-                          <strong>handling everything </strong> from
-                          <strong>application</strong> to compliance management.
+                          Our ERP Centralized system centralizes customer
+                          information and processes to enhance collaboration,
+                          improve data flow, and ensure timely delivery of
+                          services. Integrating all departments Marketing,
+                          Presale, Quality, Sales, Accounts, Client
+                          Relationship, Technical, liaisoning, Procurement, and
+                          Human Resource etc ensures that each department has
+                          the most up-to-date information, enabling quicker
+                          decision-making and a smooth customer experience.
                         </p>
-                        <p>
+                        {/* <p>
                           We streamline the process of obtaining necessary
                           business approvals to ensure your operations are fully
                           compliant with regulatory requirements.
-                        </p>
+                        </p> */}
+                        <h4 className="as-header-1 white pb3">
+                          Various Modules in One Integrated ERP
+                        </h4>
                         <ul>
-                          <li>Focus on what you do best.</li>
-                          <li>Growing your business.</li>
-                          <li>Experience a hassle-free approval process.</li>
+                          <li>Marketing</li>
+                          <li>Quality Management</li>
+                          <li>Customer Relationship Management</li>
+                          <li>Accounts</li>
+                          <li>Operations</li>
+                          <li>Procurement</li>
+                          <li>Human Resource Management</li>
+                          <li>Liaisoning</li>
                         </ul>
                       </div>
 
@@ -717,7 +737,7 @@ const LandingPage = () => {
                       className="no-lazyload"
                       width="454"
                       height="591"
-                      style={{marginTop:'80px'}}
+                      style={{ marginTop: "80px" }}
                     />
                   </div>
                 </div>
@@ -962,23 +982,18 @@ const LandingPage = () => {
                   <div className="w-50-l pl5-l flex-l flex-row-l items-center-l">
                     <div className="center no-center-l mw-600 pt4-l tc tl-l">
                       <h2 className="mid title-sequel pt3">
-                        Master Compliance, <i>Minimize Risk</i>
+                        Centralized Data, Seamless Collaboration- “One System,
+                        Infinite Possibilities”
                       </h2>
                       <h3>by automating (almost) everything</h3>
                       <p>
-                        Transform your approach to compliance with our
-                        cutting-edge risk management solutions. We simplify the
-                        complexities of regulatory requirements, identifying and
-                        mitigating potential risks to ensure your business
-                        remains secure and compliant.
-                      </p>
-                      <p>
-                        With our expertise, you can confidently navigate legal
-                        landscapes, avoid costly penalties, and focus on driving
-                        your business forward. Let us turn compliance challenges
-                        into opportunities for growth and stability.{" "}
-                        <strong>Save 1000s of hours</strong> and focus your
-                        energy where it counts.
+                        Our system connects all the business functions, from
+                        Marketing to Client Relations, Sales, Accounts,
+                        Technical, Quality, procurement, HRM and Liaisoning,
+                        into a unified platform, ensuring that information flows
+                        seamlessly across departments. With a single source of
+                        truth, you can streamline processes, improve accuracy,
+                        and boost efficiency.
                       </p>
                     </div>
                   </div>
@@ -1003,26 +1018,19 @@ const LandingPage = () => {
                   <div className="w-50-l pr5-l order-0-l flex-l flex-row-l items-center-l">
                     <div className="center no-center-l mw-600 pt4-l tc tl-l">
                       <h2 className="mid title-sequel pt3">
-                        Stay Ahead with
-                        <br /> <i>Proactive Compliance</i>
+                        Accelerate Business Growth with Smarter Solutions- “From
+                        Leads to Loyalty: Every Step Streamlines”
                       </h2>
                       <h3>
                         Elevate your business’s compliance strategy with our
                         advanced monitoring framework.
                       </h3>
                       <p>
-                        We provide real-time insights and proactive oversight to
-                        ensure your operations adhere to evolving regulations.
-                        By implementing cutting-edge tools and expert analysis,
-                        we help you stay ahead of compliance challenges,
-                        mitigate risks, and maintain seamless regulatory
-                        alignment.
-                        <strong></strong>
-                      </p>
-                      <p>
-                        Embrace a future of transparency and confidence with a
-                        compliance monitoring system designed for dynamic
-                        success.
+                        From lead generation to client on-boarding, sales
+                        tracking and payment processing the system helps you to
+                        manage it all. Automate workflows, reduce manual tasks
+                        and deliver exceptional service that drives customer
+                        satisfaction and business growth.
                       </p>
                     </div>
                   </div>
@@ -1046,31 +1054,19 @@ const LandingPage = () => {
                 <div className="w-50-l pl5-l flex-l flex-row-l items-center-l">
                   <div className="center no-center-l mw-600 pt4-l tc tl-l">
                     <h2 className="mid title-sequel pt3">
-                      Unlock Efficiency with
-                      <br /> <i>Outsourced Excellence</i>
+                      Real-Time Insights for Informed Decisions:” Empower your
+                      Teams and Data-Driven Decisions”
                     </h2>
-                    <h3>
+                    {/* <h3>
                       Streamline your operations by outsourcing and managing
                       critical tasks with ease.{" "}
-                    </h3>
+                    </h3> */}
                     <p>
-                      Our tailored solutions handle your administrative,
-                      regulatory, and operational needs,{" "}
-                      <strong>
-                        allowing you to focus on strategic growth.
-                      </strong>
-                      .
+                      Get instant access to key business metrics, reports, and
+                      dashboards. With real-time updates and analytics. It helps
+                      in making smarter decisions and adapting quickly to client
+                      needs
                     </p>
-                    <p>
-                      Experience unparalleled efficiency and expertise as we
-                      manage complex tasks and ensure seamless execution,
-                      freeing you to concentrate on what truly matters—driving
-                      your business forward.
-                    </p>
-                    {/* <p>
-                      You can even <strong>access industry benchmarks</strong>{" "}
-                      to see how your performance compares to your competition.
-                    </p> */}
                   </div>
                 </div>
               </div>
@@ -1095,31 +1091,17 @@ const LandingPage = () => {
                   <div className="w-50-l pr5-l order-0-l flex-l flex-row-l items-center-l">
                     <div className="center no-center-l mw-600 tc tl-l">
                       <h2 className="mid title-sequel pt3">
-                        Stay Ahead with
-                        <br /> <i>Intelligent Alerts</i>
+                        Effortless client Management:-“Every Interaction Counts,
+                        All in one Place”
                       </h2>
-                      <h3>
-                        Revolutionize your business operations with automated
-                        alerts and triggers that keep you informed and in
-                        control.{" "}
-                      </h3>
+
                       <p>
-                        Our intelligent system delivers real-time notifications
-                        and proactive alerts, ensuring you never miss critical
-                        updates or deadlines. Streamline decision-making,
-                        enhance responsiveness, and stay ahead of potential
-                        issues with a solution designed to keep your business
-                        running smoothly and efficiently.
+                        Track manage, and optimize every client touchpoint. With
+                        the Client relationship module, You will have a
+                        360-degree view of all interactions, feedback, and
+                        project status helping you build stronger, and lasting
+                        relationship within the departments.
                       </p>
-                      {/* <p>
-                        Add new sales channels – including TikTok, Instagram,
-                        live stream platforms and more – in minutes. Curate an
-                        ever-changing roster of the latest tech tools, as and
-                        when your business needs them. Access deep APIs and a
-                        certified network of development partners so that{" "}
-                        <strong>where other brands falter, you can soar</strong>
-                        .
-                      </p> */}
                     </div>
                   </div>
                 </div>
@@ -1204,32 +1186,152 @@ const LandingPage = () => {
 
                 <div className="w-60-l pb4 pb0-l pr5-l center no-center-l mw-600 max-w-none-l flex-l flex-row-l items-center-l order-0-l">
                   <div className="white mw-800 mw-none-l center tc tl-l pv4">
-                    <h2 className="as-header-1 white">Ready to keep growing?</h2>
-
-                    <p className="intro-text mb4 fw6">
+                    <h2 className="as-header-1 white">Benifits</h2>
+                    {/* <p className="intro-text mb4 fw6">
                       Discover how Corpseed can help control your cash flow
-                    </p>
-
-                    {/* <a href="#" className="btn btn--std fw6 js-form-reveal dib">
-                      Book a demo
-                    </a> */}
+                    </p> */}
+                    <ul class="benifit-list d-flex flex-column gap-8 list-unstyled text-white">
+                      <li className="benifit-list-li">
+                        <div>
+                          <Icon
+                            icon="fluent:circle-12-filled"
+                            height={12}
+                            width={12}
+                            className="circle-icon"
+                          />
+                        </div>
+                        <p>
+                          <strong>Faster Response Times</strong>: Information
+                          flow between teams is faster, reducing delays in
+                          customer interactions.
+                        </p>
+                      </li>
+                      <li className="benifit-list-li">
+                        <div>
+                          <Icon
+                            icon="fluent:circle-12-filled"
+                            height={12}
+                            width={12}
+                            className="circle-icon"
+                          />
+                        </div>
+                        <p>
+                          <strong>Improved Accuracy</strong>: Centralizing data
+                          ensures consistency and accuracy across all
+                          departments.
+                        </p>
+                      </li>
+                      <li className="benifit-list-li">
+                        <div>
+                          {" "}
+                          <Icon
+                            icon="fluent:circle-12-filled"
+                            height={12}
+                            width={12}
+                            className="circle-icon"
+                          />
+                        </div>
+                        <p>
+                          <strong>Enhanced Collaborations</strong>: By having
+                          real-time access to client data, teams work together
+                          more effectively, improving overall client
+                          satisfaction.
+                        </p>
+                      </li>
+                      <li className="benifit-list-li">
+                        <div>
+                          <Icon
+                            icon="fluent:circle-12-filled"
+                            height={12}
+                            width={12}
+                            className="circle-icon"
+                          />
+                        </div>
+                        <p>
+                          {" "}
+                          <strong>Cost Efficiency</strong>: Streamlining
+                          workflows eliminates unnecessary steps, reducing
+                          operational costs and human error.
+                        </p>
+                      </li>
+                      <li className="benifit-list-li">
+                        <div>
+                          <Icon
+                            icon="fluent:circle-12-filled"
+                            height={12}
+                            width={12}
+                            className="circle-icon"
+                          />
+                        </div>
+                        <p>
+                          <strong>Efficiency</strong>: Automated processes,
+                          reduce manual errors, and speed up response times.
+                        </p>
+                      </li>
+                      <li className="benifit-list-li">
+                        <div>
+                          <Icon
+                            icon="fluent:circle-12-filled"
+                            height={12}
+                            width={12}
+                            className="circle-icon"
+                          />
+                        </div>
+                        <p>
+                          <strong>Accuracy</strong>: A single source of truth
+                          for all client data ensures consistency across teams.
+                        </p>
+                      </li>
+                      <li className="benifit-list-li">
+                        <div>
+                          {" "}
+                          <Icon
+                            icon="fluent:circle-12-filled"
+                            height={12}
+                            width={12}
+                            className="circle-icon"
+                          />
+                        </div>
+                        <p>
+                          <strong>Growth</strong>: Faster project delivery,
+                          enhanced collaborations, and better customer
+                          experience drive business success.
+                        </p>
+                      </li>
+                      <li className="benifit-list-li">
+                        <div>
+                          {" "}
+                          <Icon
+                            icon="fluent:circle-12-filled"
+                            height={12}
+                            width={12}
+                            className="circle-icon"
+                          />
+                        </div>
+                        <p>
+                          <strong>Client Satisfaction</strong>: Improves service
+                          delivery, project management, and communications.
+                        </p>
+                      </li>
+                    </ul>
                   </div>
                 </div>
               </div>
             </div>
           </section>
 
-          {/* <section className="trusted-content">
+          <section className="trusted-content">
             <div className="l-wrapper mw-82 pv4 pt5-l overflow-hidden">
               <div className="center mw-800 tc mb4 mb5-l">
-                <h2 className="as-intro-text sg-jade-mid mb0 pb2">Our customers</h2>
+                {/* <h2 className="as-intro-text sg-jade-mid mb0 pb2">Our customers</h2> */}
                 <h3 className="as-header-2 title-sequel">
-                  Trusted by merchants
-                  <br /> in every industry
+                  ERP- Where every department from Marketing to Liaisoning,
+                  works as one for smarter business solutions and happier
+                  clients
                 </h3>
               </div>
 
-              <div className="flex flex-row flex-wrap m-columns-wrapper m-columns-wrapper--one-rem">
+              {/* <div className="flex flex-row flex-wrap m-columns-wrapper m-columns-wrapper--one-rem">
                 <div className="w-100 w-50-m w-33-l pb4 mw-500 center no-center-l">
                   <div className="ph3 h-100 pb2-l">
                     <a
@@ -1431,9 +1533,9 @@ const LandingPage = () => {
                     </a>
                   </div>
                 </div>
-              </div>
+              </div> */}
             </div>
-          </section> */}
+          </section>
 
           {/* <section className="brightpearl-at-a-glance bg-black">
             <div className="l-wrapper mw-82 pt5 pb4 overflow-hidden">
@@ -2151,12 +2253,12 @@ const LandingPage = () => {
             <div className="l-wrapper mw-82 pv4 pt5-l">
               <div className="white mw-600 center tc pv4">
                 <h2 className="as-header-1 white">
-                  <span id="Contact">Got questions</span>
+                  <span id="Contact">Contact us Today</span>
                 </h2>
 
                 <p className="intro-text mb4 fw6">
-                  Ready to reach your potential? Book a demo today to see how
-                  Corpseed can help you do business better.
+                  Let’s build a more efficient, collaborative, and
+                  client-focused future together
                 </p>
 
                 <a
@@ -2219,129 +2321,100 @@ const LandingPage = () => {
               {" "}
               <span>
                 {" "}
-                See the benefits of Corpseed's Retail Operating System in
-                action
+                See the benefits of Corpseed's Retail Operating System in action
               </span>
             </h2>
           </div>
         </div>
-
-        {/* <div
-          className="m-home-banner dn db-l bg-section-map-lines"
-          // style="position:fixed;bottom:0;left:0;right:0;z-index:100; background-color: #000;"
-          style={{position:'fixed',bottom:0,left:0,right:0,zIndex:100,backgroundColor:'#000'}}
-        >
-          <div className="l-wrapper mw-72">
-            <a
-              href="https://www.brightpearl.com/ecommerce-guides/hyper-scalable-era-explained"
-              className="db"
-              data-wpel-link="internal"
-            >
-              <div className="flex flex-row justify-center">
-                <div
-                  className="w-40-l tl pv3"
-                  // style="background:url('https://www.brightpearl.com/wp-content/themes/bp-wp-2021/assets/img/banner/bg-banner-hyper.png') center right no-repeat; background-size: contain; min-height: 100px;"
-                  style={{backgroundSize:'contain',minHeight:'100px'}}
-                >
-                  <h3 className="title-sequel white mb0">
-                    The <span className="bp-orange">Hyper-scalable</span> <br />
-                    Era Explained
-                  </h3>
-                </div>
-
-                <div className="w-30-l pv3 ph4 tl flex flex-row items-center">
-                  <p className="white fw6 mb0">
-                    What it is, why it matters and how retailers can reap the
-                    benefits
-                  </p>
-                </div>
-
-                <div className="w-20-l pv3 flex flex-row items-center">
-                  <p className="btn ph4 pv3 btn--orange mb0 lh-solid dib ml3 nowrap fw6">
-                    Get the report
-                  </p>
-                </div>
-              </div>
-            </a>
-          </div>
-        </div> */}
-
         <footer id="colophon" className="l-footer site-footer bg-black">
-          <div className="l-wrapper mw-82 pv4 pv6-l lh-copy">
+          <div className="l-wrapper mw-82 lh-copy">
             <div className="l-footer-inner">
               <div className="footer-row-1 flex-l flex-row-l">
                 <div className="w-50-l pr4-l">
                   <div className="pv4 mb4 mt3-l br3">
-                    <div className="mw-700 pb4 pb5-l">
-                      <img
-                        src="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20185%2045'%3E%3C/svg%3E"
-                        alt="Brightpearl by Sage"
-                        width="185px"
-                        height="45px"
-                        data-lazy-src="https://www.brightpearl.com/wp-content/themes/bp-wp-2021/assets/img/logo-brightpearl-by-sage-white.svg"
-                      />
-                      <noscript>
-                        <img
-                          src="wp-content/themes/bp-wp-2021/assets/img/logo-brightpearl-by-sage-white.svg"
-                          alt="Brightpearl by Sage"
-                          width="185px"
-                          height="45px"
-                        />
-                      </noscript>
-                    </div>
-
                     <div className="m-footer-social pt4-l">
                       <div className="flex-l flex-row-l w-50-l pr4-l">
                         <div className="w-50-l mb4 mb0-l">
-                          <ul className="list pl0 lh-copy">
-                            <li className="dib v-mid pr3">
-                              <h5 className="mb0 white">
-                                <b>Follow Us</b>
-                              </h5>
-                            </li>
-
-                            <li className="m-footer-social-icon dib v-mid pr2">
+                          <h5 className="mb0 white">
+                            <b>Follow Us</b>
+                          </h5>
+                          <ul className="list pl0 lh-copy my-4">
+                            <li className="m-footer-social-icon dib v-mid pr2 mr-2">
                               <a
-                                href="https://www.facebook.com/BrightpearlHQ"
+                                href="https://www.facebook.com/CorpseedGroup/"
                                 target="_blank"
-                                className="facebook db hide-text hover-opacity white"
+                                // className="facebook db hide-text hover-opacity"
                                 data-wpel-link="external"
                                 rel="external noopener noreferrer"
                               >
-                                Facebook
+                                <div style={{ height: "auto", width: "45px" }}>
+                                  <img src={facebook} />
+                                </div>
                               </a>
                             </li>
-                            <li className="m-footer-social-icon dib v-mid pr2">
+                            <li className="m-footer-social-icon dib v-mid pr2 mr-2">
                               <a
-                                href="https://twitter.com/BrightpearlHQ"
+                                href="https://www.instagram.com/corpseed/"
                                 target="_blank"
-                                className="twitter db hide-text hover-opacity white"
+                                // className="facebook db hide-text hover-opacity"
                                 data-wpel-link="external"
                                 rel="external noopener noreferrer"
                               >
-                                X (Twitter)
+                                <div style={{ height: "auto", width: "45px" }}>
+                                  <img src={instagram} />
+                                </div>
                               </a>
                             </li>
-                            <li className="m-footer-social-icon dib v-mid pr2">
+                            <li className="m-footer-social-icon dib v-mid pr2 mr-2">
                               <a
-                                href="https://www.linkedin.com/company/brightpearl/"
+                                href="https://x.com/corpseed"
                                 target="_blank"
-                                className="linkedin db hide-text hover-opacity white"
+                                // className="twitter db hide-text hover-opacity white"
                                 data-wpel-link="external"
                                 rel="external noopener noreferrer"
                               >
-                                LinkedIn
+                                <div style={{ height: "auto", width: "35px" }}>
+                                  <img src={twitterX} />
+                                </div>
+                              </a>
+                            </li>
+                            <li className="m-footer-social-icon dib v-mid pr2 mr-2">
+                              <a
+                                href="https://in.linkedin.com/company/corpseed"
+                                target="_blank"
+                                // className="linkedin db hide-text hover-opacity white"
+                                data-wpel-link="external"
+                                rel="external noopener noreferrer"
+                              >
+                                <div style={{ height: "auto", width: "35px" }}>
+                                  <img src={linkedin} />
+                                </div>
+                              </a>
+                            </li>
+                            <li className="m-footer-social-icon dib v-mid pr2 mr-2">
+                              <a
+                                href="https://www.youtube.com/@CorpSeed"
+                                target="_blank"
+                                // className="youtube db hide-text hover-opacity white"
+                                data-wpel-link="external"
+                                rel="external noopener noreferrer"
+                              >
+                                <div style={{ height: "auto", width: "45px" }}>
+                                  <img src={youtube} />
+                                </div>
                               </a>
                             </li>
                             <li className="m-footer-social-icon dib v-mid">
                               <a
-                                href="https://www.youtube.com/user/brightpearldocs"
+                                href="https://in.pinterest.com/corpseed/"
                                 target="_blank"
-                                className="youtube db hide-text hover-opacity white"
+                                // className="youtube db hide-text hover-opacity white"
                                 data-wpel-link="external"
                                 rel="external noopener noreferrer"
                               >
-                                Youtube
+                                <div style={{ height: "auto", width: "40px" }}>
+                                  <img src={pintrest} />
+                                </div>
                               </a>
                             </li>
                           </ul>
@@ -2532,8 +2605,7 @@ const LandingPage = () => {
         </footer>
       </div>
     </>
-  )
-}
+  );
+};
 
-export default LandingPage
-
+export default LandingPage;

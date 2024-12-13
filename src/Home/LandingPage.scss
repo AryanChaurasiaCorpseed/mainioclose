@@ -147,7 +147,7 @@ img {
 // }
 button
 // ,
-// select 
+// select
 {
   text-transform: none;
 }
@@ -320,7 +320,7 @@ blockquote a {
 button
 // input[type="button"],
 // input[type="reset"],
-// input[type="submit"] 
+// input[type="submit"]
 {
   border: 1px solid;
   // border-color: #00d639;
@@ -334,7 +334,7 @@ button:hover
 // ,
 // input[type="button"]:hover,
 // input[type="reset"]:hover,
-// input[type="submit"]:hover 
+// input[type="submit"]:hover
 {
   // background: #00d639;
   // border-color: #00d639;
@@ -348,7 +348,7 @@ button:focus
 // input[type="reset"]:active,
 // input[type="reset"]:focus,
 // input[type="submit"]:active,
-// input[type="submit"]:focus 
+// input[type="submit"]:focus
 {
   // background: #00d639;
   // border-color: #00d639;
@@ -6789,4 +6789,33 @@ form .hs-error-msgs.inputs-list li {
       clear: both;
     }
   }
+}
+
+.benifit-list{
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.benifit-list-li {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  margin:0;
+  p{
+    font-size: 18px;
+    margin-left: 5px;
+    strong{
+      font-size: 22px;
+      font-weight: 900;
+    }
+  }
+
+}
+
+.circle-icon{
+  margin-top: 10px;
+  color: #fff;
+  width: 12;
+  height: 12;
 }
