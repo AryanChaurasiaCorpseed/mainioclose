@@ -71,6 +71,7 @@ const VendorsList = () => {
     endDate: null,
     userId: getHighestPriorityRole(currentRoles) !== "ADMIN" ? [userid] : [],
   });
+  const [openPopup, setOpenPopup] = useState(false);
 
   useEffect(() => {
     dispatch(
@@ -287,6 +288,7 @@ const VendorsList = () => {
         ...values,
       };
       dispatch(vendorsFilteration(data));
+      setOpenPopup(false)
     },
     [dispatch, filterQuery]
   );
@@ -381,8 +383,10 @@ const VendorsList = () => {
             <Popover
               trigger={"click"}
               placement="bottomRight"
+              open={openPopup}
               overlayStyle={{ width: "400px" }}
               title="Filter for export"
+              onOpenChange={(e) => setOpenPopup(e)}
               content={
                 <Form layout="vertical" form={form} onFinish={handleFilter}>
                   <Form.Item
@@ -470,10 +474,7 @@ const VendorsList = () => {
               headers={headers}
               filename={"exported_data.csv"}
             >
-              <Button
-                size="small"
-                
-              >
+              <Button size="small">
                 <Icon
                   icon="fluent:arrow-upload-16-filled"
                   height={BTN_ICON_HEIGHT}
