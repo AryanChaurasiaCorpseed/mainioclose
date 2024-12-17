@@ -19,8 +19,10 @@ import {
   Button,
   DatePicker,
   Flex,
+  Form,
   Input,
   notification,
+  Popover,
   Select,
   Typography,
 } from "antd";
@@ -35,6 +37,7 @@ const { RangePicker } = DatePicker;
 
 const VendorsList = () => {
   const dispatch = useDispatch();
+  const [form] = Form.useForm();
   const loading = useSelector((state) => state.leads.loading);
   const currentRoles = useSelector((state) => state?.auth?.roles);
   const { userid } = useParams();
@@ -275,11 +278,18 @@ const VendorsList = () => {
     }
   };
 
-  console.log("kdxjvhclsdh", filterQuery);
-
-  const handleFilter = useCallback(() => {
-    dispatch(vendorsFilteration(filterQuery));
-  }, [dispatch, filterQuery]);
+  const handleFilter = useCallback(
+    (values) => {
+      const data = {
+        userIdBy: userid,
+        startDate: dayjs(values?.dateRange?.[0]).format("YYYY-MM-YY"),
+        endDate: dayjs(values?.dateRange?.[1]).format("YYYY-MM-YY"),
+        ...values,
+      };
+      dispatch(vendorsFilteration(data));
+    },
+    [dispatch, filterQuery]
+  );
 
   const handleResetFilter = () => {
     setFilterQuery({
@@ -289,6 +299,7 @@ const VendorsList = () => {
       endDate: null,
       userId: [],
     });
+    form.resetFields();
     dispatch(handleVendorsLoading(""));
     dispatch(
       getAllVendorsRequest({
@@ -333,8 +344,6 @@ const VendorsList = () => {
     "Over Due TAT",
   ];
 
-  console.log("sajchgsajkdg", filterQuery);
-
   return (
     <>
       <Flex justify="space-between">
@@ -369,100 +378,92 @@ const VendorsList = () => {
 
         {getHighestPriorityRole(currentRoles) === "ADMIN" && (
           <Flex gap={8} align="center" justify="flex-end">
-            <Icon
-              icon="fluent:filter-24-filled"
-              height={32}
-              width={32}
-              color={
-                vendorFilterationLoading === "success" ? "#0958d9" : "gray"
+            <Popover
+              trigger={"click"}
+              placement="bottomRight"
+              overlayStyle={{ width: "400px" }}
+              title="Filter for export"
+              content={
+                <Form layout="vertical" form={form} onFinish={handleFilter}>
+                  <Form.Item
+                    label="Select date range"
+                    name="dateRange"
+                    rules={[
+                      {
+                        required: true,
+                        message: "please select the date range",
+                      },
+                    ]}
+                  >
+                    <RangePicker
+                      style={{ width: "100%" }}
+                      size="small"
+                      presets={rangePresets}
+                      disabledDate={(current) =>
+                        current && current > dayjs().endOf("day")
+                      }
+                    />
+                  </Form.Item>
+                  <Form.Item label="Select status" name="status">
+                    <Select
+                      size="small"
+                      style={{ width: "100%" }}
+                      placeholder="Select status"
+                      options={
+                        vendorsStatus?.length > 0
+                          ? vendorsStatus?.map((item) => ({
+                              label: item?.statusName,
+                              value: item?.statusName,
+                            }))
+                          : []
+                      }
+                    />
+                  </Form.Item>
+                  <Form.Item label="Select users" name="userId">
+                    <Select
+                      style={{ width: "100%" }}
+                      mode="multiple"
+                      maxTagCount={"responsive"}
+                      placeholder="Select users"
+                      options={
+                        procurementAssigneeList?.length > 0
+                          ? procurementAssigneeList?.map((item) => ({
+                              label: item?.fullName,
+                              value: item?.id,
+                            }))
+                          : []
+                      }
+                    />
+                  </Form.Item>
+                  <Form.Item>
+                    <Button htmlType="submit" type="primary">
+                      Apply
+                    </Button>
+                  </Form.Item>
+                </Form>
               }
-            />
-            <RangePicker
-              style={{ width: "35%" }}
-              size="small"
-              presets={rangePresets}
-              disabledDate={(current) =>
-                current && current > dayjs().endOf("day")
-              }
-              value={[
-                filterQuery?.startDate ? dayjs(filterQuery?.startDate) : "",
-                filterQuery?.endDate ? dayjs(filterQuery?.endDate) : "",
-              ]}
-              onChange={(dates, dateString) => {
-                if (dates) {
-                  setFilterQuery((prev) => ({
-                    ...prev,
-                    startDate: dayjs(dateString[0]).format("YYYY-MM-DD"),
-                    endDate: dayjs(dateString[1]).format("YYYY-MM-DD"),
-                  }));
-                }
-              }}
-            />
-            <Select
-              size="small"
-              style={{ width: "15%" }}
-              placeholder="Select status"
-              options={
-                vendorsStatus?.length > 0
-                  ? vendorsStatus?.map((item) => ({
-                      label: item?.statusName,
-                      value: item?.statusName,
-                    }))
-                  : []
-              }
-              value={filterQuery?.status}
-              onChange={(e) =>
-                setFilterQuery((prev) => ({ ...prev, status: e }))
-              }
-            />
-
-            {getHighestPriorityRole(currentRoles) === "ADMIN" && (
-              <Select
-                size="small"
-                style={{ width: "15%" }}
-                mode="multiple"
-                maxTagCount={"responsive"}
-                placeholder="Select users"
-                options={
-                  procurementAssigneeList?.length > 0
-                    ? procurementAssigneeList?.map((item) => ({
-                        label: item?.fullName,
-                        value: item?.id,
-                      }))
-                    : []
-                }
-                value={filterQuery?.userId}
-                onChange={(e) =>
-                  setFilterQuery((prev) => ({ ...prev, userId: e }))
-                }
-              />
-            )}
+            >
+              <Button type="text">
+                <Icon
+                  icon="fluent:filter-24-filled"
+                  height={32}
+                  width={32}
+                  color={
+                    vendorFilterationLoading === "success" ? "#0958d9" : "gray"
+                  }
+                />
+              </Button>
+            </Popover>
 
             <Button
               size="small"
               onClick={handleResetFilter}
-              disabled={
-                filterQuery?.startDate === null && filterQuery?.endDate === null
-              }
+              // disabled={
+              //   filterQuery?.startDate === null && filterQuery?.endDate === null
+              // }
             >
               Reset filter
             </Button>
-            <Button
-              size="small"
-              type="primary"
-              onClick={handleFilter}
-              loading={vendorFilterationLoading === "pending" ? true : false}
-              disabled={
-                (filterQuery?.startDate === null &&
-                  filterQuery?.endDate === null) ||
-                vendorFilterationLoading === "success"
-                  ? true
-                  : false
-              }
-            >
-              Apply filter
-            </Button>
-
             <CSVLink
               className="text-white"
               data={exportData}
