@@ -472,10 +472,7 @@ const VendorsList = () => {
             >
               <Button
                 size="small"
-                disabled={
-                  filterQuery?.startDate === null &&
-                  filterQuery?.endDate === null
-                }
+                
               >
                 <Icon
                   icon="fluent:arrow-upload-16-filled"
