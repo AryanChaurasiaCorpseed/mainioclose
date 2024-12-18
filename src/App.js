@@ -80,6 +80,11 @@ import MainComanyModule from "./Main/Sales/company/MainComanyModule";
 import GraphMainPage from "./Main/GraphDashboard/GraphMainPage";
 import EstimatePage from "./Main/Sales/Leads/EstimatePage";
 import ProposalsPage from "./Main/Sales/Leads/ProposalsPage";
+import AccountSettingPage from "./Main/AccountSetting/AccountSettingPage";
+import VoucherTypePage from "./Main/AccountSetting/VoucherType/VoucherTypePage";
+import LedgerTypePage from "./Main/AccountSetting/LedgerType/LedgerTypePage";
+import Ledger from "./Main/AccountSetting/Ledger/Leadger";
+import Voucher from "./Main/AccountSetting/Voucher/Voucher";
 
 const SpinLoading = lazy(() => import("./components/SpinLoading"));
 
@@ -309,10 +314,7 @@ function App() {
                   path="companyForm"
                   element={<MainCompanyFormPage role={"sales"} />}
                 />
-                <Route
-                  path="accounttwo"
-                  element={<div>account second page</div>}
-                />
+                <Route path="" element={<div>account second page</div>} />
                 <Route
                   path="accountthird"
                   element={<div>account third page</div>}
@@ -504,6 +506,15 @@ function App() {
                     </Suspense>
                   }
                 />
+              </Route>
+              <Route
+                path="/erp/:userid/accountSetting"
+                element={<AccountSettingPage />}
+              >
+                <Route path="voucherType" element={<VoucherTypePage />} />
+                <Route path="ledgerType" element={<LedgerTypePage />} />
+                <Route path="ledger" element={<Ledger />} />
+                <Route path="voucher" element={<Voucher />} />
               </Route>
 
               {/* profile routes */}

@@ -148,11 +148,15 @@ const SideBar = () => {
                       key: "lead-form",
                     },
                     {
-                      label: <Link to={`${userid}/sales/estimate`}>Estimate</Link>,
+                      label: (
+                        <Link to={`${userid}/sales/estimate`}>Estimate</Link>
+                      ),
                       key: "estimate",
                     },
                     {
-                      label: <Link to={`${userid}/sales/proposal`}>Proposal</Link>,
+                      label: (
+                        <Link to={`${userid}/sales/proposal`}>Proposal</Link>
+                      ),
                       key: "proposal",
                     },
                   ]
@@ -524,9 +528,7 @@ const SideBar = () => {
     ...(getHighestPriorityRole(currentRoles) === "ADMIN"
       ? [
           {
-            label: (
-              <Link to={`/erp/${userid}/setting/leadStatus`}>Setting</Link>
-            ),
+            label: "Setting",
             key: "setting",
             icon: (
               <Icon
@@ -535,6 +537,24 @@ const SideBar = () => {
                 width={SIDE_BAR_ICON_WIDTH}
               />
             ),
+            children: [
+              {
+                label: (
+                  <Link to={`/erp/${userid}/setting/leadStatus`}>
+                    Erp setting
+                  </Link>
+                ),
+                key: "erpSetting",
+              },
+              {
+                label: (
+                  <Link to={`/erp/${userid}/accountSetting/voucherType`}>
+                    Account setting
+                  </Link>
+                ),
+                key: "accountSetting",
+              },
+            ],
           },
         ]
       : []),
