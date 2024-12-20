@@ -283,12 +283,12 @@ const VendorsList = () => {
     (values) => {
       const data = {
         userIdBy: userid,
-        startDate: dayjs(values?.dateRange?.[0]).format("YYYY-MM-YY"),
-        endDate: dayjs(values?.dateRange?.[1]).format("YYYY-MM-YY"),
+        startDate: dayjs(values?.dateRange?.[0]).format("YYYY-MM-DD"),
+        endDate: dayjs(values?.dateRange?.[1]).format("YYYY-MM-DD"),
         ...values,
       };
       dispatch(vendorsFilteration(data));
-      setOpenPopup(false)
+      setOpenPopup(false);
     },
     [dispatch, filterQuery]
   );

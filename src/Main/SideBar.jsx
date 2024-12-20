@@ -379,6 +379,28 @@ const SideBar = () => {
                 ),
                 key: "companyForm",
               },
+              {
+                key: "ledger",
+                label: (
+                  <Link
+                    className="link-four"
+                    to={`/erp/${userid}/account/ledger`}
+                  >
+                    Ledger
+                  </Link>
+                ),
+              },
+              {
+                key: "voucher",
+                label: (
+                  <Link
+                    className="link-four"
+                    to={`/erp/${userid}/account/voucher`}
+                  >
+                    Voucher
+                  </Link>
+                ),
+              },
             ],
           },
         ]
@@ -411,6 +433,28 @@ const SideBar = () => {
                   </Link>
                 ),
                 key: "companyForm",
+              },
+              {
+                key: "ledger",
+                label: (
+                  <Link
+                    className="link-four"
+                    to={`/erp/${userid}/account/ledger`}
+                  >
+                    Ledger
+                  </Link>
+                ),
+              },
+              {
+                key: "voucher",
+                label: (
+                  <Link
+                    className="link-four"
+                    to={`/erp/${userid}/account/voucher`}
+                  >
+                    Voucher
+                  </Link>
+                ),
               },
             ],
           },

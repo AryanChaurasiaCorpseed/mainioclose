@@ -41,28 +41,7 @@ const AccountSettingPage = () => {
         </Link>
       ),
     },
-    {
-      key: "ledger",
-      label: (
-        <Link
-          className="link-four"
-          to={`/erp/${currentUserId}/accountSetting/ledger`}
-        >
-          Ledger
-        </Link>
-      ),
-    },
-    {
-      key: "voucher",
-      label: (
-        <Link
-          className="link-four"
-          to={`/erp/${currentUserId}/accountSetting/voucher`}
-        >
-          Voucher
-        </Link>
-      ),
-    },
+    
   ];
 
   return (

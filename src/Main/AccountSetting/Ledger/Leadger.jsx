@@ -28,6 +28,7 @@ const Ledger = () => {
   const [form] = Form.useForm();
   const dispatch = useDispatch();
   const ledgerList = useSelector((state) => state.account.ledgerList);
+  const ledgerTypeList = useSelector((state) => state.account.ledgerTypeList);
   const [openModal, setOpenModal] = useState(false);
   const [editData, setEditData] = useState(null);
   const [searchText, setSearchText] = useState("");
@@ -35,6 +36,7 @@ const Ledger = () => {
 
   useEffect(() => {
     dispatch(getAllLedger());
+    dispatch(getAllLedgerType());
   }, [dispatch]);
 
   useEffect(() => {
@@ -55,6 +57,12 @@ const Ledger = () => {
   const handleEdit = (value) => {
     form.setFieldsValue({
       name: value?.name,
+      ledgerTypeId:value?.ledgerType?.id,
+      email:value?.email,
+      pin:value?.pin,
+      state:value?.state,
+      country:value?.country,
+      address:value?.address
     });
     setOpenModal(true);
     setEditData(value);
@@ -67,7 +75,7 @@ const Ledger = () => {
           if (resp.meta.requestStatus === "fulfilled") {
             notification.success({ message: "Ledger updated successfully !." });
             setOpenModal(false);
-            dispatch(getAllLedgerType());
+            dispatch(getAllLedger());
             form.resetFields();
             setEditData(null);
           } else {
@@ -83,7 +91,7 @@ const Ledger = () => {
           if (resp.meta.requestStatus === "fulfilled") {
             notification.success({ message: "Ledger created successfully" });
             setOpenModal(false);
-            dispatch(getAllLedgerType());
+            dispatch(getAllLedger());
             form.resetFields();
           } else {
             notification.error({ message: "Something went wrong !." });
@@ -148,6 +156,7 @@ const Ledger = () => {
       <Modal
         title={editData ? "Edit ledger" : "Create ledger"}
         open={openModal}
+        centered
         onCancel={() => setOpenModal(false)}
         onClose={() => setOpenModal(false)}
         onOk={() => form.submit()}
@@ -166,7 +175,19 @@ const Ledger = () => {
             name="ledgerTypeId"
             rules={[{ required: true, message: "please select ledger type" }]}
           >
-            <Select />
+            <Select
+              options={
+                ledgerTypeList?.length > 0
+                  ? ledgerTypeList?.map((item) => ({
+                      label: item?.name,
+                      value: item?.id,
+                    }))
+                  : []
+              }
+              filterOption={(input, option) =>
+                option.label.toLowerCase().includes(input.toLowerCase())
+              }
+            />
           </Form.Item>
           <Form.Item
             label="Email"

@@ -13,12 +13,15 @@ export const createVoucherType = createAsyncThunk(
   }
 );
 
-export const getAllVoucherType = createAsyncThunk("getAllVoucherType", async () => {
-  const response = await getQuery(
-    `/accountService/api/v1/voucherType/getAllVoucherType`
-  );
-  return response.data;
-});
+export const getAllVoucherType = createAsyncThunk(
+  "getAllVoucherType",
+  async () => {
+    const response = await getQuery(
+      `/accountService/api/v1/voucherType/getAllVoucherType`
+    );
+    return response.data;
+  }
+);
 
 export const updateVouchersType = createAsyncThunk(
   "updateVouchersType",
@@ -50,40 +53,45 @@ export const updateLedgerType = createAsyncThunk(
   }
 );
 
-export const getAllLedgerType = createAsyncThunk("getAllLedgerType", async () => {
-  const response = await getQuery(
-    `/accountService/api/v1/ledgerType/getAllLedgerType`
+export const getAllLedgerType = createAsyncThunk(
+  "getAllLedgerType",
+  async () => {
+    const response = await getQuery(
+      `/accountService/api/v1/ledgerType/getAllLedgerType`
+    );
+    return response.data;
+  }
+);
+
+export const createLedger = createAsyncThunk("createLedger", async (data) => {
+  const response = await postQuery(
+    `/accountService/api/v1/ledger/createLedger`,
+    data
   );
   return response.data;
 });
 
-export const createLedger=createAsyncThunk('createLedger',async(data)=>{
-    const response=await postQuery(`/accountService/api/v1/ledger/createLedger`,data)
-    return response.data
-})
+export const updateLedger = createAsyncThunk("updateLedger", async () => {
+  const response = await putQuery(``);
+  return response.data;
+});
 
-export const updateLedger=createAsyncThunk('updateLedger',async()=>{
-    const response=await putQuery(``)
-    return response.data
-})
-
-export const getAllLedger=createAsyncThunk('getAllLedger',async()=>{
-    const response=await getQuery(`/accountService/api/v1/ledger/getAllLedger`)
-    return response.data
-})
+export const getAllLedger = createAsyncThunk("getAllLedger", async () => {
+  const response = await getQuery(`/accountService/api/v1/ledger/getAllLedger`);
+  return response.data;
+});
 
 const AccountSlice = createSlice({
   name: "account",
   initialState: {
     voucherTypeLoading: "",
     voucherTypeList: [],
-    ledgerTypeLoading:'',
-    ledgerTypeList:[],
-    ledgerLoading:'',
-    ledgerList:[],
-    voucherLoading:'',
-    voucherList:[]
-
+    ledgerTypeLoading: "",
+    ledgerTypeList: [],
+    ledgerLoading: "",
+    ledgerList: [],
+    voucherLoading: "",
+    voucherList: [],
   },
   extraReducers: (builder) => {
     builder.addCase(getAllVoucherType.pending, (state, action) => {
@@ -99,28 +107,28 @@ const AccountSlice = createSlice({
     });
 
     builder.addCase(getAllLedgerType.pending, (state, action) => {
-        state.ledgerTypeLoading = "pending";
-      });
-      builder.addCase(getAllLedgerType.fulfilled, (state, action) => {
-        state.ledgerTypeLoading = "success";
-        state.ledgerTypeList = action.payload;
-      });
-      builder.addCase(getAllLedgerType.rejected, (state, action) => {
-        state.ledgerTypeLoading = "rejected";
-        state.ledgerTypeList = [];
-      });
+      state.ledgerTypeLoading = "pending";
+    });
+    builder.addCase(getAllLedgerType.fulfilled, (state, action) => {
+      state.ledgerTypeLoading = "success";
+      state.ledgerTypeList = action.payload;
+    });
+    builder.addCase(getAllLedgerType.rejected, (state, action) => {
+      state.ledgerTypeLoading = "rejected";
+      state.ledgerTypeList = [];
+    });
 
-      builder.addCase(getAllLedger.pending, (state, action) => {
-        state.ledgerLoading = "pending";
-      });
-      builder.addCase(getAllLedger.fulfilled, (state, action) => {
-        state.ledgerLoading = "success";
-        state.ledgerList = action.payload;
-      });
-      builder.addCase(getAllLedger.rejected, (state, action) => {
-        state.ledgerLoading = "rejected";
-        state.ledgerList = [];
-      });
+    builder.addCase(getAllLedger.pending, (state, action) => {
+      state.ledgerLoading = "pending";
+    });
+    builder.addCase(getAllLedger.fulfilled, (state, action) => {
+      state.ledgerLoading = "success";
+      state.ledgerList = action.payload;
+    });
+    builder.addCase(getAllLedger.rejected, (state, action) => {
+      state.ledgerLoading = "rejected";
+      state.ledgerList = [];
+    });
   },
 });
 

@@ -5,6 +5,7 @@ import {
   Input,
   Modal,
   notification,
+  Select,
   Typography,
 } from "antd";
 import React, { useEffect, useState } from "react";
@@ -59,7 +60,9 @@ const LedgerTypePage = () => {
       dispatch(updateLedgerType({ ...values, id: editData?.id }))
         .then((resp) => {
           if (resp.meta.requestStatus === "fulfilled") {
-            notification.success({ message: "Ledger type updated successfully !." });
+            notification.success({
+              message: "Ledger type updated successfully !.",
+            });
             setOpenModal(false);
             dispatch(getAllLedgerType());
             form.resetFields();
@@ -75,7 +78,9 @@ const LedgerTypePage = () => {
       dispatch(createLedgerType(values))
         .then((resp) => {
           if (resp.meta.requestStatus === "fulfilled") {
-            notification.success({ message: "Ledger type created successfully" });
+            notification.success({
+              message: "Ledger type created successfully",
+            });
             setOpenModal(false);
             dispatch(getAllLedgerType());
             form.resetFields();
@@ -154,6 +159,42 @@ const LedgerTypePage = () => {
             rules={[{ required: true, message: "please enter ledger name" }]}
           >
             <Input />
+          </Form.Item>
+          <Form.Item
+            label="Sub ledger"
+            name="subLeadger"
+            rules={[{ required: true, message: "please select sub ledger" }]}
+          >
+            <Select
+              options={[
+                { label: "True", value: true },
+                { label: "False", value: false },
+              ]}
+            />
+          </Form.Item>
+          <Form.Item
+            label="Debit credit"
+            name="isDebitCredit"
+            rules={[{ required: true, message: "please select debit credit" }]}
+          >
+            <Select
+              options={[
+                { label: "True", value: true },
+                { label: "False", value: false },
+              ]}
+            />
+          </Form.Item>
+          <Form.Item
+            label="For calculation"
+            name="usedForCalculation"
+            rules={[{ required: true, message: "please select calculation" }]}
+          >
+            <Select
+              options={[
+                { label: "True", value: true },
+                { label: "False", value: false },
+              ]}
+            />
           </Form.Item>
         </Form>
       </Modal>

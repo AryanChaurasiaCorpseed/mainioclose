@@ -314,6 +314,8 @@ function App() {
                   path="companyForm"
                   element={<MainCompanyFormPage role={"sales"} />}
                 />
+                <Route path="ledger" element={<Ledger />} />
+                <Route path="voucher" element={<Voucher />} />
                 <Route path="" element={<div>account second page</div>} />
                 <Route
                   path="accountthird"
@@ -513,8 +515,6 @@ function App() {
               >
                 <Route path="voucherType" element={<VoucherTypePage />} />
                 <Route path="ledgerType" element={<LedgerTypePage />} />
-                <Route path="ledger" element={<Ledger />} />
-                <Route path="voucher" element={<Voucher />} />
               </Route>
 
               {/* profile routes */}

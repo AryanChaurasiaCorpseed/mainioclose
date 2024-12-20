@@ -7,6 +7,8 @@ export const leadSource = [
   "Whatsapp",
   "Law Zoom website",
   "Other",
-]
+  "Mail",
+  "Emailer",
+];
 
-export const userDepartment = ["Sales", "IT", "Quality", "HR"]
+export const userDepartment = ["Sales", "IT", "Quality", "HR"];
