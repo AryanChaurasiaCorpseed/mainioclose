@@ -35,9 +35,10 @@ export const updateVouchersType = createAsyncThunk(
 
 export const createLedgerType = createAsyncThunk(
   "createLedgerType",
-  async ({ name, subLeadger, isDebitCredit, usedForCalculation }) => {
+  async (data) => {
     const response = await postQuery(
-      `/accountService/api/v1/ledgerType/createLedgerType?name=${name}&subLeadger=${subLeadger}&isDebitCredit=${isDebitCredit}&usedForCalculation=${usedForCalculation}`
+      `/accountService/api/v1/ledgerType/createLedgerType`,
+      data
     );
     return response.data;
   }
@@ -45,9 +46,10 @@ export const createLedgerType = createAsyncThunk(
 
 export const updateLedgerType = createAsyncThunk(
   "updateLedgerType",
-  async ({ id, name, subLeadger, isDebitCredit, usedForCalculation }) => {
+  async (data) => {
     const response = await putQuery(
-      `/accountService/api/v1/ledgerType/updateLedgerType?id=${id}&name=${name}&subLeadger=${subLeadger}&isDebitCredit=${isDebitCredit}&usedForCalculation=${usedForCalculation}`
+      `/accountService/api/v1/ledgerType/updateLedgerType`,
+      data
     );
     return response.data;
   }
@@ -80,6 +82,16 @@ export const getAllLedger = createAsyncThunk("getAllLedger", async () => {
   const response = await getQuery(`/accountService/api/v1/ledger/getAllLedger`);
   return response.data;
 });
+
+export const getLedgerTypeById = createAsyncThunk(
+  "getLedgerTypeById",
+  async (id) => {
+    const response = await getQuery(
+      `/accountService/api/v1/ledgerType/getAllLedgerTypeById?id=${id}`
+    );
+    return response.data;
+  }
+);
 
 const AccountSlice = createSlice({
   name: "account",

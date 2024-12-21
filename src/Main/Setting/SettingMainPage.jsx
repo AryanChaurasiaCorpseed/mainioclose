@@ -138,7 +138,7 @@ const SettingMainPage = () => {
 
   return (
     <>
-      <Layout >
+      <Layout style={{background:'#fff'}} >
         <Sider
           style={{
             padding: 0,
@@ -149,6 +149,7 @@ const SettingMainPage = () => {
             mode="inline"
             items={items}
             defaultSelectedKeys={[getPathKey()]}
+            style={{height:'100%'}}
           />
         </Sider>
         <Layout style={{backgroundColor:'#fff'}}>

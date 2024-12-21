@@ -23,6 +23,7 @@ const LedgerTypePage = () => {
   const [form] = Form.useForm();
   const dispatch = useDispatch();
   const ledgerTypeList = useSelector((state) => state.account.ledgerTypeList);
+  const ledgerGroupList = useSelector((state) => state.account.ledgerTypeList);
   const [openModal, setOpenModal] = useState(false);
   const [editData, setEditData] = useState(null);
   const [searchText, setSearchText] = useState("");
@@ -50,6 +51,10 @@ const LedgerTypePage = () => {
   const handleEdit = (value) => {
     form.setFieldsValue({
       name: value?.name,
+      usedForCalculation: value?.usedForCalculation,
+      isDebitCredit: value?.debitCredit,
+      subLeadger: value?.subLeadger,
+      id: value?.ledgerType,
     });
     setOpenModal(true);
     setEditData(value);
@@ -103,6 +108,24 @@ const LedgerTypePage = () => {
     {
       dataIndex: "name",
       title: "Name",
+    },
+    {
+      dataIndex: "debitCredit",
+      title: "Debit credit",
+      render: (_, data) =>
+        data?.debitCredit ? <Text>True</Text> : <Text>False</Text>,
+    },
+    {
+      dataIndex: "usedForCalculation",
+      title: "Used for calculation",
+      render: (_, data) =>
+        data?.usedForCalculation ? <Text>True</Text> : <Text>False</Text>,
+    },
+    {
+      dataIndex: "subLeadger",
+      title: "Sub ledger",
+      render: (_, data) =>
+        data?.subLeadger ? <Text>True</Text> : <Text>False</Text>,
     },
     {
       dataIndex: "edit",
@@ -159,6 +182,28 @@ const LedgerTypePage = () => {
             rules={[{ required: true, message: "please enter ledger name" }]}
           >
             <Input />
+          </Form.Item>
+          <Form.Item
+            label="Ledger group"
+            name="id"
+            rules={[{ required: true, message: "please select ledger group" }]}
+          >
+            <Select
+              showSearch
+              options={
+                ledgerGroupList?.length > 0
+                  ? [{ name: "Primary", id: 0 }, ...ledgerGroupList]?.map(
+                      (item) => ({
+                        label: item?.name,
+                        value: item?.id,
+                      })
+                    )
+                  : []
+              }
+              filterOption={(input, option) =>
+                option.label.toLowerCase().includes(input.toLowerCase())
+              }
+            />
           </Form.Item>
           <Form.Item
             label="Sub ledger"
