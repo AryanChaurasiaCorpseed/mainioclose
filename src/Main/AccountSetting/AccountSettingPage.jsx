@@ -41,6 +41,17 @@ const AccountSettingPage = () => {
         </Link>
       ),
     },
+    {
+      key: "statutory",
+      label: (
+        <Link
+          className="link-four"
+          to={`/erp/${currentUserId}/accountSetting/statutory`}
+        >
+          Statutory
+        </Link>
+      ),
+    },
     
   ];
 
@@ -57,6 +68,7 @@ const AccountSettingPage = () => {
             mode="inline"
             items={items}
             defaultSelectedKeys={[getPathKey()]}
+            style={{height:'100%'}}
           />
         </Sider>
         <Layout style={{ backgroundColor: "#fff" }}>

@@ -1,30 +1,29 @@
-import React, { useEffect, useState } from "react"
-import { useDispatch, useSelector } from "react-redux"
-import { getAllCompliances } from "../../Toolkit/Slices/ComplianceSlice"
-import TableOutlet from "../../components/design/TableOutlet"
-import TableScalaton from "../../components/TableScalaton"
-import SomethingWrong from "../../components/usefulThings/SomethingWrong"
-import MainHeading from "../../components/design/MainHeading"
-import "./Compliance.scss"
-import { ViewComplianceDoc } from "./ViewComplianceDoc"
-import CommonTable from "../../components/CommonTable"
-import {Icon} from '@iconify/react'
-import { Input } from "antd"
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { getAllCompliances } from "../../Toolkit/Slices/ComplianceSlice";
+import TableOutlet from "../../components/design/TableOutlet";
+import TableScalaton from "../../components/TableScalaton";
+import SomethingWrong from "../../components/usefulThings/SomethingWrong";
+import MainHeading from "../../components/design/MainHeading";
+import "./Compliance.scss";
+import { ViewComplianceDoc } from "./ViewComplianceDoc";
+import CommonTable from "../../components/CommonTable";
+import { Icon } from "@iconify/react";
+import { Input } from "antd";
 
 const Compliances = () => {
   const { allCompliance, complianceLoading, complianceError } = useSelector(
     (prev) => prev?.compliance
-  )
+  );
 
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
-  const [searchText, setSearchText] = useState("")
-  const [filteredData, setFilteredData] = useState([])
-
+  const [searchText, setSearchText] = useState("");
+  const [filteredData, setFilteredData] = useState([]);
 
   useEffect(() => {
-    dispatch(getAllCompliances())
-  }, [dispatch])
+    dispatch(getAllCompliances());
+  }, [dispatch]);
 
   const columns = [
     {
@@ -40,25 +39,22 @@ const Compliances = () => {
       title: "Documents",
       render: (_, props) => <ViewComplianceDoc data={props} />,
     },
-  ]
-
+  ];
 
   useEffect(() => {
-    setFilteredData(allCompliance)
-  }, [allCompliance])
+    setFilteredData(allCompliance);
+  }, [allCompliance]);
 
   const handleSearch = (e) => {
-    const value = e.target.value
-    setSearchText(value)
+    const value = e.target.value;
+    setSearchText(value);
     const filtered = allCompliance?.filter((item) =>
       Object.values(item)?.some((val) =>
         String(val)?.toLowerCase()?.includes(value?.toLowerCase())
       )
-    )
-    setFilteredData(filtered)
-  }
-
-
+    );
+    setFilteredData(filtered);
+  };
 
   return (
     <TableOutlet>
@@ -82,12 +78,12 @@ const Compliances = () => {
           <CommonTable
             data={filteredData}
             columns={columns}
-            scroll={{ y: 600 }}
+            scroll={{ y: "75vh" }}
           />
         )}
       </div>
     </TableOutlet>
-  )
-}
+  );
+};
 
-export default Compliances
+export default Compliances;

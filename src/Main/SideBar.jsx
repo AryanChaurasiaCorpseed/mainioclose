@@ -435,6 +435,17 @@ const SideBar = () => {
                 key: "companyForm",
               },
               {
+                key: "organizations",
+                label: (
+                  <Link
+                    className="link-four"
+                    to={`/erp/${userid}/account/organizations`}
+                  >
+                    Organizations
+                  </Link>
+                ),
+              },
+              {
                 key: "ledger",
                 label: (
                   <Link

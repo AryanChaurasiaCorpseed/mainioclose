@@ -93,6 +93,85 @@ export const getLedgerTypeById = createAsyncThunk(
   }
 );
 
+export const getLedgerById = createAsyncThunk("getLedgerById", async (id) => {
+  const response = await getQuery(
+    `/accountService/api/v1/ledger/getLedgerById?id=${id}`
+  );
+  return response.data;
+});
+
+export const createStatutory = createAsyncThunk(
+  "createStatutory",
+  async (data) => {
+    const response = await postQuery(
+      `/accountService/api/v1/statutory/addStatutoryDetails`,
+      data
+    );
+    return response.data;
+  }
+);
+
+export const getAllStatutoryList = createAsyncThunk(
+  "getAllStatutoryList",
+  async () => {
+    const response = await getQuery(
+      `/accountService/api/v1/statutory/getStatutoryDetails`
+    );
+    return response.data;
+  }
+);
+
+export const updateStatutory = createAsyncThunk(
+  "updateStatutory",
+  async (data) => {
+    const response = await putQuery(
+      `/accountService/api/v1/statutory/updateStatutoryDetails`,
+      data
+    );
+    return response.data;
+  }
+);
+
+export const getAllVoucher = createAsyncThunk("getAllVoucher", async () => {
+  const response = await getQuery(
+    `/accountService/api/v1/voucher/getAllVoucher`
+  );
+  return response.data;
+});
+
+export const createVoucher = createAsyncThunk("createVoucher", async (data) => {
+  const response = await postQuery(
+    `/accountService/api/v1/voucher/createVoucher`,
+    data
+  );
+  return response.data;
+});
+
+// export const updateVoucher=createAsyncThunk('updateVoucher',async()=>{
+//   const response=await putQuery(``)
+// })
+
+export const getAllOrganizations = createAsyncThunk(
+  "getAllOrganizations",
+  async () => {
+    const response = await getQuery(
+      `/accountService/api/v1/organization/getAllOrganization`
+    );
+    return response.data;
+  }
+);
+
+export const createOrganization = createAsyncThunk(
+  "createOrganization",
+  async (data) => {
+    const response = await postQuery(
+      `/accountService/api/v1/organization/createOrganization`,
+      data
+    );
+    return response.data;
+  }
+);
+
 const AccountSlice = createSlice({
   name: "account",
   initialState: {
@@ -104,6 +183,9 @@ const AccountSlice = createSlice({
     ledgerList: [],
     voucherLoading: "",
     voucherList: [],
+    loading: "",
+    ledgerDetail: {},
+    organiztionList: [],
   },
   extraReducers: (builder) => {
     builder.addCase(getAllVoucherType.pending, (state, action) => {
@@ -140,6 +222,42 @@ const AccountSlice = createSlice({
     builder.addCase(getAllLedger.rejected, (state, action) => {
       state.ledgerLoading = "rejected";
       state.ledgerList = [];
+    });
+
+    builder.addCase(getAllVoucher.pending, (state, action) => {
+      state.voucherLoading = "pending";
+    });
+    builder.addCase(getAllVoucher.fulfilled, (state, action) => {
+      state.voucherLoading = "success";
+      state.voucherList = action.payload;
+    });
+    builder.addCase(getAllVoucher.rejected, (state, action) => {
+      state.voucherLoading = "rejected";
+      state.voucherList = [];
+    });
+
+    builder.addCase(getLedgerById.pending, (state, action) => {
+      state.loading = "pending";
+    });
+    builder.addCase(getLedgerById.fulfilled, (state, action) => {
+      state.loading = "success";
+      state.ledgerDetail = action.payload;
+    });
+    builder.addCase(getLedgerById.rejected, (state, action) => {
+      state.loading = "rejected";
+      state.ledgerDetail = {};
+    });
+
+    builder.addCase(getAllOrganizations.pending, (state, action) => {
+      state.loading = "pending";
+    });
+    builder.addCase(getAllOrganizations.fulfilled, (state, action) => {
+      state.loading = "success";
+      state.organiztionList = action.payload;
+    });
+    builder.addCase(getAllOrganizations.rejected, (state, action) => {
+      state.loading = "rejected";
+      state.organiztionList = [];
     });
   },
 });

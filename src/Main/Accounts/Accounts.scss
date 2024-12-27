@@ -6,10 +6,15 @@
 }
 
 .lead-tag {
-    display: inline-block;  
-    max-width: 80px;       
-    white-space: nowrap;  
-    overflow: hidden;      
-    text-overflow: ellipsis; 
-    vertical-align: middle; 
+    display: inline-block;
+    max-width: 80px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    vertical-align: middle;
+  }
+
+  .table-head-heading{
+    font-size: 14px;
+    font-weight: 600;
   }

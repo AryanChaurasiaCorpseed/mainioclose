@@ -946,7 +946,7 @@ const LeadsModule = () => {
             <CommonTable
               data={allLeadData}
               columns={columns}
-              scroll={{ y: 520, x: adminRole ? 2500 : 1500 }}
+              scroll={{ y: "70vh", x: adminRole ? 2500 : 1500 }}
               rowSelection={true}
               onRowSelection={onSelectChange}
               selectedRowKeys={selectedRowKeys}

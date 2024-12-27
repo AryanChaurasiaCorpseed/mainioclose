@@ -83,8 +83,10 @@ import ProposalsPage from "./Main/Sales/Leads/ProposalsPage";
 import AccountSettingPage from "./Main/AccountSetting/AccountSettingPage";
 import VoucherTypePage from "./Main/AccountSetting/VoucherType/VoucherTypePage";
 import LedgerTypePage from "./Main/AccountSetting/LedgerType/LedgerTypePage";
-import Ledger from "./Main/AccountSetting/Ledger/Leadger";
-import Voucher from "./Main/AccountSetting/Voucher/Voucher";
+import Statutory from "./Main/AccountSetting/Statutory/Statutory";
+import Ledger from "./Main/Accounts/Ledger/Leadger";
+import Voucher from "./Main/Accounts/Voucher/Voucher";
+import Organizations from "./Main/Accounts/Organization/Organizations";
 
 const SpinLoading = lazy(() => import("./components/SpinLoading"));
 
@@ -141,6 +143,12 @@ function App() {
             borderRadiusLG: 4,
             controlHeightSM: 28,
           },
+          InputNumber: {
+            borderRadius: 4,
+            borderRadiusSM: 4,
+            borderRadiusLG: 4,
+            controlHeightSM: 28,
+          },
           Divider: {
             colorSplit: "#D3D3D3",
             margin: 4,
@@ -173,6 +181,9 @@ function App() {
             groupTitleFontSize: 12,
             fontSize: 13,
             fontSizeLG: 13,
+            borderRadius:4,
+            borderRadiusSM:4,
+            borderRadiusLG:4
           },
           Form: {
             fontSize: 12,
@@ -316,6 +327,7 @@ function App() {
                 />
                 <Route path="ledger" element={<Ledger />} />
                 <Route path="voucher" element={<Voucher />} />
+                <Route path="organizations" element={<Organizations />} />
                 <Route path="" element={<div>account second page</div>} />
                 <Route
                   path="accountthird"
@@ -515,6 +527,7 @@ function App() {
               >
                 <Route path="voucherType" element={<VoucherTypePage />} />
                 <Route path="ledgerType" element={<LedgerTypePage />} />
+                <Route path="statutory" element={<Statutory />} />
               </Route>
 
               {/* profile routes */}
