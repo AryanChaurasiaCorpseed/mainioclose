@@ -101,7 +101,6 @@ const ConsultantCompanies = () => {
     [currUser, dispatch, filterUserId]
   );
 
-
   const filterCompanyBasedOnUser = useCallback(
     (filterUserId) => {
       if (filterUserId) {
@@ -498,7 +497,7 @@ const ConsultantCompanies = () => {
             <CommonTable
               data={consultantCompanyList}
               columns={columns}
-              scroll={{ x: 3300, y: 480 }}
+              scroll={{ x: 3300, y: "63vh" }}
               rowSelection={true}
               onRowSelection={onSelectChange}
               selectedRowKeys={selectedRowKeys}

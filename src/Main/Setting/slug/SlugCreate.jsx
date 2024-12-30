@@ -15,7 +15,7 @@ import { Icon } from "@iconify/react";
 import OverFlowText from "../../../components/OverFlowText";
 import { BTN_ICON_HEIGHT, BTN_ICON_WIDTH } from "../../../components/Constants";
 import CreatePlantSetupModal from "../../../Model/CreatePlantSetupModal";
-const { Search } = Input
+const { Search } = Input;
 
 const SlugCreate = () => {
   const dispatch = useDispatch();
@@ -143,40 +143,43 @@ const SlugCreate = () => {
           Create slug
         </Button>
       </div>
-      <div className="flex-verti-center-hori-start mt-2">
-        <Search
-          placeholder="search"
-          size="small"
-          allowClear
-          value={searchText}
-          onSearch={onSearch}
-          onChange={(e) => {
-            setSearchText(e.target.value);
-            if (!e.target.value && !e.target.value.trim()) {
-              dispatch(
-                getAllSlugAction({
-                  page: paginationData?.page,
-                  size: paginationData?.size,
-                })
-              );
-              setSearchText("");
-            }
-          }}
-          enterButton="search"
-          style={{ width: "250px" }}
-          prefix={<Icon icon="fluent:search-24-regular" />}
+      <div className="setting-table">
+        <div className="flex-verti-center-hori-start mt-2">
+          <Search
+            placeholder="search"
+            size="small"
+            allowClear
+            value={searchText}
+            onSearch={onSearch}
+            onChange={(e) => {
+              setSearchText(e.target.value);
+              if (!e.target.value && !e.target.value.trim()) {
+                dispatch(
+                  getAllSlugAction({
+                    page: paginationData?.page,
+                    size: paginationData?.size,
+                  })
+                );
+                setSearchText("");
+              }
+            }}
+            enterButton="search"
+            style={{ width: "250px" }}
+            prefix={<Icon icon="fluent:search-24-regular" />}
+          />
+        </div>
+        <CommonTable
+          columns={columns}
+          data={allLeadSlug}
+          pagination={true}
+          scroll={{ y: "70vh", x: 1200 }}
+          totalCount={totalCount}
+          pageSize={paginationData?.size}
+          page={paginationData?.page}
+          handlePagination={handlePagination}
         />
       </div>
-      <CommonTable
-        columns={columns}
-        data={allLeadSlug}
-        pagination={true}
-        scroll={{ y: 500, x: 1200 }}
-        totalCount={totalCount}
-        pageSize={paginationData?.size}
-        page={paginationData?.page}
-        handlePagination={handlePagination}
-      />
+
       <Modal
         title="Create slug"
         open={openModal}

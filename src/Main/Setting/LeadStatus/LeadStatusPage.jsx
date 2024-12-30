@@ -1,57 +1,60 @@
-import React, { useEffect, useState } from "react"
-import "./LeadStatusPage.scss"
-import { deleteQuery } from "../../../API/DeleteQuery"
-import MainHeading from "../../../components/design/MainHeading"
-import EditStatus from "./EditStatus"
-import { Button, Form, Input, Modal } from "antd"
-import { useDispatch, useSelector } from "react-redux"
-import { createLead, getAllStatusData } from "../../../Toolkit/Slices/LeadSlice"
-import CommonTable from "../../../components/CommonTable"
-import { Icon } from "@iconify/react"
-import OverFlowText from "../../../components/OverFlowText"
+import React, { useEffect, useState } from "react";
+import "./LeadStatusPage.scss";
+import { deleteQuery } from "../../../API/DeleteQuery";
+import MainHeading from "../../../components/design/MainHeading";
+import EditStatus from "./EditStatus";
+import { Button, Form, Input, Modal } from "antd";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  createLead,
+  getAllStatusData,
+} from "../../../Toolkit/Slices/LeadSlice";
+import CommonTable from "../../../components/CommonTable";
+import { Icon } from "@iconify/react";
+import OverFlowText from "../../../components/OverFlowText";
 
 const LeadStatusPage = () => {
-  const [form] = Form.useForm()
-  const dispatch = useDispatch()
-  const [openModal, setOpenModal] = useState(false)
-  const [searchText, setSearchText] = useState("")
-  const [filteredData, setFilteredData] = useState([])
-  const statusData = useSelector((state) => state.leads.getAllStatus)
+  const [form] = Form.useForm();
+  const dispatch = useDispatch();
+  const [openModal, setOpenModal] = useState(false);
+  const [searchText, setSearchText] = useState("");
+  const [filteredData, setFilteredData] = useState([]);
+  const statusData = useSelector((state) => state.leads.getAllStatus);
 
   useEffect(() => {
-    dispatch(getAllStatusData())
-  }, [])
+    dispatch(getAllStatusData());
+  }, []);
 
   const deleteStatusFun = async (statusId) => {
     if (window.confirm("Are you sure to delete this record?") == true) {
       try {
         const leadStatusDel = await deleteQuery(
           `/leadService/api/v1/status/deleteStaus?id=${statusId}`
-        )
+        );
       } catch (err) {
-        console.log(err)
+        console.log(err);
       }
     }
-  }
+  };
 
   useEffect(() => {
-    setFilteredData(statusData)
-  }, [statusData])
+    setFilteredData(statusData);
+  }, [statusData]);
 
   const handleSearch = (e) => {
-    const value = e.target.value
-    setSearchText(value)
+    const value = e.target.value;
+    setSearchText(value);
     const filtered = statusData?.filter((item) =>
       Object.values(item)?.some((val) =>
         String(val)?.toLowerCase()?.includes(value?.toLowerCase())
       )
-    )
-    setFilteredData(filtered)
-  }
+    );
+    setFilteredData(filtered);
+  };
 
   const handleFinish = (values) => {
-    dispatch(createLead(values)).then(() => window.location.reload())
-  }
+    dispatch(createLead(values)).then(() => window.location.reload());
+  };
 
   const columns = [
     {
@@ -90,7 +93,7 @@ const LeadStatusPage = () => {
         </Button>
       ),
     },
-  ]
+  ];
 
   return (
     <div>
@@ -116,7 +119,7 @@ const LeadStatusPage = () => {
           <CommonTable
             data={filteredData}
             columns={columns}
-            scroll={{ y: 480 }}
+            scroll={{ y: "72vh" }}
           />
         </div>
       </div>
@@ -146,7 +149,7 @@ const LeadStatusPage = () => {
         </Form>
       </Modal>
     </div>
-  )
-}
+  );
+};
 
-export default LeadStatusPage
+export default LeadStatusPage;

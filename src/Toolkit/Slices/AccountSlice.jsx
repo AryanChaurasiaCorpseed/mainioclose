@@ -132,6 +132,7 @@ export const updateStatutory = createAsyncThunk(
   }
 );
 
+
 export const getAllVoucher = createAsyncThunk("getAllVoucher", async () => {
   const response = await getQuery(
     `/accountService/api/v1/voucher/getAllVoucher`
@@ -186,6 +187,7 @@ const AccountSlice = createSlice({
     loading: "",
     ledgerDetail: {},
     organiztionList: [],
+    statutoryList:[]
   },
   extraReducers: (builder) => {
     builder.addCase(getAllVoucherType.pending, (state, action) => {
@@ -246,6 +248,18 @@ const AccountSlice = createSlice({
     builder.addCase(getLedgerById.rejected, (state, action) => {
       state.loading = "rejected";
       state.ledgerDetail = {};
+    });
+
+    builder.addCase(getAllStatutoryList.pending, (state, action) => {
+      state.loading = "pending";
+    });
+    builder.addCase(getAllStatutoryList.fulfilled, (state, action) => {
+      state.loading = "success";
+      state.statutoryList = action.payload;
+    });
+    builder.addCase(getAllStatutoryList.rejected, (state, action) => {
+      state.loading = "rejected";
+      state.statutoryList = [];
     });
 
     builder.addCase(getAllOrganizations.pending, (state, action) => {

@@ -466,7 +466,7 @@ function App() {
 
               {/* end */}
 
-              <Route path="/erp/:userid/setting" element={<SettingMainPage />}>
+              <Route path="/erp/:userid/setting/erpSetting" element={<SettingMainPage />}>
                 <Route path="leadStatus" element={<LeadStatusPage />} />
                 <Route path="products" element={<ProductsChange />} />
                 <Route path="category" element={<LeadCategory />} />
@@ -522,7 +522,7 @@ function App() {
                 />
               </Route>
               <Route
-                path="/erp/:userid/accountSetting"
+                path="/erp/:userid/setting/accountSetting"
                 element={<AccountSettingPage />}
               >
                 <Route path="voucherType" element={<VoucherTypePage />} />

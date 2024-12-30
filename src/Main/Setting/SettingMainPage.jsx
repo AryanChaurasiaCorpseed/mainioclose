@@ -24,7 +24,7 @@ const SettingMainPage = () => {
       label: (
         <Link
           className="link-four"
-          to={`/erp/${currentUserId}/setting/leadStatus`}
+          to={`/erp/${currentUserId}/setting/erpSetting/leadStatus`}
         >
           Lead status
         </Link>
@@ -35,7 +35,7 @@ const SettingMainPage = () => {
       label: (
         <Link
           className="link-four"
-          to={`/erp/${currentUserId}/setting/category`}
+          to={`/erp/${currentUserId}/setting/erpSetting/category`}
         >
           Lead category
         </Link>
@@ -46,7 +46,7 @@ const SettingMainPage = () => {
       label: (
         <Link
           className="link-four"
-          to={`/erp/${currentUserId}/setting/products`}
+          to={`/erp/${currentUserId}/setting/erpSetting/products`}
         >
           Lead product
         </Link>
@@ -55,7 +55,7 @@ const SettingMainPage = () => {
     {
       key: "slug",
       label: (
-        <Link className="link-four" to={`/erp/${currentUserId}/setting/slug`}>
+        <Link className="link-four" to={`/erp/${currentUserId}/setting/erpSetting/slug`}>
           Lead slug
         </Link>
       ),
@@ -63,7 +63,7 @@ const SettingMainPage = () => {
     {
       key: "urls",
       label: (
-        <Link className="link-four" to={`/erp/${currentUserId}/setting/urls`}>
+        <Link className="link-four" to={`/erp/${currentUserId}/setting/erpSetting/urls`}>
           Lead urls
         </Link>
       ),
@@ -73,7 +73,7 @@ const SettingMainPage = () => {
       label: (
         <Link
           className="link-four"
-          to={`/erp/${currentUserId}/setting/comments`}
+          to={`/erp/${currentUserId}/setting/erpSetting/comments`}
         >
           Comments
         </Link>
@@ -84,7 +84,7 @@ const SettingMainPage = () => {
       label: (
         <Link
           className="link-four"
-          to={`/erp/${currentUserId}/setting/desigination`}
+          to={`/erp/${currentUserId}/setting/erpSetting/desigination`}
         >
           Desigination
         </Link>
@@ -95,7 +95,7 @@ const SettingMainPage = () => {
       label: (
         <Link
           className="link-four"
-          to={`/erp/${currentUserId}/setting/department`}
+          to={`/erp/${currentUserId}/setting/erpSetting/department`}
         >
           Department
         </Link>
@@ -106,7 +106,7 @@ const SettingMainPage = () => {
       label: (
         <Link
           className="link-four"
-          to={`/erp/${currentUserId}/setting/ipaddress`}
+          to={`/erp/${currentUserId}/setting/erpSetting/ipaddress`}
         >
           Ip address
         </Link>
@@ -117,7 +117,7 @@ const SettingMainPage = () => {
       label: (
         <Link
           className="link-four"
-          to={`/erp/${currentUserId}/setting/procurement`}
+          to={`/erp/${currentUserId}/setting/erpSetting/procurement`}
         >
           Procurement
         </Link>
@@ -128,7 +128,7 @@ const SettingMainPage = () => {
       label: (
         <Link
           className="link-four"
-          to={`/erp/${currentUserId}/setting/clientDesigination`}
+          to={`/erp/${currentUserId}/setting/erpSetting/clientDesigination`}
         >
           Client Desigination
         </Link>
@@ -156,7 +156,8 @@ const SettingMainPage = () => {
           <Content
             style={{
               margin: "24px 16px 0",
-              backgroundColor:'#fff'
+              backgroundColor:'#fff',
+              height:'90vh'
             }}
           >
             <Outlet />

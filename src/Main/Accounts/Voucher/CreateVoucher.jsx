@@ -1,47 +1,93 @@
 import { Col, Flex, InputNumber, Row, Select, Typography } from "antd";
 import React, { useEffect, useState } from "react";
 import "../Accounts.scss";
-import {
-  getAllLedger,
-  getAllVoucherType,
-  getLedgerById,
-} from "../../../Toolkit/Slices/AccountSlice";
+import { getLedgerById } from "../../../Toolkit/Slices/AccountSlice";
 import { useDispatch, useSelector } from "react-redux";
 const { Text } = Typography;
 
-const CreateVoucher = ({ setVoucherData, voucherData }) => {
+const CreateVoucher = ({
+  setVoucherData,
+  voucherData,
+  setCount,
+  count,
+  setRenderedGstData,
+  renderedGSTData,
+}) => {
   const dispatch = useDispatch();
   const ledgerList = useSelector((state) => state.account.ledgerList);
   const voucherTypeList = useSelector((state) => state.account.voucherTypeList);
-
-  const [estimatedata, setEstimateData] = useState({
-    rate: null,
-    per: null,
-    amount: null,
-  });
-
-  const [renderedGSTData, setRenderedGstData] = useState([]);
-
-  useEffect(() => {
-    dispatch(getAllVoucherType());
-    dispatch(getAllLedger());
-  }, [dispatch]);
+  const ledgerDetail = useSelector((state) => state.account.ledgerDetail);
 
   const handlePressEnter = (e) => {
-    const cGstAmount = (estimatedata?.amount * 18) / 100;
-    const sGstAmount = (estimatedata?.amount * 12) / 100;
-    setRenderedGstData((prev) => [
-      ...prev,
-      { idx: 2, perticulars: "CGST", rate: 18, per: "", amount: cGstAmount },
-      { idx: 3, perticulars: "SGST", rate: 12, per: "", amount: sGstAmount },
-      {
-        idx: 4,
-        perticulars: "Total amount",
-        rate: "",
-        per: "",
-        amount: sGstAmount + cGstAmount + estimatedata?.amount,
-      },
-    ]);
+    if (count === 1) {
+      const creditCgstAmount =
+        (voucherData?.creditAmount * ledgerDetail?.cgst) / 100;
+      const creditSgstAmount =
+        (voucherData?.creditAmount * ledgerDetail?.sgst) / 100;
+      const creditIgstAmount =
+        (voucherData?.creditAmount * ledgerDetail?.igst) / 100;
+      const debitCgstAmount =
+        (voucherData?.debitAmount * ledgerDetail?.cgst) / 100;
+      const debitSgstAmount =
+        (voucherData?.debitAmount * ledgerDetail?.sgst) / 100;
+      const debitIgstAmount =
+        (voucherData?.debitAmount * ledgerDetail?.igst) / 100;
+      if (ledgerDetail?.cgstSgstPrsent) {
+        setRenderedGstData((prev) => [
+          ...prev,
+          {
+            idx: 2,
+            perticulars: "CGST",
+            rate: ledgerDetail?.cgst,
+            debitAmount: debitCgstAmount,
+            creditAmount: creditCgstAmount,
+          },
+          {
+            idx: 3,
+            perticulars: "SGST",
+            rate: ledgerDetail?.sgst,
+            debitAmount: debitSgstAmount,
+            creditAmount: creditSgstAmount,
+          },
+          {
+            idx: "",
+            perticulars: "Total amount",
+            rate: "",
+            debitAmount:
+              debitCgstAmount + debitSgstAmount + voucherData?.debitAmount,
+            creditAmount:
+              creditCgstAmount + creditSgstAmount + voucherData?.creditAmount,
+          },
+        ]);
+      }
+      if (ledgerDetail?.igstPrsent) {
+        setRenderedGstData((prev) => [
+          ...prev,
+          {
+            idx: 2,
+            perticulars: "IGST",
+            rate: ledgerDetail?.igst,
+            debitAmount: debitIgstAmount,
+            creditAmount: creditIgstAmount,
+          },
+          {
+            idx: "",
+            perticulars: "Total amount",
+            rate: "",
+            debitAmount: debitIgstAmount + voucherData?.debitAmount,
+            creditAmount: creditIgstAmount + voucherData?.creditAmount,
+          },
+        ]);
+      }
+      setVoucherData((prev) => ({
+        ...prev,
+        companyName: ledgerDetail?.name,
+        igst: ledgerDetail?.igst,
+        sgst: ledgerDetail?.sgst,
+        cgst: ledgerDetail?.sgst,
+      }));
+    }
+    setCount(count + 1);
   };
 
   return (
@@ -61,6 +107,9 @@ const CreateVoucher = ({ setVoucherData, voucherData }) => {
             filterOption={(input, option) =>
               option.label.toLowerCase().includes(input.toLowerCase())
             }
+            onChange={(e) =>
+              setVoucherData((prev) => ({ ...prev, voucherTypeId: e }))
+            }
             style={{ width: "25%" }}
           />{" "}
           <Select
@@ -76,14 +125,30 @@ const CreateVoucher = ({ setVoucherData, voucherData }) => {
             filterOption={(input, option) =>
               option.label.toLowerCase().includes(input.toLowerCase())
             }
+            onChange={(e) =>
+              setVoucherData((prev) => ({ ...prev, ledgerId: e }))
+            }
             style={{ width: "25%" }}
+          />
+          <Select
+            placeholder="Payment type"
+            style={{ width: "25%" }}
+            value={voucherData?.paymentType}
+            options={[
+              { label: "Cash", value: "Cash" },
+              { label: "UPI", value: "UPI" },
+              { label: "NetBanking", value: "NetBanking" },
+            ]}
+            onChange={(e) => {
+              setVoucherData((prev) => ({ ...prev, paymentType: e }));
+            }}
           />
         </Flex>
 
         <Flex gap={8}>
           <Text className="table-head-heading">Party A/C name</Text>{" "}
           <Text className="table-head-heading">:</Text>
-          <Text strong></Text>
+          <Text strong>{ledgerDetail?.accountHolderName}</Text>
         </Flex>
         <Flex vertical>
           <Row
@@ -102,13 +167,13 @@ const CreateVoucher = ({ setVoucherData, voucherData }) => {
               <Text className="table-head-heading">Perticulars</Text>
             </Col>
             <Col span={3}>
-              <Text className="table-head-heading">Rate</Text>
+              <Text className="table-head-heading">Rate %</Text>
             </Col>
             <Col span={3}>
-              <Text className="table-head-heading">Per</Text>
+              <Text className="table-head-heading">Credit amount</Text>
             </Col>
             <Col span={3}>
-              <Text className="table-head-heading">Amount</Text>
+              <Text className="table-head-heading">Debit amount</Text>
             </Col>
           </Row>
           <Row style={{ width: "100%", padding: "2px 4px", margin: "2px 0px" }}>
@@ -131,43 +196,35 @@ const CreateVoucher = ({ setVoucherData, voucherData }) => {
                 filterOption={(input, option) =>
                   option.label.toLowerCase().includes(input.toLowerCase())
                 }
-                onChange={(e) => dispatch(getLedgerById(e))}
+                onChange={(e) => {
+                  dispatch(getLedgerById(e));
+                  setVoucherData((prev) => ({ ...prev, productId: e }));
+                }}
                 style={{ width: "70%" }}
               />
             </Col>
+            <Col span={3}></Col>
             <Col span={3}>
               <InputNumber
                 variant="filled"
                 controls={false}
                 size="small"
-                style={{ width: "80%" }}
-                value={estimatedata?.rate}
-                onChange={(e) =>
-                  setEstimateData((prev) => ({ ...prev, rate: e }))
-                }
+                style={{ width: "90%" }}
+                value={voucherData?.creditAmount}
+                onChange={(e) => {
+                  setVoucherData((prev) => ({ ...prev, creditAmount: e }));
+                }}
               />
             </Col>
             <Col span={3}>
               <InputNumber
                 variant="filled"
-                controls={false}
-                size="small"
-                style={{ width: "80%" }}
-                value={estimatedata?.per}
-                onChange={(e) =>
-                  setEstimateData((prev) => ({ ...prev, per: e }))
-                }
-              />
-            </Col>
-            <Col span={3}>
-              <InputNumber
-                variant="filled"
-                style={{ width: "80%" }}
+                style={{ width: "90%" }}
                 size="small"
                 controls={false}
-                value={estimatedata?.amount}
+                value={voucherData?.debitAmount}
                 onChange={(e) =>
-                  setEstimateData((prev) => ({ ...prev, amount: e }))
+                  setVoucherData((prev) => ({ ...prev, debitAmount: e }))
                 }
                 onPressEnter={handlePressEnter}
               />
@@ -175,7 +232,15 @@ const CreateVoucher = ({ setVoucherData, voucherData }) => {
           </Row>
           {renderedGSTData?.map((item, idx) => (
             <Row
-              style={{ width: "100%", padding: "2px 4px", margin: "2px 0px" }}
+              style={{
+                width: "100%",
+                padding: "2px 4px",
+                margin: "2px 0px",
+                borderTop:
+                  renderedGSTData?.length - 1 === idx
+                    ? "rgba(5, 5, 5, 0.06)"
+                    : "",
+              }}
             >
               <Col span={2}>
                 <Text>{item?.idx}</Text>
@@ -195,7 +260,15 @@ const CreateVoucher = ({ setVoucherData, voucherData }) => {
                 <Text>{item?.rate} </Text>
               </Col>
               <Col span={3} style={{ padding: "0px 8px" }}>
-                <Text>{item?.per}</Text>
+                <Text
+                  className={
+                    idx === renderedGSTData?.length - 1
+                      ? "table-head-heading"
+                      : ""
+                  }
+                >
+                  {item?.creditAmount}
+                </Text>
               </Col>
               <Col span={3} style={{ padding: "0px 8px" }}>
                 <Text
@@ -205,7 +278,7 @@ const CreateVoucher = ({ setVoucherData, voucherData }) => {
                       : ""
                   }
                 >
-                  {item?.amount}
+                  {item?.debitAmount}
                 </Text>
               </Col>
             </Row>

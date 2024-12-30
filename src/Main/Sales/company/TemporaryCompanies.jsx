@@ -228,7 +228,7 @@ const TemporaryCompanies = () => {
     {
       dataIndex: "gstType",
       title: "GST type",
-      checked: false,
+      checked: false, 
       render: (_, props) => <ColComp data={props?.gstType} />,
     },
     // {
@@ -695,7 +695,7 @@ const TemporaryCompanies = () => {
             <CommonTable
               data={allTemporaryCompanies}
               columns={columns}
-              scroll={{ x: 3300, y: 480 }}
+              scroll={{ x: 3300, y: '63vh' }}
               rowSelection={true}
               onRowSelection={onSelectChange}
               selectedRowKeys={selectedRowKeys}

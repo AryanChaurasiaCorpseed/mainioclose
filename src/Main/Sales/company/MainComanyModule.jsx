@@ -36,6 +36,7 @@ const MainComanyModule = () => {
       defaultActiveKey="company"
       size="small"
       items={items}
+      style={{height:'93vh'}}
     />
   )
 }

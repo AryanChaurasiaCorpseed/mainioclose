@@ -1,45 +1,45 @@
-import React, { useEffect, useState } from "react"
-import MainHeading from "../../../components/design/MainHeading"
-import { Button, Form, Input, Modal, notification, Popconfirm } from "antd"
-import { useDispatch, useSelector } from "react-redux"
-import CommonTable from "../../../components/CommonTable"
-import { Icon } from "@iconify/react"
-import ProductDetails from "./ProductDetails"
-import "./Product.scss"
-import { useParams } from "react-router-dom"
-import { createProduct, getAllProductData } from "../../../Toolkit/Slices/ProductSlice"
+import React, { useEffect, useState } from "react";
+import MainHeading from "../../../components/design/MainHeading";
+import { Button, Form, Input, Modal, notification, Popconfirm } from "antd";
+import { useDispatch, useSelector } from "react-redux";
+import CommonTable from "../../../components/CommonTable";
+import { Icon } from "@iconify/react";
+import ProductDetails from "./ProductDetails";
+import "./Product.scss";
+import { useParams } from "react-router-dom";
 import {
-  deleteProduct,
-
-} from "../../../Toolkit/Slices/LeadSlice"
+  createProduct,
+  getAllProductData,
+} from "../../../Toolkit/Slices/ProductSlice";
+import { deleteProduct } from "../../../Toolkit/Slices/LeadSlice";
 
 const ProductsChange = () => {
-  const dispatch = useDispatch()
-  const { userid } = useParams()
-  const [form] = Form.useForm()
-  const productData = useSelector((state) => state.product.productData)
-  const [openModal, setOpenModal] = useState(false)
-  const [searchText, setSearchText] = useState("")
-  const [filteredData, setFilteredData] = useState([])
+  const dispatch = useDispatch();
+  const { userid } = useParams();
+  const [form] = Form.useForm();
+  const productData = useSelector((state) => state.product.productData);
+  const [openModal, setOpenModal] = useState(false);
+  const [searchText, setSearchText] = useState("");
+  const [filteredData, setFilteredData] = useState([]);
 
   useEffect(() => {
-    dispatch(getAllProductData())
-  }, [dispatch])
+    dispatch(getAllProductData());
+  }, [dispatch]);
 
   useEffect(() => {
-    setFilteredData(productData)
-  }, [productData])
+    setFilteredData(productData);
+  }, [productData]);
 
   const handleSearch = (e) => {
-    const value = e.target.value
-    setSearchText(value)
+    const value = e.target.value;
+    setSearchText(value);
     const filtered = productData?.filter((item) =>
       Object.values(item)?.some((val) =>
         String(val)?.toLowerCase()?.includes(value?.toLowerCase())
       )
-    )
-    setFilteredData(filtered)
-  }
+    );
+    setFilteredData(filtered);
+  };
 
   const ProductCol = [
     { dataIndex: "id", title: "Id", fixed: "left", width: 50 },
@@ -64,10 +64,10 @@ const ProductsChange = () => {
                 if (resp.meta.requestStatus === "fulfilled") {
                   notification.success({
                     message: "Peoduct deleted successfully!.",
-                  })
-                  dispatch(getAllProductData())
+                  });
+                  dispatch(getAllProductData());
                 } else {
-                  notification.error({ message: "Something went wrong !." })
+                  notification.error({ message: "Something went wrong !." });
                 }
               })
               .catch(() =>
@@ -81,21 +81,21 @@ const ProductsChange = () => {
         </Popconfirm>
       ),
     },
-  ]
+  ];
 
   const handleFinish = (values) => {
-    values.userId = userid
+    values.userId = userid;
     dispatch(createProduct(values))
       .then((resp) => {
         if (resp.meta.requestStatus === "fulfilled") {
-          notification.success({ message: "Product created successfully" })
-          setOpenModal(false)
+          notification.success({ message: "Product created successfully" });
+          setOpenModal(false);
         } else {
-          notification.error({ message: "Something went wrong!." })
+          notification.error({ message: "Something went wrong!." });
         }
       })
-      .catch(() => notification.error({ message: "Something went wrong!." }))
-  }
+      .catch(() => notification.error({ message: "Something went wrong!." }));
+  };
 
   return (
     <div>
@@ -105,22 +105,24 @@ const ProductsChange = () => {
           Add product
         </Button>
       </div>
-      <div className="flex-verti-center-hori-start mt-2">
-        <Input
-          value={searchText}
-          size="small"
-          onChange={handleSearch}
-          style={{ width: "220px" }}
-          placeholder="search"
-          prefix={<Icon icon="fluent:search-24-regular" />}
+      <div  className="setting-table">
+        <div className="flex-verti-center-hori-start mt-2">
+          <Input
+            value={searchText}
+            size="small"
+            onChange={handleSearch}
+            style={{ width: "220px" }}
+            placeholder="search"
+            prefix={<Icon icon="fluent:search-24-regular" />}
+          />
+        </div>
+
+        <CommonTable
+          data={filteredData}
+          columns={ProductCol}
+          scroll={{ y: "72vh" }}
         />
       </div>
-
-      <CommonTable
-        data={filteredData}
-        columns={ProductCol}
-        scroll={{ y: 500 }}
-      />
 
       <Modal
         title="Add product"
@@ -144,7 +146,7 @@ const ProductsChange = () => {
         </Form>
       </Modal>
     </div>
-  )
-}
+  );
+};
 
-export default ProductsChange
+export default ProductsChange;

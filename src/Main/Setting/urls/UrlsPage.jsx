@@ -1,5 +1,5 @@
-import React, { useCallback, useEffect, useState } from "react"
-import { useDispatch, useSelector } from "react-redux"
+import React, { useCallback, useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import {
   convertUrlsToProduct,
   createAllUrlAction,
@@ -7,9 +7,9 @@ import {
   getAllUrlCount,
   getAllUrlList,
   searchLeadUrlList,
-} from "../../../Toolkit/Slices/LeadUrlSlice"
-import MainHeading from "../../../components/design/MainHeading"
-import { getAllSlugList } from "../../../Toolkit/Slices/LeadSlugSlice"
+} from "../../../Toolkit/Slices/LeadUrlSlice";
+import MainHeading from "../../../components/design/MainHeading";
+import { getAllSlugList } from "../../../Toolkit/Slices/LeadSlugSlice";
 import {
   Button,
   Form,
@@ -20,36 +20,36 @@ import {
   Tag,
   Tooltip,
   Typography,
-} from "antd"
-import EditUrls from "./EditUrls"
-import CommonTable from "../../../components/CommonTable"
-import OverFlowText from "../../../components/OverFlowText"
-import { Icon } from "@iconify/react"
-import { BTN_ICON_HEIGHT, BTN_ICON_WIDTH } from "../../../components/Constants"
-import UrlChilds from "./UrlChilds"
-const { Text } = Typography
-const { Search } = Input
+} from "antd";
+import EditUrls from "./EditUrls";
+import CommonTable from "../../../components/CommonTable";
+import OverFlowText from "../../../components/OverFlowText";
+import { Icon } from "@iconify/react";
+import { BTN_ICON_HEIGHT, BTN_ICON_WIDTH } from "../../../components/Constants";
+import UrlChilds from "./UrlChilds";
+const { Text } = Typography;
+const { Search } = Input;
 
 const UrlsPage = () => {
-  const [form] = Form.useForm()
-  const dispatch = useDispatch()
-  const slugList = useSelector((state) => state.leadslug.slugList)
-  const totalCount = useSelector((state) => state.leadurls.totalUrlCount)
-  const allLeadUrl = useSelector((prev) => prev?.leadurls.allLeadUrl)
-  const [urlDep, setUrlDep] = useState(false)
-  const [openModal, setOpenModal] = useState(false)
-  const [selectedRowKeys, setSelectedRowKeys] = useState([])
-  const [searchText, setSearchText] = useState("")
-  const [filteredData, setFilteredData] = useState([])
+  const [form] = Form.useForm();
+  const dispatch = useDispatch();
+  const slugList = useSelector((state) => state.leadslug.slugList);
+  const totalCount = useSelector((state) => state.leadurls.totalUrlCount);
+  const allLeadUrl = useSelector((prev) => prev?.leadurls.allLeadUrl);
+  const [urlDep, setUrlDep] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
+  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+  const [searchText, setSearchText] = useState("");
+  const [filteredData, setFilteredData] = useState([]);
   const [paginationData, setPaginationData] = useState({
     page: 1,
     size: 50,
-  })
+  });
 
   useEffect(() => {
-    dispatch(getAllSlugList())
-    dispatch(getAllUrlList())
-  }, [dispatch])
+    dispatch(getAllSlugList());
+    dispatch(getAllUrlList());
+  }, [dispatch]);
 
   useEffect(() => {
     dispatch(
@@ -57,9 +57,9 @@ const UrlsPage = () => {
         page: paginationData?.page,
         size: paginationData?.size,
       })
-    )
-    dispatch(getAllUrlCount())
-  }, [dispatch, urlDep])
+    );
+    dispatch(getAllUrlCount());
+  }, [dispatch, urlDep]);
 
   const handlePagination = useCallback(
     (dataPage, size) => {
@@ -68,30 +68,30 @@ const UrlsPage = () => {
           page: dataPage,
           size: size,
         })
-      )
-      setPaginationData({ size: size, page: dataPage })
+      );
+      setPaginationData({ size: size, page: dataPage });
     },
     [dispatch]
-  )
+  );
 
   const handleSubmit = async (values) => {
-    const createNewUrl = await dispatch(createAllUrlAction(values))
+    const createNewUrl = await dispatch(createAllUrlAction(values));
     if (createNewUrl.type === "createLeadUrlData/fulfilled") {
-      notification.success({ message: "Url created successfully" })
-      setUrlDep((prev) => !prev)
-      setOpenModal(false)
-      form.resetFields()
+      notification.success({ message: "Url created successfully" });
+      setUrlDep((prev) => !prev);
+      setOpenModal(false);
+      form.resetFields();
     }
     if (createNewUrl.type === "createLeadUrlData/rejected") {
-      notification.error("Something Went Wrong")
+      notification.error("Something Went Wrong");
     }
-  }
+  };
 
   const slugsInTooltip = (data) => {
     return data?.map((items) => {
-      return <Tag className="slug-items-tooltip">{items?.name}</Tag>
-    })
-  }
+      return <Tag className="slug-items-tooltip">{items?.name}</Tag>;
+    });
+  };
 
   const columns = [
     { title: "Id", dataIndex: "id", fixed: "left", width: 80 },
@@ -99,7 +99,11 @@ const UrlsPage = () => {
       title: "Url name",
       dataIndex: "urlsName",
       fixed: "left",
-      render: (_, data) => <UrlChilds data={data} paginationData={paginationData}>{data?.urlsName}</UrlChilds>,
+      render: (_, data) => (
+        <UrlChilds data={data} paginationData={paginationData}>
+          {data?.urlsName}
+        </UrlChilds>
+      ),
     },
     {
       title: "Slugs",
@@ -144,14 +148,15 @@ const UrlsPage = () => {
       title: "Edit",
       dataIndex: "edit",
       width: 80,
-      render: (_, data) => <EditUrls data={data}  paginationData={paginationData} />,
+      render: (_, data) => (
+        <EditUrls data={data} paginationData={paginationData} />
+      ),
     },
-  ]
-
+  ];
 
   const onSelectChange = (newSelectedRowKeys) => {
-    setSelectedRowKeys(newSelectedRowKeys)
-  }
+    setSelectedRowKeys(newSelectedRowKeys);
+  };
 
   const handleConvertToProduct = useCallback(() => {
     dispatch(
@@ -163,25 +168,24 @@ const UrlsPage = () => {
         if (resp.meta.requestStatus === "fulfilled") {
           notification.success({
             message: "urls converted to product successfully",
-          })
+          });
           dispatch(
             getAllUrlAction({
               page: paginationData?.page,
               size: paginationData?.size,
             })
-          )
-          setSelectedRowKeys([])
+          );
+          setSelectedRowKeys([]);
         } else {
           notification.error({
             message: "Something went wrong !.",
-          })
+          });
         }
       })
       .catch(() => {
-        notification.error({ message: "Something went wrong !." })
-      })
-  }, [dispatch, selectedRowKeys, paginationData])
-
+        notification.error({ message: "Something went wrong !." });
+      });
+  }, [dispatch, selectedRowKeys, paginationData]);
 
   const onSearch = (e, b, c) => {
     if (e) {
@@ -195,7 +199,7 @@ const UrlsPage = () => {
           page: paginationData?.page,
           size: paginationData?.size,
         })
-      )
+      );
     }
   };
 
@@ -220,48 +224,50 @@ const UrlsPage = () => {
           </Button>
         </div>
       </div>
-      <div className="flex-verti-center-hori-start mt-2">
-      <Search
-          placeholder="search"
-          size="small"
-          allowClear
-          value={searchText}
-          onSearch={onSearch}
-          onChange={(e) => {
-            setSearchText(e.target.value);
-            if (!e.target.value && !e.target.value.trim()) {
-              dispatch(
-                getAllUrlAction({
-                  page: paginationData?.page,
-                  size: paginationData?.size,
-                })
-              )
-              setSearchText("");
-            }
-          }}
-          enterButton="search"
-          style={{ width: "250px" }}
-          prefix={<Icon icon="fluent:search-24-regular" />}
+      <div className="setting-table">
+        <div className="flex-verti-center-hori-start mt-2">
+          <Search
+            placeholder="search"
+            size="small"
+            allowClear
+            value={searchText}
+            onSearch={onSearch}
+            onChange={(e) => {
+              setSearchText(e.target.value);
+              if (!e.target.value && !e.target.value.trim()) {
+                dispatch(
+                  getAllUrlAction({
+                    page: paginationData?.page,
+                    size: paginationData?.size,
+                  })
+                );
+                setSearchText("");
+              }
+            }}
+            enterButton="search"
+            style={{ width: "250px" }}
+            prefix={<Icon icon="fluent:search-24-regular" />}
+          />
+        </div>
+
+        <CommonTable
+          columns={columns}
+          data={allLeadUrl}
+          getCheckboxProps={(record) => ({
+            disabled: record.product,
+          })}
+          rowSelection={true}
+          onRowSelection={onSelectChange}
+          selectedRowKeys={selectedRowKeys}
+          pagination={true}
+          scroll={{ y: "65vh", x: 1000 }}
+          rowKey={(row) => row?.id}
+          totalCount={totalCount}
+          page={paginationData?.page}
+          size={paginationData?.size}
+          handlePagination={handlePagination}
         />
       </div>
-      
-      <CommonTable
-        columns={columns}
-        data={allLeadUrl}
-        getCheckboxProps={(record) => ({
-          disabled: record.product, 
-        })}
-        rowSelection={true}
-        onRowSelection={onSelectChange}
-        selectedRowKeys={selectedRowKeys}
-        pagination={true}
-        scroll={{ y: 500, x: 1000 }}
-        rowKey={(row) => row?.id}
-        totalCount={totalCount}
-        page={paginationData?.page}
-        size={paginationData?.size}
-        handlePagination={handlePagination}
-      />
 
       <Modal
         title="Create url"
@@ -321,11 +327,10 @@ const UrlsPage = () => {
               }
             />
           </Form.Item>
-          
         </Form>
       </Modal>
     </>
-  )
-}
+  );
+};
 
-export default UrlsPage
+export default UrlsPage;

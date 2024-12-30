@@ -24,7 +24,7 @@ const AccountSettingPage = () => {
       label: (
         <Link
           className="link-four"
-          to={`/erp/${currentUserId}/accountSetting/voucherType`}
+          to={`/erp/${currentUserId}/setting/accountSetting/voucherType`}
         >
           Vouchers type
         </Link>
@@ -35,7 +35,7 @@ const AccountSettingPage = () => {
       label: (
         <Link
           className="link-four"
-          to={`/erp/${currentUserId}/accountSetting/ledgerType`}
+          to={`/erp/${currentUserId}/setting/accountSetting/ledgerType`}
         >
           Ledger type
         </Link>
@@ -46,7 +46,7 @@ const AccountSettingPage = () => {
       label: (
         <Link
           className="link-four"
-          to={`/erp/${currentUserId}/accountSetting/statutory`}
+          to={`/erp/${currentUserId}/setting/accountSetting/statutory`}
         >
           Statutory
         </Link>

@@ -16,17 +16,20 @@ import {
   createLedgerType,
   createStatutory,
   getAllLedgerType,
+  getAllStatutoryList,
   updateLedgerType,
   updateStatutory,
 } from "../../../Toolkit/Slices/AccountSlice";
 import CommonTable from "../../../components/CommonTable";
+import { useParams } from "react-router-dom";
 const { Text } = Typography;
 
 const Statutory = () => {
   const [form] = Form.useForm();
   const dispatch = useDispatch();
+  const { userid } = useParams();
+  const statutoryList = useSelector((state) => state.account.statutoryList);
   const ledgerTypeList = useSelector((state) => state.account.ledgerTypeList);
-  const ledgerGroupList = useSelector((state) => state.account.ledgerTypeList);
   const [openModal, setOpenModal] = useState(false);
   const [editData, setEditData] = useState(null);
   const [searchText, setSearchText] = useState("");
@@ -37,13 +40,17 @@ const Statutory = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    setFilteredData(ledgerTypeList);
-  }, [ledgerTypeList]);
+    dispatch(getAllStatutoryList(userid));
+  }, [userid, dispatch]);
+
+  useEffect(() => {
+    setFilteredData(statutoryList);
+  }, [statutoryList]);
 
   const handleSearch = (e) => {
     const value = e.target.value;
     setSearchText(value);
-    const filtered = ledgerTypeList?.filter((item) =>
+    const filtered = statutoryList?.filter((item) =>
       Object.values(item)?.some((val) =>
         String(val)?.toLowerCase()?.includes(value?.toLowerCase())
       )

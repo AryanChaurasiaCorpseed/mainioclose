@@ -1,62 +1,62 @@
-import React, { useEffect, useState } from "react"
-import { useParams } from "react-router-dom"
-import MainHeading from "../../../components/design/MainHeading"
-import { toast } from "react-toastify"
-import "react-toastify/dist/ReactToastify.css"
-import { Button, Form, Input, Modal, notification, Popconfirm } from "antd"
-import { useDispatch, useSelector } from "react-redux"
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import MainHeading from "../../../components/design/MainHeading";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { Button, Form, Input, Modal, notification, Popconfirm } from "antd";
+import { useDispatch, useSelector } from "react-redux";
 import {
   createLeadCateogry,
   deleteLeadCategory,
   getAllProductWithCattegory,
-} from "../../../Toolkit/Slices/LeadSlice"
-import CommonTable from "../../../components/CommonTable"
-import { Icon } from "@iconify/react"
-import OverFlowText from "../../../components/OverFlowText"
-toast.configure()
+} from "../../../Toolkit/Slices/LeadSlice";
+import CommonTable from "../../../components/CommonTable";
+import { Icon } from "@iconify/react";
+import OverFlowText from "../../../components/OverFlowText";
+toast.configure();
 
 const LeadCategory = () => {
-  const { userid } = useParams()
-  const [form] = Form.useForm()
-  const dispatch = useDispatch()
-  const categoryData = useSelector((state) => state.leads.categoryData)
-  const [openModal, setOpenModal] = useState(false)
-  const [searchText, setSearchText] = useState("")
-  const [filteredData, setFilteredData] = useState([])
+  const { userid } = useParams();
+  const [form] = Form.useForm();
+  const dispatch = useDispatch();
+  const categoryData = useSelector((state) => state.leads.categoryData);
+  const [openModal, setOpenModal] = useState(false);
+  const [searchText, setSearchText] = useState("");
+  const [filteredData, setFilteredData] = useState([]);
 
   useEffect(() => {
-    dispatch(getAllProductWithCattegory())
-  }, [dispatch])
+    dispatch(getAllProductWithCattegory());
+  }, [dispatch]);
 
   const handleFinish = (values) => {
     dispatch(createLeadCateogry({ userId: userid, ...values }))
       .then((resp) => {
         if (resp.meta.requestStatus === "fulfilled") {
-          notification.success({ message: "Category created successfully !." })
-          setOpenModal(false)
-          form.resetFields()
-          dispatch(getAllProductWithCattegory())
+          notification.success({ message: "Category created successfully !." });
+          setOpenModal(false);
+          form.resetFields();
+          dispatch(getAllProductWithCattegory());
         } else {
-          notification.error({ message: "Something went wrong !." })
+          notification.error({ message: "Something went wrong !." });
         }
       })
-      .catch(() => notification.error({ message: "Something went wrong !." }))
-  }
+      .catch(() => notification.error({ message: "Something went wrong !." }));
+  };
 
   useEffect(() => {
-    setFilteredData(categoryData)
-  }, [categoryData])
+    setFilteredData(categoryData);
+  }, [categoryData]);
 
   const handleSearch = (e) => {
-    const value = e.target.value
-    setSearchText(value)
+    const value = e.target.value;
+    setSearchText(value);
     const filtered = categoryData?.filter((item) =>
       Object.values(item)?.some((val) =>
         String(val)?.toLowerCase()?.includes(value?.toLowerCase())
       )
-    )
-    setFilteredData(filtered)
-  }
+    );
+    setFilteredData(filtered);
+  };
 
   const columns = [
     {
@@ -91,10 +91,10 @@ const LeadCategory = () => {
                 if (resp.meta.requestStatus === "fulfilled") {
                   notification.success({
                     message: "Category deleted successfully !.",
-                  })
-                  dispatch(getAllProductWithCattegory())
+                  });
+                  dispatch(getAllProductWithCattegory());
                 } else {
-                  notification.error({ message: "Something went wrong !." })
+                  notification.error({ message: "Something went wrong !." });
                 }
               })
               .catch(() =>
@@ -108,7 +108,7 @@ const LeadCategory = () => {
         </Popconfirm>
       ),
     },
-  ]
+  ];
 
   return (
     <div>
@@ -133,7 +133,7 @@ const LeadCategory = () => {
           <CommonTable
             data={filteredData}
             columns={columns}
-            scroll={{ y: 550 }}
+            scroll={{ y: "72vh" }}
           />
         </div>
       </div>
@@ -157,7 +157,7 @@ const LeadCategory = () => {
         </Form>
       </Modal>
     </div>
-  )
-}
+  );
+};
 
-export default LeadCategory
+export default LeadCategory;

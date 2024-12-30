@@ -639,7 +639,7 @@ const MainCompanyPage = () => {
             <CommonTable
               data={allCompnay}
               columns={columns}
-              scroll={{ x: 3300, y: 480 }}
+              scroll={{ x: 3300, y: '63vh' }}
               rowSelection={true}
               onRowSelection={onSelectChange}
               selectedRowKeys={selectedRowKeys}

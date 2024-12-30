@@ -6,7 +6,9 @@ import { Icon } from "@iconify/react";
 import CommonTable from "../../../components/CommonTable";
 import {
   createVoucher,
+  getAllLedger,
   getAllVoucher,
+  getAllVoucherType,
 } from "../../../Toolkit/Slices/AccountSlice";
 import CreateVoucher from "./CreateVoucher";
 const { Text } = Typography;
@@ -18,6 +20,8 @@ const Voucher = () => {
   const [filteredData, setFilteredData] = useState([]);
   const [openModal, setOpenModal] = useState(false);
   const [editData, setEditData] = useState(null);
+  const [renderedGSTData, setRenderedGstData] = useState([]);
+  const [count, setCount] = useState(1);
   const [voucherData, setVoucherData] = useState({
     companyName: "",
     ledgerId: 0,
@@ -27,15 +31,17 @@ const Voucher = () => {
     creditAmount: "",
     debitAmount: "",
     createDate: "",
-    paymentType: "",
+    paymentType: null,
     igst: "",
     cgst: "",
     sgst: "",
-    cgstsgst: true,
+    cgstsgst: false,
     creditDebit: true,
   });
 
   useEffect(() => {
+    dispatch(getAllVoucherType());
+    dispatch(getAllLedger());
     dispatch(getAllVoucher());
   }, [dispatch]);
 
@@ -46,6 +52,7 @@ const Voucher = () => {
   const handleEditVoucher = (value) => {
     setEditData(value);
     setOpenModal(true);
+    setVoucherData((prev) => ({ ...prev, ...value }));
   };
 
   const handleSearch = (e) => {
@@ -64,7 +71,26 @@ const Voucher = () => {
       .then((resp) => {
         if (resp.meta.requestStatus === "fulfilled") {
           notification.success({ message: "Voucher created successfully !." });
+          dispatch(getAllVoucher());
           setOpenModal(false);
+          setCount(0);
+          setRenderedGstData([]);
+          setVoucherData({
+            companyName: "",
+            ledgerId: 0,
+            ledgerTypeId: 0,
+            voucherTypeId: 0,
+            productId: 0,
+            creditAmount: "",
+            debitAmount: "",
+            createDate: "",
+            paymentType: null,
+            igst: "",
+            cgst: "",
+            sgst: "",
+            cgstsgst: false,
+            creditDebit: true,
+          });
         } else {
           notification.error({ message: "Something went wrong !." });
         }
@@ -89,7 +115,11 @@ const Voucher = () => {
       dataIndex: "edit",
       title: "Edit",
       render: (_, data) => (
-        <Button type="text" size="small" onClick={handleEditVoucher}>
+        <Button
+          type="text"
+          size="small"
+          onClick={() => handleEditVoucher(data)}
+        >
           <Icon icon="fluent:edit-24-regular" />
         </Button>
       ),
@@ -144,6 +174,10 @@ const Voucher = () => {
         <CreateVoucher
           setVoucherData={setVoucherData}
           voucherData={voucherData}
+          setRenderedGstData={setRenderedGstData}
+          renderedGSTData={renderedGSTData}
+          count={count}
+          setCount={setCount}
         />
       </Modal>
     </>

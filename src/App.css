@@ -575,8 +575,10 @@ button:focus {
 }
 
 .setting-table {
-  padding: 20px 0px;
   font-size: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }
 
 .css-t89xny-MuiDataGrid-columnHeaderTitle {

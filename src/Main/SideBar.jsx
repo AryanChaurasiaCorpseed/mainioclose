@@ -28,7 +28,6 @@ const SideBar = () => {
     }
   }, [dispatch, currentUserId]);
 
-  console.log("sdklgfksdjhflkjasdlkfjhg", currentUserDetail);
 
   const items = [
     {
@@ -595,7 +594,7 @@ const SideBar = () => {
             children: [
               {
                 label: (
-                  <Link to={`/erp/${userid}/setting/leadStatus`}>
+                  <Link to={`/erp/${userid}/setting/erpSetting/leadStatus`}>
                     Erp setting
                   </Link>
                 ),
@@ -603,7 +602,7 @@ const SideBar = () => {
               },
               {
                 label: (
-                  <Link to={`/erp/${userid}/accountSetting/voucherType`}>
+                  <Link to={`/erp/${userid}/setting/accountSetting/voucherType`}>
                     Account setting
                   </Link>
                 ),
