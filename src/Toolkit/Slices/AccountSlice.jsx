@@ -121,10 +121,15 @@ export const getAllStatutoryList = createAsyncThunk(
   }
 );
 
-export const getStatutoryItemDetail=createAsyncThunk('getStatutoryItemDetail',async(id)=>{
-  const response=await getQuery(`/accountService/api/v1/statutory/getStatutoryDetails?id=${id}`)
-  return response.data
-})
+export const getStatutoryItemDetail = createAsyncThunk(
+  "getStatutoryItemDetail",
+  async (id) => {
+    const response = await getQuery(
+      `/accountService/api/v1/statutory/getStatutoryDetails?id=${id}`
+    );
+    return response.data;
+  }
+);
 
 export const updateStatutory = createAsyncThunk(
   "updateStatutory",
@@ -166,6 +171,16 @@ export const getAllOrganizations = createAsyncThunk(
   }
 );
 
+export const getOrganizationByName = createAsyncThunk(
+  "getOrganizationByName",
+  async (name) => {
+    const response = await getQuery(
+      `/accountService/api/v1/organization/getAllOrganizationByName?name=${name}`
+    );
+    return response.data;
+  }
+);
+
 export const createOrganization = createAsyncThunk(
   "createOrganization",
   async (data) => {
@@ -177,10 +192,15 @@ export const createOrganization = createAsyncThunk(
   }
 );
 
-export const getAllDailyBookRecord=createAsyncThunk('getAllDailyBookRecord',async({startDate,endDate})=>{
-  const response=await getQuery(`/accountService/api/v1/voucher/getAllVoucherInBetweenDate?startDate=${startDate}&endDate=${endDate}`)
-  return response.data
-})
+export const getAllDailyBookRecord = createAsyncThunk(
+  "getAllDailyBookRecord",
+  async ({ startDate, endDate }) => {
+    const response = await getQuery(
+      `/accountService/api/v1/voucher/getAllVoucherInBetweenDate?startDate=${startDate}&endDate=${endDate}`
+    );
+    return response.data;
+  }
+);
 
 const AccountSlice = createSlice({
   name: "account",
@@ -197,8 +217,9 @@ const AccountSlice = createSlice({
     ledgerDetail: {},
     organiztionList: [],
     statutoryList: [],
-    statutoryDetail:{},
-    dailybookList:[]
+    statutoryDetail: {},
+    dailybookList: [],
+    organizationDetail: {},
   },
   extraReducers: (builder) => {
     builder.addCase(getAllVoucherType.pending, (state, action) => {
@@ -297,7 +318,6 @@ const AccountSlice = createSlice({
       state.statutoryDetail = [];
     });
 
-
     builder.addCase(getAllDailyBookRecord.pending, (state, action) => {
       state.loading = "pending";
     });
@@ -310,7 +330,17 @@ const AccountSlice = createSlice({
       state.dailybookList = [];
     });
 
-
+    builder.addCase(getOrganizationByName.pending, (state, action) => {
+      state.loading = "pending";
+    });
+    builder.addCase(getOrganizationByName.fulfilled, (state, action) => {
+      state.loading = "success";
+      state.organizationDetail = action.payload;
+    });
+    builder.addCase(getOrganizationByName.rejected, (state, action) => {
+      state.loading = "rejected";
+      state.organizationDetail = {};
+    });
   },
 });
 

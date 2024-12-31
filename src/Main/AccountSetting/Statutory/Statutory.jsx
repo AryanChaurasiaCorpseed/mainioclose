@@ -226,16 +226,15 @@ const Statutory = () => {
           >
             <Select
               showSearch
-              options={
-                ledgerTypeList?.length > 0
-                  ? [{ name: "Primary", id: 0 }, ...ledgerTypeList]?.map(
-                      (item) => ({
-                        label: item?.name,
-                        value: item?.id,
-                      })
-                    )
-                  : []
-              }
+              options={[
+                { label: "Primary", value: 0 },
+                ...(ledgerTypeList?.length > 0
+                  ? ledgerTypeList?.map((item) => ({
+                      label: item?.name,
+                      value: item?.id,
+                    }))
+                  : []),
+              ]}
               filterOption={(input, option) =>
                 option.label.toLowerCase().includes(input.toLowerCase())
               }
@@ -304,7 +303,8 @@ const Statutory = () => {
 
           <Form.Item
             shouldUpdate={(prevValues, currentValues) =>
-              prevValues.gstRateDetailPresent !== currentValues.gstRateDetailPresent
+              prevValues.gstRateDetailPresent !==
+              currentValues.gstRateDetailPresent
             }
             noStyle
           >

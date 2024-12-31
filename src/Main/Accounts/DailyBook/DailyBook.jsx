@@ -67,7 +67,6 @@ const DailyBook = () => {
         <Text>{dayjs(data?.createDate).format("DD-MM-YYYY")}</Text>
       ),
     },
-
     {
       dataIndex: "debitAmount",
       title: "Debit amount (Inwards Qty)",
