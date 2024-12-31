@@ -33,9 +33,9 @@ const Ledger = () => {
   const [searchText, setSearchText] = useState("");
   const [filteredData, setFilteredData] = useState([]);
   const [ledgerForm, setLedgerForm] = useState({
-    hsnSacPrsent: false,
-    gstRateDetailPrsent: false,
-    bankAccountPrsent: false,
+    hsnSac: false,
+    gstRate: false,
+    bankAccount: false,
   });
 
   useEffect(() => {
@@ -62,24 +62,24 @@ const Ledger = () => {
     dispatch(getLedgerTypeById(e)).then((resp) => {
       if (resp.meta.requestStatus === "fulfilled") {
         let data = resp.payload;
-        if (data?.hsnSacPrsent) {
-          setLedgerForm((prev) => ({ ...prev, hsnSacPrsent: true }));
+        if (data?.hsnSac) {
+          setLedgerForm((prev) => ({ ...prev, hsnSac: true }));
           form.setFieldsValue({
             hsnSacDetails: data?.hsnSacDetails,
             HsnSac: data?.HsnSac,
             hsnDescription: data?.hsnDescription,
           });
         }
-        if (data?.gstRateDetailPrsent) {
-          setLedgerForm((prev) => ({ ...prev, gstRateDetailPrsent: true }));
+        if (data?.gstRate) {
+          setLedgerForm((prev) => ({ ...prev, gstRate: true }));
           form.setFieldsValue({
             gstRateDetails: data?.gstRateDetails,
             taxabilityType: data?.taxabilityType,
             gstRates: data?.gstRates,
           });
         }
-        if (data?.bankAccountPrsent) {
-          setLedgerForm((prev) => ({ ...prev, bankAccountPrsent: true }));
+        if (data?.bankAccount) {
+          setLedgerForm((prev) => ({ ...prev, bankAccount: true }));
           form.setFieldsValue({
             accountHolderName: data?.accountHolderName,
             accountNo: data?.accountNo,
@@ -108,7 +108,7 @@ const Ledger = () => {
     setEditData(value);
   };
 
-  const handleFinish = (values) => {
+  const handleFinish = (values) => { 
     if (editData) {
       dispatch(updateLedger({ ...values, id: editData?.id, ...ledgerForm }))
         .then((resp) => {
@@ -247,7 +247,7 @@ const Ledger = () => {
               </Form.Item>
             </Col>
           </Row>
-          {ledgerForm?.hsnSacPrsent && (
+          {ledgerForm?.hsnSac && (
             <Flex vertical>
               <Row>
                 <Col span={11}>
@@ -287,7 +287,7 @@ const Ledger = () => {
             </Flex>
           )}
 
-          {ledgerForm?.gstRateDetailPrsent && (
+          {ledgerForm?.gstRate && (
             <Flex vertical>
               <Row>
                 <Col span={11}>
@@ -336,7 +336,7 @@ const Ledger = () => {
             </Flex>
           )}
 
-          {ledgerForm?.bankAccountPrsent && (
+          {ledgerForm?.bankAccount && (
             <Flex vertical>
               <Row>
                 <Col span={11}>
