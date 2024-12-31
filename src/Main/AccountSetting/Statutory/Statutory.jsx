@@ -1,8 +1,10 @@
 import {
   Button,
+  Drawer,
   Flex,
   Form,
   Input,
+  InputNumber,
   Modal,
   notification,
   Select,
@@ -13,11 +15,10 @@ import React, { useEffect, useState } from "react";
 import { Icon } from "@iconify/react";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  createLedgerType,
   createStatutory,
   getAllLedgerType,
   getAllStatutoryList,
-  updateLedgerType,
+  getStatutoryItemDetail,
   updateStatutory,
 } from "../../../Toolkit/Slices/AccountSlice";
 import CommonTable from "../../../components/CommonTable";
@@ -34,6 +35,8 @@ const Statutory = () => {
   const [editData, setEditData] = useState(null);
   const [searchText, setSearchText] = useState("");
   const [filteredData, setFilteredData] = useState([]);
+  const [statutoryItem, setStatutoryItem] = useState(null);
+  const [openDrawer, setOpenDrawer] = useState(false);
 
   useEffect(() => {
     dispatch(getAllLedgerType());
@@ -56,6 +59,12 @@ const Statutory = () => {
       )
     );
     setFilteredData(filtered);
+  };
+
+  const handleItemClick = (item) => {
+    dispatch(getStatutoryItemDetail(item?.id));
+    setOpenDrawer(true);
+    setStatutoryItem(item);
   };
 
   const handleEdit = (value) => {
@@ -129,6 +138,11 @@ const Statutory = () => {
     {
       dataIndex: "name",
       title: "Name",
+      render: (_, data) => (
+        <Text className="link-heading" onClick={() => handleItemClick(data)}>
+          {data?.name}
+        </Text>
+      ),
     },
     {
       dataIndex: "debitCredit",
@@ -323,7 +337,7 @@ const Statutory = () => {
                       <Input />
                     </Form.Item>
                     <Form.Item
-                      label="GST rate data"
+                      label="GST rate data (in %)"
                       name="gstRatesData"
                       rules={[
                         {
@@ -332,7 +346,7 @@ const Statutory = () => {
                         },
                       ]}
                     >
-                      <Input />
+                      <InputNumber controls={false} style={{ width: "100%" }} />
                     </Form.Item>
                   </>
                 )}
@@ -427,6 +441,14 @@ const Statutory = () => {
           </Form.Item>
         </Form>
       </Modal>
+      <Drawer
+        open={openDrawer}
+        onClose={() => setOpenDrawer(false)}
+        closeIcon={false}
+        width={"70%"}
+      >
+        This is Statutory Item
+      </Drawer>
     </>
   );
 };

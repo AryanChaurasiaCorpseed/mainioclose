@@ -400,6 +400,17 @@ const SideBar = () => {
                   </Link>
                 ),
               },
+              {
+                key: "dailybook",
+                label: (
+                  <Link
+                    className="link-four"
+                    to={`/erp/${userid}/account/dailybook`}
+                  >
+                    Daily book
+                  </Link>
+                ),
+              },
             ],
           },
         ]
@@ -463,6 +474,17 @@ const SideBar = () => {
                     to={`/erp/${userid}/account/voucher`}
                   >
                     Voucher
+                  </Link>
+                ),
+              },
+              {
+                key: "dailybook",
+                label: (
+                  <Link
+                    className="link-four"
+                    to={`/erp/${userid}/account/dailybook`}
+                  >
+                    Daily book
                   </Link>
                 ),
               },

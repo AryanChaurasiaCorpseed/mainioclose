@@ -997,6 +997,7 @@ select.form-control:not([size]):not([multiple]) {
   color: #1677ff;
   font-size: 12px;
   font-weight: 400;
+  cursor: pointer;
 }
 
 .light-gray-row td {

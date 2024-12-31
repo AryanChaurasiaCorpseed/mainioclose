@@ -113,13 +113,18 @@ export const createStatutory = createAsyncThunk(
 
 export const getAllStatutoryList = createAsyncThunk(
   "getAllStatutoryList",
-  async () => {
+  async (id) => {
     const response = await getQuery(
-      `/accountService/api/v1/statutory/getStatutoryDetails`
+      `/accountService/api/v1/statutory/getAllStatutoryDetails?currentUserId=${id}`
     );
     return response.data;
   }
 );
+
+export const getStatutoryItemDetail=createAsyncThunk('getStatutoryItemDetail',async(id)=>{
+  const response=await getQuery(`/accountService/api/v1/statutory/getStatutoryDetails?id=${id}`)
+  return response.data
+})
 
 export const updateStatutory = createAsyncThunk(
   "updateStatutory",
@@ -131,7 +136,6 @@ export const updateStatutory = createAsyncThunk(
     return response.data;
   }
 );
-
 
 export const getAllVoucher = createAsyncThunk("getAllVoucher", async () => {
   const response = await getQuery(
@@ -187,7 +191,8 @@ const AccountSlice = createSlice({
     loading: "",
     ledgerDetail: {},
     organiztionList: [],
-    statutoryList:[]
+    statutoryList: [],
+    statutoryDetail:{}
   },
   extraReducers: (builder) => {
     builder.addCase(getAllVoucherType.pending, (state, action) => {
@@ -273,6 +278,20 @@ const AccountSlice = createSlice({
       state.loading = "rejected";
       state.organiztionList = [];
     });
+
+    builder.addCase(getStatutoryItemDetail.pending, (state, action) => {
+      state.loading = "pending";
+    });
+    builder.addCase(getStatutoryItemDetail.fulfilled, (state, action) => {
+      state.loading = "success";
+      state.statutoryDetail = action.payload;
+    });
+    builder.addCase(getStatutoryItemDetail.rejected, (state, action) => {
+      state.loading = "rejected";
+      state.statutoryDetail = [];
+    });
+
+
   },
 });
 

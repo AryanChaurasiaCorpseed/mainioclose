@@ -87,6 +87,7 @@ import Statutory from "./Main/AccountSetting/Statutory/Statutory";
 import Ledger from "./Main/Accounts/Ledger/Leadger";
 import Voucher from "./Main/Accounts/Voucher/Voucher";
 import Organizations from "./Main/Accounts/Organization/Organizations";
+import DailyBook from "./Main/Accounts/DailyBook/DailyBook";
 
 const SpinLoading = lazy(() => import("./components/SpinLoading"));
 
@@ -328,6 +329,8 @@ function App() {
                 <Route path="ledger" element={<Ledger />} />
                 <Route path="voucher" element={<Voucher />} />
                 <Route path="organizations" element={<Organizations />} />
+                <Route path="dailybook" element={<DailyBook />} />
+                
                 <Route path="" element={<div>account second page</div>} />
                 <Route
                   path="accountthird"
