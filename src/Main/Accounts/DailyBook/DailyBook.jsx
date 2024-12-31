@@ -1,18 +1,35 @@
 import { DatePicker, Flex, Input, Typography } from "antd";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Icon } from "@iconify/react";
 import CommonTable from "../../../components/CommonTable";
+import { useDispatch, useSelector } from "react-redux";
+import { getAllDailyBookRecord } from "../../../Toolkit/Slices/AccountSlice";
+import dayjs from "dayjs";
 const { Text } = Typography;
+const { RangePicker } = DatePicker;
 
 const DailyBook = () => {
+  const dispatch = useDispatch();
   const [searchText, setSearchText] = useState("");
   const [filteredData, setFilteredData] = useState([]);
-  const voucherList = [];
+  const dailybookList = useSelector((state) => state.account.dailybookList);
+  const [dateRange, setDateRange] = useState({
+    startDate: dayjs().subtract(1, "day").format("YYYY-MM-DD"),
+    endDate: dayjs().format("YYYY-MM-DD"),
+  });
+
+  useEffect(() => {
+    dispatch(getAllDailyBookRecord(dateRange));
+  }, [dispatch]);
+
+  useEffect(() => {
+    setFilteredData(dailybookList);
+  }, [dailybookList]);
 
   const handleSearch = (e) => {
     const value = e.target.value?.trim();
     setSearchText(value);
-    const filtered = voucherList?.filter((item) =>
+    const filtered = dailybookList?.filter((item) =>
       Object.values(item)?.some((val) =>
         String(val)?.toLowerCase()?.includes(value?.toLowerCase())
       )
@@ -24,23 +41,33 @@ const DailyBook = () => {
     {
       dataIndex: "id",
       title: "Id",
+      width: 80,
     },
     {
-      dataIndex: "date",
-      title: "Date",
+      dataIndex: "ledgerName",
+      title: "Ledger name",
     },
     {
-      dataIndex: "",
-      title: "Perticulars",
+      dataIndex: "companyName",
+      title: "Company name",
     },
     {
       dataIndex: "voucherType",
       title: "Voucher type",
+      render: (_, data) => <Text>{data?.voucherType?.name}</Text>,
     },
     {
-      dataIndex: "voucherNumber",
-      title: "Voucher no.",
+      dataIndex: "paymentType",
+      title: "Payment type",
     },
+    {
+      dataIndex: "date",
+      title: "Date",
+      render: (_, data) => (
+        <Text>{dayjs(data?.createDate).format("DD-MM-YYYY")}</Text>
+      ),
+    },
+
     {
       dataIndex: "debitAmount",
       title: "Debit amount (Inwards Qty)",
@@ -51,11 +78,27 @@ const DailyBook = () => {
     },
   ];
 
+  const handleSetDate = (dates, dateStrings) => {
+    if (dates) {
+      dispatch(
+        getAllDailyBookRecord({
+          startDate: dateStrings[0],
+          endDate: dateStrings[1],
+        })
+      );
+      setDateRange((prev) => ({
+        ...prev,
+        startDate: dateStrings[0],
+        endDate: dateStrings[1],
+      }));
+    }
+  };
+
   return (
     <>
       <Flex vertical gap={12}>
         <Flex className="vouchers-header">
-          <Text className="heading-text">Voucher</Text>
+          <Text className="heading-text">Daily book</Text>
         </Flex>
 
         <Flex
@@ -71,12 +114,22 @@ const DailyBook = () => {
             placeholder="search"
             style={{ width: "25%" }}
           />
-          <DatePicker />
+          <RangePicker
+            placement="bottomRight"
+            value={[
+              dateRange?.startDate ? dayjs(dateRange?.startDate) : "",
+              dateRange?.endDate ? dayjs(dateRange?.endDate) : "",
+            ]}
+            disabledDate={(current) =>
+              current && current > dayjs().endOf("day")
+            }
+            onChange={handleSetDate}
+          />
         </Flex>
         <CommonTable
           data={filteredData}
           columns={columns}
-          scroll={{ y: "70vh" }}
+          scroll={{ y: "70vh", x: 1500 }}
         />
       </Flex>
     </>

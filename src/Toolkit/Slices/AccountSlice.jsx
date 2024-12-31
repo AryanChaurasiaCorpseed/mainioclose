@@ -177,6 +177,11 @@ export const createOrganization = createAsyncThunk(
   }
 );
 
+export const getAllDailyBookRecord=createAsyncThunk('getAllDailyBookRecord',async({startDate,endDate})=>{
+  const response=await getQuery(`/accountService/api/v1/voucher/getAllVoucherInBetweenDate?startDate=${startDate}&endDate=${endDate}`)
+  return response.data
+})
+
 const AccountSlice = createSlice({
   name: "account",
   initialState: {
@@ -192,7 +197,8 @@ const AccountSlice = createSlice({
     ledgerDetail: {},
     organiztionList: [],
     statutoryList: [],
-    statutoryDetail:{}
+    statutoryDetail:{},
+    dailybookList:[]
   },
   extraReducers: (builder) => {
     builder.addCase(getAllVoucherType.pending, (state, action) => {
@@ -289,6 +295,19 @@ const AccountSlice = createSlice({
     builder.addCase(getStatutoryItemDetail.rejected, (state, action) => {
       state.loading = "rejected";
       state.statutoryDetail = [];
+    });
+
+
+    builder.addCase(getAllDailyBookRecord.pending, (state, action) => {
+      state.loading = "pending";
+    });
+    builder.addCase(getAllDailyBookRecord.fulfilled, (state, action) => {
+      state.loading = "success";
+      state.dailybookList = action.payload?.result;
+    });
+    builder.addCase(getAllDailyBookRecord.rejected, (state, action) => {
+      state.loading = "rejected";
+      state.dailybookList = [];
     });
 
 
