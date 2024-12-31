@@ -190,16 +190,15 @@ const LedgerTypePage = () => {
           >
             <Select
               showSearch
-              options={
-                ledgerGroupList?.length > 0
-                  ? [{ name: "Primary", id: 0 }, ...ledgerGroupList]?.map(
-                      (item) => ({
-                        label: item?.name,
-                        value: item?.id,
-                      })
-                    )
-                  : []
-              }
+              options={[
+                { label: "Primary", value: 0 },
+                ...(ledgerGroupList?.length > 0
+                  ? ledgerGroupList?.map((item) => ({
+                      label: item?.name,
+                      value: item?.id,
+                    }))
+                  : []),
+              ]}
               filterOption={(input, option) =>
                 option.label.toLowerCase().includes(input.toLowerCase())
               }

@@ -70,15 +70,15 @@ const Statutory = () => {
   const handleEdit = (value) => {
     form.setFieldsValue({
       id: value?.id,
-      hsnSac: value?.hsnSac,
+      hsnSacPresent: value?.hsnSacPresent,
       hsnSacDetails: value?.hsnSacDetails,
       hsnSacData: value?.hsnSacData,
       hsnDescription: value?.hsnDescription,
-      gstRate: value?.gstRate,
+      gstRateDetailPresent: value?.gstRateDetailPresent,
       gstRateDetails: value?.gstRateDetails,
       taxabilityType: value?.taxabilityType,
       gstRatesData: value?.gstRatesData,
-      bankAccount: value?.bankAccount,
+      bankAccountPresent: value?.bankAccountPresent,
       bankName: value?.bankName,
       accountNo: value?.accountNo,
       ifscCode: value?.ifscCode,
@@ -242,19 +242,19 @@ const Statutory = () => {
             />
           </Form.Item>
 
-          <Form.Item label="Hsn sac" name="hsnSac">
+          <Form.Item label="Hsn sac" name="hsnSacPresent">
             <Switch />
           </Form.Item>
 
           <Form.Item
             shouldUpdate={(prevValues, currentValues) =>
-              prevValues.hsnSac !== currentValues.hsnSac
+              prevValues.hsnSacPresent !== currentValues.hsnSacPresent
             }
             noStyle
           >
             {({ getFieldValue }) => (
               <>
-                {getFieldValue("hsnSac") && (
+                {getFieldValue("hsnSacPresent") && (
                   <>
                     <Form.Item
                       label="Hsn sac details"
@@ -298,19 +298,19 @@ const Statutory = () => {
             )}
           </Form.Item>
 
-          <Form.Item label="GST rate" name="gstRate">
+          <Form.Item label="GST rate" name="gstRateDetailPresent">
             <Switch />
           </Form.Item>
 
           <Form.Item
             shouldUpdate={(prevValues, currentValues) =>
-              prevValues.gstRate !== currentValues.gstRate
+              prevValues.gstRateDetailPresent !== currentValues.gstRateDetailPresent
             }
             noStyle
           >
             {({ getFieldValue }) => (
               <>
-                {getFieldValue("gstRate") && (
+                {getFieldValue("gstRateDetailPresent") && (
                   <>
                     <Form.Item
                       label="GST rate details"
@@ -353,19 +353,19 @@ const Statutory = () => {
               </>
             )}
           </Form.Item>
-          <Form.Item label="Bank account" name="bankAccount">
+          <Form.Item label="Bank account" name="bankAccountPresent">
             <Switch />
           </Form.Item>
 
           <Form.Item
             shouldUpdate={(prevValues, currentValues) =>
-              prevValues.bankAccount !== currentValues.bankAccount
+              prevValues.bankAccountPresent !== currentValues.bankAccountPresent
             }
             noStyle
           >
             {({ getFieldValue }) => (
               <>
-                {getFieldValue("bankAccount") && (
+                {getFieldValue("bankAccountPresent") && (
                   <>
                     <Form.Item
                       label="Bank name"
