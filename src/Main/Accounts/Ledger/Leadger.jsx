@@ -33,9 +33,9 @@ const Ledger = () => {
   const [searchText, setSearchText] = useState("");
   const [filteredData, setFilteredData] = useState([]);
   const [ledgerForm, setLedgerForm] = useState({
-    hsnSac: false,
-    gstRate: false,
-    bankAccount: false,
+    hsnSacPresent: false,
+    gstRateDetailPresent: false,
+    bankAccountPresent: false,
   });
 
   useEffect(() => {
@@ -62,24 +62,24 @@ const Ledger = () => {
     dispatch(getLedgerTypeById(e)).then((resp) => {
       if (resp.meta.requestStatus === "fulfilled") {
         let data = resp.payload;
-        if (data?.hsnSac) {
-          setLedgerForm((prev) => ({ ...prev, hsnSac: true }));
+        if (data?.hsnSacPresent) {
+          setLedgerForm((prev) => ({ ...prev, hsnSacPresent: true }));
           form.setFieldsValue({
             hsnSacDetails: data?.hsnSacDetails,
             HsnSac: data?.HsnSac,
             hsnDescription: data?.hsnDescription,
           });
         }
-        if (data?.gstRate) {
-          setLedgerForm((prev) => ({ ...prev, gstRate: true }));
+        if (data?.gstRateDetailPresent) {
+          setLedgerForm((prev) => ({ ...prev, gstRateDetailPresent: true }));
           form.setFieldsValue({
             gstRateDetails: data?.gstRateDetails,
             taxabilityType: data?.taxabilityType,
             gstRates: data?.gstRates,
           });
         }
-        if (data?.bankAccount) {
-          setLedgerForm((prev) => ({ ...prev, bankAccount: true }));
+        if (data?.bankAccountPresent) {
+          setLedgerForm((prev) => ({ ...prev, bankAccountPresent: true }));
           form.setFieldsValue({
             accountHolderName: data?.accountHolderName,
             accountNo: data?.accountNo,
@@ -247,7 +247,7 @@ const Ledger = () => {
               </Form.Item>
             </Col>
           </Row>
-          {ledgerForm?.hsnSac && (
+          {ledgerForm?.hsnSacPresent && (
             <Flex vertical>
               <Row>
                 <Col span={11}>
@@ -287,7 +287,7 @@ const Ledger = () => {
             </Flex>
           )}
 
-          {ledgerForm?.gstRate && (
+          {ledgerForm?.gstRateDetailPresent && (
             <Flex vertical>
               <Row>
                 <Col span={11}>
@@ -336,7 +336,7 @@ const Ledger = () => {
             </Flex>
           )}
 
-          {ledgerForm?.bankAccount && (
+          {ledgerForm?.bankAccountPresent && (
             <Flex vertical>
               <Row>
                 <Col span={11}>

@@ -32,7 +32,7 @@ const CreateVoucher = ({
         (voucherData?.debitAmount * ledgerDetail?.sgst) / 100;
       const debitIgstAmount =
         (voucherData?.debitAmount * ledgerDetail?.igst) / 100;
-      if (ledgerDetail?.cgstSgstPrsent) {
+      if (ledgerDetail?.cgstSgstPresent) {
         setRenderedGstData((prev) => [
           ...prev,
           {
@@ -60,7 +60,7 @@ const CreateVoucher = ({
           },
         ]);
       }
-      if (ledgerDetail?.igstPrsent) {
+      if (ledgerDetail?.igstPresent) {
         setRenderedGstData((prev) => [
           ...prev,
           {
