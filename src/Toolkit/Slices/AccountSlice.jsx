@@ -323,7 +323,7 @@ const AccountSlice = createSlice({
     });
     builder.addCase(getAllDailyBookRecord.fulfilled, (state, action) => {
       state.loading = "success";
-      state.dailybookList = action.payload?.result;
+      state.dailybookList = action.payload;
     });
     builder.addCase(getAllDailyBookRecord.rejected, (state, action) => {
       state.loading = "rejected";

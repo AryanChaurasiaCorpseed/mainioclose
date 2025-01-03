@@ -981,6 +981,13 @@ select.form-control:not([size]):not([multiple]) {
   color: #0f0f0f;
 }
 
+.text-heading{
+  font-size: 13px;
+  line-height: 15px;
+}
+
+
+
 .ant-tooltip .ant-tooltip-inner {
   color: #fff;
   opacity: 0.8;

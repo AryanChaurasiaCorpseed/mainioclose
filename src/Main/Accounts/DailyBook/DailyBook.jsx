@@ -23,13 +23,13 @@ const DailyBook = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    setFilteredData(dailybookList);
+    setFilteredData(dailybookList?.result);
   }, [dailybookList]);
 
   const handleSearch = (e) => {
     const value = e.target.value?.trim();
     setSearchText(value);
-    const filtered = dailybookList?.filter((item) =>
+    const filtered = dailybookList?.result?.filter((item) =>
       Object.values(item)?.some((val) =>
         String(val)?.toLowerCase()?.includes(value?.toLowerCase())
       )
@@ -42,10 +42,12 @@ const DailyBook = () => {
       dataIndex: "id",
       title: "Id",
       width: 80,
+      fixed:'left'
     },
     {
       dataIndex: "ledgerName",
       title: "Ledger name",
+      fixed:'left'
     },
     {
       dataIndex: "companyName",
@@ -113,17 +115,34 @@ const DailyBook = () => {
             placeholder="search"
             style={{ width: "25%" }}
           />
-          <RangePicker
-            placement="bottomRight"
-            value={[
-              dateRange?.startDate ? dayjs(dateRange?.startDate) : "",
-              dateRange?.endDate ? dayjs(dateRange?.endDate) : "",
-            ]}
-            disabledDate={(current) =>
-              current && current > dayjs().endOf("day")
-            }
-            onChange={handleSetDate}
-          />
+          <Flex gap={32} align="center">
+            <Flex gap={4}>
+              <Text className="text-heading" type="secondary">Total amount</Text>
+              <Text className="text-heading">:</Text>
+              <Text className="text-heading" strong>{dailybookList?.totalAmount}</Text>
+            </Flex>
+            <Flex gap={4}>
+              <Text className="text-heading" type="secondary">Total credit</Text>
+              <Text className="text-heading">:</Text>
+              <Text className="text-heading" strong>{dailybookList?.totalCredit}</Text>
+            </Flex>
+            <Flex gap={4}>
+              <Text className="text-heading" type="secondary">Total debit</Text>
+              <Text className="text-heading">:</Text>
+              <Text className="text-heading" strong>{dailybookList?.totalDebit}</Text>
+            </Flex>
+            <RangePicker
+              placement="bottomRight"
+              value={[
+                dateRange?.startDate ? dayjs(dateRange?.startDate) : "",
+                dateRange?.endDate ? dayjs(dateRange?.endDate) : "",
+              ]}
+              disabledDate={(current) =>
+                current && current > dayjs().endOf("day")
+              }
+              onChange={handleSetDate}
+            />
+          </Flex>
         </Flex>
         <CommonTable
           data={filteredData}
