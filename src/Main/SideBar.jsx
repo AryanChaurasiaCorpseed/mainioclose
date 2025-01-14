@@ -28,7 +28,6 @@ const SideBar = () => {
     }
   }, [dispatch, currentUserId]);
 
-
   const items = [
     {
       label: "Dashboard",
@@ -488,6 +487,17 @@ const SideBar = () => {
                   </Link>
                 ),
               },
+              {
+                key: "bankStatement",
+                label: (
+                  <Link
+                    className="link-four"
+                    to={`/erp/${userid}/account/bankStatement`}
+                  >
+                    Bank statement
+                  </Link>
+                ),
+              },
             ],
           },
         ]
@@ -624,7 +634,9 @@ const SideBar = () => {
               },
               {
                 label: (
-                  <Link to={`/erp/${userid}/setting/accountSetting/voucherType`}>
+                  <Link
+                    to={`/erp/${userid}/setting/accountSetting/voucherType`}
+                  >
                     Account setting
                   </Link>
                 ),

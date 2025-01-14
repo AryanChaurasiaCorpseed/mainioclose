@@ -13,8 +13,6 @@ import OrdersModule from "./Main/Sales/Orders/OrdersModule";
 import Login from "./Login/Login";
 import SignUp from "./Login/SignUp";
 import LeadDetailsPage from "./Main/Sales/Inbox/LeadDetailsPage";
-import HomePage from "./Home/HomePage";
-import FrontMainPage from "./Home/FrontMainPage";
 import MainLoginRouter from "./Login/MainLoginRouter";
 import OtpPage from "./Login/OtpPage";
 import ForgetPassword from "./Login/ForgetPassword";
@@ -46,14 +44,12 @@ import UserRating from "./Main/HR/UserRating";
 import SlugCreate from "./Main/Setting/slug/SlugCreate";
 import UrlsPage from "./Main/Setting/urls/UrlsPage";
 import SingleUserHistory from "./Main/DashBoard/SingleUserHistory";
-import MainCompanyPage from "./Main/Sales/company/MainCompanyPage";
 import ProjectPage from "./Main/Sales/Project/ProjectPage";
 import UserService from "./Main/HR/UserService";
 import Compliances from "./Main/Compliance/Compliances";
 import QualityModule from "./Main/Quality/QualityModule";
 import IVR from "./Main/Quality/IVR";
 import Accounts from "./Main/Accounts/Accounts";
-import { AccountsList } from "./Main/Accounts/AccountsList";
 import { ConfigProvider } from "antd";
 import Comments from "./Main/Setting/Comments/Comments";
 import { lazy, Suspense } from "react";
@@ -70,8 +66,6 @@ import HomePageFile from "./Home/HomePageFile";
 import LandingPage from "./Home/LandingPage";
 import IpAddress from "./Main/Setting/IpAddress/IpAddress";
 import VendorsList from "./Main/Vendors/VendorsList";
-import ProjectGraph from "./Main/GraphDashboard/ProjectGraph";
-import MainGraphPage from "./Main/GraphDashboard/MainGraphPage";
 import Procurement from "./Main/Vendors/Procurement";
 import MainCompanyFormPage from "./Main/Accounts/MainCompanyFormPage";
 import VendorsRequestList from "./Main/Sales/Leads/VendorsRequestList";
@@ -88,6 +82,7 @@ import Ledger from "./Main/Accounts/Ledger/Leadger";
 import Voucher from "./Main/Accounts/Voucher/Voucher";
 import Organizations from "./Main/Accounts/Organization/Organizations";
 import DailyBook from "./Main/Accounts/DailyBook/DailyBook";
+import BankStatement from "./Main/Accounts/BankStatements/BankStatement";
 
 const SpinLoading = lazy(() => import("./components/SpinLoading"));
 
@@ -330,6 +325,7 @@ function App() {
                 <Route path="voucher" element={<Voucher />} />
                 <Route path="organizations" element={<Organizations />} />
                 <Route path="dailybook" element={<DailyBook />} />
+                <Route path="bankStatement" element={<BankStatement />} />
                 
                 <Route path="" element={<div>account second page</div>} />
                 <Route

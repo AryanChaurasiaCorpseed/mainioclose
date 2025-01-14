@@ -202,6 +202,26 @@ export const getAllDailyBookRecord = createAsyncThunk(
   }
 );
 
+export const getAllBankStatements = createAsyncThunk(
+  "getAllBankStatements",
+  async () => {
+    const response = await getQuery(
+      `/accountService/api/v1/bankStatements/getAllBankStatements`
+    );
+    return response.data;
+  }
+);
+
+export const addBankDetails=createAsyncThunk('addBankDetails',async(data)=>{
+  const response=await postQuery(`/accountService/api/v1/bankStatements/createBankStatement`,data)
+  return response.data
+})
+
+export const createPaymentRegister=createAsyncThunk('createPaymentRegister',async(data)=>{
+  const response=await postQuery(`/accountService/api/v1/paymentRegister/createPaymentRegister`,data)
+  return response.data
+})
+
 const AccountSlice = createSlice({
   name: "account",
   initialState: {
@@ -220,6 +240,7 @@ const AccountSlice = createSlice({
     statutoryDetail: {},
     dailybookList: [],
     organizationDetail: {},
+    bankStatementList: [],
   },
   extraReducers: (builder) => {
     builder.addCase(getAllVoucherType.pending, (state, action) => {
@@ -340,6 +361,18 @@ const AccountSlice = createSlice({
     builder.addCase(getOrganizationByName.rejected, (state, action) => {
       state.loading = "rejected";
       state.organizationDetail = {};
+    });
+
+    builder.addCase(getAllBankStatements.pending, (state, action) => {
+      state.loading = "pending";
+    });
+    builder.addCase(getAllBankStatements.fulfilled, (state, action) => {
+      state.loading = "success";
+      state.bankStatementList = action.payload;
+    });
+    builder.addCase(getAllBankStatements.rejected, (state, action) => {
+      state.loading = "rejected";
+      state.bankStatementList = [];
     });
   },
 });
