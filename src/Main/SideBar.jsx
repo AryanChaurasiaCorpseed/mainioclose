@@ -157,6 +157,14 @@ const SideBar = () => {
                       ),
                       key: "proposal",
                     },
+                    {
+                      label: (
+                        <Link to={`${userid}/sales/paymentRegister`}>
+                          Payment register
+                        </Link>
+                      ),
+                      key: "paymentRegister",
+                    },
                   ]
                 : currentUserDetail?.department === "Quality Team" &&
                   getHighestPriorityRole(currentRoles) !== "ADMIN"
@@ -218,6 +226,14 @@ const SideBar = () => {
               {
                 label: <Link to={`${userid}/sales/proposal`}>Proposal</Link>,
                 key: "proposal",
+              },
+              {
+                label: (
+                  <Link to={`${userid}/sales/paymentsRegister`}>
+                    Payment register
+                  </Link>
+                ),
+                key: "paymentsRegister",
               },
             ],
           },
@@ -410,6 +426,39 @@ const SideBar = () => {
                   </Link>
                 ),
               },
+              {
+                key: "bankStatement",
+                label: (
+                  <Link
+                    className="link-four"
+                    to={`/erp/${userid}/account/bankStatement`}
+                  >
+                    Bank statement
+                  </Link>
+                ),
+              },
+              {
+                key: "paymentRegister",
+                label: (
+                  <Link
+                    className="link-four"
+                    to={`/erp/${userid}/account/paymentRegister`}
+                  >
+                    Payment register
+                  </Link>
+                ),
+              },
+              {
+                key: "tds",
+                label: (
+                  <Link
+                    className="link-four"
+                    to={`/erp/${userid}/account/tds`}
+                  >
+                    TDS
+                  </Link>
+                ),
+              },
             ],
           },
         ]
@@ -495,6 +544,28 @@ const SideBar = () => {
                     to={`/erp/${userid}/account/bankStatement`}
                   >
                     Bank statement
+                  </Link>
+                ),
+              },
+              {
+                key: "paymentRegister",
+                label: (
+                  <Link
+                    className="link-four"
+                    to={`/erp/${userid}/account/paymentRegister`}
+                  >
+                    Payment register
+                  </Link>
+                ),
+              },
+              {
+                key: "tds",
+                label: (
+                  <Link
+                    className="link-four"
+                    to={`/erp/${userid}/account/tds`}
+                  >
+                    TDS
                   </Link>
                 ),
               },

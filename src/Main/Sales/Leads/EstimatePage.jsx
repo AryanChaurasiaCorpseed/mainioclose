@@ -88,7 +88,6 @@ const EstimatePage = () => {
     {
       datIndex: "productName",
       title: "Product name",
-      width: 250,
       fixed: "left",
       render: (_, data) => <Text>{data?.productName}</Text>,
     },
@@ -273,7 +272,7 @@ const EstimatePage = () => {
   }, []);
 
   const handleSearch = (e) => {
-    const value = e.target.value;
+    const value = e.target.value.trim();
     setSearchText(value);
     const filtered = estimateList?.filter((item) =>
       Object.values(item)?.some((val) =>
@@ -317,7 +316,7 @@ const EstimatePage = () => {
   const handleSubmit = useCallback(
     (values) => {
       values.doc = values?.doc?.map((item) => item?.response);
-      let obj = { ...values,gstsAmount, estimateId: estimateData?.id };
+      let obj = { ...values, ...gstsAmount, estimateId: estimateData?.id };
       dispatch(createPaymentRegister(obj))
         .then((resp) => {
           if (resp.meta.requestStatus === "fulfilled") {
@@ -335,7 +334,7 @@ const EstimatePage = () => {
           notification.error({ message: "Something went wrong !." })
         );
     },
-    [form, dispatch, estimateData,gstsAmount]
+    [form, dispatch, estimateData, gstsAmount]
   );
 
   return (
@@ -359,7 +358,7 @@ const EstimatePage = () => {
             <CommonTable
               data={filteredData}
               columns={columns}
-              scroll={{ y: 500, x: 4000 }}
+              scroll={{ y: "65vh", x: 5000 }}
               page={paginationData?.page}
               pageSize={paginationData?.size}
               pagination={true}

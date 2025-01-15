@@ -40,7 +40,7 @@ const BankStatement = () => {
   }, [bankStatementList]);
 
   const handleSearch = (e) => {
-    const value = e.target.value;
+    const value = e.target.value?.trim();
     setSearchText(value);
     const filtered = bankStatementList?.filter((item) =>
       Object.values(item)?.some((val) =>

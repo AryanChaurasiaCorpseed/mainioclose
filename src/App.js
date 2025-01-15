@@ -83,6 +83,8 @@ import Voucher from "./Main/Accounts/Voucher/Voucher";
 import Organizations from "./Main/Accounts/Organization/Organizations";
 import DailyBook from "./Main/Accounts/DailyBook/DailyBook";
 import BankStatement from "./Main/Accounts/BankStatements/BankStatement";
+import PaymentRegister from "./Main/Accounts/PaymentRegister/PaymentRegister";
+import TDS from "./Main/Accounts/TDS/TDS";
 
 const SpinLoading = lazy(() => import("./components/SpinLoading"));
 
@@ -292,6 +294,8 @@ function App() {
                 <Route path="lead-form" element={<CompanyForm />} />
                 <Route path="estimate" element={<EstimatePage />} />
                 <Route path="proposal" element={<ProposalsPage />} />
+                <Route path="paymentsRegister" element={<PaymentRegister />} />
+                
                 <Route
                   path="company/:companyId/details"
                   element={<CompanyPageLayout />}
@@ -326,6 +330,8 @@ function App() {
                 <Route path="organizations" element={<Organizations />} />
                 <Route path="dailybook" element={<DailyBook />} />
                 <Route path="bankStatement" element={<BankStatement />} />
+                <Route path="paymentRegister" element={<PaymentRegister />} />
+                <Route path="tds" element={<TDS />} />
                 
                 <Route path="" element={<div>account second page</div>} />
                 <Route

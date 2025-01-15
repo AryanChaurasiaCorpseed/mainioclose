@@ -42,7 +42,7 @@ const HrUserList = () => {
   }, [allMainUser])
 
   const handleSearch = (e) => {
-    const value = e.target.value
+    const value = e.target.value.trim()
     setSearchText(value)
     const filtered = allMainUser?.filter((item) =>
       Object.values(item)?.some((val) =>

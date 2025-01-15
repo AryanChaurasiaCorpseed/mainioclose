@@ -46,6 +46,7 @@ const MainPage = () => {
     return lastWord;
   };
 
+
   return (
     <>
       <Layout

@@ -31,7 +31,7 @@ const ProductsChange = () => {
   }, [productData]);
 
   const handleSearch = (e) => {
-    const value = e.target.value;
+    const value = e.target.value.trim();
     setSearchText(value);
     const filtered = productData?.filter((item) =>
       Object.values(item)?.some((val) =>

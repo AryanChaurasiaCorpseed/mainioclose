@@ -212,15 +212,60 @@ export const getAllBankStatements = createAsyncThunk(
   }
 );
 
-export const addBankDetails=createAsyncThunk('addBankDetails',async(data)=>{
-  const response=await postQuery(`/accountService/api/v1/bankStatements/createBankStatement`,data)
-  return response.data
-})
+export const addBankDetails = createAsyncThunk(
+  "addBankDetails",
+  async (data) => {
+    const response = await postQuery(
+      `/accountService/api/v1/bankStatements/createBankStatement`,
+      data
+    );
+    return response.data;
+  }
+);
 
-export const createPaymentRegister=createAsyncThunk('createPaymentRegister',async(data)=>{
-  const response=await postQuery(`/accountService/api/v1/paymentRegister/createPaymentRegister`,data)
-  return response.data
-})
+export const createPaymentRegister = createAsyncThunk(
+  "createPaymentRegister",
+  async (data) => {
+    const response = await postQuery(
+      `/accountService/api/v1/paymentRegister/createPaymentRegister`,
+      data
+    );
+    return response.data;
+  }
+);
+
+export const getAllPaymentRegister = createAsyncThunk(
+  "getAllPaymentRegister",
+  async () => {
+    const response = await getQuery(
+      `/accountService/api/v1/paymentRegister/getAllPaymentRegister`
+    );
+    return response.data;
+  }
+);
+
+export const getUnusedBankStatement = createAsyncThunk(
+  "getUnusedBankStatement",
+  async () => {
+    const response = await getQuery(
+      `/accountService/api/v1/bankStatements/getUnusedBankStatement`
+    );
+    return response.data;
+  }
+);
+
+export const getAllTdsList = createAsyncThunk("getAllTdsList", async () => {
+  const response = await getQuery(`/accountService/api/v1/tds/getAllTds`);
+  return response.data;
+});
+
+export const createTDS = createAsyncThunk("createTDS", async (data) => {
+  const response = await postQuery(
+    `/accountService/api/v1/tds/createTds`,
+    data
+  );
+  return response.data;
+});
 
 const AccountSlice = createSlice({
   name: "account",
@@ -241,6 +286,9 @@ const AccountSlice = createSlice({
     dailybookList: [],
     organizationDetail: {},
     bankStatementList: [],
+    paymentRegisterList: [],
+    unusedBankStatementList: [],
+    tdsList: [],
   },
   extraReducers: (builder) => {
     builder.addCase(getAllVoucherType.pending, (state, action) => {
@@ -373,6 +421,42 @@ const AccountSlice = createSlice({
     builder.addCase(getAllBankStatements.rejected, (state, action) => {
       state.loading = "rejected";
       state.bankStatementList = [];
+    });
+
+    builder.addCase(getAllPaymentRegister.pending, (state, action) => {
+      state.loading = "pending";
+    });
+    builder.addCase(getAllPaymentRegister.fulfilled, (state, action) => {
+      state.loading = "success";
+      state.paymentRegisterList = action.payload;
+    });
+    builder.addCase(getAllPaymentRegister.rejected, (state, action) => {
+      state.loading = "rejected";
+      state.paymentRegisterList = [];
+    });
+
+    builder.addCase(getUnusedBankStatement.pending, (state, action) => {
+      state.loading = "pending";
+    });
+    builder.addCase(getUnusedBankStatement.fulfilled, (state, action) => {
+      state.loading = "success";
+      state.unusedBankStatementList = action.payload;
+    });
+    builder.addCase(getUnusedBankStatement.rejected, (state, action) => {
+      state.loading = "rejected";
+      state.unusedBankStatementList = [];
+    });
+
+    builder.addCase(getAllTdsList.pending, (state, action) => {
+      state.loading = "pending";
+    });
+    builder.addCase(getAllTdsList.fulfilled, (state, action) => {
+      state.loading = "success";
+      state.tdsList = action.payload;
+    });
+    builder.addCase(getAllTdsList.rejected, (state, action) => {
+      state.loading = "rejected";
+      state.tdsList = [];
     });
   },
 });

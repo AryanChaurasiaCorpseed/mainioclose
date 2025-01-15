@@ -56,7 +56,7 @@ const Voucher = () => {
   };
 
   const handleSearch = (e) => {
-    const value = e.target.value;
+    const value = e.target.value.trim();
     setSearchText(value);
     const filtered = voucherList?.filter((item) =>
       Object.values(item)?.some((val) =>
