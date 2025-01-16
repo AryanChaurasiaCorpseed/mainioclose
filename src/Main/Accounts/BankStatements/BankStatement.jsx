@@ -50,6 +50,8 @@ const BankStatement = () => {
     setFilteredData(filtered);
   };
 
+
+
   const columns = [
     {
       dataIndex: "id",
@@ -72,12 +74,12 @@ const BankStatement = () => {
       dataIndex: "leftAmount",
       title: "Left amount",
     },
+    
     {
       dataIndex: "paymentDate",
       title: "Payment date",
       render: (data) => <Text>{dayjs(data).format("DD-MM-YYYY")}</Text>,
     },
-    
   ];
 
   const handleSubmit = useCallback(

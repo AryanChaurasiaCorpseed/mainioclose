@@ -55,6 +55,12 @@ const Proposal = ({ leadid }) => {
   const [productData, setProductData] = useState([]);
   const [openModal, setOpenModal] = useState(false);
   const [editProposal, setEditProposal] = useState(false);
+   const [productFees, setProductFees] = useState({
+      professionalFees: 0,
+      serviceCharge: 0,
+      otherFees: 0,
+      govermentfees: 0,
+    });
 
   useEffect(() => {
     if (Object.keys(companyDetails) > 0) {
@@ -106,6 +112,7 @@ const Proposal = ({ leadid }) => {
               govermentCode: item?.hsnNo,
               govermentGst: item?.taxAmount,
             });
+            setProductFees((prev) => ({ ...prev, govermentfees: item?.fees }));
           }
           if (item?.name === "Professional fees") {
             form.setFieldsValue({
@@ -113,6 +120,10 @@ const Proposal = ({ leadid }) => {
               professionalCode: item?.hsnNo,
               profesionalGst: item?.taxAmount,
             });
+            setProductFees((prev) => ({
+              ...prev,
+              professionalFees: item?.fees,
+            }));
           }
           if (item?.name === "Service charges") {
             form.setFieldsValue({
@@ -120,6 +131,7 @@ const Proposal = ({ leadid }) => {
               serviceCode: item?.hsnNo,
               serviceGst: item?.taxAmount,
             });
+            setProductFees((prev) => ({ ...prev, serviceCharge: item?.fees }))
           }
 
           if (item?.name === "Other fees") {
@@ -128,6 +140,7 @@ const Proposal = ({ leadid }) => {
               otherCode: item?.hsnNo,
               otherGst: item?.taxAmount,
             });
+            setProductFees((prev) => ({ ...prev, otherFees: item?.fees }));
           }
         });
       }
@@ -184,7 +197,6 @@ const Proposal = ({ leadid }) => {
       secondaryAddress: details?.secondaryAddress,
       secondaryCity: details?.secondaryCity,
       secondaryState: details?.secondaryState,
-      country: details?.country,
       secondaryPinCode: details?.secondaryPinCode,
       isConsultant: details?.isConsultant,
       originalCompanyName: details?.consultantByCompany?.name,
@@ -194,6 +206,18 @@ const Proposal = ({ leadid }) => {
     });
     setEditProposal((prev) => !prev);
   }, [details, form]);
+
+
+  const validateGreaterThanOrEqual = (initialValue) => ({
+    validator(_, value) {
+      if (value === undefined || value >= initialValue) {
+        return Promise.resolve();
+      }
+      return Promise.reject(
+        new Error(`Value must be greater than or equal to ${initialValue}`)
+      );
+    },
+  });
 
   const handleFinish = useCallback(
     (values) => {
@@ -233,54 +257,28 @@ const Proposal = ({ leadid }) => {
     [leadid, details, editProposal, dispatch]
   );
 
-  // const generatePDF = async () => {
-  //   const element = pdfRef.current;
-  //   const canvas = await html2canvas(element, {
-  //     scale: 2,
-  //     useCORS: true,
-  //   });
-  //   const imgData = canvas.toDataURL("image/png");
-  //   const pdf = new jsPDF("p", "mm", "a4");
-  //   const imgWidth = 210;
-  //   const imgHeight = (canvas.height * imgWidth) / canvas.width;
-  //   pdf.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight);
-  //   pdf.save("proposal.pdf");
-  // };
-
   const generatePDF = async () => {
     const element = pdfRef.current;
-
-    // Render the HTML content to a canvas
     const canvas = await html2canvas(element, {
-      scale: 2, // Improve resolution
-      useCORS: true, // Allow cross-origin images
+      scale: 2, 
+      useCORS: true,
     });
 
-    // Get image data from the canvas
     const imgData = canvas.toDataURL("image/png");
-
-    // Create a new jsPDF instance
     const pdf = new jsPDF("p", "mm", "a4");
-    const imgWidth = 210; // Width in mm for A4
-    const imgHeight = (canvas.height * imgWidth) / canvas.width; // Maintain aspect ratio
+    const imgWidth = 210; 
+    const imgHeight = (canvas.height * imgWidth) / canvas.width; 
 
-    const pageHeight = 297; // Height in mm for A4
-    let yPosition = 0; // Starting Y position
+    const pageHeight = 297; 
+    let yPosition = 0; 
 
     while (yPosition < imgHeight) {
-      // Add the portion of the image that fits in the current page
       pdf.addImage(imgData, "PNG", 0, -yPosition, imgWidth, imgHeight);
-
-      // If there's more content, add a new page
       if (yPosition + pageHeight < imgHeight) {
         pdf.addPage();
       }
-
-      // Move to the next page
       yPosition += pageHeight;
     }
-
-    // Save the PDF
     pdf.save("proposal.pdf");
   };
 
@@ -804,6 +802,9 @@ const Proposal = ({ leadid }) => {
                             required: true,
                             message: "Please give professional fees",
                           },
+                          validateGreaterThanOrEqual(
+                            productFees?.professionalFees
+                          ),
                         ]}
                       >
                         <Input />
@@ -841,6 +842,9 @@ const Proposal = ({ leadid }) => {
                             required: true,
                             message: "please give service charges",
                           },
+                          validateGreaterThanOrEqual(
+                            productFees?.serviceCharge
+                          ),
                         ]}
                       >
                         <Input />
@@ -872,6 +876,9 @@ const Proposal = ({ leadid }) => {
                         name="govermentfees"
                         rules={[
                           { required: true, message: "please give govt. fees" },
+                          validateGreaterThanOrEqual(
+                            productFees?.govermentfees
+                          ),
                         ]}
                       >
                         <Input />
@@ -906,6 +913,7 @@ const Proposal = ({ leadid }) => {
                             required: true,
                             message: "please give other fees charges",
                           },
+                          validateGreaterThanOrEqual(productFees?.otherFees),
                         ]}
                       >
                         <Input />

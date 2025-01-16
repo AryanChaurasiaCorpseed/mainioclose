@@ -267,6 +267,21 @@ export const createTDS = createAsyncThunk("createTDS", async (data) => {
   return response.data;
 });
 
+export const getTdsAmounts = createAsyncThunk("getTdsAmounts", async () => {
+  const response = await getQuery(`/accountService/api/v1/tds/getAllTdsCount`);
+  return response.data;
+});
+
+export const approvedPayment = createAsyncThunk(
+  "approvedPayment",
+  async ({ bankstatementId, registerAmountId }) => {
+    const response = await postQuery(
+      `/accountService/api/v1/bankStatements/addRegisterAmountInBankStatement?bankstatementId=${bankstatementId}&registerAmountId=${registerAmountId}`
+    );
+    return response.data;
+  }
+);
+
 const AccountSlice = createSlice({
   name: "account",
   initialState: {
@@ -289,6 +304,7 @@ const AccountSlice = createSlice({
     paymentRegisterList: [],
     unusedBankStatementList: [],
     tdsList: [],
+    tdsAmount: {},
   },
   extraReducers: (builder) => {
     builder.addCase(getAllVoucherType.pending, (state, action) => {
@@ -457,6 +473,18 @@ const AccountSlice = createSlice({
     builder.addCase(getAllTdsList.rejected, (state, action) => {
       state.loading = "rejected";
       state.tdsList = [];
+    });
+
+    builder.addCase(getTdsAmounts.pending, (state, action) => {
+      state.loading = "pending";
+    });
+    builder.addCase(getTdsAmounts.fulfilled, (state, action) => {
+      state.loading = "success";
+      state.tdsAmount = action.payload;
+    });
+    builder.addCase(getTdsAmounts.rejected, (state, action) => {
+      state.loading = "rejected";
+      state.tdsAmount = [];
     });
   },
 });

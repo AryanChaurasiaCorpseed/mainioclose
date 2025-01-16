@@ -17,6 +17,7 @@ const MainPage = () => {
   const dispatch = useDispatch();
   const items = SideBar();
   const [collapsed, setCollapsed] = useState(false);
+  
   const {
     token: { colorBgContainer },
   } = theme.useToken();
@@ -46,6 +47,14 @@ const MainPage = () => {
     return lastWord;
   };
 
+  const [openKeys, setOpenKeys] = useState(getSecondLastKey());
+
+  // useEffect(() => {
+  //   const key = getSecondLastKey();
+  //   setOpenKeys(key);
+  // }, []);
+
+  console.log('fkdjbsdkjfkj',[openKeys])
 
   return (
     <>
@@ -71,9 +80,10 @@ const MainPage = () => {
                 ? "setting"
                 : getPathKey(),
             ]}
-            defaultOpenKeys={[getSecondLastKey()]}
+            defaultOpenKeys={[openKeys]}
             mode="inline"
             items={items}
+            onOpenChange={(e) => setOpenKeys(e[e?.length - 1])}
           />
         </Sider>
         <Layout>
