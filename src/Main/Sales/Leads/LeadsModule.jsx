@@ -416,8 +416,8 @@ const LeadsModule = () => {
       dataIndex: "name",
       checked: true,
       sorter: (a, b) => {
-        const nameA = a.clients[0]?.name.toLowerCase();
-        const nameB = b.clients[0]?.name.toLowerCase();
+        const nameA = a.clients[0]?.name?.toLowerCase();
+        const nameB = b.clients[0]?.name?.toLowerCase();
         if (nameA < nameB) return -1;
         if (nameA > nameB) return 1;
         return 0;
@@ -903,7 +903,7 @@ const LeadsModule = () => {
               if (dates) {
                 setAllMultiFilterData((prev) => ({
                   ...prev,
-                  toDate: dateStrings[1],
+                  toDate: dateStrings[0],
                   fromDate: dateStrings[1],
                 }));
               }
