@@ -5,6 +5,7 @@ import {
   Button,
   Col,
   DatePicker,
+  Flex,
   Form,
   Input,
   InputNumber,
@@ -12,6 +13,7 @@ import {
   notification,
   Row,
   Select,
+  Switch,
   Typography,
   Upload,
 } from "antd";
@@ -24,9 +26,12 @@ import TableScalaton from "../../../components/TableScalaton";
 import SomethingWrong from "../../../components/usefulThings/SomethingWrong";
 import { useParams } from "react-router-dom";
 import dayjs from "dayjs";
-import { createPaymentRegister } from "../../../Toolkit/Slices/AccountSlice";
+import {
+  createPaymentRegister,
+  getPaymentDetailListByEstimateId,
+} from "../../../Toolkit/Slices/AccountSlice";
 import { getAllUrlList } from "../../../Toolkit/Slices/LeadUrlSlice";
-const { Text } = Typography;
+const { Text, Title } = Typography;
 
 const EstimatePage = () => {
   const dispatch = useDispatch();
@@ -34,6 +39,7 @@ const EstimatePage = () => {
   const [form] = Form.useForm();
   const estimateList = useSelector((state) => state.leads.estimateList);
   const estimateLoading = useSelector((state) => state.leads.estimateLoading);
+  const paymentList = useSelector((state) => state.account.paymentList);
   const allLeadUrl = useSelector((prev) => prev?.leadurls.allUrlList);
   const [searchText, setSearchText] = useState("");
   const [filteredData, setFilteredData] = useState([]);
@@ -254,6 +260,7 @@ const EstimatePage = () => {
           type="text"
           onClick={() => {
             handleSetData(data);
+            dispatch(getPaymentDetailListByEstimateId(data?.id));
           }}
         >
           <Icon icon="fluent:add-16-regular" width="16" height="16" />
@@ -372,7 +379,7 @@ const EstimatePage = () => {
         title="Add payment details"
         open={openModal}
         centered
-        width={"70%"}
+        width={"50%"}
         onCancel={() => setOpenModal(false)}
         onClose={() => setOpenModal(false)}
         okText="Submit"
@@ -450,6 +457,25 @@ const EstimatePage = () => {
               </Form.Item>
             </Col>
           </Row>
+          <Row style={{marginBottom:'12px'}}>
+            <Col span={18}>
+              <Flex vertical>
+                <Title level={5}>Total paid amount</Title>
+                <Flex gap={2} vertical>
+                  {paymentList?.map((item, idx) => (
+                    <Text key={`paym${idx}`}>
+                      Payment {idx + 1} : {item?.totalAmount}
+                    </Text>
+                  ))}
+                </Flex>
+              </Flex>
+            </Col>
+            <Col span={6}>
+              <Title level={5}>
+                Total amount : {estimateData?.totalAmount}
+              </Title>
+            </Col>
+          </Row>
           <Row>
             <Col span={11}>
               <Form.Item
@@ -524,6 +550,56 @@ const EstimatePage = () => {
             </Col>
             <Col span={2} />
             <Col span={11}>
+              <Flex>
+                <Form.Item
+                  label="TDS present"
+                  name="tdsPresent"
+                  rules={[
+                    {
+                      required: true,
+                      message: "please enter tds present.",
+                    },
+                  ]}
+                >
+                  <Switch size="small" />
+                </Form.Item>
+
+                <Form.Item
+                  shouldUpdate={(prevValues, currentValues) =>
+                    prevValues.tdsPresent !== currentValues.tdsPresent
+                  }
+                  noStyle
+                >
+                  {({ getFieldValue }) => (
+                    <>
+                      {getFieldValue("tdsPresent") && (
+                        <>
+                          <Form.Item
+                            label="TDS percent"
+                            name="tdsPercent"
+                            rules={[
+                              {
+                                required: true,
+                                message: "please enter tds percent.",
+                              },
+                            ]}
+                          >
+                            <Input
+                              suffix={
+                                <Icon icon="material-symbols-light:percent" />
+                              }
+                            />
+                          </Form.Item>
+                        </>
+                      )}
+                    </>
+                  )}
+                </Form.Item>
+              </Flex>
+            </Col>
+          </Row>
+          <Row>
+            <Col span={11}>
               <Form.Item
                 label="Professional fees"
                 name="professionalFees"
@@ -543,8 +619,7 @@ const EstimatePage = () => {
                 />
               </Form.Item>
             </Col>
-          </Row>
-          <Row>
+            <Col span={2} />
             <Col span={11}>
               <Form.Item
                 label="Professional gst"
@@ -561,7 +636,8 @@ const EstimatePage = () => {
                 />
               </Form.Item>
             </Col>
-            <Col span={2} />
+          </Row>
+          <Row>
             <Col span={11}>
               <Form.Item
                 label="Government fees"
@@ -582,8 +658,7 @@ const EstimatePage = () => {
                 />
               </Form.Item>
             </Col>
-          </Row>
-          <Row>
+            <Col span={2} />
             <Col span={11}>
               <Form.Item
                 label="Government gst"
@@ -600,7 +675,8 @@ const EstimatePage = () => {
                 />
               </Form.Item>
             </Col>
-            <Col span={2} />
+          </Row>
+          <Row>
             <Col span={11}>
               <Form.Item
                 label="Service charge"
@@ -621,8 +697,7 @@ const EstimatePage = () => {
                 />
               </Form.Item>
             </Col>
-          </Row>
-          <Row>
+            <Col span={2} />
             <Col span={11}>
               <Form.Item
                 label="Service gst"
@@ -642,7 +717,8 @@ const EstimatePage = () => {
                 />
               </Form.Item>
             </Col>
-            <Col span={2} />
+          </Row>
+          <Row>
             <Col span={11}>
               <Form.Item
                 label="Other fees"
@@ -658,8 +734,7 @@ const EstimatePage = () => {
                 />
               </Form.Item>
             </Col>
-          </Row>
-          <Row>
+            <Col span={2} />
             <Col span={11}>
               <Form.Item
                 label="Other gst"
@@ -679,7 +754,8 @@ const EstimatePage = () => {
                 />
               </Form.Item>
             </Col>
-            <Col span={2} />
+          </Row>
+          <Row>
             <Col span={11}>
               <Form.Item
                 label="Total amount"
@@ -701,8 +777,7 @@ const EstimatePage = () => {
                 />
               </Form.Item>
             </Col>
-          </Row>
-          <Row>
+            <Col span={2} />
             <Col span={11}>
               <Form.Item
                 label="Payment date"
@@ -717,7 +792,8 @@ const EstimatePage = () => {
                 <DatePicker style={{ width: "100%" }} />
               </Form.Item>
             </Col>
-            <Col span={2} />
+          </Row>
+          <Row>
             <Col span={11}>
               <Form.Item
                 label="Remark"
@@ -732,8 +808,7 @@ const EstimatePage = () => {
                 <Input.TextArea />
               </Form.Item>
             </Col>
-          </Row>
-          <Row>
+            <Col span={2} />
             <Col span={11}>
               <Form.Item
                 label="Document attachement"
@@ -753,6 +828,9 @@ const EstimatePage = () => {
                 </Upload>
               </Form.Item>
             </Col>
+          </Row>
+          <Row>
+            <Col span={11}></Col>
           </Row>
         </Form>
       </Modal>

@@ -282,6 +282,11 @@ export const approvedPayment = createAsyncThunk(
   }
 );
 
+export const getPaymentDetailListByEstimateId=createAsyncThunk('getPaymentDetailListByEstimateId',async(id)=>{
+  const response=await getQuery(`/accountService/api/v1/paymentRegister/getPaymentRegisterByEstimateId?id=${id}`)
+  return response.data
+})
+
 const AccountSlice = createSlice({
   name: "account",
   initialState: {
@@ -305,6 +310,7 @@ const AccountSlice = createSlice({
     unusedBankStatementList: [],
     tdsList: [],
     tdsAmount: {},
+    paymentList:[]
   },
   extraReducers: (builder) => {
     builder.addCase(getAllVoucherType.pending, (state, action) => {
@@ -486,6 +492,20 @@ const AccountSlice = createSlice({
       state.loading = "rejected";
       state.tdsAmount = [];
     });
+
+
+    builder.addCase(getPaymentDetailListByEstimateId.pending, (state, action) => {
+      state.loading = "pending";
+    });
+    builder.addCase(getPaymentDetailListByEstimateId.fulfilled, (state, action) => {
+      state.loading = "success";
+      state.paymentList = action.payload;
+    });
+    builder.addCase(getPaymentDetailListByEstimateId.rejected, (state, action) => {
+      state.loading = "rejected";
+      state.tdsAmount = [];
+    });
+
   },
 });
 
