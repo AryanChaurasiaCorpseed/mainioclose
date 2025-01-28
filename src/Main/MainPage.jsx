@@ -17,7 +17,7 @@ const MainPage = () => {
   const dispatch = useDispatch();
   const items = SideBar();
   const [collapsed, setCollapsed] = useState(false);
-  
+
   const {
     token: { colorBgContainer },
   } = theme.useToken();
@@ -54,7 +54,7 @@ const MainPage = () => {
   //   setOpenKeys(key);
   // }, []);
 
-  console.log('fkdjbsdkjfkj',[openKeys])
+  console.log("fkdjbsdkjfkj", [openKeys]);
 
   return (
     <>
@@ -76,6 +76,8 @@ const MainPage = () => {
                 ? "accountSetting"
                 : getSecondLastKey() === "erpSetting"
                 ? "erpSetting"
+                : getSecondLastKey() === "organizations"
+                ? "organizations"
                 : getThirdLastKey() === "setting"
                 ? "setting"
                 : getPathKey(),

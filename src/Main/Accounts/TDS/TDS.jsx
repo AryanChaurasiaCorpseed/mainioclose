@@ -1,11 +1,13 @@
 import {
   Button,
+  Col,
   Flex,
   Form,
   Input,
   InputNumber,
   Modal,
   notification,
+  Row,
   Typography,
 } from "antd";
 import React, { useCallback, useEffect, useState } from "react";
@@ -133,6 +135,7 @@ const TDS = () => {
       <Modal
         title={editData ? "Edit TDS details" : "Add TDS details"}
         open={openModal}
+        width={"60%"}
         centered
         onCancel={() => setOpenModal(false)}
         onClose={() => setOpenModal(false)}
@@ -145,59 +148,97 @@ const TDS = () => {
           form={form}
           style={{ maxHeight: "75vh", overflow: "auto" }}
         >
-          <Form.Item
-            label="Organization"
-            name="organization"
-            rules={[{ required: true, message: "please enter organization" }]}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item
-            label="TDS type"
-            name="tdsType"
-            rules={[{ required: true, message: "please enter tds type" }]}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item
-            label="Payment register id"
-            name="paymentRegisterId"
-            rules={[
-              { required: true, message: "please enter payment register id" },
-            ]}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item
-            label="Total payment amount"
-            name="totalPaymentAmount"
-            rules={[
-              { required: true, message: "please enter total payment amount" },
-            ]}
-          >
-            <InputNumber style={{ width: "100%" }} />
-          </Form.Item>
-          <Form.Item
-            label="TDS %"
-            name="tdsPrecent"
-            rules={[{ required: true, message: "please enter tds %" }]}
-          >
-            <InputNumber style={{ width: "100%" }} />
-          </Form.Item>
-          <Form.Item
-            label="TDS amount"
-            name="tdsAmount"
-            rules={[{ required: true, message: "please enter tds amount" }]}
-          >
-            <InputNumber style={{ width: "100%" }} />
-          </Form.Item>
-          <Form.Item
-            label="Project id"
-            name="projectId"
-            rules={[{ required: true, message: "please select project id" }]}
-          >
-            <InputNumber style={{ width: "100%" }} />
-          </Form.Item>
+          <Row>
+            <Col span={11}>
+              {" "}
+              <Form.Item
+                label="Organization"
+                name="organization"
+                rules={[
+                  { required: true, message: "please enter organization" },
+                ]}
+              >
+                <Input />
+              </Form.Item>
+            </Col>
+            <Col span={2} />
+            <Col span={11}>
+              <Form.Item
+                label="TDS type"
+                name="tdsType"
+                rules={[{ required: true, message: "please enter tds type" }]}
+              >
+                <Input />
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row>
+            <Col span={11}>
+              <Form.Item
+                label="Payment register id"
+                name="paymentRegisterId"
+                rules={[
+                  {
+                    required: true,
+                    message: "please enter payment register id",
+                  },
+                ]}
+              >
+                <Input />
+              </Form.Item>
+            </Col>
+            <Col span={2} />
+            <Col span={11}>
+              <Form.Item
+                label="Total payment amount"
+                name="totalPaymentAmount"
+                rules={[
+                  {
+                    required: true,
+                    message: "please enter total payment amount",
+                  },
+                ]}
+              >
+                <InputNumber style={{ width: "100%" }} />
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row>
+            <Col span={11}>
+              <Form.Item
+                label="TDS %"
+                name="tdsPrecent"
+                rules={[{ required: true, message: "please enter tds %" }]}
+              >
+                <InputNumber style={{ width: "100%" }} />
+              </Form.Item>
+            </Col>
+            <Col span={2} />
+            <Col span={11}>
+              <Form.Item
+                label="TDS amount"
+                name="tdsAmount"
+                rules={[{ required: true, message: "please enter tds amount" }]}
+              >
+                <InputNumber style={{ width: "100%" }} />
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row>
+            <Col span={11}>
+              <Form.Item
+                label="Project id"
+                name="projectId"
+                rules={[
+                  { required: true, message: "please select project id" },
+                ]}
+              >
+                <InputNumber style={{ width: "100%" }} />
+              </Form.Item>
+            </Col>
+            <Col span={2} />
+            <Col span={11}></Col>
+          </Row>
         </Form>
       </Modal>
     </>

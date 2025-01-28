@@ -393,72 +393,72 @@ const SideBar = () => {
                 ),
                 key: "companyForm",
               },
-              {
-                key: "ledger",
-                label: (
-                  <Link
-                    className="link-four"
-                    to={`/erp/${userid}/account/ledger`}
-                  >
-                    Ledger
-                  </Link>
-                ),
-              },
-              {
-                key: "voucher",
-                label: (
-                  <Link
-                    className="link-four"
-                    to={`/erp/${userid}/account/voucher`}
-                  >
-                    Voucher
-                  </Link>
-                ),
-              },
-              {
-                key: "dailybook",
-                label: (
-                  <Link
-                    className="link-four"
-                    to={`/erp/${userid}/account/dailybook`}
-                  >
-                    Daily book
-                  </Link>
-                ),
-              },
-              {
-                key: "bankStatement",
-                label: (
-                  <Link
-                    className="link-four"
-                    to={`/erp/${userid}/account/bankStatement`}
-                  >
-                    Bank statement
-                  </Link>
-                ),
-              },
-              {
-                key: "paymentRegister",
-                label: (
-                  <Link
-                    className="link-four"
-                    to={`/erp/${userid}/account/paymentRegister`}
-                  >
-                    Payment register
-                  </Link>
-                ),
-              },
-              {
-                key: "tds",
-                label: (
-                  <Link
-                    className="link-four"
-                    to={`/erp/${userid}/account/tds`}
-                  >
-                    TDS
-                  </Link>
-                ),
-              },
+              // {
+              //   key: "ledger",
+              //   label: (
+              //     <Link
+              //       className="link-four"
+              //       to={`/erp/${userid}/account/ledger`}
+              //     >
+              //       Ledger
+              //     </Link>
+              //   ),
+              // },
+              // {
+              //   key: "voucher",
+              //   label: (
+              //     <Link
+              //       className="link-four"
+              //       to={`/erp/${userid}/account/voucher`}
+              //     >
+              //       Voucher
+              //     </Link>
+              //   ),
+              // },
+              // {
+              //   key: "dailybook",
+              //   label: (
+              //     <Link
+              //       className="link-four"
+              //       to={`/erp/${userid}/account/dailybook`}
+              //     >
+              //       Daily book
+              //     </Link>
+              //   ),
+              // },
+              // {
+              //   key: "bankStatement",
+              //   label: (
+              //     <Link
+              //       className="link-four"
+              //       to={`/erp/${userid}/account/bankStatement`}
+              //     >
+              //       Bank statement
+              //     </Link>
+              //   ),
+              // },
+              // {
+              //   key: "paymentRegister",
+              //   label: (
+              //     <Link
+              //       className="link-four"
+              //       to={`/erp/${userid}/account/paymentRegister`}
+              //     >
+              //       Payment register
+              //     </Link>
+              //   ),
+              // },
+              // {
+              //   key: "tds",
+              //   label: (
+              //     <Link
+              //       className="link-four"
+              //       to={`/erp/${userid}/account/tds`}
+              //     >
+              //       TDS
+              //     </Link>
+              //   ),
+              // },
             ],
           },
         ]
@@ -503,72 +503,72 @@ const SideBar = () => {
                   </Link>
                 ),
               },
-              {
-                key: "ledger",
-                label: (
-                  <Link
-                    className="link-four"
-                    to={`/erp/${userid}/account/ledger`}
-                  >
-                    Ledger
-                  </Link>
-                ),
-              },
-              {
-                key: "voucher",
-                label: (
-                  <Link
-                    className="link-four"
-                    to={`/erp/${userid}/account/voucher`}
-                  >
-                    Voucher
-                  </Link>
-                ),
-              },
-              {
-                key: "dailybook",
-                label: (
-                  <Link
-                    className="link-four"
-                    to={`/erp/${userid}/account/dailybook`}
-                  >
-                    Daily book
-                  </Link>
-                ),
-              },
-              {
-                key: "bankStatement",
-                label: (
-                  <Link
-                    className="link-four"
-                    to={`/erp/${userid}/account/bankStatement`}
-                  >
-                    Bank statement
-                  </Link>
-                ),
-              },
-              {
-                key: "paymentRegister",
-                label: (
-                  <Link
-                    className="link-four"
-                    to={`/erp/${userid}/account/paymentRegister`}
-                  >
-                    Payment register
-                  </Link>
-                ),
-              },
-              {
-                key: "tds",
-                label: (
-                  <Link
-                    className="link-four"
-                    to={`/erp/${userid}/account/tds`}
-                  >
-                    TDS
-                  </Link>
-                ),
-              },
+              // {
+              //   key: "ledger",
+              //   label: (
+              //     <Link
+              //       className="link-four"
+              //       to={`/erp/${userid}/account/ledger`}
+              //     >
+              //       Ledger
+              //     </Link>
+              //   ),
+              // },
+              // {
+              //   key: "voucher",
+              //   label: (
+              //     <Link
+              //       className="link-four"
+              //       to={`/erp/${userid}/account/voucher`}
+              //     >
+              //       Voucher
+              //     </Link>
+              //   ),
+              // },
+              // {
+              //   key: "dailybook",
+              //   label: (
+              //     <Link
+              //       className="link-four"
+              //       to={`/erp/${userid}/account/dailybook`}
+              //     >
+              //       Daily book
+              //     </Link>
+              //   ),
+              // },
+              // {
+              //   key: "bankStatement",
+              //   label: (
+              //     <Link
+              //       className="link-four"
+              //       to={`/erp/${userid}/account/bankStatement`}
+              //     >
+              //       Bank statement
+              //     </Link>
+              //   ),
+              // },
+              // {
+              //   key: "paymentRegister",
+              //   label: (
+              //     <Link
+              //       className="link-four"
+              //       to={`/erp/${userid}/account/paymentRegister`}
+              //     >
+              //       Payment register
+              //     </Link>
+              //   ),
+              // },
+              // {
+              //   key: "tds",
+              //   label: (
+              //     <Link
+              //       className="link-four"
+              //       to={`/erp/${userid}/account/tds`}
+              //     >
+              //       TDS
+              //     </Link>
+              //   ),
+              // },
             ],
           },
         ]
@@ -695,14 +695,14 @@ const SideBar = () => {
               />
             ),
             children: [
-              {
-                label: (
-                  <Link to={`/erp/${userid}/setting/erpSetting/leadStatus`}>
-                    Erp setting
-                  </Link>
-                ),
-                key: "erpSetting",
-              },
+              // {
+              //   label: (
+              //     <Link to={`/erp/${userid}/setting/erpSetting/leadStatus`}>
+              //       Erp setting
+              //     </Link>
+              //   ),
+              //   key: "erpSetting",
+              // },
               {
                 label: (
                   <Link

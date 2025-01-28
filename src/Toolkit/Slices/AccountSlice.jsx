@@ -282,8 +282,25 @@ export const approvedPayment = createAsyncThunk(
   }
 );
 
-export const getPaymentDetailListByEstimateId=createAsyncThunk('getPaymentDetailListByEstimateId',async(id)=>{
-  const response=await getQuery(`/accountService/api/v1/paymentRegister/getPaymentRegisterByEstimateId?id=${id}`)
+export const getPaymentDetailListByEstimateId = createAsyncThunk(
+  "getPaymentDetailListByEstimateId",
+  async (id) => {
+    const response = await getQuery(
+      `/accountService/api/v1/paymentRegister/getPaymentRegisterByEstimateId?id=${id}`
+    );
+    return response.data;
+  }
+);
+
+export const getAllGroups = createAsyncThunk("getAllGroups", async () => {
+  const response = await getQuery(
+    `/accountService/api/v1/ledgerType/getAllLedgerType`
+  );
+  return response.data;
+});
+
+export const getLedgerByGroupId=createAsyncThunk('getLedgerByGroupId',async(id)=>{
+  const response=await getQuery(``)
   return response.data
 })
 
@@ -310,7 +327,9 @@ const AccountSlice = createSlice({
     unusedBankStatementList: [],
     tdsList: [],
     tdsAmount: {},
-    paymentList:[]
+    paymentList: [],
+    groupList: [],
+    groupLedgerList:[]
   },
   extraReducers: (builder) => {
     builder.addCase(getAllVoucherType.pending, (state, action) => {
@@ -493,19 +512,38 @@ const AccountSlice = createSlice({
       state.tdsAmount = [];
     });
 
+    builder.addCase(
+      getPaymentDetailListByEstimateId.pending,
+      (state, action) => {
+        state.loading = "pending";
+      }
+    );
+    builder.addCase(
+      getPaymentDetailListByEstimateId.fulfilled,
+      (state, action) => {
+        state.loading = "success";
+        state.paymentList = action.payload;
+      }
+    );
+    builder.addCase(
+      getPaymentDetailListByEstimateId.rejected,
+      (state, action) => {
+        state.loading = "rejected";
+        state.tdsAmount = [];
+      }
+    );
 
-    builder.addCase(getPaymentDetailListByEstimateId.pending, (state, action) => {
+    builder.addCase(getAllGroups.pending, (state, action) => {
       state.loading = "pending";
     });
-    builder.addCase(getPaymentDetailListByEstimateId.fulfilled, (state, action) => {
+    builder.addCase(getAllGroups.fulfilled, (state, action) => {
       state.loading = "success";
-      state.paymentList = action.payload;
+      state.groupList = action.payload;
     });
-    builder.addCase(getPaymentDetailListByEstimateId.rejected, (state, action) => {
+    builder.addCase(getAllGroups.rejected, (state, action) => {
       state.loading = "rejected";
       state.tdsAmount = [];
     });
-
   },
 });
 

@@ -85,6 +85,13 @@ import DailyBook from "./Main/Accounts/DailyBook/DailyBook";
 import BankStatement from "./Main/Accounts/BankStatements/BankStatement";
 import PaymentRegister from "./Main/Accounts/PaymentRegister/PaymentRegister";
 import TDS from "./Main/Accounts/TDS/TDS";
+import Group from "./Main/Accounts/Organization/Group/Group";
+import MainOrganizationPage from "./Main/Accounts/Organization/MainOrganizationPage";
+import SettingsPage from "./Main/Accounts/Organization/Settings/SettingsPage";
+import GroupLedger from "./Main/Accounts/Organization/Group/GroupLedger";
+import MainGroupPage from "./Main/Accounts/Organization/Group/MainGroupPage";
+import MainGroupLedgerPage from "./Main/Accounts/Organization/Group/MainGroupLedgerPage";
+import Groupvoucher from "./Main/Accounts/Organization/Group/Groupvoucher";
 
 const SpinLoading = lazy(() => import("./components/SpinLoading"));
 
@@ -179,9 +186,9 @@ function App() {
             groupTitleFontSize: 12,
             fontSize: 13,
             fontSizeLG: 13,
-            borderRadius:4,
-            borderRadiusSM:4,
-            borderRadiusLG:4
+            borderRadius: 4,
+            borderRadiusSM: 4,
+            borderRadiusLG: 4,
           },
           Form: {
             fontSize: 12,
@@ -295,7 +302,7 @@ function App() {
                 <Route path="estimate" element={<EstimatePage />} />
                 <Route path="proposal" element={<ProposalsPage />} />
                 <Route path="paymentsRegister" element={<PaymentRegister />} />
-                
+
                 <Route
                   path="company/:companyId/details"
                   element={<CompanyPageLayout />}
@@ -325,14 +332,43 @@ function App() {
                   path="companyForm"
                   element={<MainCompanyFormPage role={"sales"} />}
                 />
-                <Route path="ledger" element={<Ledger />} />
-                <Route path="voucher" element={<Voucher />} />
-                <Route path="organizations" element={<Organizations />} />
-                <Route path="dailybook" element={<DailyBook />} />
-                <Route path="bankStatement" element={<BankStatement />} />
-                <Route path="paymentRegister" element={<PaymentRegister />} />
-                <Route path="tds" element={<TDS />} />
-                
+
+                <Route path="organizations" element={<MainOrganizationPage />}>
+                  <Route index element={<Organizations />} />
+                  <Route path="organization" element={<Organizations />} />
+                  <Route path="ledger" element={<Ledger />} />
+                  <Route path="voucher" element={<Voucher />} />
+
+                  {/* Group Routes */}
+                  <Route path="group" element={<MainGroupPage />}>
+                    <Route index element={<Group />} />
+                    <Route
+                      path=":groupId/ledger"
+                      element={<MainGroupLedgerPage />}
+                    >
+                      <Route index element={<GroupLedger />} />
+                      <Route
+                        path=":ledgerId/voucher"
+                        element={<Groupvoucher />}
+                      />
+                    </Route>
+                    {/* New route for individual group */}
+                  </Route>
+
+                  <Route path="dailybook" element={<DailyBook />} />
+                  <Route path="bankStatement" element={<BankStatement />} />
+                  <Route path="paymentRegister" element={<PaymentRegister />} />
+                  <Route path="tds" element={<TDS />} />
+
+                  {/* Settings Routes */}
+                  <Route path="setting" element={<SettingsPage />}>
+                    <Route index element={<VoucherTypePage />} />
+                    <Route path="voucherType" element={<VoucherTypePage />} />
+                    <Route path="ledgerType" element={<LedgerTypePage />} />
+                    <Route path="statutory" element={<Statutory />} />
+                  </Route>
+                </Route>
+
                 <Route path="" element={<div>account second page</div>} />
                 <Route
                   path="accountthird"
@@ -471,7 +507,10 @@ function App() {
 
               {/* end */}
 
-              <Route path="/erp/:userid/setting/erpSetting" element={<SettingMainPage />}>
+              <Route
+                path="/erp/:userid/setting/erpSetting"
+                element={<SettingMainPage />}
+              >
                 <Route path="leadStatus" element={<LeadStatusPage />} />
                 <Route path="products" element={<ProductsChange />} />
                 <Route path="category" element={<LeadCategory />} />
