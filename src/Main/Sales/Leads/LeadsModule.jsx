@@ -15,6 +15,7 @@ import {
   handleDeleteSingleLead,
   handleFlagByQualityTeam,
   handleLeadassignedToSamePerson,
+  importLeadsSheet,
   multiAssignedLeads,
   searchLeads,
   updateAssigneeInLeadModule,
@@ -31,10 +32,12 @@ import {
   Input,
   notification,
   Popconfirm,
+  Popover,
   Select,
   Space,
   Spin,
   Typography,
+  Upload,
 } from "antd";
 import { Icon } from "@iconify/react";
 import CompanyFormModal from "../../Accounts/CompanyFormModal";
@@ -47,7 +50,7 @@ import {
 } from "../../Common/Commons";
 import LeadsDetailsMainPage from "./LeadsDetailsMainPage";
 import dayjs from "dayjs";
-const { Text } = Typography;
+const { Text, Title } = Typography;
 const { Search } = Input;
 const { RangePicker } = DatePicker;
 
@@ -80,6 +83,7 @@ const LeadsModule = () => {
   const [dropdownData, setDropdownData] = useState([]);
   const [headerData, setHeaderData] = useState([]);
   const [searchText, setSearchText] = useState("");
+  const [uploadedFile, setUploadedFile] = useState(null);
 
   const onSelectChange = (newSelectedRowKeys, rowsData) => {
     setSelectedRowKeys(newSelectedRowKeys);
@@ -617,47 +621,6 @@ const LeadsModule = () => {
     return () => clearInterval(notifcationApi);
   }, [userid, dispatch]);
 
-  const menuStyle = {
-    boxShadow: "none",
-  };
-
-  const handleOpenDropdown = useCallback(() => {
-    const res = [...columns];
-    let result = res?.filter((col) => col.checked === true);
-    setDropdownData(res);
-    setHeaderData(result);
-    setOpenDropdown(true);
-  }, [columns]);
-
-  const handleSelectColumns = useCallback((e, key) => {
-    setDropdownData((prev) => {
-      let temp = [...prev];
-      let res = temp.map((ele) =>
-        ele.title === key ? { ...ele, checked: e } : ele
-      );
-      let result = res?.filter((col) => col.checked === true);
-      setHeaderData(result);
-      return res;
-    });
-  }, []);
-
-  const columnDropDown = useCallback(
-    (handleSelectColumns) => {
-      const result = dropdownData?.map((item) => ({
-        label: (
-          <Checkbox
-            checked={item?.checked}
-            onChange={(e) => handleSelectColumns(!item?.checked, item?.title)}
-          >
-            {item?.title}
-          </Checkbox>
-        ),
-      }));
-      return result;
-    },
-    [dropdownData]
-  );
-
   const onSearchLead = (e, b, c) => {
     if (e) {
       setSearchText(e);
@@ -669,6 +632,32 @@ const LeadsModule = () => {
       dispatch(getAllLeads(allMultiFilterData));
     }
   };
+
+  const props = {
+    name: "file",
+    multiple: true,
+    action: "/leadService/api/v1/upload/uploadimageToFileSystem",
+    onChange(info) {
+      setUploadedFile(info?.file?.response);
+    },
+    onDrop(e) {},
+  };
+
+  const handleUploadFile = useCallback(() => {
+    if (uploadedFile) {
+      dispatch(importLeadsSheet(uploadedFile))
+        .then((resp) => {
+          if (resp.meta.requestStatus === "fulfilled") {
+            notification.success({ message: "File uploaded successfully !." });
+          } else {
+            notification.error({ message: "Something wemt wrong !." });
+          }
+        })
+        .catch(() =>
+          notification.error({ message: "Something wemt wrong !." })
+        );
+    }
+  }, [dispatch, uploadedFile]);
 
   const handleApplyFilter = useCallback(() => {
     dispatch(getAllLeads(allMultiFilterData));
@@ -724,70 +713,6 @@ const LeadsModule = () => {
           </Link>
           {adminRole && (
             <div className="d-end mr-2">
-              {/* <Dropdown
-                disabled={selectedRow?.length === 0 ? true : false}
-                open={openDropdown}
-                // onOpenChange={(e) => setOpenDropdown(e)}
-                trigger={["click"]}
-                overlayClassName="global-drop-down"
-                menu={{ items: columnDropDown(handleSelectColumns) }}
-                dropdownRender={(menu) => (
-                  <div className="dropdown-content">
-                    <div style={{ height: "100%", overflowY: "auto" }}>
-                      {React.cloneElement(menu, {
-                        style: menuStyle,
-                      })}
-                    </div>
-                    <Divider
-                      style={{
-                        margin: 6,
-                        color: "lightgray",
-                      }}
-                    />
-                    <div className="flex-justify-end">
-                      <Space>
-                        <Button
-                          size="small"
-                          onClick={() => setOpenDropdown(false)}
-                        >
-                          Cancel
-                        </Button>
-                        <Button
-                          type="primary"
-                          size="small"
-                          onClick={() => {
-                            setOpenDropdown(false);
-                            setSelectedRow([]);
-                            setSelectedRowKeys([]);
-                          }}
-                        >
-                          <CSVLink
-                            className="text-white"
-                            data={exportData}
-                            headers={
-                              headerData?.length > 0
-                                ? headerData?.map((column) => column.title)
-                                : []
-                            }
-                            filename={"exported_data.csv"}
-                          >
-                            Export
-                          </CSVLink>
-                        </Button>
-                      </Space>
-                    </div>
-                  </div>
-                )}
-              >
-                <Button size="small" onClick={handleOpenDropdown}>
-                  <Icon
-                    icon="fluent:arrow-upload-16-filled"
-                    height={BTN_ICON_HEIGHT}
-                    width={BTN_ICON_WIDTH}
-                  />
-                </Button>
-              </Dropdown> */}
-
               <CSVLink
                 className="text-white"
                 data={exportData}
@@ -812,6 +737,7 @@ const LeadsModule = () => {
               </CSVLink>
             </div>
           )}
+
           <Button
             onClick={() => setHideMUltiFilter((prev) => !prev)}
             className="mr-2"
@@ -819,6 +745,43 @@ const LeadsModule = () => {
           >
             Filter data
           </Button>
+
+          <Popover
+            trigger={"click"}
+            overlayInnerStyle={{ minWidth: 200 }}
+            placement="bottomRight"
+            content={
+              <Flex vertical gap={24}>
+                <Flex vertical gap={8}>
+                  <Title level={5}>Upload csv file or excel sheet </Title>
+                  <Upload {...props}>
+                    <Button>
+                      <Icon
+                        icon="fluent:attach-16-regular"
+                        width="16"
+                        height="16"
+                      />
+                      Attach
+                    </Button>
+                  </Upload>
+                </Flex>
+                <Button type="primary" onClick={handleUploadFile}>
+                  Submit
+                </Button>
+              </Flex>
+            }
+          >
+            <Button size="small" className="mr-2">
+              {" "}
+              <Icon
+                icon="fluent:arrow-download-16-filled"
+                height={BTN_ICON_HEIGHT}
+                width={BTN_ICON_WIDTH}
+              />{" "}
+              Import
+            </Button>
+          </Popover>
+
           <LeadCreateModel />
           <Link to={`notification`}>
             <div className="bell-box">
@@ -918,7 +881,7 @@ const LeadsModule = () => {
           </Button>
         </div>
       </div>
-      <div className="flex-verti-center-hori-start mt-2">
+      <div className="flex-verti-center-hori-start my-2">
         <Search
           placeholder="search"
           size="small"

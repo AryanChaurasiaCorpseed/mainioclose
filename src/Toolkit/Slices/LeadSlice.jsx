@@ -860,6 +860,16 @@ export const editLeadPropposal = createAsyncThunk(
   }
 );
 
+export const importLeadsSheet = createAsyncThunk(
+  "importLeadsSheet",
+  async (url) => {
+    const response = await postQuery(
+      `/api/leads/import-csv-from-s3?s3Url=${url}`
+    );
+    return response.data;
+  }
+);
+
 export const LeadSlice = createSlice({
   name: "lead",
   initialState: {
