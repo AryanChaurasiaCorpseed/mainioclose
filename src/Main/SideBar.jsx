@@ -695,14 +695,14 @@ const SideBar = () => {
               />
             ),
             children: [
-              // {
-              //   label: (
-              //     <Link to={`/erp/${userid}/setting/erpSetting/leadStatus`}>
-              //       Erp setting
-              //     </Link>
-              //   ),
-              //   key: "erpSetting",
-              // },
+              {
+                label: (
+                  <Link to={`/erp/${userid}/setting/erpSetting/leadStatus`}>
+                    Erp setting
+                  </Link>
+                ),
+                key: "erpSetting",
+              },
               {
                 label: (
                   <Link

@@ -640,7 +640,7 @@ const LeadsModule = () => {
     onChange(info) {
       setUploadedFile(info?.file?.response);
     },
-    onDrop(e) {},
+    onDrop(e) { },
   };
 
   const handleUploadFile = useCallback(() => {
@@ -747,41 +747,45 @@ const LeadsModule = () => {
             Filter data
           </Button>
 
-          <Popover
-            trigger={"click"}
-            overlayInnerStyle={{ minWidth: 200 }}
-            placement="bottomRight"
-            content={
-              <Flex vertical gap={24}>
-                <Flex vertical gap={8}>
-                  <Title level={5}>Upload csv file or excel sheet </Title>
-                  <Upload {...props}>
-                    <Button>
-                      <Icon
-                        icon="fluent:attach-16-regular"
-                        width="16"
-                        height="16"
-                      />
-                      Attach
+          {
+            adminRole && (
+              <Popover
+                trigger={"click"}
+                overlayInnerStyle={{ minWidth: 200 }}
+                placement="bottomRight"
+                content={
+                  <Flex vertical gap={24}>
+                    <Flex vertical gap={8}>
+                      <Title level={5}>Upload csv file or excel sheet </Title>
+                      <Upload {...props}>
+                        <Button>
+                          <Icon
+                            icon="fluent:attach-16-regular"
+                            width="16"
+                            height="16"
+                          />
+                          Attach
+                        </Button>
+                      </Upload>
+                    </Flex>
+                    <Button type="primary" onClick={handleUploadFile}>
+                      Submit
                     </Button>
-                  </Upload>
-                </Flex>
-                <Button type="primary" onClick={handleUploadFile}>
-                  Submit
+                  </Flex>
+                }
+              >
+                <Button size="small" className="mr-2">
+                  {" "}
+                  <Icon
+                    icon="fluent:arrow-download-16-filled"
+                    height={BTN_ICON_HEIGHT}
+                    width={BTN_ICON_WIDTH}
+                  />{" "}
+                  Import
                 </Button>
-              </Flex>
-            }
-          >
-            <Button size="small" className="mr-2">
-              {" "}
-              <Icon
-                icon="fluent:arrow-download-16-filled"
-                height={BTN_ICON_HEIGHT}
-                width={BTN_ICON_WIDTH}
-              />{" "}
-              Import
-            </Button>
-          </Popover>
+              </Popover>
+            )
+          }
 
           <LeadCreateModel />
           <Link to={`notification`}>
