@@ -55,12 +55,16 @@ const Proposal = ({ leadid }) => {
   const [productData, setProductData] = useState([]);
   const [openModal, setOpenModal] = useState(false);
   const [editProposal, setEditProposal] = useState(false);
-   const [productFees, setProductFees] = useState({
-      professionalFees: 0,
-      serviceCharge: 0,
-      otherFees: 0,
-      govermentfees: 0,
-    });
+  const [productFees, setProductFees] = useState({
+    professionalFees: 0,
+    serviceCharge: 0,
+    otherFees: 0,
+    govermentfees: 0,
+    profesionalGst: 0,
+    serviceGst: 0,
+    govermentGst: 0,
+    otherGst: 0,
+  });
 
   useEffect(() => {
     if (Object.keys(companyDetails) > 0) {
@@ -112,7 +116,11 @@ const Proposal = ({ leadid }) => {
               govermentCode: item?.hsnNo,
               govermentGst: item?.taxAmount,
             });
-            setProductFees((prev) => ({ ...prev, govermentfees: item?.fees }));
+            setProductFees((prev) => ({
+              ...prev,
+              govermentfees: item?.fees,
+              govermentGst: item?.taxAmount,
+            }));
           }
           if (item?.name === "Professional fees") {
             form.setFieldsValue({
@@ -123,6 +131,7 @@ const Proposal = ({ leadid }) => {
             setProductFees((prev) => ({
               ...prev,
               professionalFees: item?.fees,
+              profesionalGst: item?.taxAmount,
             }));
           }
           if (item?.name === "Service charges") {
@@ -131,7 +140,11 @@ const Proposal = ({ leadid }) => {
               serviceCode: item?.hsnNo,
               serviceGst: item?.taxAmount,
             });
-            setProductFees((prev) => ({ ...prev, serviceCharge: item?.fees }))
+            setProductFees((prev) => ({
+              ...prev,
+              serviceCharge: item?.fees,
+              serviceGst: item?.taxAmount,
+            }));
           }
 
           if (item?.name === "Other fees") {
@@ -140,7 +153,11 @@ const Proposal = ({ leadid }) => {
               otherCode: item?.hsnNo,
               otherGst: item?.taxAmount,
             });
-            setProductFees((prev) => ({ ...prev, otherFees: item?.fees }));
+            setProductFees((prev) => ({
+              ...prev,
+              otherFees: item?.fees,
+              otherGst: item?.taxAmount,
+            }));
           }
         });
       }
@@ -207,7 +224,6 @@ const Proposal = ({ leadid }) => {
     setEditProposal((prev) => !prev);
   }, [details, form]);
 
-
   const validateGreaterThanOrEqual = (initialValue) => ({
     validator(_, value) {
       if (value === undefined || value >= initialValue) {
@@ -260,17 +276,17 @@ const Proposal = ({ leadid }) => {
   const generatePDF = async () => {
     const element = pdfRef.current;
     const canvas = await html2canvas(element, {
-      scale: 2, 
+      scale: 2,
       useCORS: true,
     });
 
     const imgData = canvas.toDataURL("image/png");
     const pdf = new jsPDF("p", "mm", "a4");
-    const imgWidth = 210; 
-    const imgHeight = (canvas.height * imgWidth) / canvas.width; 
+    const imgWidth = 210;
+    const imgHeight = (canvas.height * imgWidth) / canvas.width;
 
-    const pageHeight = 297; 
-    let yPosition = 0; 
+    const pageHeight = 297;
+    let yPosition = 0;
 
     while (yPosition < imgHeight) {
       pdf.addImage(imgData, "PNG", 0, -yPosition, imgWidth, imgHeight);
@@ -284,11 +300,7 @@ const Proposal = ({ leadid }) => {
 
   return (
     <Spin size="large" spinning={proposalLoading === "pending" ? true : false}>
-      <Flex
-        justify="space-between"
-        align="center"
-        style={{ width: "100%", paddingLeft: "24px" }}
-      >
+      <Flex justify="space-between" align="center" style={{ width: "100%" }}>
         <Text className="heading-text">
           {Object.keys(details)?.length > 0 && !editProposal
             ? "Proposal details"
@@ -320,7 +332,7 @@ const Proposal = ({ leadid }) => {
             }}
             onFinish={handleFinish}
           >
-            <Form.Item
+            {/* <Form.Item
               label="Select client admin"
               name="admin"
               rules={[
@@ -348,7 +360,7 @@ const Proposal = ({ leadid }) => {
                   option?.contact?.toLowerCase()?.includes(input?.toLowerCase())
                 }
               />
-            </Form.Item>
+            </Form.Item> */}
 
             <Form.List name="cc">
               {(fields, { add, remove }, { errors }) => (
@@ -430,7 +442,7 @@ const Proposal = ({ leadid }) => {
               </Form.Item>
             )}
 
-            {Object.keys(companyDetails)?.length > 0 &&
+            {/* {Object.keys(companyDetails)?.length > 0 &&
             companyDetails?.isConsultant ? (
               <>
                 <Form.Item
@@ -547,7 +559,7 @@ const Proposal = ({ leadid }) => {
               </>
             ) : (
               ""
-            )}
+            )} */}
 
             {Object.keys(companyDetails)?.length > 0 && (
               <>
@@ -616,11 +628,11 @@ const Proposal = ({ leadid }) => {
                 </Form.Item>
               </>
             )}
-            <Form.Item label="Pan number" name="panNo">
+            {/* <Form.Item label="Pan number" name="panNo">
               <Input maxLength={10} />
-            </Form.Item>
+            </Form.Item> */}
 
-            <Row>
+            {/* <Row>
               <Col span={11}>
                 <Form.Item label="GST type" name="gstType">
                   <Select
@@ -641,8 +653,8 @@ const Proposal = ({ leadid }) => {
                   <Input />
                 </Form.Item>
               </Col>
-            </Row>
-            <Row>
+            </Row> */}
+            {/* <Row>
               <Col span={11}>
                 <Form.Item label="GST number" name="gstNo">
                   <Input />
@@ -668,7 +680,7 @@ const Proposal = ({ leadid }) => {
                   </Upload>
                 </Form.Item>
               </Col>
-            </Row>
+            </Row> */}
 
             <Flex vertical style={{ width: "100%" }}>
               <Flex justify="space-between">
@@ -708,7 +720,7 @@ const Proposal = ({ leadid }) => {
                   }
                 />
               </Form.Item>
-              <Form.Item
+              {/* <Form.Item
                 label="Secondary contacts"
                 name="secondaryContact"
                 rules={[
@@ -741,10 +753,10 @@ const Proposal = ({ leadid }) => {
                       ?.includes(input?.toLowerCase())
                   }
                 />
-              </Form.Item>
+              </Form.Item> */}
             </Flex>
 
-            <Form.Item
+            {/* <Form.Item
               label="Sales type"
               name="salesType"
               rules={[{ required: true, message: "please select sales type" }]}
@@ -753,7 +765,7 @@ const Proposal = ({ leadid }) => {
                 <Radio value={"Non-Consulting Sale"}>Non-Consulting Sale</Radio>
                 <Radio value={"Consulting Sale"}>Consulting Sale</Radio>
               </Radio.Group>
-            </Form.Item>
+            </Form.Item> */}
             <Form.Item
               label="Product name"
               name="productId"
@@ -777,7 +789,7 @@ const Proposal = ({ leadid }) => {
             </Form.Item>
 
             <Row>
-              <Flex gap={30} align="center">
+              {/* <Flex gap={30} align="center">
                 <Form.Item layout="horizontal" label="Select jurisdiction">
                   <Input />
                 </Form.Item>
@@ -787,7 +799,7 @@ const Proposal = ({ leadid }) => {
                     <Radio value="Renewal">Renewal</Radio>
                   </Radio.Group>
                 </Form.Item>
-              </Flex>
+              </Flex> */}
 
               {productData?.map((ele) => {
                 return ele?.name === "Professional fees" ? (
@@ -820,13 +832,13 @@ const Proposal = ({ leadid }) => {
                       >
                         <Input placeholder="Hsn number" />
                       </Form.Item>
-                      <Form.Item
-                        name="profesionalGst"
-                        rules={[
-                          { required: true, message: "please provide GST %" },
-                        ]}
-                      >
-                        <Input placeholder="Gst %" />
+                      <Form.Item name="profesionalGst">
+                        <Input
+                          placeholder="Gst %"
+                          disabled={
+                            productFees?.profesionalGst == 0 ? false : true
+                          }
+                        />
                       </Form.Item>
                     </Flex>
                   </Row>
@@ -857,13 +869,13 @@ const Proposal = ({ leadid }) => {
                       >
                         <Input placeholder="HSN number" />
                       </Form.Item>
-                      <Form.Item
-                        name="serviceGst"
-                        rules={[
-                          { required: true, message: "please give GST %" },
-                        ]}
-                      >
-                        <Input placeholder="Gst %" />
+                      <Form.Item name="serviceGst">
+                        <Input
+                          placeholder="Gst %"
+                          disabled={
+                            productFees?.serviceGst === 0 ? false : true
+                          }
+                        />
                       </Form.Item>
                     </Flex>
                   </Row>
@@ -891,13 +903,13 @@ const Proposal = ({ leadid }) => {
                       >
                         <Input placeholder="HSN number" />
                       </Form.Item>
-                      <Form.Item
-                        name="govermentGst"
-                        rules={[
-                          { required: true, message: "please give gst %" },
-                        ]}
-                      >
-                        <Input placeholder="Gst %" />
+                      <Form.Item name="govermentGst">
+                        <Input
+                          placeholder="Gst %"
+                          disabled={
+                            productFees?.govermentGst === 0 ? false : true
+                          }
+                        />
                       </Form.Item>
                     </Flex>
                   </Row>
@@ -926,13 +938,11 @@ const Proposal = ({ leadid }) => {
                       >
                         <Input placeholder="HSN number" />
                       </Form.Item>
-                      <Form.Item
-                        name="otherGst"
-                        rules={[
-                          { required: true, message: "please give GST % " },
-                        ]}
-                      >
-                        <Input placeholder="Gst %" />
+                      <Form.Item name="otherGst">
+                        <Input
+                          placeholder="Gst %"
+                          disabled={productFees?.otherGst === 0 ? false : true}
+                        />
                       </Form.Item>
                     </Flex>
                   </Row>
@@ -962,7 +972,7 @@ const Proposal = ({ leadid }) => {
               />
             </Form.Item>
 
-            <Row>
+            {/* <Row>
               <Col span={11}>
                 <Form.Item
                   label="Order number"
@@ -985,9 +995,9 @@ const Proposal = ({ leadid }) => {
                   <DatePicker />
                 </Form.Item>
               </Col>
-            </Row>
+            </Row> */}
 
-            <Form.Item
+            {/* <Form.Item
               label="Invoice notes"
               name="invoiceNote"
               rules={[
@@ -1002,7 +1012,7 @@ const Proposal = ({ leadid }) => {
               rules={[{ required: true, message: "please write remarks" }]}
             >
               <Input.TextArea />
-            </Form.Item>
+            </Form.Item> */}
 
             <Form.Item
               label="Address"
@@ -1041,7 +1051,7 @@ const Proposal = ({ leadid }) => {
               <Input />
             </Form.Item>
 
-            <Form.Item
+            {/* <Form.Item
               label="Secondary address"
               name="secondaryAddress"
               rules={[
@@ -1089,7 +1099,7 @@ const Proposal = ({ leadid }) => {
               ]}
             >
               <Input />
-            </Form.Item>
+            </Form.Item> */}
 
             <Form.Item>
               <Button htmlType="submit" type="primary">

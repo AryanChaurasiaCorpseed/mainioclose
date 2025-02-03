@@ -62,6 +62,10 @@ const LeadEstimate = ({ leadid }) => {
     serviceCharge: 0,
     otherFees: 0,
     govermentfees: 0,
+    profesionalGst: 0,
+    serviceGst: 0,
+    govermentGst: 0,
+    otherGst: 0,
   });
 
   useEffect(() => {
@@ -115,7 +119,11 @@ const LeadEstimate = ({ leadid }) => {
               govermentCode: item?.hsnNo,
               govermentGst: item?.taxAmount,
             });
-            setProductFees((prev) => ({ ...prev, govermentfees: item?.fees }));
+            setProductFees((prev) => ({
+              ...prev,
+              govermentfees: item?.fees,
+              govermentGst: item?.taxAmount,
+            }));
           }
           if (item?.name === "Professional fees") {
             form.setFieldsValue({
@@ -126,6 +134,7 @@ const LeadEstimate = ({ leadid }) => {
             setProductFees((prev) => ({
               ...prev,
               professionalFees: item?.fees,
+              profesionalGst: item?.taxAmount,
             }));
           }
           if (item?.name === "Service charges") {
@@ -134,7 +143,11 @@ const LeadEstimate = ({ leadid }) => {
               serviceCode: item?.hsnNo,
               serviceGst: item?.taxAmount,
             });
-            setProductFees((prev) => ({ ...prev, serviceCharge: item?.fees }));
+            setProductFees((prev) => ({
+              ...prev,
+              serviceCharge: item?.fees,
+              serviceGst: item?.taxAmount,
+            }));
           }
 
           if (item?.name === "Other fees") {
@@ -143,7 +156,11 @@ const LeadEstimate = ({ leadid }) => {
               otherCode: item?.hsnNo,
               otherGst: item?.taxAmount,
             });
-            setProductFees((prev) => ({ ...prev, otherFees: item?.fees }));
+            setProductFees((prev) => ({
+              ...prev,
+              otherFees: item?.fees,
+              otherGst: item?.taxAmount,
+            }));
           }
         });
       }
@@ -222,7 +239,6 @@ const LeadEstimate = ({ leadid }) => {
     },
   });
 
-
   const handleFinish = useCallback(
     (values) => {
       values.leadId = leadid;
@@ -288,11 +304,7 @@ const LeadEstimate = ({ leadid }) => {
       size="large"
       spinning={estimateDetailLoading === "pending" ? true : false}
     >
-      <Flex
-        justify="space-between"
-        align="center"
-        style={{ width: "100%", paddingLeft: "24px" }}
-      >
+      <Flex justify="space-between" align="center" style={{ width: "100%" }}>
         <Text className="heading-text">
           {Object.keys(details)?.length > 0 && !editEstimate
             ? "Estimate details"
@@ -828,13 +840,11 @@ const LeadEstimate = ({ leadid }) => {
                       >
                         <Input placeholder="Hsn number" />
                       </Form.Item>
-                      <Form.Item
-                        name="profesionalGst"
-                        rules={[
-                          { required: true, message: "please provide GST %" },
-                        ]}
-                      >
-                        <Input placeholder="Gst %" />
+                      <Form.Item name="profesionalGst">
+                        <Input
+                          placeholder="Gst %"
+                          disabled={productFees?.profesionalGst == 0 ? false : true}
+                        />
                       </Form.Item>
                     </Flex>
                   </Row>
@@ -865,13 +875,11 @@ const LeadEstimate = ({ leadid }) => {
                       >
                         <Input placeholder="HSN number" />
                       </Form.Item>
-                      <Form.Item
-                        name="serviceGst"
-                        rules={[
-                          { required: true, message: "please give GST %" },
-                        ]}
-                      >
-                        <Input placeholder="Gst %" />
+                      <Form.Item name="serviceGst">
+                        <Input
+                          placeholder="Gst %"
+                          disabled={productFees?.serviceGst === 0 ? false : true}
+                        />
                       </Form.Item>
                     </Flex>
                   </Row>
@@ -899,13 +907,11 @@ const LeadEstimate = ({ leadid }) => {
                       >
                         <Input placeholder="HSN number" />
                       </Form.Item>
-                      <Form.Item
-                        name="govermentGst"
-                        rules={[
-                          { required: true, message: "please give gst %" },
-                        ]}
-                      >
-                        <Input placeholder="Gst %" />
+                      <Form.Item name="govermentGst">
+                        <Input
+                          placeholder="Gst %"
+                          disabled={productFees?.govermentGst === 0 ? false : true}
+                        />
                       </Form.Item>
                     </Flex>
                   </Row>
@@ -934,13 +940,11 @@ const LeadEstimate = ({ leadid }) => {
                       >
                         <Input placeholder="HSN number" />
                       </Form.Item>
-                      <Form.Item
-                        name="otherGst"
-                        rules={[
-                          { required: true, message: "please give GST % " },
-                        ]}
-                      >
-                        <Input placeholder="Gst %" />
+                      <Form.Item name="otherGst">
+                        <Input
+                          placeholder="Gst %"
+                          disabled={productFees?.otherGst === 0 ? false : true}
+                        />
                       </Form.Item>
                     </Flex>
                   </Row>
