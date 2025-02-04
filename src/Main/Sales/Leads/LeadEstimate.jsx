@@ -335,6 +335,7 @@ const LeadEstimate = ({ leadid }) => {
             style={{ width: "60%" }}
             initialValues={{
               cc: [""],
+              isConsultant: false,
             }}
             onFinish={handleFinish}
           >
@@ -454,7 +455,7 @@ const LeadEstimate = ({ leadid }) => {
                 <Form.Item
                   label="Are you consultant ?"
                   name="isConsultant"
-                  rules={[{ required: true }]}
+                  rules={[{ required:true }]}
                 >
                   <Switch size="small" />
                 </Form.Item>
@@ -843,7 +844,9 @@ const LeadEstimate = ({ leadid }) => {
                       <Form.Item name="profesionalGst">
                         <Input
                           placeholder="Gst %"
-                          disabled={productFees?.profesionalGst == 0 ? false : true}
+                          disabled={
+                            productFees?.profesionalGst == 0 ? false : true
+                          }
                         />
                       </Form.Item>
                     </Flex>
@@ -878,7 +881,9 @@ const LeadEstimate = ({ leadid }) => {
                       <Form.Item name="serviceGst">
                         <Input
                           placeholder="Gst %"
-                          disabled={productFees?.serviceGst === 0 ? false : true}
+                          disabled={
+                            productFees?.serviceGst === 0 ? false : true
+                          }
                         />
                       </Form.Item>
                     </Flex>
@@ -910,7 +915,9 @@ const LeadEstimate = ({ leadid }) => {
                       <Form.Item name="govermentGst">
                         <Input
                           placeholder="Gst %"
-                          disabled={productFees?.govermentGst === 0 ? false : true}
+                          disabled={
+                            productFees?.govermentGst === 0 ? false : true
+                          }
                         />
                       </Form.Item>
                     </Flex>

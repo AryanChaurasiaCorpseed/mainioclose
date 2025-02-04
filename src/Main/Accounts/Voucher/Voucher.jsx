@@ -102,10 +102,28 @@ const Voucher = () => {
     {
       dataIndex: "id",
       title: "Id",
+      width:80
     },
     {
-      dataIndex: "companyName",
-      title: "Company name",
+      dataIndex: "ledgerName",
+      title: "Ledger",
+    },
+    {
+      dataIndex: "voucherType",
+      title: "Voucher type",
+      render:(info)=><Text>{info?.name}</Text>
+    },
+    {
+      dataIndex: "creditAmount",
+      title: "Credit amount",
+    },
+    {
+      dataIndex: "debitAmount",
+      title: "Debit amount",
+    },
+    {
+      dataIndex: "paymentType",
+      title: "Payment type",
     },
     {
       dataIndex: "product",
@@ -116,11 +134,10 @@ const Voucher = () => {
       title: "Edit",
       render: (_, data) => (
         <Button
-          type="text"
           size="small"
           onClick={() => handleEditVoucher(data)}
         >
-          <Icon icon="fluent:edit-24-regular" />
+         Edit
         </Button>
       ),
     },

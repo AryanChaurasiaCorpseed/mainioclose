@@ -154,6 +154,11 @@ const Ledger = () => {
       title: "Name",
     },
     {
+      dataIndex: "ledgerType",
+      title: "Ledger type",
+      render:(info)=><Text>{info?.name}</Text>
+    },
+    {
       dataIndex: "edit",
       title: "Edit",
       render: (_, data) => (

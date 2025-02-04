@@ -92,6 +92,7 @@ import GroupLedger from "./Main/Accounts/Organization/Group/GroupLedger";
 import MainGroupPage from "./Main/Accounts/Organization/Group/MainGroupPage";
 import MainGroupLedgerPage from "./Main/Accounts/Organization/Group/MainGroupLedgerPage";
 import Groupvoucher from "./Main/Accounts/Organization/Group/Groupvoucher";
+import AccountEstimate from "./Main/Accounts/estimate/AccountEstimate";
 
 const SpinLoading = lazy(() => import("./components/SpinLoading"));
 
@@ -338,6 +339,7 @@ function App() {
                   <Route path="organization" element={<Organizations />} />
                   <Route path="ledger" element={<Ledger />} />
                   <Route path="voucher" element={<Voucher />} />
+                  <Route path="estimate" element={<AccountEstimate />} />
 
                   {/* Group Routes */}
                   <Route path="group" element={<MainGroupPage />}>

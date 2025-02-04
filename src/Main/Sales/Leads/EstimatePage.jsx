@@ -257,13 +257,12 @@ const EstimatePage = () => {
       render: (_, data) => (
         <Button
           size="small"
-          type="text"
           onClick={() => {
             handleSetData(data);
             dispatch(getPaymentDetailListByEstimateId(data?.id));
           }}
         >
-          <Icon icon="fluent:add-16-regular" width="16" height="16" />
+          Add
         </Button>
       ),
     },
@@ -457,7 +456,7 @@ const EstimatePage = () => {
               </Form.Item>
             </Col>
           </Row>
-          <Row style={{marginBottom:'12px'}}>
+          <Row style={{ marginBottom: "12px" }}>
             <Col span={18}>
               <Flex vertical>
                 <Title level={5}>Total paid amount</Title>

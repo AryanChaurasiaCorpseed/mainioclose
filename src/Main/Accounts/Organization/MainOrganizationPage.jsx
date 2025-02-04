@@ -23,6 +23,10 @@ const MainOrganizationPage = () => {
       label: <Link to="voucher">Voucher</Link>,
     },
     {
+      key: "estimate",
+      label: <Link to="estimate">Estimate</Link>,
+    },
+    {
       key: "dailyBook",
       label: <Link to="dailybook">Daily book</Link>,
     },

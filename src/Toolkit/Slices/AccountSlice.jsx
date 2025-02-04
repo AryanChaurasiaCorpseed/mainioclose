@@ -299,10 +299,53 @@ export const getAllGroups = createAsyncThunk("getAllGroups", async () => {
   return response.data;
 });
 
-export const getLedgerByGroupId=createAsyncThunk('getLedgerByGroupId',async(id)=>{
-  const response=await getQuery(``)
-  return response.data
-})
+export const getLedgerByGroupId = createAsyncThunk(
+  "getLedgerByGroupId",
+  async (id) => {
+    const response = await getQuery(``);
+    return response.data;
+  }
+);
+
+export const getEstimateByStatus = createAsyncThunk(
+  "getEstimateByStatus",
+  async ({ status, page, size, userId }) => {
+    const response = await getQuery(
+      `/leadService/api/v1/leadEstimate/getEstimateByStatus?status=${status}&page=${page}&size=${size}&userId=${userId}`
+    );
+    return response.data;
+  }
+);
+
+export const getTotalCountOfEstimate = createAsyncThunk(
+  "getTotalCountOfEstimate",
+  async ({ status, userId }) => {
+    const response = await getQuery(
+      `/leadService/api/v1/leadEstimate/getEstimateByStatusCount?status=${status}&userId=${userId}`
+    );
+    return response.data;
+  }
+);
+
+export const searchAccountEstimate = createAsyncThunk(
+  "searchAccountEstimate",
+  async ({ searchText, userId }) => {
+    const response = await getQuery(
+      `/leadService/api/v1/leadEstimate/searchEstimate?search=${searchText}&userId=${userId}`
+    );
+    return response.data;
+  }
+);
+
+export const approvedAndDisapprovedStatus = createAsyncThunk(
+  "approvedAndDisapprovedStatus",
+  async ({ status, estimateId, userId }) => {
+    const response = await putQuery(
+      `/leadService/api/v1/leadEstimate/approvedEstimate?status=${status}&estimateId=${estimateId}&userId=${userId}`
+    );
+    return response.data;
+  }
+);
 
 const AccountSlice = createSlice({
   name: "account",
@@ -329,7 +372,9 @@ const AccountSlice = createSlice({
     tdsAmount: {},
     paymentList: [],
     groupList: [],
-    groupLedgerList:[]
+    groupLedgerList: [],
+    allEstimateByStatus: [],
+    totalEstimateCount: 0,
   },
   extraReducers: (builder) => {
     builder.addCase(getAllVoucherType.pending, (state, action) => {
@@ -543,6 +588,30 @@ const AccountSlice = createSlice({
     builder.addCase(getAllGroups.rejected, (state, action) => {
       state.loading = "rejected";
       state.tdsAmount = [];
+    });
+
+    builder.addCase(getEstimateByStatus.pending, (state, action) => {
+      state.loading = "pending";
+    });
+    builder.addCase(getEstimateByStatus.fulfilled, (state, action) => {
+      state.loading = "success";
+      state.allEstimateByStatus = action.payload;
+    });
+    builder.addCase(getEstimateByStatus.rejected, (state, action) => {
+      state.loading = "rejected";
+      state.allEstimateByStatus = [];
+    });
+
+    builder.addCase(getTotalCountOfEstimate.pending, (state, action) => {
+      state.loading = "pending";
+    });
+    builder.addCase(getTotalCountOfEstimate.fulfilled, (state, action) => {
+      state.loading = "success";
+      state.totalEstimateCount = action.payload;
+    });
+    builder.addCase(getTotalCountOfEstimate.rejected, (state, action) => {
+      state.loading = "rejected";
+      state.totalEstimateCount = 0;
     });
   },
 });
