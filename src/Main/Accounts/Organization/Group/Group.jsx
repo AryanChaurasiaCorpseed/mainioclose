@@ -25,7 +25,7 @@ const Group = () => {
       dataIndex: "name",
       title: "Name",
       render: (name, record) => (
-        <Link to={`${record.id}/ledger`}>{name}</Link>
+        <Link className="link-heading" to={`${record.id}/groupLedger`}>{name}</Link>
       ),
     },
   ];
@@ -36,12 +36,6 @@ const Group = () => {
         <Flex justify="space-between" align="center">
           <Text className="heading-text">Groups list</Text>
           <Flex gap={8}>
-            {/* <Button type="primary" onClick={() => setOpenModal1(true)}>
-              Add statutory
-            </Button>
-            <Button type="primary" onClick={() => setOpenModal(true)}>
-              Create organization
-            </Button> */}
           </Flex>
         </Flex>
         <Flex vertical>

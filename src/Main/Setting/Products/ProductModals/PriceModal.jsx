@@ -7,51 +7,97 @@ import {
   notification,
   Select,
 } from "antd";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import {
   addAmountForProduct,
+  editAmountForProduct,
   getSingleProductByProductId,
 } from "../../../../Toolkit/Slices/ProductSlice";
 import { useParams } from "react-router-dom";
 import { Icon } from "@iconify/react";
 
-const PriceModal = ({ data }) => {
+const PriceModal = ({ data, edit, editData }) => {
   const { userid } = useParams();
   const dispatch = useDispatch();
   const [form] = Form.useForm();
   const [openModal, setOpenModal] = useState(false);
+  const [priceData, setPriceData] = useState(null);
+
+  const handleEdit = () => {
+    if (editData) {
+      form.setFieldsValue({
+        name: editData?.name,
+        fees: editData?.fees,
+        hsnNo: editData?.hsnNo,
+        taxAmount: editData?.taxAmount,
+      });
+
+      setPriceData(editData);
+    }
+    setOpenModal(true);
+  };
+
+  console.log("dlfkjddsjhfksdhg", editData);
 
   const handleFinish = useCallback(
     (values) => {
       values.productId = data?.id;
       values.userId = userid;
-      dispatch(addAmountForProduct(values))
-        .then((resp) => {
-          if (resp.meta.requestStatus === "fulfilled") {
-            notification.success({
-              message: "Price details added successfully .",
-            });
-            dispatch(getSingleProductByProductId(data?.id));
-            setOpenModal(false);
-            form.resetFields();
-          } else {
-            notification.error({ message: "Something went wrong !." });
-          }
-        })
-        .catch(() =>
-          notification.error({ message: "Something went wrong !." })
-        );
+      if (edit) {
+        dispatch(
+          editAmountForProduct({ ...values, productAmountId: priceData?.id })
+        )
+          .then((resp) => {
+            if (resp.meta.requestStatus === "fulfilled") {
+              notification.success({
+                message: "Price details updated successfully .",
+              });
+              dispatch(getSingleProductByProductId(data?.id));
+              setOpenModal(false);
+              setPriceData(null);
+              form.resetFields();
+            } else {
+              notification.error({ message: "Something went wrong !." });
+            }
+          })
+          .catch(() =>
+            notification.error({ message: "Something went wrong !." })
+          );
+      } else {
+        dispatch(addAmountForProduct(values))
+          .then((resp) => {
+            if (resp.meta.requestStatus === "fulfilled") {
+              notification.success({
+                message: "Price details added successfully .",
+              });
+              dispatch(getSingleProductByProductId(data?.id));
+              setOpenModal(false);
+              form.resetFields();
+            } else {
+              notification.error({ message: "Something went wrong !." });
+            }
+          })
+          .catch(() =>
+            notification.error({ message: "Something went wrong !." })
+          );
+      }
     },
-    [data, dispatch, form, userid]
+    [data, dispatch, form, userid,priceData]
   );
   return (
     <>
-      <Button size="small" type="text" onClick={() => setOpenModal(true)}>
-        <Icon icon="fluent:add-24-filled" />
-      </Button>
+      {edit ? (
+        <Button size="small" type="text" onClick={handleEdit}>
+          <Icon icon="fluent:edit-16-regular" width="16" height="16" />
+        </Button>
+      ) : (
+        <Button size="small" type="text" onClick={() => setOpenModal(true)}>
+          <Icon icon="fluent:add-24-filled" />
+        </Button>
+      )}
       <Modal
-        title="Amount details"
+        title={edit ? "Update amount details" : "Amount details"}
         open={openModal}
         centered
         onCancel={() => setOpenModal(false)}
@@ -60,11 +106,7 @@ const PriceModal = ({ data }) => {
         okText="Submit"
         okButtonProps={{ htmlType: "submit" }}
       >
-        <Form
-          layout="vertical"
-          form={form}
-          onFinish={handleFinish}
-        >
+        <Form layout="vertical" form={form} onFinish={handleFinish}>
           <Form.Item
             label="Name of fee"
             name="name"

@@ -333,6 +333,7 @@ const LeadEstimate = ({ leadid }) => {
             layout="vertical"
             size="small"
             style={{ width: "60%" }}
+            scrollToFirstError
             initialValues={{
               cc: [""],
               isConsultant: false,
@@ -391,12 +392,7 @@ const LeadEstimate = ({ leadid }) => {
                         ]}
                         noStyle
                       >
-                        <Input
-                          placeholder="example@xyz.com"
-                          style={{
-                            width: "90%",
-                          }}
-                        />
+                        <Input placeholder="example@xyz.com" />
                       </Form.Item>
                       {fields.length > 1 ? (
                         <Button
@@ -412,13 +408,7 @@ const LeadEstimate = ({ leadid }) => {
                     </Form.Item>
                   ))}
                   <Form.Item>
-                    <Button
-                      type="dashed"
-                      onClick={() => add()}
-                      style={{
-                        width: "80%",
-                      }}
-                    >
+                    <Button type="dashed" onClick={() => add()}>
                       Add Cc
                     </Button>
                     <Form.ErrorList errors={errors} />
@@ -455,7 +445,7 @@ const LeadEstimate = ({ leadid }) => {
                 <Form.Item
                   label="Are you consultant ?"
                   name="isConsultant"
-                  rules={[{ required:true }]}
+                  rules={[{ required: true }]}
                 >
                   <Switch size="small" />
                 </Form.Item>
@@ -1396,18 +1386,18 @@ const LeadEstimate = ({ leadid }) => {
                             <td>{details?.govermentFees}</td>
                           </tr>
                         )}
-                        {details?.professionalCode && (
+                        {details?.profesionalCode !== null && (
                           <tr>
                             <td></td>
                             <td>Professional fee</td>
-                            <td>{details?.professionalCode}</td>
+                            <td>{details?.profesionalCode}</td>
                             <td>{""}</td>
                             <td>{details?.profesionalGst}</td>
                             <td>{""}</td>
                             <td>{details?.professionalFees}</td>
                           </tr>
                         )}
-                        {details?.serviceCode && (
+                        {details?.serviceCode !== null && (
                           <tr>
                             <td></td>
                             <td>Service fee</td>
@@ -1418,7 +1408,7 @@ const LeadEstimate = ({ leadid }) => {
                             <td>{details?.serviceCharge}</td>
                           </tr>
                         )}
-                        {details?.otherCode && (
+                        {details?.otherCode !== null && (
                           <tr>
                             <td></td>
                             <td>Other fee</td>
@@ -1468,15 +1458,15 @@ const LeadEstimate = ({ leadid }) => {
                           </tr>
                         </thead>
                         <tbody>
-                          {details?.professionalCode && (
+                          {details?.profesionalCode !== null && (
                             <tr>
-                              <td>{details?.professionalCode}</td>
+                              <td>{details?.profesionalCode}</td>
                               <td>0.0 %</td>
                               <td>0.0 %</td>
                               <td>{details?.profesionalGst}</td>
                             </tr>
                           )}
-                          {details?.serviceCode && (
+                          {details?.serviceCode !== null && (
                             <tr>
                               <td>{details?.serviceCode}</td>
                               <td>0.0 %</td>
@@ -1484,7 +1474,7 @@ const LeadEstimate = ({ leadid }) => {
                               <td>{details?.serviceGst}</td>
                             </tr>
                           )}
-                          {details?.govermentCode && (
+                          {details?.govermentCode !== null && (
                             <tr>
                               <td>{details?.govermentCode}</td>
                               <td>0.0 %</td>
@@ -1492,7 +1482,7 @@ const LeadEstimate = ({ leadid }) => {
                               <td>{details?.govermentGst}</td>
                             </tr>
                           )}
-                          {details?.otherCode && (
+                          {details?.otherCode !== null && (
                             <tr>
                               <td>{details?.otherCode}</td>
                               <td>0.0 %</td>

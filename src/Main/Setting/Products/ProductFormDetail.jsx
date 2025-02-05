@@ -72,6 +72,13 @@ const ProductFormDetail = ({ data }) => {
       dataIndex: "taxAmount",
     },
     {
+      title: "Edit",
+      dataIndex: "edit",
+      render: (_, priceData) => (
+        <PriceModal data={data} edit={true} editData={priceData} />
+      ),
+    },
+    {
       title: "Delete",
       render: (_, record) => (
         <Popconfirm
@@ -264,7 +271,7 @@ const ProductFormDetail = ({ data }) => {
           <Text className="heading-text">Attached documents</Text>
           <DocsModal data={data} />
         </Flex>
-        <Flex style={{ width: "100%",padding:4 }} gap={3} >
+        <Flex style={{ width: "100%", padding: 4 }} gap={3}>
           {productDetail?.doc?.map((item) => (
             <DocumentViewModal data={item} />
           ))}

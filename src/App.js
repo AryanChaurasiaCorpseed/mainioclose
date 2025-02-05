@@ -345,16 +345,15 @@ function App() {
                   <Route path="group" element={<MainGroupPage />}>
                     <Route index element={<Group />} />
                     <Route
-                      path=":groupId/ledger"
+                      path=":groupId/groupLedger"
                       element={<MainGroupLedgerPage />}
                     >
                       <Route index element={<GroupLedger />} />
                       <Route
-                        path=":ledgerId/voucher"
+                        path=":ledgerId/groupVoucher"
                         element={<Groupvoucher />}
                       />
                     </Route>
-                    {/* New route for individual group */}
                   </Route>
 
                   <Route path="dailybook" element={<DailyBook />} />

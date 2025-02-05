@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import CommonTable from "../../../components/CommonTable";
 import {
   Button,
+  Drawer,
   Flex,
   Input,
   notification,
@@ -22,6 +23,8 @@ import {
 } from "../../../Toolkit/Slices/AccountSlice";
 import OverFlowText from "../../../components/OverFlowText";
 import dayjs from "dayjs";
+import { getEstimateByLeadId } from "../../../Toolkit/Slices/LeadSlice";
+import ViewEstimate from "./ViewEstimate";
 const { Text } = Typography;
 const { Search } = Input;
 
@@ -37,6 +40,7 @@ const AccountEstimate = () => {
   const [selectedFilter, setSelectedFilter] = useState("All");
   const [openModal, setOpenModal] = useState(false);
   const [formId, setFormId] = useState(null);
+  const [openDrawer, setOpenDrawer] = useState(false);
   const [paginationData, setPaginationData] = useState({
     page: 1,
     size: 50,
@@ -88,6 +92,11 @@ const AccountEstimate = () => {
     }
   };
 
+  const handleViewEstimate = (value) => {
+    dispatch(getEstimateByLeadId(value?.leadId));
+    setOpenDrawer(true);
+  };
+
   const handleChangeStatus = (e, id) => {
     dispatch(
       approvedAndDisapprovedStatus({
@@ -125,7 +134,11 @@ const AccountEstimate = () => {
       datIndex: "productName",
       title: "Product name",
       fixed: "left",
-      render: (_, data) => <Text>{data?.productName}</Text>,
+      render: (_, data) => (
+        <Button type="link" onClick={() => handleViewEstimate(data)}>
+          {data?.productName}
+        </Button>
+      ),
     },
     {
       dataIndex: "companyName",
@@ -355,64 +368,74 @@ const AccountEstimate = () => {
   ];
 
   return (
-    <Flex vertical style={{ padding: 4 }}>
-      <div className="create-user-box">
-        <MainHeading data={"Estimate"} />
-      </div>
-      <div style={{ marginTop: 3 }}>
-        <Flex gap={8} style={{ marginBottom: 4 }}>
-          <Search
-            size="small"
-            onSearch={onSearchLead}
-            style={{ width: "220px" }}
-            placeholder="search"
-            onChange={(e) =>
-              !e.target.value
-                ? dispatch(
-                    searchAccountEstimate({
-                      searchText: "",
-                      userId: userid,
-                    })
-                  )
-                : ""
-            }
-            enterButton="search"
-            prefix={<Icon icon="fluent:search-24-regular" />}
+    <>
+      <Flex vertical style={{ padding: 4 }}>
+        <div className="create-user-box">
+          <MainHeading data={"Estimate"} />
+        </div>
+        <div style={{ marginTop: 3 }}>
+          <Flex gap={8} style={{ marginBottom: 4 }}>
+            <Search
+              size="small"
+              onSearch={onSearchLead}
+              style={{ width: "220px" }}
+              placeholder="search"
+              onChange={(e) =>
+                !e.target.value
+                  ? dispatch(
+                      searchAccountEstimate({
+                        searchText: "",
+                        userId: userid,
+                      })
+                    )
+                  : ""
+              }
+              enterButton="search"
+              prefix={<Icon icon="fluent:search-24-regular" />}
+            />
+            <Select
+              style={{ width: "220px" }}
+              showSearch
+              size="small"
+              value={selectedFilter}
+              options={[
+                { label: "All", value: "All" },
+                { label: "Initiated", value: "Initiated" },
+                { label: "Approved", value: "Approved" },
+                { label: "Disapproved", value: "Disapproved" },
+              ]}
+              onChange={(e) => {
+                setSelectedFilter(e);
+                setPaginationData({
+                  page: 1,
+                  size: 50,
+                });
+              }}
+            />
+          </Flex>
+          <CommonTable
+            data={allEstimateByStatus}
+            columns={columns}
+            scroll={{ x: 5000, y: "67vh" }}
+            rowSelection={true}
+            page={paginationData?.page}
+            pageSize={paginationData?.size}
+            rowKey={(record) => record?.id}
+            pagination={true}
+            totalCount={totalEstimateCount}
+            handlePagination={handlePagination}
           />
-          <Select
-            style={{ width: "220px" }}
-            showSearch
-            size="small"
-            value={selectedFilter}
-            options={[
-              { label: "All", value: "All" },
-              { label: "Initiated", value: "Initiated" },
-              { label: "Approved", value: "Approved" },
-              { label: "Disapproved", value: "Disapproved" },
-            ]}
-            onChange={(e) => {
-              setSelectedFilter(e);
-              setPaginationData({
-                page: 1,
-                size: 50,
-              });
-            }}
-          />
-        </Flex>
-        <CommonTable
-          data={allEstimateByStatus}
-          columns={columns}
-          scroll={{ x: 5000, y: "67vh" }}
-          rowSelection={true}
-          page={paginationData?.page}
-          pageSize={paginationData?.size}
-          rowKey={(record) => record?.id}
-          pagination={true}
-          totalCount={totalEstimateCount}
-          handlePagination={handlePagination}
-        />
-      </div>
-    </Flex>
+        </div>
+      </Flex>
+      <Drawer
+        open={openDrawer}
+        onClose={() => setOpenDrawer(false)}
+        width={"60%"}
+        closeIcon={null}
+      >
+        <ViewEstimate />
+      </Drawer>
+    </>
   );
 };
 

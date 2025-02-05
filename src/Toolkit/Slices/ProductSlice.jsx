@@ -1,37 +1,38 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
-import { getQuery } from "../../API/GetQuery"
-import { postQuery } from "../../API/PostQuery"
-import { deleteQuery } from "../../API/DeleteQuery"
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { getQuery } from "../../API/GetQuery";
+import { postQuery } from "../../API/PostQuery";
+import { deleteQuery } from "../../API/DeleteQuery";
+import { putQuery } from "../../API/PutQuery";
 
 export const getAllProductData = createAsyncThunk(
   "getAllProductData",
   async (data) => {
     const response = await getQuery(
       `/leadService/api/v1/product/getAllProducts`
-    )
-    return response.data
+    );
+    return response.data;
   }
-)
+);
 
 export const getSingleProductByProductId = createAsyncThunk(
   "getSingleProductByProductId",
   async (id) => {
     const response = await getQuery(
       `/leadService/api/v1/product/getProduct?id=${id}`
-    )
-    return response.data
+    );
+    return response.data;
   }
-)
+);
 
 export const getAllCategories = createAsyncThunk(
   "getAllCategories",
   async (data) => {
     const response = await getQuery(
       `/leadService/api/v1/category/getAllCategories`
-    )
-    return response.data
+    );
+    return response.data;
   }
-)
+);
 
 export const addDocumentProduct = createAsyncThunk(
   "addDocumentProduct",
@@ -39,15 +40,21 @@ export const addDocumentProduct = createAsyncThunk(
     const response = await postQuery(
       `/leadService/api/v1/product/addDocumentsInProduct`,
       data
-    )
-    return response.categoryData
+    );
+    return response.categoryData;
   }
-)
+);
 
-export const addDocsInProduct=createAsyncThunk('addDocsInProduct',async(data)=>{
-  const response=await postQuery(`/leadService/api/v1/product/addProductDocumentsInProduct`,data)
-  return response.data
-})
+export const addDocsInProduct = createAsyncThunk(
+  "addDocsInProduct",
+  async (data) => {
+    const response = await postQuery(
+      `/leadService/api/v1/product/addProductDocumentsInProduct`,
+      data
+    );
+    return response.data;
+  }
+);
 
 export const addMilestoneForProduct = createAsyncThunk(
   "addMilestoneForProduct",
@@ -55,10 +62,10 @@ export const addMilestoneForProduct = createAsyncThunk(
     const response = await postQuery(
       `/leadService/api/v1/product/addStageInProduct`,
       data
-    )
-    return response.data
+    );
+    return response.data;
   }
-)
+);
 
 export const addAmountForProduct = createAsyncThunk(
   "addAmountForProduct",
@@ -66,10 +73,21 @@ export const addAmountForProduct = createAsyncThunk(
     const response = await postQuery(
       `/leadService/api/v1/product/addAmountInProduct`,
       data
-    )
-    return response.data
+    );
+    return response.data;
   }
-)
+);
+
+export const editAmountForProduct = createAsyncThunk(
+  "editAmountForProduct",
+  async (data) => {
+    const response = await putQuery(
+      `/leadService/api/v1/product/updateAmountInProduct`,
+      data
+    );
+    return response.data;
+  }
+);
 
 export const addTATforProduct = createAsyncThunk(
   "addTATforProduct",
@@ -77,55 +95,55 @@ export const addTATforProduct = createAsyncThunk(
     const response = await postQuery(
       `/leadService/api/v1/product/addTatAndDescription`,
       data
-    )
-    return response.data
+    );
+    return response.data;
   }
-)
+);
 
 export const deleteMileStoneForProduct = createAsyncThunk(
   "deleteMileStoneForProduct",
   async (id) => {
     const response = await deleteQuery(
       `/leadService/api/v1/product/deleteStageFromProduct?productStageId =${id}`
-    )
-    return response.data
+    );
+    return response.data;
   }
-)
+);
 
 export const deletePriceForProduct = createAsyncThunk(
   "deletePriceForProduct",
   async (id) => {
     const response = await deleteQuery(
       `/leadService/api/v1/product/deleteAmountFromProduct?productAmountId=${id}`
-    )
-    return response.data
+    );
+    return response.data;
   }
-)
+);
 
 export const deleteDocumentForProduct = createAsyncThunk(
   "deleteDocumentForProduct",
   async (id) => {
     const response = await deleteQuery(
       `/leadService/api/v1/product/deleteDocumentFromProduct?productdocumentId=${id}`
-    )
-    return response.data
+    );
+    return response.data;
   }
-)
+);
 
 export const createProduct = createAsyncThunk("createProduct", async (data) => {
   const response = await postQuery(
     `/leadService/api/v1/product/createProduct`,
     data
-  )
-  return response.data
-})
+  );
+  return response.data;
+});
 
 export const deleteProduct = createAsyncThunk("deleteProduct", async (id) => {
   const response = await deleteQuery(
     `/leadService/api/v1/product/delete?id=${id}`
-  )
-  return response.data
-})
+  );
+  return response.data;
+});
 
 const ProductSlice = createSlice({
   name: "product",
@@ -137,41 +155,41 @@ const ProductSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(getAllProductData.pending, (state, action) => {
-      state.loading = "pending"
-    })
+      state.loading = "pending";
+    });
     builder.addCase(getAllProductData.fulfilled, (state, action) => {
-      state.loading = "success"
-      state.productData = action.payload
-    })
+      state.loading = "success";
+      state.productData = action.payload;
+    });
     builder.addCase(getAllProductData.rejected, (state, action) => {
-      state.loading = "rejected"
-      state.productData = []
-    })
+      state.loading = "rejected";
+      state.productData = [];
+    });
 
     builder.addCase(getAllCategories.pending, (state, action) => {
-      state.loading = "pending"
-    })
+      state.loading = "pending";
+    });
     builder.addCase(getAllCategories.fulfilled, (state, action) => {
-      state.loading = "success"
-      state.categoryData = action.payload
-    })
+      state.loading = "success";
+      state.categoryData = action.payload;
+    });
     builder.addCase(getAllCategories.rejected, (state, action) => {
-      state.loading = "rejected"
-      state.categoryData = []
-    })
+      state.loading = "rejected";
+      state.categoryData = [];
+    });
 
     builder.addCase(getSingleProductByProductId.pending, (state, action) => {
-      state.loading = "pending"
-    })
+      state.loading = "pending";
+    });
     builder.addCase(getSingleProductByProductId.fulfilled, (state, action) => {
-      state.loading = "success"
-      state.singleProductDetail = action.payload
-    })
+      state.loading = "success";
+      state.singleProductDetail = action.payload;
+    });
     builder.addCase(getSingleProductByProductId.rejected, (state, action) => {
-      state.loading = "rejected"
-      state.singleProductDetail = {}
-    })
+      state.loading = "rejected";
+      state.singleProductDetail = {};
+    });
   },
-})
+});
 
-export default ProductSlice.reducer
+export default ProductSlice.reducer;

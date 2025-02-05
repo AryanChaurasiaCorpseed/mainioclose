@@ -302,7 +302,7 @@ export const getAllGroups = createAsyncThunk("getAllGroups", async () => {
 export const getLedgerByGroupId = createAsyncThunk(
   "getLedgerByGroupId",
   async (id) => {
-    const response = await getQuery(``);
+    const response = await getQuery(`/accountService/api/v1/ledger/getAllLedgerByGroupId?id=${id}`);
     return response.data;
   }
 );
@@ -346,6 +346,7 @@ export const approvedAndDisapprovedStatus = createAsyncThunk(
     return response.data;
   }
 );
+
 
 const AccountSlice = createSlice({
   name: "account",
@@ -612,6 +613,18 @@ const AccountSlice = createSlice({
     builder.addCase(getTotalCountOfEstimate.rejected, (state, action) => {
       state.loading = "rejected";
       state.totalEstimateCount = 0;
+    });
+
+    builder.addCase(getLedgerByGroupId.pending, (state, action) => {
+      state.loading = "pending";
+    });
+    builder.addCase(getLedgerByGroupId.fulfilled, (state, action) => {
+      state.loading = "success";
+      state.groupLedgerList = action.payload;
+    });
+    builder.addCase(getLedgerByGroupId.rejected, (state, action) => {
+      state.loading = "rejected";
+      state.totalEstimateCount = [];
     });
   },
 });
