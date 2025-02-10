@@ -33,14 +33,13 @@ const EditSlugModal = ({ data }) => {
   return (
     <div>
       <Button
-        type="text"
         onClick={() => {
           form.setFieldsValue({ name: data?.name })
           setOpenModal(true)
         }}
         size="small"
       >
-        <Icon icon="fluent:edit-20-regular" />
+        <Icon icon="fluent:edit-20-regular" />Edit
       </Button>
       <Modal
         title="Edit slug"

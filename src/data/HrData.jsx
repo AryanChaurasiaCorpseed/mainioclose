@@ -1,7 +1,7 @@
-import { Typography } from "antd"
-import { Icon } from "@iconify/react"
-import OverFlowText from "../components/OverFlowText"
-const { Text } = Typography
+import { Typography } from "antd";
+import { Icon } from "@iconify/react";
+import OverFlowText from "../components/OverFlowText";
+const { Text } = Typography;
 
 export const hrUserData = [
   {
@@ -10,7 +10,7 @@ export const hrUserData = [
     fixed: "left",
     width: 120,
     render: (_, props) => {
-      return <Text>CORP00{props?.id}</Text>
+      return <Text>CORP00{props?.id}</Text>;
     },
   },
   { dataIndex: "fullName", title: "Full name", fixed: "left" },
@@ -28,12 +28,16 @@ export const hrUserData = [
   {
     dataIndex: "designation",
     title: "Designation",
-    render: (_, data) => <OverFlowText>{data?.userDesignation?.name}</OverFlowText>,
+    render: (_, data) => (
+      <OverFlowText>{data?.userDesignation?.name}</OverFlowText>
+    ),
   },
   {
     dataIndex: "department",
     title: "Department",
-    render: (_, data) => <OverFlowText>{data?.userDepartment?.name}</OverFlowText>,
+    render: (_, data) => (
+      <OverFlowText>{data?.userDepartment?.name}</OverFlowText>
+    ),
   },
 
   {
@@ -64,7 +68,7 @@ export const hrUserData = [
   {
     dataIndex: "epfNo",
     title: "Employee id",
-    render: (_, props) =><OverFlowText>{props?.epfNo}</OverFlowText>,
+    render: (_, props) => <OverFlowText>{props?.epfNo}</OverFlowText>,
   },
   {
     dataIndex: "experience",
@@ -79,7 +83,9 @@ export const hrUserData = [
   {
     dataIndex: "managers",
     title: "Manager",
-    render: (_, props) => <OverFlowText>{props?.managers?.fullName}</OverFlowText>,
+    render: (_, props) => (
+      <OverFlowText>{props?.managers?.fullName}</OverFlowText>
+    ),
   },
   {
     dataIndex: "panNumber",
@@ -161,14 +167,11 @@ export const hrUserData = [
   {
     dataIndex: "backupTeam",
     title: "Backup team",
-    render: (_, props) => (
-      <p>
-        {props?.backupTeam ? (
-          <Icon icon="fluent:checkmark-20-filled" color="green" />
-        ) : (
-          <Icon icon="fluent:dismiss-20-filled" color="red" />
-        )}{" "}
-      </p>
-    ),
+    render: (_, props) =>
+      props?.backupTeam ? (
+        <p style={{ color: "green" }}>OK</p>
+      ) : (
+        <p style={{ color: "red" }}>Rejected</p>
+      ),
   },
-]
+];

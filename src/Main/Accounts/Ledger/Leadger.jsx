@@ -162,8 +162,8 @@ const Ledger = () => {
       dataIndex: "edit",
       title: "Edit",
       render: (_, data) => (
-        <Button type="text" size="small" onClick={() => handleEdit(data)}>
-          <Icon icon="fluent:edit-16-regular" />
+        <Button size="small" onClick={() => handleEdit(data)}>
+          <Icon icon="fluent:edit-16-regular" /> Edit
         </Button>
       ),
     },

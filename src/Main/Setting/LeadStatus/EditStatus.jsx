@@ -24,8 +24,8 @@ const EditStatus = ({ data }) => {
 
   return (
     <>
-      <Button size="small" type="text" onClick={handleEdit}>
-        <Icon icon="fluent:edit-20-regular" />
+      <Button size="small"  onClick={handleEdit}>
+        <Icon icon="fluent:edit-20-regular" /> Edit
       </Button>
       <Modal
         title="Edit status"

@@ -102,7 +102,7 @@ const ProfileDrawer = () => {
                   : currentUserProfile?.username?.toUpperCase()?.[0]}
               </Avatar>
               <div className="edit-icon" onClick={() => setOpenModal(true)}>
-                <Icon icon="fluent:camera-20-regular" />
+                <Icon icon="fluent:camera-20-regular" /> Camera
               </div>
             </div>
           ) : (

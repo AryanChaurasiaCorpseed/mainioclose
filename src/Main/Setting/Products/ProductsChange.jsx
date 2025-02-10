@@ -75,8 +75,8 @@ const ProductsChange = () => {
               )
           }
         >
-          <Button size="small" type="text" danger>
-            <Icon icon="fluent:delete-20-regular" />
+          <Button size="small"  danger>
+            <Icon icon="fluent:delete-20-regular" /> Delete
           </Button>
         </Popconfirm>
       ),

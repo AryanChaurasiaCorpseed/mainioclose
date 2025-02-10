@@ -334,7 +334,7 @@ const LeadsModule = () => {
               <Icon
                 icon="fluent:flag-24-filled"
                 color={data?.reopenByQuality ? "red" : ""}
-              />
+              />F
             </Button>
           )}
         </Flex>
@@ -559,12 +559,13 @@ const LeadsModule = () => {
                 okText="Yes"
                 cancelText="No"
               >
-                <Button type="text" size="small" danger>
+                <Button  size="small" danger>
                   <Icon
                     icon="fluent:delete-20-regular"
                     height={18}
                     width={18}
                   />
+                  Delete
                 </Button>
               </Popconfirm>
             ),

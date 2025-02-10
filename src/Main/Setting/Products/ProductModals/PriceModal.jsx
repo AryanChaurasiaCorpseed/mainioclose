@@ -88,12 +88,12 @@ const PriceModal = ({ data, edit, editData }) => {
   return (
     <>
       {edit ? (
-        <Button size="small" type="text" onClick={handleEdit}>
-          <Icon icon="fluent:edit-16-regular" width="16" height="16" />
+        <Button size="small"  onClick={handleEdit}>
+          <Icon icon="fluent:edit-16-regular" width="16" height="16" />Edit
         </Button>
       ) : (
-        <Button size="small" type="text" onClick={() => setOpenModal(true)}>
-          <Icon icon="fluent:add-24-filled" />
+        <Button size="small"  onClick={() => setOpenModal(true)}>
+          <Icon icon="fluent:add-24-filled" />Add
         </Button>
       )}
       <Modal

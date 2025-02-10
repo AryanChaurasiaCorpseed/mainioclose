@@ -418,7 +418,7 @@ const CompanyFormModal = ({
     <>
       {edit ? (
         <Button type="text" size="small" onClick={handleEditBtnClick}>
-          <Icon icon="fluent:edit-24-regular" />
+          <Icon icon="fluent:edit-24-regular" /> Edit
         </Button>
       ) : detailView ? (
         <Button size="small" type="primary" onClick={handleButtonClick}>
@@ -427,7 +427,7 @@ const CompanyFormModal = ({
         </Button>
       ) : (
         <Button type="text" size="small" onClick={handleButtonClick}>
-          <Icon icon="fluent:add-24-filled" height={18} width={18} />
+          <Icon icon="fluent:add-24-filled" height={18} width={18} /> Add
         </Button>
       )}
 

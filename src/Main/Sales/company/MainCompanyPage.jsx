@@ -250,7 +250,7 @@ const MainCompanyPage = () => {
                 icon="fluent:more-circle-24-regular"
                 height={BTN_ICON_HEIGHT + 8}
                 width={BTN_ICON_WIDTH + 8}
-              />
+              />More
             </Tooltip>
           </div>
         ) : (
@@ -277,7 +277,7 @@ const MainCompanyPage = () => {
                 icon="fluent:more-circle-24-regular"
                 height={BTN_ICON_HEIGHT + 8}
                 width={BTN_ICON_WIDTH + 8}
-              />
+              />More
             </Tooltip>
           </div>
         ) : (

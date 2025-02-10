@@ -396,13 +396,12 @@ const LeadEstimate = ({ leadid }) => {
                       </Form.Item>
                       {fields.length > 1 ? (
                         <Button
-                          type="text"
                           size="small"
                           style={{ margin: "0px 4px" }}
                           onClick={() => remove(field.name)}
                           danger
                         >
-                          <Icon icon="fluent:delete-24-regular" />
+                          <Icon icon="fluent:delete-24-regular" /> Delete
                         </Button>
                       ) : null}
                     </Form.Item>

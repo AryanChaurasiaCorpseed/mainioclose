@@ -170,10 +170,9 @@ const Department = () => {
       render: (_, records) => (
         <Button
           size="small"
-          type="text"
           onClick={() => addDesigination(records)}
         >
-          <Icon icon="fluent:add-16-filled" />
+          <Icon icon="fluent:add-16-filled" /> Add
         </Button>
       ),
     },

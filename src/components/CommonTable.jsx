@@ -99,7 +99,7 @@ const CommonTable = ({
           onMouseUp={stopScrolling}
           onMouseLeave={stopScrolling}
         >
-          <Icon icon="fluent:chevron-left-20-regular" />
+          <Icon icon="fluent:chevron-left-20-regular" /> Left
         </Button>
       )}
       {canScrollRight && (
@@ -111,7 +111,7 @@ const CommonTable = ({
           onMouseUp={stopScrolling}
           onMouseLeave={stopScrolling}
         >
-          <Icon icon="fluent:chevron-right-20-regular" />
+          <Icon icon="fluent:chevron-right-20-regular" /> Right
         </Button>
       )}
       <Table

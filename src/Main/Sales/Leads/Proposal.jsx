@@ -399,7 +399,7 @@ const Proposal = ({ leadid }) => {
                           onClick={() => remove(field.name)}
                           danger
                         >
-                          <Icon icon="fluent:delete-24-regular" />
+                          <Icon icon="fluent:delete-24-regular" /> Delete
                         </Button>
                       ) : null}
                     </Form.Item>

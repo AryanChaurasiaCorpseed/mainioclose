@@ -127,13 +127,12 @@ const Procurement = () => {
         render: (_, data) => (
           <Button
             size="small"
-            type="text"
             onClick={() => {
               form1.setFieldsValue({ categoryName: data?.vendorCategoryName })
               setOpenModal1(true)
             }}
           >
-            <Icon icon="fluent:edit-24-regular" />
+            <Icon icon="fluent:edit-24-regular" />Edit
           </Button>
         ),
       },
@@ -177,7 +176,6 @@ const Procurement = () => {
           return (
             <Button
               size="small"
-              type="text"
               onClick={() => {
                 setOpenModal(true)
                 form.setFieldsValue({
@@ -186,7 +184,7 @@ const Procurement = () => {
                 setSubCategoryData(data)
               }}
             >
-              <Icon icon="fluent:edit-24-regular" />
+              <Icon icon="fluent:edit-24-regular" /> Edit
             </Button>
           )
         },
@@ -197,7 +195,6 @@ const Procurement = () => {
         render: (_, data) => (
           <Button
             size="small"
-            type="text"
             onClick={() => {
               form2.setFieldsValue({
                 subCategoryName: data?.subCategoryName,
@@ -208,7 +205,7 @@ const Procurement = () => {
               setSubCategoryData(data)
             }}
           >
-            <Icon icon="fluent:edit-24-regular" />
+            <Icon icon="fluent:edit-24-regular" />Edit
           </Button>
         ),
       },

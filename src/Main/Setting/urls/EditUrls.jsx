@@ -45,8 +45,8 @@ const EditUrls = ({ data, paginationData }) => {
   )
   return (
     <>
-      <Button type="text" onClick={editFormValues} size="small">
-        <Icon icon="fluent:edit-20-regular" />
+      <Button onClick={editFormValues} size="small">
+        <Icon icon="fluent:edit-20-regular" /> Edit
       </Button>
       <Modal
         title="Edit url"

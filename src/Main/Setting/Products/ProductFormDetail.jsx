@@ -102,8 +102,8 @@ const ProductFormDetail = ({ data }) => {
               )
           }
         >
-          <Button size="small" type="text" danger>
-            <Icon icon="fluent:delete-24-regular" />
+          <Button size="small"  danger>
+            <Icon icon="fluent:delete-24-regular" /> Delete
           </Button>
         </Popconfirm>
       ),
@@ -155,8 +155,8 @@ const ProductFormDetail = ({ data }) => {
               )
           }
         >
-          <Button size="small" type="text" danger>
-            <Icon icon="fluent:delete-24-regular" />
+          <Button size="small" danger>
+            <Icon icon="fluent:delete-24-regular" /> Delete
           </Button>
         </Popconfirm>
       ),
@@ -201,8 +201,8 @@ const ProductFormDetail = ({ data }) => {
               )
           }
         >
-          <Button size="small" type="text" danger>
-            <Icon icon="fluent:delete-24-regular" />
+          <Button size="small" danger>
+            <Icon icon="fluent:delete-24-regular" /> Delete
           </Button>
         </Popconfirm>
       ),

@@ -144,8 +144,8 @@ const CreateuserDashboard = ({ data, modalText, edit }) => {
           Create user
         </Button>
       ) : (
-        <Button type="text" size="small" onClick={() => editUserDetails()}>
-          <Icon icon="fluent:edit-20-regular" />
+        <Button size="small" onClick={() => editUserDetails()}>
+          <Icon icon="fluent:edit-20-regular" /> Edit
         </Button>
       )}
 

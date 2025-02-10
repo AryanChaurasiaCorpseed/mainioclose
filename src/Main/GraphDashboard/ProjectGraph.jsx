@@ -144,14 +144,14 @@ const ProjectGraph = ({ expandedBox }) => {
             disabled={pagination?.prev === 0}
             onClick={handleprev}
           >
-            <Icon icon="fluent:chevron-left-24-regular" />
+            <Icon icon="fluent:chevron-left-24-regular" />Prev
           </Button>
           <Button
             size="small"
             disabled={pagination?.next >= dataList?.length ? true : false}
             onClick={handleNext}
           >
-            <Icon icon="fluent:chevron-right-24-regular" />
+            <Icon icon="fluent:chevron-right-24-regular" /> Next
           </Button>
         </Flex>
       </Flex>

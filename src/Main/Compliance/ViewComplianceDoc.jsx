@@ -48,7 +48,7 @@ export const ViewComplianceDoc = ({ data }) => {
         </Tag>
       ))}
       <Tag className="btn-tag" onClick={() => setOpenModal1(true)}>
-        <Icon icon="fluent:add-20-regular" />
+        <Icon icon="fluent:add-20-regular" /> Add
       </Tag>
 
       <Modal

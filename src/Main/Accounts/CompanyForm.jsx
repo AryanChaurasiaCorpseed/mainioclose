@@ -391,11 +391,12 @@ const CompanyForm = () => {
                       });
                     }}
                   >
-                    <Icon
+                    {/* <Icon
                       icon="fluent:approvals-app-24-regular"
                       height={BTN_ICON_HEIGHT}
                       width={BTN_ICON_WIDTH}
-                    />
+                    /> */}
+                    Approval
                   </Button>
                   {/* <Tooltip title="Approved" arrow={false}>
                     <Button

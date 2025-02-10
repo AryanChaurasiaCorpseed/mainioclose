@@ -113,18 +113,17 @@ export const LeadActivityPage = ({ leadid }) => {
               <Space size={1}>
                 <Button
                   size="small"
-                  type="text"
                   onClick={() => updateTaskData(item)}
                 >
-                  <Icon icon="fluent:edit-20-regular" />
+                  <Icon icon="fluent:edit-20-regular" />Edit
                 </Button>
                 <Popconfirm
                   title="Delete the task"
                   description="Are you sure to delete this task?"
                   onConfirm={() => deleteTask({ id: item.id, userid: userid })}
                 >
-                  <Button size="small" type="text" danger>
-                    <Icon icon="fluent:delete-20-regular" />
+                  <Button size="small"  danger>
+                    <Icon icon="fluent:delete-20-regular" /> Delete
                   </Button>
                 </Popconfirm>
               </Space>

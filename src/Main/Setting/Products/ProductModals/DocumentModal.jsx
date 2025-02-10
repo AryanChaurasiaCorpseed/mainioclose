@@ -31,8 +31,8 @@ const DocumentModal = ({ data }) => {
 
   return (
     <>
-      <Button size="small" type="text" onClick={() => setOpenModal(true)}>
-        <Icon icon="fluent:add-24-filled" />
+      <Button size="small" onClick={() => setOpenModal(true)}>
+        <Icon icon="fluent:add-24-filled" /> Add
       </Button>
       <Modal
         title="Document details"

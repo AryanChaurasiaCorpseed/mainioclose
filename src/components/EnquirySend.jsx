@@ -70,6 +70,7 @@ const EnquirySend = () => {
           height={BTN_ICON_HEIGHT}
           width={BTN_ICON_WIDTH}
         />
+        Enquiry
       </Button>
     </Popover>
   )

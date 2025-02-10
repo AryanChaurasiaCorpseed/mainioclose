@@ -245,8 +245,8 @@ const CreateHrDashBoard = ({ data, edit, modalTitle }) => {
           Create user
         </Button>
       ) : (
-        <Button type="text" size="small" onClick={handleEdit}>
-          <Icon icon="fluent:edit-20-regular" />
+        <Button  size="small" onClick={handleEdit}>
+          <Icon icon="fluent:edit-20-regular" />Edit
         </Button>
       )}
 

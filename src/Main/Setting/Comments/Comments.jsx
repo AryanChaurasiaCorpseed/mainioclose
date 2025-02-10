@@ -76,8 +76,8 @@ const Comments = () => {
       title: "Edit",
       dataIndex: "delete",
       render: (_, data) => (
-        <Button size="small" type="text" onClick={() => editComments(data)}>
-          <Icon icon="fluent:edit-20-regular" />
+        <Button size="small" onClick={() => editComments(data)}>
+          <Icon icon="fluent:edit-20-regular" /> Edit
         </Button>
       ),
     },
@@ -107,8 +107,8 @@ const Comments = () => {
               })
           }
         >
-          <Button size="small" type="text" danger>
-            <Icon icon="fluent:delete-20-regular" />
+          <Button size="small"  danger>
+            <Icon icon="fluent:delete-20-regular" /> Delete
           </Button>
         </Popconfirm>
       ),

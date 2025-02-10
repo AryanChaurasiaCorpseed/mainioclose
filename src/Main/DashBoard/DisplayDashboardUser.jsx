@@ -147,7 +147,7 @@ const DisplayDashboardUser = () => {
               danger
               onClick={() => deleteUser(props?.id)}
             >
-              <Icon icon="fluent:delete-24-regular" />
+              <Icon icon="fluent:delete-24-regular" /> Delete
             </Button>
           </>
         )

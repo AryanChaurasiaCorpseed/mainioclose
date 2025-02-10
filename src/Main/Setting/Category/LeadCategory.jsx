@@ -102,8 +102,8 @@ const LeadCategory = () => {
               )
           }
         >
-          <Button type="text" danger size="small">
-            <Icon icon="fluent:delete-20-regular" />
+          <Button  danger size="small">
+            <Icon icon="fluent:delete-20-regular" /> Delete
           </Button>
         </Popconfirm>
       ),

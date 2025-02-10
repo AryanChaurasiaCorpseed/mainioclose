@@ -57,7 +57,6 @@ const ClientDesigination = () => {
       dataIndex: "edit",
       render: (_, data) => (
         <Button
-          type="text"
           size="small"
           onClick={() => {
             form.setFieldsValue({ name: data?.name })
@@ -65,7 +64,7 @@ const ClientDesigination = () => {
             setEditId(data?.id)
           }}
         >
-          <Icon icon="fluent:edit-24-regular" />
+          <Icon icon="fluent:edit-24-regular" />Edit
         </Button>
       ),
     },
@@ -83,8 +82,8 @@ const ClientDesigination = () => {
                 }
             }).catch(()=>notification.error({message:'Something went wrong!.'}))
         }}>
-            <Button type="text" danger size="small" >
-          <Icon icon="fluent:delete-20-regular" />
+            <Button  danger size="small" >
+          <Icon icon="fluent:delete-20-regular" /> Delete
         </Button>
         </Popconfirm>
       ),

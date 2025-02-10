@@ -120,8 +120,8 @@ const LeadComments = ({ list, leadid }) => {
         renderItem={(item) => (
           <List.Item
             actions={[
-              <Button size="small" type="text" onClick={() => handleEdit(item)}>
-                <Icon icon="fluent:edit-24-regular" />
+              <Button   onClick={() => handleEdit(item)}>
+                <Icon icon="fluent:edit-24-regular" /> Edit
               </Button>,
 
               currentUserRoles?.includes("ADMIN") && (
@@ -136,8 +136,8 @@ const LeadComments = ({ list, leadid }) => {
                   }
                   onConfirm={() => handleDeleteRemark(item?.id)}
                 >
-                  <Button size="small" type="text" danger>
-                    <Icon icon="fluent:delete-24-regular" />
+                  <Button size="small"  danger>
+                    <Icon icon="fluent:delete-24-regular" /> Delete
                   </Button>
                 </Popconfirm>
               ),

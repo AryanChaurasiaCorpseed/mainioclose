@@ -385,14 +385,13 @@ const LeadDetailsPage = ({ leadid }) => {
       extra: (
         <Button
           size="small"
-          type="text"
           onClick={(e) => {
             e.stopPropagation();
             setOpenModal(true);
             form1.resetFields();
           }}
         >
-          <Icon icon="fluent:add-20-regular" />
+          <Icon icon="fluent:add-20-regular" /> Add
         </Button>
       ),
       children: (
@@ -418,10 +417,9 @@ const LeadDetailsPage = ({ leadid }) => {
               <Space size={1}>
                 <Button
                   size="small"
-                  type="text"
                   onClick={() => handleUpdateContact(item)}
                 >
-                  <Icon icon="fluent:edit-20-regular" />
+                  <Icon icon="fluent:edit-20-regular" />Edit
                 </Button>
                 {adminRole && (
                   <Popconfirm
@@ -429,8 +427,8 @@ const LeadDetailsPage = ({ leadid }) => {
                     description="Are you sure to delete this task?"
                     onConfirm={() => deleteContactFun(item.clientId)}
                   >
-                    <Button size="small" danger type="text">
-                      <Icon icon="fluent:delete-20-regular" />
+                    <Button size="small" danger >
+                      <Icon icon="fluent:delete-20-regular" /> Delete
                     </Button>
                   </Popconfirm>
                 )}
@@ -518,11 +516,10 @@ const LeadDetailsPage = ({ leadid }) => {
                           : "NA"}
                       </Text>
                       <Button
-                        type="text"
                         size="small"
                         onClick={() => setUpdateOriginalName(true)}
                       >
-                        <Icon icon="fluent:edit-20-regular" />
+                        <Icon icon="fluent:edit-20-regular" /> Edit
                       </Button>
                     </div>
                   </div>
@@ -535,11 +532,10 @@ const LeadDetailsPage = ({ leadid }) => {
                         {singleLeadResponseData?.leadName}
                       </Text>
                       <Button
-                        type="text"
                         size="small"
                         onClick={() => setUpdateLeadNameToggle(false)}
                       >
-                        <Icon icon="fluent:edit-20-regular" />
+                        <Icon icon="fluent:edit-20-regular" />Edit
                       </Button>
                     </div>
                   </div>
