@@ -93,6 +93,8 @@ import MainGroupPage from "./Main/Accounts/Organization/Group/MainGroupPage";
 import MainGroupLedgerPage from "./Main/Accounts/Organization/Group/MainGroupLedgerPage";
 import Groupvoucher from "./Main/Accounts/Organization/Group/Groupvoucher";
 import AccountEstimate from "./Main/Accounts/estimate/AccountEstimate";
+import AllInvoice from "./Main/Accounts/AllInvoice";
+import ManageSales from "./Main/Accounts/ManageSales";
 
 const SpinLoading = lazy(() => import("./components/SpinLoading"));
 
@@ -360,6 +362,8 @@ function App() {
                   <Route path="bankStatement" element={<BankStatement />} />
                   <Route path="paymentRegister" element={<PaymentRegister />} />
                   <Route path="tds" element={<TDS />} />
+                  <Route path="allInvoice" element={<AllInvoice />} />
+                  <Route path="manageSales" element={<ManageSales />} />
 
                   {/* Settings Routes */}
                   <Route path="setting" element={<SettingsPage />}>

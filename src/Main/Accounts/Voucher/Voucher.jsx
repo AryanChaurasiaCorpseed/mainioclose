@@ -122,6 +122,18 @@ const Voucher = () => {
       title: "Debit amount",
     },
     {
+      dataIndex: "sgst",
+      title: "Sgst",
+    },
+    {
+      dataIndex: "cgst",
+      title: "Cgst",
+    },
+    {
+      dataIndex: "igst",
+      title: "Igst",
+    },
+    {
       dataIndex: "paymentType",
       title: "Payment type",
     },

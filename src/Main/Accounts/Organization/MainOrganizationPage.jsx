@@ -39,6 +39,14 @@ const MainOrganizationPage = () => {
       label: <Link to="paymentRegister">Payment register</Link>,
     },
     {
+      key: "allInvoice",
+      label: <Link to="allInvoice">All invoice</Link>,
+    },
+    {
+      key: "manageSales",
+      label: <Link to="manageSales">Manage sales</Link>,
+    },
+    {
       key: "tds",
       label: <Link to="tds">TDS</Link>,
     },

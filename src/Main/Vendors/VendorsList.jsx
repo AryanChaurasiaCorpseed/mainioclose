@@ -66,10 +66,10 @@ const VendorsList = () => {
   });
   const [filterQuery, setFilterQuery] = useState({
     userIdBy: userid,
-    status: null,
+    statuses: [],
     startDate: null,
     endDate: null,
-    userId: getHighestPriorityRole(currentRoles) !== "ADMIN" ? [userid] : [],
+    userIds: getHighestPriorityRole(currentRoles) !== "ADMIN" ? [userid] : [],
   });
   const [openPopup, setOpenPopup] = useState(false);
 
@@ -227,6 +227,7 @@ const VendorsList = () => {
     {
       dataIndex: "receivedDate",
       title: "Receieved date",
+      render:(receivedDate)=><Text>{dayjs(receivedDate).format('YYYY-MM-DD')}</Text>
     },
     {
       dataIndex: "completedDate",
@@ -296,10 +297,10 @@ const VendorsList = () => {
   const handleResetFilter = () => {
     setFilterQuery({
       userIdBy: userid,
-      status: null,
+      statuses: [],
       startDate: null,
       endDate: null,
-      userId: [],
+      userIds: [],
     });
     form.resetFields();
     dispatch(handleVendorsLoading(""));
@@ -408,8 +409,9 @@ const VendorsList = () => {
                       }
                     />
                   </Form.Item>
-                  <Form.Item label="Select status" name="status">
+                  <Form.Item label="Select status" name="statuses">
                     <Select
+                      mode="multiple"
                       size="small"
                       style={{ width: "100%" }}
                       placeholder="Select status"
@@ -423,7 +425,7 @@ const VendorsList = () => {
                       }
                     />
                   </Form.Item>
-                  <Form.Item label="Select users" name="userId">
+                  <Form.Item label="Select users" name="userIds">
                     <Select
                       style={{ width: "100%" }}
                       mode="multiple"

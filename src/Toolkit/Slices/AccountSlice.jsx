@@ -302,7 +302,9 @@ export const getAllGroups = createAsyncThunk("getAllGroups", async () => {
 export const getLedgerByGroupId = createAsyncThunk(
   "getLedgerByGroupId",
   async (id) => {
-    const response = await getQuery(`/accountService/api/v1/ledger/getAllLedgerByGroupId?id=${id}`);
+    const response = await getQuery(
+      `/accountService/api/v1/ledger/getAllLedgerByGroupId?id=${id}`
+    );
     return response.data;
   }
 );
@@ -347,6 +349,32 @@ export const approvedAndDisapprovedStatus = createAsyncThunk(
   }
 );
 
+export const getVoucherByGroupLedgerId = createAsyncThunk(
+  "getVoucherByLedgerId",
+  async (id) => {
+    const response = await getQuery(
+      `/accountService/api/v1/voucher/getAllVoucherByLedgerId?ledgerId=${id}`
+    );
+    return response.data;
+  }
+);
+
+export const getAllInvoice = createAsyncThunk("getAllInvoice", async (id) => {
+  const response = await getQuery(
+    `/accountService/api/v1/paymentRegister/getAllInvoice?userId=${id}`
+  );
+  return response.data;
+});
+
+export const getAllInvoiceForSale = createAsyncThunk(
+  "getAllInvoiceForSale",
+  async (id) => {
+    const response = await getQuery(
+      `/accountService/api/v1/paymentRegister/getAllInvoiceForSales?userId=${id}`
+    );
+    return response.data;
+  }
+);
 
 const AccountSlice = createSlice({
   name: "account",
@@ -376,6 +404,9 @@ const AccountSlice = createSlice({
     groupLedgerList: [],
     allEstimateByStatus: [],
     totalEstimateCount: 0,
+    groupVoucherList: [],
+    salesInvoiceList: [],
+    allInvoiceList: [],
   },
   extraReducers: (builder) => {
     builder.addCase(getAllVoucherType.pending, (state, action) => {
@@ -624,7 +655,43 @@ const AccountSlice = createSlice({
     });
     builder.addCase(getLedgerByGroupId.rejected, (state, action) => {
       state.loading = "rejected";
-      state.totalEstimateCount = [];
+      state.groupLedgerList = [];
+    });
+
+    builder.addCase(getVoucherByGroupLedgerId.pending, (state, action) => {
+      state.loading = "pending";
+    });
+    builder.addCase(getVoucherByGroupLedgerId.fulfilled, (state, action) => {
+      state.loading = "success";
+      state.groupVoucherList = action.payload;
+    });
+    builder.addCase(getVoucherByGroupLedgerId.rejected, (state, action) => {
+      state.loading = "rejected";
+      state.groupVoucherList = [];
+    });
+
+    builder.addCase(getAllInvoice.pending, (state, action) => {
+      state.loading = "pending";
+    });
+    builder.addCase(getAllInvoice.fulfilled, (state, action) => {
+      state.loading = "success";
+      state.allInvoiceList = action.payload;
+    });
+    builder.addCase(getAllInvoice.rejected, (state, action) => {
+      state.loading = "rejected";
+      state.allInvoiceList = [];
+    });
+
+    builder.addCase(getAllInvoiceForSale.pending, (state, action) => {
+      state.loading = "pending";
+    });
+    builder.addCase(getAllInvoiceForSale.fulfilled, (state, action) => {
+      state.loading = "success";
+      state.salesInvoiceList = action.payload;
+    });
+    builder.addCase(getAllInvoiceForSale.rejected, (state, action) => {
+      state.loading = "rejected";
+      state.salesInvoiceList = [];
     });
   },
 });

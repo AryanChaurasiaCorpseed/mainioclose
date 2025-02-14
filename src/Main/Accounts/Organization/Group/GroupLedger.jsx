@@ -26,7 +26,7 @@ const GroupLedger = () => {
       dataIndex: "name",
       title: "Name",
       render: (name, record) => (
-        <Link className="link-heading" to={`${record.id}/groupVoucher`}>
+        <Link className="link-heading" to={`${record.id}/groupVoucher`}     >
           {name}
         </Link>
       ),
