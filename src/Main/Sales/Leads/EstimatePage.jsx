@@ -76,11 +76,11 @@ const EstimatePage = () => {
     setEstimateData(data);
     form.setFieldsValue({
       serviceName: data?.productName,
-      profesionalGst: data?.profesionalGst,
+      profesionalGst: data?.profesionalGst ? data?.profesionalGst : 0,
       companyName: data?.companyName,
-      govermentGst: data?.govermentGst,
-      serviceGst: data?.serviceGst,
-      otherGst: data?.otherGst,
+      govermentGst: data?.govermentGst ? data?.govermentGst : 0,
+      serviceGst: data?.serviceGst ? data?.serviceGst : 0,
+      otherGst: data?.otherGst ? data?.otherGst : 0,
     });
   };
 

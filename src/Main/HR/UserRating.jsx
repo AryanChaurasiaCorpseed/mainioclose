@@ -44,14 +44,7 @@ const UserRating = () => {
     {
       dataIndex: "rating",
       title: "Rating",
-      render: (_, props) => {
-        const arrayOfZeros = Array.from({ length: props?.rating }, () => 0)
-        return arrayOfZeros.map((star) => (
-          <span className="text-warning ml-1">
-            <i className="fa-solid fa-star"></i>
-          </span>
-        ))  
-      },
+      render: (_, props) => <Text>{props?.rating}</Text>
     },
     {
       dataIndex: "edit",
