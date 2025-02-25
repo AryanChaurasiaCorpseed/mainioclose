@@ -120,7 +120,7 @@ const LeadComments = ({ list, leadid }) => {
         renderItem={(item) => (
           <List.Item
             actions={[
-              <Button   onClick={() => handleEdit(item)}>
+              <Button size="small" style={{marginRight:4}}  onClick={() => handleEdit(item)}>
                 <Icon icon="fluent:edit-24-regular" /> Edit
               </Button>,
 

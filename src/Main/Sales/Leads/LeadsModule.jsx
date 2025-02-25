@@ -316,7 +316,7 @@ const LeadsModule = () => {
           notification.error({ message: "Something went wrong !." })
         );
     },
-    [dispatch, userid,allMultiFilterData]
+    [dispatch, userid, allMultiFilterData]
   );
 
   const columns = [
@@ -334,7 +334,7 @@ const LeadsModule = () => {
               <Icon
                 icon="fluent:flag-24-filled"
                 color={data?.reopenByQuality ? "red" : ""}
-              />F
+              />
             </Button>
           )}
         </Flex>
@@ -559,7 +559,7 @@ const LeadsModule = () => {
                 okText="Yes"
                 cancelText="No"
               >
-                <Button  size="small" danger>
+                <Button size="small" danger>
                   <Icon
                     icon="fluent:delete-20-regular"
                     height={18}
@@ -641,7 +641,7 @@ const LeadsModule = () => {
     onChange(info) {
       setUploadedFile(info?.file?.response);
     },
-    onDrop(e) { },
+    onDrop(e) {},
   };
 
   const handleUploadFile = useCallback(() => {
@@ -707,187 +707,186 @@ const LeadsModule = () => {
     <div className="lead-module small-box-padding">
       <div className="create-user-box">
         <MainHeading data={`Leads (${totalCount})`} />
-        <div className="all-center">
+        <Flex align="center" gap={2}>
           <Link to={`allTask`}>
-            <Button className="mr-2" size="small" type="primary">
+            <Button size="small" type="primary">
               All tasks
             </Button>
           </Link>
           {adminRole && (
-            <div className="d-end mr-2">
-              <CSVLink
-                className="text-white"
-                data={exportData}
-                headers={headers}
-                filename={"exported_data.csv"}
+            <CSVLink
+              className="text-white"
+              data={exportData}
+              headers={headers}
+              filename={"exported_data.csv"}
+            >
+              <Button
+                size="small"
+                // onClick={() => {
+                //   setOpenDropdown(false);
+                //   setSelectedRow([]);
+                //   setSelectedRowKeys([]);
+                // }}
               >
-                <Button
-                  size="small"
-                  // onClick={() => {
-                  //   setOpenDropdown(false);
-                  //   setSelectedRow([]);
-                  //   setSelectedRowKeys([]);
-                  // }}
-                >
-                  <Icon
-                    icon="fluent:arrow-upload-16-filled"
-                    height={BTN_ICON_HEIGHT}
-                    width={BTN_ICON_WIDTH}
-                  />{" "}
-                  Export
-                </Button>
-              </CSVLink>
-            </div>
+                <Icon
+                  icon="fluent:arrow-upload-16-filled"
+                  height={BTN_ICON_HEIGHT}
+                  width={BTN_ICON_WIDTH}
+                />{" "}
+                Export
+              </Button>
+            </CSVLink>
           )}
 
           <Button
             onClick={() => setHideMUltiFilter((prev) => !prev)}
-            className="mr-2"
             size="small"
           >
             Filter data
           </Button>
 
-          {
-            adminRole && (
-              <Popover
-                trigger={"click"}
-                overlayInnerStyle={{ minWidth: 200 }}
-                placement="bottomRight"
-                content={
-                  <Flex vertical gap={24}>
-                    <Flex vertical gap={8}>
-                      <Title level={5}>Upload csv file or excel sheet </Title>
-                      <Upload {...props}>
-                        <Button>
-                          <Icon
-                            icon="fluent:attach-16-regular"
-                            width="16"
-                            height="16"
-                          />
-                          Attach
-                        </Button>
-                      </Upload>
-                    </Flex>
-                    <Button type="primary" onClick={handleUploadFile}>
-                      Submit
-                    </Button>
+          {adminRole && (
+            <Popover
+              trigger={"click"}
+              overlayInnerStyle={{ minWidth: 200 }}
+              placement="bottomRight"
+              content={
+                <Flex vertical gap={24}>
+                  <Flex vertical gap={8}>
+                    <Title level={5}>Upload csv file or excel sheet </Title>
+                    <Upload {...props}>
+                      <Button>
+                        <Icon
+                          icon="fluent:attach-16-regular"
+                          width="16"
+                          height="16"
+                        />
+                        Attach
+                      </Button>
+                    </Upload>
                   </Flex>
-                }
-              >
-                <Button size="small" className="mr-2">
-                  {" "}
-                  <Icon
-                    icon="fluent:arrow-download-16-filled"
-                    height={BTN_ICON_HEIGHT}
-                    width={BTN_ICON_WIDTH}
-                  />{" "}
-                  Import
-                </Button>
-              </Popover>
-            )
-          }
+                  <Button type="primary" onClick={handleUploadFile}>
+                    Submit
+                  </Button>
+                </Flex>
+              }
+            >
+              <Button size="small" className="mr-2">
+                {" "}
+                <Icon
+                  icon="fluent:arrow-download-16-filled"
+                  height={BTN_ICON_HEIGHT}
+                  width={BTN_ICON_WIDTH}
+                />{" "}
+                Import
+              </Button>
+            </Popover>
+          )}
 
           <LeadCreateModel />
           <Link to={`notification`}>
             <div className="bell-box">
               <span className="bell-count">{notificationCount}</span>
-              <span className="bell-icon">
-                <i className="fa-regular fa-bell"></i>
-              </span>
+              <Icon icon="fluent:alert-24-regular" width="32" height="32" />
             </div>
           </Link>
-        </div>
+        </Flex>
       </div>
 
-      <div className={`${hideMUltiFilter ? "" : "d-none"} all-between py-2`}>
-        <div className="filter-container">
-          {adminRole && (
+      {hideMUltiFilter && (
+        <div className={`all-between py-2`}>
+          <div className="filter-container">
+            {adminRole && (
+              <Select
+                mode="multiple"
+                maxTagCount="responsive"
+                size="small"
+                allowClear
+                showSearch
+                style={{ width: "45%" }}
+                value={allMultiFilterData?.userIdFilter}
+                placeholder="Select users"
+                onChange={(e) =>
+                  setAllMultiFilterData((prev) => ({
+                    ...prev,
+                    userIdFilter: e,
+                  }))
+                }
+                options={
+                  leadUserNew?.length > 0
+                    ? leadUserNew?.map((item) => ({
+                        label: item?.fullName,
+                        value: item?.id,
+                      }))
+                    : []
+                }
+                filterOption={(input, option) =>
+                  option.label.toLowerCase().includes(input.toLowerCase())
+                }
+              />
+            )}
             <Select
               mode="multiple"
               maxTagCount="responsive"
               size="small"
+              style={{ width: "45%" }}
+              value={allMultiFilterData?.statusId}
               allowClear
               showSearch
-              style={{ width: "45%" }}
-              value={allMultiFilterData?.userIdFilter}
-              placeholder="Select users"
-              onChange={(e) =>
-                setAllMultiFilterData((prev) => ({ ...prev, userIdFilter: e }))
-              }
+              placeholder="Select Status"
               options={
-                leadUserNew?.length > 0
-                  ? leadUserNew?.map((item) => ({
-                      label: item?.fullName,
+                getAllStatus?.length > 0
+                  ? getAllStatus?.map((item) => ({
+                      label: item?.name,
                       value: item?.id,
                     }))
                   : []
+              }
+              onChange={(e) =>
+                setAllMultiFilterData((prev) => ({ ...prev, statusId: e }))
               }
               filterOption={(input, option) =>
                 option.label.toLowerCase().includes(input.toLowerCase())
               }
             />
-          )}
-          <Select
-            mode="multiple"
-            maxTagCount="responsive"
-            size="small"
-            style={{ width: "45%" }}
-            value={allMultiFilterData?.statusId}
-            allowClear
-            showSearch
-            placeholder="Select Status"
-            options={
-              getAllStatus?.length > 0
-                ? getAllStatus?.map((item) => ({
-                    label: item?.name,
-                    value: item?.id,
-                  }))
-                : []
-            }
-            onChange={(e) =>
-              setAllMultiFilterData((prev) => ({ ...prev, statusId: e }))
-            }
-            filterOption={(input, option) =>
-              option.label.toLowerCase().includes(input.toLowerCase())
-            }
-          />
-        </div>
+          </div>
 
-        <div className="filter-right-container">
-          <RangePicker
-            placement="bottomRight"
-            presets={rangePresets}
-            value={[
-              allMultiFilterData?.toDate
-                ? dayjs(allMultiFilterData?.toDate)
-                : "",
-              allMultiFilterData?.fromDate
-                ? dayjs(allMultiFilterData?.fromDate)
-                : "",
-            ]}
-            disabledDate={(current) =>
-              current && current > dayjs().endOf("day")
-            }
-            onChange={(dates, dateStrings) => {
-              if (dates) {
-                setAllMultiFilterData((prev) => ({
-                  ...prev,
-                  toDate: dateStrings[0],
-                  fromDate: dateStrings[1],
-                }));
+          <div className="filter-right-container">
+            <RangePicker
+              placement="bottomRight"
+              presets={rangePresets}
+              value={[
+                allMultiFilterData?.toDate
+                  ? dayjs(allMultiFilterData?.toDate)
+                  : "",
+                allMultiFilterData?.fromDate
+                  ? dayjs(allMultiFilterData?.fromDate)
+                  : "",
+              ]}
+              disabledDate={(current) =>
+                current && current > dayjs().endOf("day")
               }
-            }}
-          />
+              onChange={(dates, dateStrings) => {
+                if (dates) {
+                  setAllMultiFilterData((prev) => ({
+                    ...prev,
+                    toDate: dateStrings[0],
+                    fromDate: dateStrings[1],
+                  }));
+                }
+              }}
+            />
 
-          <Button size="small" type="primary" onClick={handleApplyFilter}>
-            Apply filter
-          </Button>
-          <Button size="small" onClick={handleResetFilter}>
-            Reset filter
-          </Button>
+            <Button size="small" type="primary" onClick={handleApplyFilter}>
+              Apply filter
+            </Button>
+            <Button size="small" onClick={handleResetFilter}>
+              Reset filter
+            </Button>
+          </div>
         </div>
-      </div>
+      )}
+
       <div className="flex-verti-center-hori-start my-2">
         <Search
           placeholder="search"

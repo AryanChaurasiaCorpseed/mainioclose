@@ -414,7 +414,7 @@ const LeadDetailsPage = ({ leadid }) => {
                   </Space>
                 }
               />
-              <Space size={1}>
+              <Space size={4}>
                 <Button
                   size="small"
                   onClick={() => handleUpdateContact(item)}
@@ -696,7 +696,7 @@ const LeadDetailsPage = ({ leadid }) => {
                 {complianceDocumentList?.length > 0 && (
                   <>
                     <Divider style={{ margin: "6px" }} />
-                    <Flex>
+                    <Flex wrap gap={2}>
                       {complianceDocumentList?.map((item, idx) => (
                         <>
                           <Tag
@@ -709,7 +709,7 @@ const LeadDetailsPage = ({ leadid }) => {
                               <Icon icon="fluent:document-pdf-24-regular" height={18} width={18} color="red" />
                             }
                           >
-                            Document {idx}
+                            Document {idx+1}
                           </Tag>
                         </>
                       ))}

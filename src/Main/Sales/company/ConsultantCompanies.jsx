@@ -23,7 +23,6 @@ import { useParams } from "react-router-dom";
 import { getAllLeadUser } from "../../../Toolkit/Slices/LeadSlice";
 import OverFlowText from "../../../components/OverFlowText";
 import ColComp from "../../../components/small/ColComp";
-import CompanyHistory from "./CompanyHistory";
 import { CSVLink } from "react-csv";
 import {
   getAllConsultantByCompany,
@@ -32,26 +31,21 @@ import {
 } from "../../../Toolkit/Slices/CompanySlice";
 import { Icon } from "@iconify/react";
 import { getHighestPriorityRole } from "../../Common/Commons";
-const { Text } = Typography;
 const { Search } = Input;
 
 const ConsultantCompanies = () => {
   const dispatch = useDispatch();
   const { userid } = useParams();
   const currUser = useSelector((prev) => prev?.auth?.currentUser);
-  const leadUserNew = useSelector((state) => state.leads.getAllLeadUserData);
   const currentRoles = useSelector((state) => state?.auth?.roles);
   const allUsers = useSelector((state) => state.user.allUsers);
   const { consultantCompanyList, consultantLoading, consultantCompanyCount } =
     useSelector((prev) => prev?.company);
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [selectedRow, setSelectedRow] = useState([]);
-  const [assigneeId, setAssigneeId] = useState(null);
-  const [assignedProcessing, setAssignedProcessing] = useState("");
   const [dropdownData, setDropdownData] = useState([]);
   const [openDropdown, setOpenDropdown] = useState(false);
   const [headerData, setHeaderData] = useState([]);
-  const [tempAssigneeId, setTempAssigneeId] = useState(null);
   const [paginationData, setPaginationData] = useState({
     page: 1,
     size: 50,
@@ -196,7 +190,7 @@ const ConsultantCompanies = () => {
                 icon="fluent:more-circle-24-regular"
                 height={BTN_ICON_HEIGHT + 8}
                 width={BTN_ICON_WIDTH + 8}
-              /> More
+              /> 
             </Tooltip>
           </div>
         ) : (
@@ -223,7 +217,7 @@ const ConsultantCompanies = () => {
                 icon="fluent:more-circle-24-regular"
                 height={BTN_ICON_HEIGHT + 8}
                 width={BTN_ICON_WIDTH + 8}
-              />More
+              />
             </Tooltip>
           </div>
         ) : (

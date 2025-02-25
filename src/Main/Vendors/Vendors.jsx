@@ -234,8 +234,7 @@ const Vendors = ({ leadId }) => {
     [vendorList]
   )
 
-  console.log("BNLKASDBNVLKASJBDK", vendorDetail)
-
+  
   return (
     <>
       <Flex justify="space-between" align="center">

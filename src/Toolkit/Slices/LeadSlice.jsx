@@ -870,6 +870,16 @@ export const importLeadsSheet = createAsyncThunk(
   }
 );
 
+export const searchCompaniesForEstimate = createAsyncThunk(
+  "searchCompaniesForEstimate",
+  async ({ searchNameAndGSt, userId, fieldSearch }) => {
+    const response = await getQuery(
+      `/leadService/api/v1/company/companySearchByGstAndContactDetails?searchNameAndGSt=${searchNameAndGSt}&userId=${userId}&fieldSearch=${fieldSearch}`
+    );
+    return response.data;
+  }
+);
+
 export const LeadSlice = createSlice({
   name: "lead",
   initialState: {
@@ -927,6 +937,7 @@ export const LeadSlice = createSlice({
     vendorFilterationLoading: "",
     leadDetailLoading: "",
     proposalDetails: {},
+    companiesListForEstimate:[]
   },
   reducers: {
     handleLoadingState: (state, action) => {
@@ -1378,6 +1389,19 @@ export const LeadSlice = createSlice({
       state.proposalLoading = "rejected";
       state.proposalDetails = {};
     });
+
+
+    builder.addCase(searchCompaniesForEstimate.pending, (state, action) => {
+    });
+    builder.addCase(searchCompaniesForEstimate.fulfilled, (state, action) => {
+      state.companiesListForEstimate = action?.payload;
+    });
+    builder.addCase(searchCompaniesForEstimate.rejected, (state, action) => {
+      state.companiesListForEstimate = [];
+    });
+
+
+
   },
 });
 export const {

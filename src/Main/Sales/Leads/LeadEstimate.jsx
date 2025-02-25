@@ -27,6 +27,8 @@ import {
   createEstimate,
   editLeadEstimate,
   getAllContactDetails,
+  getCompanyByUnitId,
+  searchCompaniesForEstimate,
 } from "../../../Toolkit/Slices/LeadSlice";
 import { createContacts } from "../../../Toolkit/Slices/CommonSlice";
 import dayjs from "dayjs";
@@ -36,18 +38,26 @@ import logo from "../../../Images/CORPSEED.webp";
 import numWords from "num-words";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
+import { useParams } from "react-router-dom";
 const { Text, Title } = Typography;
 
 const LeadEstimate = ({ leadid }) => {
   const [form] = Form.useForm();
   const [contactForm] = Form.useForm();
+  const { userid } = useParams();
   const dispatch = useDispatch();
   const pdfRef = useRef();
   const productList = useSelector((state) => state.product.productData);
   const contactList = useSelector((state) => state?.leads?.allContactList);
   const leadUserNew = useSelector((state) => state.leads.getAllLeadUserData);
   const companyUnits = useSelector((state) => state?.leads?.companyUnits);
+  const companiesListForEstimate = useSelector(
+    (state) => state?.leads?.companiesListForEstimate
+  );
   const details = useSelector((state) => state.leads.estimateDetail);
+  const companyDetail = useSelector(
+    (state) => state.leads.companyDetailByUnitId
+  );
   const estimateDetailLoading = useSelector(
     (state) => state.leads.estimateDetailLoading
   );
@@ -57,6 +67,11 @@ const LeadEstimate = ({ leadid }) => {
   const [productData, setProductData] = useState([]);
   const [openModal, setOpenModal] = useState(false);
   const [editEstimate, setEditEstimate] = useState(false);
+  const [seachFields, setSearchFields] = useState({
+    searchNameAndGSt: null,
+    userId: userid,
+    fieldSearch: "companyName",
+  });
   const [productFees, setProductFees] = useState({
     professionalFees: 0,
     serviceCharge: 0,
@@ -67,6 +82,7 @@ const LeadEstimate = ({ leadid }) => {
     govermentGst: 0,
     otherGst: 0,
   });
+  const [openSelectDd, setOpenSelectDd] = useState(false);
 
   useEffect(() => {
     if (Object.keys(companyDetails) > 0) {
@@ -326,8 +342,101 @@ const LeadEstimate = ({ leadid }) => {
 
       {Object.keys(details)?.length === 0 || editEstimate ? (
         <Flex
-          style={{ maxHeight: "86vh", overflow: "auto", marginTop: "24px" }}
+          vertical
+          style={{
+            maxHeight: "86vh",
+            overflow: "auto",
+            marginTop: "24px",
+          }}
         >
+          <Flex vertical gap={4} style={{ marginBottom: "12px" }}>
+            <Text style={{ fontSize: 14 }}>Seach for companies </Text>
+            <Space.Compact style={{ width: "60%" }}>
+              <Select
+                style={{ width: "20%" }}
+                options={[
+                  { label: "Company name", value: "companyName" },
+                  { label: "Gst number", value: "gstNumber" },
+                  { label: "Contact number", value: "contactNumber" },
+                  { label: "Contact email", value: "contactEmail" },
+                ]}
+                value={seachFields?.fieldSearch}
+                onChange={(e) =>
+                  setSearchFields((prev) => ({ ...prev, fieldSearch: e }))
+                }
+              />
+              <Select
+                showSearch
+                style={{ width: "80%" }}
+                placeholder="Search companies ..."
+                options={
+                  companiesListForEstimate?.length > 0
+                    ? companiesListForEstimate?.map((item) => ({
+                        label: item?.companyName,
+                        value: item?.companyId,
+                      }))
+                    : []
+                }
+                onChange={(e) => {
+                  setSearchFields((prev) => ({ ...prev, searchNameAndGSt: e }));
+                  dispatch(getCompanyByUnitId(e)).then((resp) => {
+                    if (resp.meta.requestStatus === "fulfilled") {
+                      if (resp?.payload?.assigneeId != userid) {
+                        notification.warning({
+                          message: `This company is already assigned to ${resp?.payload?.assigneeName}`,
+                        });
+                      }
+                      else if(resp?.payload?.assigneeId == userid){
+                        form.setFieldsValue({
+                          companyName:resp?.payload?.name,
+                          gstType:resp?.payload?.gstType,
+                          gstNo:resp?.payload?.gstNo,
+                          address:resp?.payload?.address,
+                          city:resp?.payload?.city,
+                          country:resp?.payload?.country,
+                          state:resp?.payload?.state,
+                          primaryContact:resp?.payload?.primaryContact,
+                          panNo:resp?.payload?.panNo,
+                          companyAge:resp?.payload?.companyAge,
+                          primaryContact:resp?.payload?.primaryContact?.id,
+                          secondaryContact:resp?.payload?.secondaryContact?.id,
+                          assigneeId:resp?.payload?.assigneeId,
+                          primaryPinCode:resp?.payload?.primaryPinCode,
+                          secondaryAddress:resp?.payload?.sAddress,
+                          secondaryCity:resp?.payload?.sCity,
+                          secondaryState:resp?.payload?.sState,
+                          secondaryCountry:resp?.payload?.sCountry,
+                          secondaryPinCode:resp?.payload?.secondaryPinCode
+                        })
+                      }
+                      
+                    }
+                  });
+                }}
+                open={openSelectDd}
+                value={seachFields?.searchNameAndGSt}
+                onSearch={(e) =>
+                  setSearchFields((prev) => ({ ...prev, searchNameAndGSt: e }))
+                }
+                onDropdownVisibleChange={(e) => setOpenSelectDd(e)}
+                // filterOption={(input, option) =>
+                //   option.label.toLowerCase().includes(input.toLowerCase())
+                // }
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    console.log("aslkdjfkjsdbajbdfasbdfjb", e);
+                    dispatch(searchCompaniesForEstimate(seachFields)).then(
+                      (resp) => {
+                        if (resp.meta.requestStatus === "fulfilled") {
+                          setOpenSelectDd(true);
+                        }
+                      }
+                    );
+                  }
+                }}
+              />
+            </Space.Compact>
+          </Flex>
           <Form
             form={form}
             layout="vertical"
@@ -340,6 +449,33 @@ const LeadEstimate = ({ leadid }) => {
             }}
             onFinish={handleFinish}
           >
+            <Form.Item
+              label="Company name"
+              name="companyName"
+              rules={[
+                { required: true, message: "please enter the company name" },
+              ]}
+            >
+              <Input />
+            </Form.Item>
+
+            <Form.Item label="GST type" name="gstType">
+              <Select
+                showSearch
+                allowClear
+                options={[
+                  { label: "Registered", value: "Registered" },
+                  { label: "Unregisterded", value: "Unregistered" },
+                  { label: "SE2", value: "SE2" },
+                  { label: "International", value: "International" },
+                ]}
+              />
+            </Form.Item>
+
+            <Form.Item label="GST number" name="gstNo">
+              <Input />
+            </Form.Item>
+
             <Form.Item
               label="Select client admin"
               name="admin"
@@ -354,7 +490,7 @@ const LeadEstimate = ({ leadid }) => {
                     ? contactList?.map((item) => ({
                         label: `${maskEmail(
                           item?.emails
-                        )} || ${maskMobileNumber(item?.contactNo)} `,
+                        )} || ${maskMobileNumber(item?.contactNo)}`,
                         value: item?.id,
                         email: item?.emails,
                         contact: item?.contactNo,
@@ -415,28 +551,6 @@ const LeadEstimate = ({ leadid }) => {
                 </>
               )}
             </Form.List>
-
-            {Object.keys(companyDetails)?.length > 0 ? (
-              <Form.Item
-                label="Company name"
-                name="companyId"
-                rules={[
-                  { required: true, message: "please enter the company name" },
-                ]}
-              >
-                <Input disabled />
-              </Form.Item>
-            ) : (
-              <Form.Item
-                label="Company name"
-                name="companyName"
-                rules={[
-                  { required: true, message: "please enter the company name" },
-                ]}
-              >
-                <Input />
-              </Form.Item>
-            )}
 
             {Object.keys(companyDetails)?.length > 0 &&
             companyDetails?.isConsultant ? (
@@ -628,32 +742,9 @@ const LeadEstimate = ({ leadid }) => {
             <Form.Item label="Pan number" name="panNo">
               <Input maxLength={10} />
             </Form.Item>
-
             <Row>
-              <Col span={11}>
-                <Form.Item label="GST type" name="gstType">
-                  <Select
-                    showSearch
-                    allowClear
-                    options={[
-                      { label: "Registered", value: "Registered" },
-                      { label: "Unregisterded", value: "Unregistered" },
-                      { label: "SE2", value: "SE2" },
-                      { label: "International", value: "International" },
-                    ]}
-                  />
-                </Form.Item>
-              </Col>
-              <Col span={2} />
               <Col span={11}>
                 <Form.Item label="Company age" name="companyAge">
-                  <Input />
-                </Form.Item>
-              </Col>
-            </Row>
-            <Row>
-              <Col span={11}>
-                <Form.Item label="GST number" name="gstNo">
                   <Input />
                 </Form.Item>
               </Col>

@@ -1090,3 +1090,8 @@ select.form-control:not([size]):not([multiple]) {
 .common-text-color{
   color: #fff;
 }
+
+
+.ck-editor__editable {
+  min-height: 300px !important;
+}
