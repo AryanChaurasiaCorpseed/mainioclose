@@ -9,6 +9,7 @@ import {
   getAllLedger,
   getAllVoucher,
   getAllVoucherType,
+  getLedgerById,
 } from "../../../Toolkit/Slices/AccountSlice";
 import CreateVoucher from "./CreateVoucher";
 const { Text } = Typography;
@@ -21,13 +22,12 @@ const Voucher = () => {
   const [openModal, setOpenModal] = useState(false);
   const [editData, setEditData] = useState(null);
   const [renderedGSTData, setRenderedGstData] = useState([]);
-  const [count, setCount] = useState(1);
   const [voucherData, setVoucherData] = useState({
     companyName: "",
-    ledgerId: 0,
-    ledgerTypeId: 0,
-    voucherTypeId: 0,
-    productId: 0,
+    ledgerId: null,
+    ledgerTypeId: null,
+    voucherTypeId: null,
+    productId: null,
     creditAmount: "",
     debitAmount: "",
     createDate: "",
@@ -49,14 +49,89 @@ const Voucher = () => {
     setFilteredData(voucherList);
   }, [voucherList]);
 
+  const handleSetGst = (ledgerDetail,voucherData) => {
+
+
+    console.log('asdkjsdbkjdsahb',ledgerDetail,voucherData)
+    const creditCgstAmount =
+      (Number(voucherData?.creditAmount) * Number(ledgerDetail?.cgst)) / 100;
+    const creditSgstAmount =
+      (Number(voucherData?.creditAmount) * Number(ledgerDetail?.sgst)) / 100;
+    const creditIgstAmount =
+      (Number(voucherData?.creditAmount) * Number(ledgerDetail?.igst)) / 100;
+    const debitCgstAmount =
+      (Number(voucherData?.debitAmount) * Number(ledgerDetail?.cgst)) / 100;
+    const debitSgstAmount =
+      (Number(voucherData?.debitAmount) * Number(ledgerDetail?.sgst)) / 100;
+    const debitIgstAmount =
+      (Number(voucherData?.debitAmount) * Number(ledgerDetail?.igst)) / 100;
+    if (ledgerDetail?.cgstSgstPresent) {
+      setRenderedGstData([
+        {
+          idx: 2,
+          perticulars: "CGST",
+          rate: ledgerDetail?.cgst,
+          debitAmount: debitCgstAmount,
+          creditAmount: creditCgstAmount,
+        },
+        {
+          idx: 3,
+          perticulars: "SGST",
+          rate: ledgerDetail?.sgst,
+          debitAmount: debitSgstAmount,
+          creditAmount: creditSgstAmount,
+        },
+        {
+          idx: "",
+          perticulars: "Total amount",
+          rate: "",
+          debitAmount:
+            debitCgstAmount + debitSgstAmount + Number(voucherData?.debitAmount),
+          creditAmount:
+            creditCgstAmount + creditSgstAmount + Number(voucherData?.creditAmount),
+        },
+      ]);
+    }
+    if (ledgerDetail?.igstPresent) {
+      setRenderedGstData([
+        {
+          idx: 2,
+          perticulars: "IGST",
+          rate: ledgerDetail?.igst,
+          debitAmount: debitIgstAmount,
+          creditAmount: creditIgstAmount,
+        },
+        {
+          idx: "",
+          perticulars: "Total amount",
+          rate: "",
+          debitAmount: debitIgstAmount + Number(voucherData?.debitAmount),
+          creditAmount: creditIgstAmount + Number(voucherData?.creditAmount),
+        },
+      ]);
+    }
+    setVoucherData((prev) => ({
+      ...prev,
+      companyName: ledgerDetail?.name,
+      igst: ledgerDetail?.igst,
+      sgst: ledgerDetail?.sgst,
+      cgst: ledgerDetail?.sgst,
+    }));
+  };
+
   const handleEditVoucher = (value) => {
     setEditData(value);
     setOpenModal(true);
+    dispatch(getLedgerById(value?.productId)).then((resp) => {
+      if (resp.meta.requestStatus === "fulfilled") {
+        handleSetGst(resp.payload,{...voucherData,...value });
+      }
+    });
     setVoucherData((prev) => ({ ...prev, ...value }));
   };
 
   const handleSearch = (e) => {
-    const value = e.target.value.trim();
+    const value = e.target.value;
     setSearchText(value);
     const filtered = voucherList?.filter((item) =>
       Object.values(item)?.some((val) =>
@@ -67,20 +142,47 @@ const Voucher = () => {
   };
 
   const handleSubmit = useCallback(() => {
-    dispatch(createVoucher(voucherData))
+    dispatch(
+      createVoucher({
+        ...voucherData,
+        igstCreditAmount:
+          renderedGSTData?.[0]?.perticulars === "IGST"
+            ? renderedGSTData?.[0]?.creditAmount
+            : 0,
+        igstDebitAmount:
+          renderedGSTData?.[0]?.perticulars === "IGST"
+            ? renderedGSTData?.[0]?.debitAmount
+            : 0,
+        cgstCreditAmount:
+          renderedGSTData?.[0]?.perticulars === "CGST"
+            ? renderedGSTData?.[0]?.creditAmount
+            : 0,
+        cgstDebitAmount:
+          renderedGSTData?.[0]?.perticulars === "CGST"
+            ? renderedGSTData?.[0]?.debitAmount
+            : 0,
+        sgstCreditAmount:
+          renderedGSTData?.[1]?.perticulars === "SGST"
+            ? renderedGSTData?.[1]?.creditAmount
+            : 0,
+        sgstDebitAmount:
+          renderedGSTData?.[1]?.perticulars === "SGST"
+            ? renderedGSTData?.[1]?.debitAmount
+            : 0,
+      })
+    )
       .then((resp) => {
         if (resp.meta.requestStatus === "fulfilled") {
           notification.success({ message: "Voucher created successfully !." });
           dispatch(getAllVoucher());
           setOpenModal(false);
-          setCount(0);
           setRenderedGstData([]);
           setVoucherData({
             companyName: "",
-            ledgerId: 0,
-            ledgerTypeId: 0,
-            voucherTypeId: 0,
-            productId: 0,
+            ledgerId: null,
+            ledgerTypeId: null,
+            voucherTypeId: null,
+            productId: null,
             creditAmount: "",
             debitAmount: "",
             createDate: "",
@@ -96,13 +198,13 @@ const Voucher = () => {
         }
       })
       .catch(() => notification.error({ message: "Something went wrong !." }));
-  }, [dispatch, voucherData]);
+  }, [dispatch, voucherData, renderedGSTData]);
 
   const columns = [
     {
       dataIndex: "id",
       title: "Id",
-      width:80
+      width: 80,
     },
     {
       dataIndex: "ledgerName",
@@ -111,27 +213,32 @@ const Voucher = () => {
     {
       dataIndex: "voucherType",
       title: "Voucher type",
-      render:(info)=><Text>{info?.name}</Text>
+      render: (info) => <Text>{info?.name}</Text>,
     },
     {
       dataIndex: "creditAmount",
       title: "Credit amount",
+      render: (info) => (info ? info : "NA"),
     },
     {
       dataIndex: "debitAmount",
       title: "Debit amount",
+      render: (info) => (info ? info : "NA"),
     },
     {
       dataIndex: "sgst",
       title: "Sgst",
+      render: (info) => (info ? info : "NA"),
     },
     {
       dataIndex: "cgst",
       title: "Cgst",
+      render: (info) => (info ? info : "NA"),
     },
     {
       dataIndex: "igst",
       title: "Igst",
+      render: (info) => (info ? info : "NA"),
     },
     {
       dataIndex: "paymentType",
@@ -145,11 +252,8 @@ const Voucher = () => {
       dataIndex: "edit",
       title: "Edit",
       render: (_, data) => (
-        <Button
-          size="small"
-          onClick={() => handleEditVoucher(data)}
-        >
-         Edit
+        <Button size="small" onClick={() => handleEditVoucher(data)}>
+          Edit
         </Button>
       ),
     },
@@ -205,8 +309,6 @@ const Voucher = () => {
           voucherData={voucherData}
           setRenderedGstData={setRenderedGstData}
           renderedGSTData={renderedGSTData}
-          count={count}
-          setCount={setCount}
         />
       </Modal>
     </>

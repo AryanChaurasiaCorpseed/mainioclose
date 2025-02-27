@@ -376,6 +376,16 @@ export const getAllInvoiceForSale = createAsyncThunk(
   }
 );
 
+export const paymentRegisterconfirm = createAsyncThunk(
+  "paymentRegisterconfirm",
+  async ({ paymentRegisterId, estimateId }) => {
+    const response = await putQuery(
+      `/accountService/api/v1/paymentRegister/paymentApproveV3?paymentRegisterId=${paymentRegisterId}&estimateId=${estimateId}`
+    );
+    return response.data;
+  }
+);
+
 const AccountSlice = createSlice({
   name: "account",
   initialState: {

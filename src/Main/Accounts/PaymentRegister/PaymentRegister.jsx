@@ -8,6 +8,7 @@ import {
   approvedPayment,
   getAllPaymentRegister,
   getUnusedBankStatement,
+  paymentRegisterconfirm,
 } from "../../../Toolkit/Slices/AccountSlice";
 const { Text } = Typography;
 
@@ -32,7 +33,7 @@ const PaymentRegister = () => {
   }, [dispatch]);
 
   const handleSearch = (e) => {
-    const value = e.target.value.trim();
+    const value = e.target.value;
     setSearchText(value);
     const filtered = paymentRegisterList?.filter((item) =>
       Object.values(item)?.some((val) =>
@@ -43,7 +44,6 @@ const PaymentRegister = () => {
   };
 
   const handleApproved = (e, x, data) => {
-    console.log("jkhdsjgjksdjskh", x, data?.transactionId);
     if (x?.transaction === data?.transactionId) {
       dispatch(
         approvedPayment({ bankstatementId: e, registerAmountId: data?.id })
@@ -53,6 +53,24 @@ const PaymentRegister = () => {
             notification.success({
               message: "Payment approved successfully !.",
             });
+            dispatch(
+              paymentRegisterconfirm({
+                paymentRegisterId: data?.id,
+                estimateId: data?.estimateId,
+              })
+            )
+              .then((res) => {
+                if (res.meta.requestStatus === "fulfilled") {
+                  notification.success({
+                    message: "Payment approved successfully in V3 !.",
+                  });
+                } else {
+                  notification.error({ message: "Something went wrong !." });
+                }
+              })
+              .catch(() =>
+                notification.error({ message: "Something went wrong !." })
+              );
           } else {
             notification.error({ message: "Something went wrong !." });
           }

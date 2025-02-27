@@ -5,7 +5,7 @@ import CommonTable from "../../../../components/CommonTable";
 import { getLedgerByGroupId } from "../../../../Toolkit/Slices/AccountSlice";
 import { Link, useParams } from "react-router-dom";
 import { Icon } from "@iconify/react";
-const { Text, Title } = Typography;
+const { Text } = Typography;
 
 const GroupLedger = () => {
   const dispatch = useDispatch();
@@ -50,7 +50,7 @@ const GroupLedger = () => {
   return (
     <Flex vertical gap={18} style={{ padding: "12px 0px" }}>
       <Flex justify="space-between" align="center">
-        <Text className="heading-text">Ledger list</Text>
+        <Text className="heading-text">Group ledger list</Text>
         <Flex gap={8}></Flex>
       </Flex>
       <Flex vertical>

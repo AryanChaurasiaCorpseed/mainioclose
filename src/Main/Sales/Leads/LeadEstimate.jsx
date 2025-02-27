@@ -258,6 +258,7 @@ const LeadEstimate = ({ leadid }) => {
   const handleFinish = useCallback(
     (values) => {
       values.leadId = leadid;
+      values.unitCompany=false
       values.gstDocuments = values.gstDocuments?.[0]?.response;
       if (editEstimate) {
         values.id = details?.id;
@@ -385,6 +386,7 @@ const LeadEstimate = ({ leadid }) => {
                         notification.warning({
                           message: `This company is already assigned to ${resp?.payload?.assigneeName}`,
                         });
+                        form.resetFields()
                       }
                       else if(resp?.payload?.assigneeId == userid){
                         form.setFieldsValue({

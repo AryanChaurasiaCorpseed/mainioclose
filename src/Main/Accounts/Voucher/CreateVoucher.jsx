@@ -8,8 +8,6 @@ const { Text } = Typography;
 const CreateVoucher = ({
   setVoucherData,
   voucherData,
-  setCount,
-  count,
   setRenderedGstData,
   renderedGSTData,
 }) => {
@@ -19,75 +17,70 @@ const CreateVoucher = ({
   const ledgerDetail = useSelector((state) => state.account.ledgerDetail);
 
   const handlePressEnter = (e) => {
-    if (count === 1) {
-      const creditCgstAmount =
-        (voucherData?.creditAmount * ledgerDetail?.cgst) / 100;
-      const creditSgstAmount =
-        (voucherData?.creditAmount * ledgerDetail?.sgst) / 100;
-      const creditIgstAmount =
-        (voucherData?.creditAmount * ledgerDetail?.igst) / 100;
-      const debitCgstAmount =
-        (voucherData?.debitAmount * ledgerDetail?.cgst) / 100;
-      const debitSgstAmount =
-        (voucherData?.debitAmount * ledgerDetail?.sgst) / 100;
-      const debitIgstAmount =
-        (voucherData?.debitAmount * ledgerDetail?.igst) / 100;
-      if (ledgerDetail?.cgstSgstPresent) {
-        setRenderedGstData((prev) => [
-          ...prev,
-          {
-            idx: 2,
-            perticulars: "CGST",
-            rate: ledgerDetail?.cgst,
-            debitAmount: debitCgstAmount,
-            creditAmount: creditCgstAmount,
-          },
-          {
-            idx: 3,
-            perticulars: "SGST",
-            rate: ledgerDetail?.sgst,
-            debitAmount: debitSgstAmount,
-            creditAmount: creditSgstAmount,
-          },
-          {
-            idx: "",
-            perticulars: "Total amount",
-            rate: "",
-            debitAmount:
-              debitCgstAmount + debitSgstAmount + voucherData?.debitAmount,
-            creditAmount:
-              creditCgstAmount + creditSgstAmount + voucherData?.creditAmount,
-          },
-        ]);
-      }
-      if (ledgerDetail?.igstPresent) {
-        setRenderedGstData((prev) => [
-          ...prev,
-          {
-            idx: 2,
-            perticulars: "IGST",
-            rate: ledgerDetail?.igst,
-            debitAmount: debitIgstAmount,
-            creditAmount: creditIgstAmount,
-          },
-          {
-            idx: "",
-            perticulars: "Total amount",
-            rate: "",
-            debitAmount: debitIgstAmount + voucherData?.debitAmount,
-            creditAmount: creditIgstAmount + voucherData?.creditAmount,
-          },
-        ]);
-      }
-      setVoucherData((prev) => ({
-        ...prev,
-        companyName: ledgerDetail?.name,
-        igst: ledgerDetail?.igst,
-        sgst: ledgerDetail?.sgst,
-        cgst: ledgerDetail?.sgst,
-      }));
+    const creditCgstAmount =
+      (voucherData?.creditAmount * ledgerDetail?.cgst) / 100;
+    const creditSgstAmount =
+      (voucherData?.creditAmount * ledgerDetail?.sgst) / 100;
+    const creditIgstAmount =
+      (voucherData?.creditAmount * ledgerDetail?.igst) / 100;
+    const debitCgstAmount =
+      (voucherData?.debitAmount * ledgerDetail?.cgst) / 100;
+    const debitSgstAmount =
+      (voucherData?.debitAmount * ledgerDetail?.sgst) / 100;
+    const debitIgstAmount =
+      (voucherData?.debitAmount * ledgerDetail?.igst) / 100;
+    if (ledgerDetail?.cgstSgstPresent) {
+      setRenderedGstData([
+        {
+          idx: 2,
+          perticulars: "CGST",
+          rate: ledgerDetail?.cgst,
+          debitAmount: debitCgstAmount,
+          creditAmount: creditCgstAmount,
+        },
+        {
+          idx: 3,
+          perticulars: "SGST",
+          rate: ledgerDetail?.sgst,
+          debitAmount: debitSgstAmount,
+          creditAmount: creditSgstAmount,
+        },
+        {
+          idx: "",
+          perticulars: "Total amount",
+          rate: "",
+          debitAmount:
+            debitCgstAmount + debitSgstAmount + voucherData?.debitAmount,
+          creditAmount:
+            creditCgstAmount + creditSgstAmount + voucherData?.creditAmount,
+        },
+      ]);
     }
-    setCount(count + 1);
+    if (ledgerDetail?.igstPresent) {
+      setRenderedGstData([
+        {
+          idx: 2,
+          perticulars: "IGST",
+          rate: ledgerDetail?.igst,
+          debitAmount: debitIgstAmount,
+          creditAmount: creditIgstAmount,
+        },
+        {
+          idx: "",
+          perticulars: "Total amount",
+          rate: "",
+          debitAmount: debitIgstAmount + voucherData?.debitAmount,
+          creditAmount: creditIgstAmount + voucherData?.creditAmount,
+        },
+      ]);
+    }
+    setVoucherData((prev) => ({
+      ...prev,
+      companyName: ledgerDetail?.name,
+      igst: ledgerDetail?.igst,
+      sgst: ledgerDetail?.sgst,
+      cgst: ledgerDetail?.sgst,
+    }));
   };
 
   return (
@@ -104,6 +97,7 @@ const CreateVoucher = ({
                   }))
                 : []
             }
+            value={voucherData?.voucherTypeId}
             filterOption={(input, option) =>
               option.label.toLowerCase().includes(input.toLowerCase())
             }
@@ -122,12 +116,14 @@ const CreateVoucher = ({
                   }))
                 : []
             }
+            value={voucherData?.ledgerId}
             filterOption={(input, option) =>
               option.label.toLowerCase().includes(input.toLowerCase())
             }
-            onChange={(e) =>
-              setVoucherData((prev) => ({ ...prev, ledgerId: e }))
-            }
+            onChange={(e) => {
+              dispatch(getLedgerById(e));
+              setVoucherData((prev) => ({ ...prev, ledgerId: e }));
+            }}
             style={{ width: "25%" }}
           />
           <Select
@@ -145,7 +141,7 @@ const CreateVoucher = ({
           />
         </Flex>
 
-        <Flex gap={8}>
+        <Flex gap={8} align="center">
           <Text className="table-head-heading">Party A/C name</Text>{" "}
           <Text className="table-head-heading">:</Text>
           <Text strong>{ledgerDetail?.accountHolderName}</Text>
@@ -193,11 +189,11 @@ const CreateVoucher = ({
                       }))
                     : []
                 }
+                value={voucherData?.productId}
                 filterOption={(input, option) =>
                   option.label.toLowerCase().includes(input.toLowerCase())
                 }
                 onChange={(e) => {
-                  dispatch(getLedgerById(e));
                   setVoucherData((prev) => ({ ...prev, productId: e }));
                 }}
                 style={{ width: "70%" }}
@@ -214,6 +210,7 @@ const CreateVoucher = ({
                 onChange={(e) => {
                   setVoucherData((prev) => ({ ...prev, creditAmount: e }));
                 }}
+                onPressEnter={handlePressEnter}
               />
             </Col>
             <Col span={3}>
