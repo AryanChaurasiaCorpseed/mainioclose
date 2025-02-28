@@ -81,6 +81,7 @@ export const AuthSlice = createSlice({
       state.userLoading = "pending"
     })
     builder.addCase(getCurrentUser.fulfilled, (state, action) => {
+      console.log('JKWTrtohhgkjbjkhbvjh',action.payload)
       state.currentUser = action.payload
       state.jwt = action.payload.jwt
       state.roles = action.payload.roles

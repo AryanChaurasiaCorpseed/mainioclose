@@ -28,9 +28,11 @@ import { useParams } from "react-router-dom";
 import dayjs from "dayjs";
 import {
   createPaymentRegister,
+  createPurchaseOrder,
   getPaymentDetailListByEstimateId,
 } from "../../../Toolkit/Slices/AccountSlice";
 import { getAllUrlList } from "../../../Toolkit/Slices/LeadUrlSlice";
+import { paymentTermDays } from "../../Common/Commons";
 const { Text, Title } = Typography;
 
 const EstimatePage = () => {
@@ -49,6 +51,7 @@ const EstimatePage = () => {
     page: 1,
     size: 50,
   });
+  const [paymentType, setPaymentType] = useState("Payment register");
   const [gstsAmount, setGstsAmount] = useState({
     govermentGstPercent: 0,
     profesionalGstPercent: 0,
@@ -260,6 +263,7 @@ const EstimatePage = () => {
           onClick={() => {
             handleSetData(data);
             dispatch(getPaymentDetailListByEstimateId(data?.id));
+            console.log("dshajsdhaskljdasdj", data);
           }}
         >
           Add
@@ -321,24 +325,52 @@ const EstimatePage = () => {
 
   const handleSubmit = useCallback(
     (values) => {
-      values.doc = values?.doc?.map((item) => item?.response);
-      let obj = { ...values, ...gstsAmount, estimateId: estimateData?.id };
-      dispatch(createPaymentRegister(obj))
-        .then((resp) => {
-          if (resp.meta.requestStatus === "fulfilled") {
-            notification.success({
-              message: "Payment registered successfully !.",
-            });
-            setOpenModal(false);
-            form.resetFields();
-            setEstimateData(null);
-          } else {
-            notification.error({ message: "Something went wrong !." });
-          }
-        })
-        .catch(() =>
-          notification.error({ message: "Something went wrong !." })
+      if (paymentType === "Purchase order") {
+        values.purchaseAttach = values?.purchaseAttach?.map(
+          (item) => item?.response
         );
+        let obj = {
+          ...values,
+          createdById: userid,
+          leadId: estimateData?.leadId,
+          estimateId: estimateData?.id,
+        };
+        dispatch(createPurchaseOrder(obj))
+          .then((resp) => {
+            if (resp.meta.requestStatus === "fulfilled") {
+              notification.success({
+                message: "Purchase order created successfully !.",
+              });
+              setOpenModal(false);
+              form.resetFields();
+              setEstimateData(null);
+            } else {
+              notification.error({ message: "Something went wrong !." });
+            }
+          })
+          .catch(() =>
+            notification.error({ message: "Something went wrong !." })
+          );
+      } else if (paymentType === "Payment register") {
+        values.doc = values?.doc?.map((item) => item?.response);
+        let obj = { ...values, ...gstsAmount, estimateId: estimateData?.id };
+        dispatch(createPaymentRegister(obj))
+          .then((resp) => {
+            if (resp.meta.requestStatus === "fulfilled") {
+              notification.success({
+                message: "Payment registered successfully !.",
+              });
+              setOpenModal(false);
+              form.resetFields();
+              setEstimateData(null);
+            } else {
+              notification.error({ message: "Something went wrong !." });
+            }
+          })
+          .catch(() =>
+            notification.error({ message: "Something went wrong !." })
+          );
+      }
     },
     [form, dispatch, estimateData, gstsAmount]
   );
@@ -390,6 +422,7 @@ const EstimatePage = () => {
           style={{ maxHeight: "80vh", overflow: "auto" }}
           onValuesChange={handleValuesChange}
           onFinish={handleSubmit}
+          initialValues={{ tdsPresent: false }}
         >
           <Row>
             <Col span={11}>
@@ -475,362 +508,499 @@ const EstimatePage = () => {
               </Title>
             </Col>
           </Row>
+
           <Row>
             <Col span={11}>
-              <Form.Item
-                label="Company name"
-                name="companyName"
-                rules={[
-                  { required: true, message: "please enter company name." },
-                ]}
-              >
-                <Input disabled />
-              </Form.Item>
-            </Col>
-            <Col span={2} />
-            <Col span={11}>
-              <Form.Item
-                label="Service name"
-                name="serviceName"
-                rules={[
-                  { required: true, message: "please enter service name." },
-                ]}
-              >
+              <Form.Item>
                 <Select
-                  disabled
-                  showSearch
-                  options={allLeadUrl?.map((item) => ({
-                    label: item?.urlsName,
-                    value: item?.urlsName,
-                  }))}
-                  filterOption={(input, option) =>
-                    option.label.toLowerCase().includes(input.toLowerCase())
-                  }
+                  value={paymentType}
+                  options={[
+                    { label: "Purchase order", value: "Purchase order" },
+                    { label: "Payment register", value: "Payment register" },
+                  ]}
+                  onChange={(e) => setPaymentType(e)}
                 />
               </Form.Item>
             </Col>
           </Row>
-          <Row>
-            <Col span={11}>
-              <Form.Item
-                label="Transaction id"
-                name="transactionId"
-                rules={[
-                  { required: true, message: "please enter transaction id." },
-                ]}
-              >
-                <Input />
-              </Form.Item>
-            </Col>
-            <Col span={2} />
-            <Col span={11}>
-              <Form.Item
-                label="Estimate number"
-                name="estimateNo"
-                rules={[
-                  { required: true, message: "please enter estimate number." },
-                ]}
-              >
-                <Input />
-              </Form.Item>
-            </Col>
-          </Row>
-          <Row>
-            <Col span={11}>
-              <Form.Item
-                label="Billing quantity"
-                name="billingQuantity"
-                rules={[
-                  { required: true, message: "please enter billing quantity" },
-                ]}
-              >
-                <Input />
-              </Form.Item>
-            </Col>
-            <Col span={2} />
-            <Col span={11}>
-              <Flex>
-                <Form.Item
-                  label="TDS present"
-                  name="tdsPresent"
-                  rules={[
-                    {
-                      required: true,
-                      message: "please enter tds present.",
-                    },
-                  ]}
-                >
-                  <Switch size="small" />
-                </Form.Item>
 
-                <Form.Item
-                  shouldUpdate={(prevValues, currentValues) =>
-                    prevValues.tdsPresent !== currentValues.tdsPresent
-                  }
-                  noStyle
-                >
-                  {({ getFieldValue }) => (
-                    <>
-                      {getFieldValue("tdsPresent") && (
+          {paymentType === "Purchase order" ? (
+            <>
+              <Row>
+                <Col span={11}>
+                  <Form.Item
+                    label="PO number"
+                    name="purchaseNumber"
+                    rules={[
+                      { required: true, message: "Please enter PO number " },
+                    ]}
+                  >
+                    <Input />
+                  </Form.Item>
+                </Col>
+                <Col span={2} />
+                <Col span={11}>
+                  <Form.Item
+                    label="Service name"
+                    name="serviceName"
+                    rules={[
+                      { required: true, message: "please enter service name." },
+                    ]}
+                  >
+                    <Select
+                      showSearch
+                      options={allLeadUrl?.map((item) => ({
+                        label: item?.urlsName,
+                        value: item?.urlsName,
+                      }))}
+                      filterOption={(input, option) =>
+                        option.label.toLowerCase().includes(input.toLowerCase())
+                      }
+                    />
+                  </Form.Item>
+                </Col>
+              </Row>
+              <Row>
+                <Col span={11}>
+                  <Form.Item
+                    label="Document attachement"
+                    name="purchaseAttach"
+                    getValueFromEvent={normFile}
+                    valuePropName="fileList"
+                  >
+                    <Upload
+                      action="/leadService/api/v1/upload/uploadimageToFileSystem"
+                      listType="text"
+                      multiple={true}
+                    >
+                      <Button size="small">
+                        <Icon icon="fluent:arrow-upload-20-filled" />
+                        Upload
+                      </Button>
+                    </Upload>
+                  </Form.Item>
+                </Col>
+                <Col span={2} />
+                <Col span={11}>
+                  <Form.Item
+                    label="Approved date"
+                    name="approveDate"
+                    rules={[
+                      {
+                        required: true,
+                        message: "please enter approved date.",
+                      },
+                    ]}
+                  >
+                    <DatePicker style={{ width: "100%" }} />
+                  </Form.Item>
+                </Col>
+              </Row>
+              <Row>
+                <Col span={11}>
+                  <Form.Item label="Payment term" name="paymentTerm">
+                    <Select
+                      options={paymentTermDays?.map((item) => ({
+                        label: item,
+                        value: item,
+                      }))}
+                    />
+                  </Form.Item>
+                </Col>
+                <Col span={2} />
+                <Col span={11}>
+                  <Form.Item
+                    label="Comment"
+                    name="comment"
+                    rules={[
+                      {
+                        required: true,
+                        message: "please give comment .",
+                      },
+                    ]}
+                  >
+                    <Input.TextArea />
+                  </Form.Item>
+                </Col>
+              </Row>
+            </>
+          ) : (
+            <>
+              <Row>
+                <Col span={11}>
+                  <Form.Item
+                    label="Company name"
+                    name="companyName"
+                    rules={[
+                      { required: true, message: "please enter company name." },
+                    ]}
+                  >
+                    <Input disabled />
+                  </Form.Item>
+                </Col>
+                <Col span={2} />
+                <Col span={11}>
+                  <Form.Item
+                    label="Service name"
+                    name="serviceName"
+                    rules={[
+                      { required: true, message: "please enter service name." },
+                    ]}
+                  >
+                    <Select
+                      disabled
+                      showSearch
+                      options={allLeadUrl?.map((item) => ({
+                        label: item?.urlsName,
+                        value: item?.urlsName,
+                      }))}
+                      filterOption={(input, option) =>
+                        option.label.toLowerCase().includes(input.toLowerCase())
+                      }
+                    />
+                  </Form.Item>
+                </Col>
+              </Row>
+              <Row>
+                <Col span={11}>
+                  <Form.Item
+                    label="Transaction id"
+                    name="transactionId"
+                    rules={[
+                      {
+                        required: true,
+                        message: "please enter transaction id.",
+                      },
+                    ]}
+                  >
+                    <Input />
+                  </Form.Item>
+                </Col>
+                <Col span={2} />
+                <Col span={11}>
+                  <Form.Item
+                    label="Estimate number"
+                    name="estimateNo"
+                    rules={[
+                      {
+                        required: true,
+                        message: "please enter estimate number.",
+                      },
+                    ]}
+                  >
+                    <Input />
+                  </Form.Item>
+                </Col>
+              </Row>
+              <Row>
+                <Col span={11}>
+                  <Form.Item
+                    label="Billing quantity"
+                    name="billingQuantity"
+                    rules={[
+                      {
+                        required: true,
+                        message: "please enter billing quantity",
+                      },
+                    ]}
+                  >
+                    <Input />
+                  </Form.Item>
+                </Col>
+                <Col span={2} />
+                <Col span={11}>
+                  <Flex>
+                    <Form.Item
+                      label="TDS present"
+                      name="tdsPresent"
+                      rules={[
+                        {
+                          required: true,
+                          message: "please enter tds present.",
+                        },
+                      ]}
+                    >
+                      <Switch size="small" />
+                    </Form.Item>
+
+                    <Form.Item
+                      shouldUpdate={(prevValues, currentValues) =>
+                        prevValues.tdsPresent !== currentValues.tdsPresent
+                      }
+                      noStyle
+                    >
+                      {({ getFieldValue }) => (
                         <>
-                          <Form.Item
-                            label="TDS percent"
-                            name="tdsPercent"
-                            rules={[
-                              {
-                                required: true,
-                                message: "please enter tds percent.",
-                              },
-                            ]}
-                          >
-                            <Input
-                              suffix={
-                                <Icon icon="material-symbols-light:percent" />
-                              }
-                            />
-                          </Form.Item>
+                          {getFieldValue("tdsPresent") && (
+                            <>
+                              <Form.Item
+                                label="TDS percent"
+                                name="tdsPercent"
+                                rules={[
+                                  {
+                                    required: true,
+                                    message: "please enter tds percent.",
+                                  },
+                                ]}
+                              >
+                                <Input
+                                  suffix={
+                                    <Icon icon="material-symbols-light:percent" />
+                                  }
+                                />
+                              </Form.Item>
+                            </>
+                          )}
                         </>
                       )}
-                    </>
-                  )}
-                </Form.Item>
-              </Flex>
-            </Col>
-          </Row>
-          <Row>
-            <Col span={11}>
-              <Form.Item
-                label="Professional fees"
-                name="professionalFees"
-                rules={[
-                  {
-                    required: true,
-                    message: "please enter professional fees.",
-                  },
-                ]}
-              >
-                <InputNumber
-                  style={{ width: "100%" }}
-                  controls={false}
-                  prefix={
-                    <Icon icon="material-symbols:currency-rupee-rounded" />
-                  }
-                />
-              </Form.Item>
-            </Col>
-            <Col span={2} />
-            <Col span={11}>
-              <Form.Item
-                label="Professional gst"
-                name="profesionalGst"
-                rules={[
-                  { required: true, message: "please enter professional gst" },
-                ]}
-              >
-                <InputNumber
-                  disabled
-                  style={{ width: "100%" }}
-                  controls={false}
-                  suffix={<Icon icon="material-symbols-light:percent" />}
-                />
-              </Form.Item>
-            </Col>
-          </Row>
-          <Row>
-            <Col span={11}>
-              <Form.Item
-                label="Government fees"
-                name="govermentfees"
-                rules={[
-                  {
-                    required: true,
-                    message: "please enter government fees.",
-                  },
-                ]}
-              >
-                <InputNumber
-                  style={{ width: "100%" }}
-                  controls={false}
-                  prefix={
-                    <Icon icon="material-symbols:currency-rupee-rounded" />
-                  }
-                />
-              </Form.Item>
-            </Col>
-            <Col span={2} />
-            <Col span={11}>
-              <Form.Item
-                label="Government gst"
-                name="govermentGst"
-                rules={[
-                  { required: true, message: "please enter government gst" },
-                ]}
-              >
-                <InputNumber
-                  disabled
-                  style={{ width: "100%" }}
-                  controls={false}
-                  suffix={<Icon icon="material-symbols-light:percent" />}
-                />
-              </Form.Item>
-            </Col>
-          </Row>
-          <Row>
-            <Col span={11}>
-              <Form.Item
-                label="Service charge"
-                name="serviceCharge"
-                rules={[
-                  {
-                    required: true,
-                    message: "please enter service charge.",
-                  },
-                ]}
-              >
-                <InputNumber
-                  style={{ width: "100%" }}
-                  controls={false}
-                  prefix={
-                    <Icon icon="material-symbols:currency-rupee-rounded" />
-                  }
-                />
-              </Form.Item>
-            </Col>
-            <Col span={2} />
-            <Col span={11}>
-              <Form.Item
-                label="Service gst"
-                name="serviceGst"
-                rules={[
-                  {
-                    required: true,
-                    message: "please enter service gst.",
-                  },
-                ]}
-              >
-                <InputNumber
-                  disabled
-                  style={{ width: "100%" }}
-                  controls={false}
-                  suffix={<Icon icon="material-symbols-light:percent" />}
-                />
-              </Form.Item>
-            </Col>
-          </Row>
-          <Row>
-            <Col span={11}>
-              <Form.Item
-                label="Other fees"
-                name="otherFees"
-                rules={[{ required: true, message: "please enter other fees" }]}
-              >
-                <InputNumber
-                  style={{ width: "100%" }}
-                  controls={false}
-                  prefix={
-                    <Icon icon="material-symbols:currency-rupee-rounded" />
-                  }
-                />
-              </Form.Item>
-            </Col>
-            <Col span={2} />
-            <Col span={11}>
-              <Form.Item
-                label="Other gst"
-                name="otherGst"
-                rules={[
-                  {
-                    required: true,
-                    message: "please enter other gst.",
-                  },
-                ]}
-              >
-                <InputNumber
-                  disabled
-                  style={{ width: "100%" }}
-                  controls={false}
-                  suffix={<Icon icon="material-symbols-light:percent" />}
-                />
-              </Form.Item>
-            </Col>
-          </Row>
-          <Row>
-            <Col span={11}>
-              <Form.Item
-                label="Total amount"
-                name="totalAmount"
-                rules={[
-                  {
-                    required: true,
-                    message: "please enter all fees mentioned above",
-                  },
-                ]}
-              >
-                <InputNumber
-                  prefix={
-                    <Icon icon="material-symbols:currency-rupee-rounded" />
-                  }
-                  disabled
-                  style={{ width: "100%" }}
-                  controls={false}
-                />
-              </Form.Item>
-            </Col>
-            <Col span={2} />
-            <Col span={11}>
-              <Form.Item
-                label="Payment date"
-                name="paymentDate"
-                rules={[
-                  {
-                    required: true,
-                    message: "please enter payment date.",
-                  },
-                ]}
-              >
-                <DatePicker style={{ width: "100%" }} />
-              </Form.Item>
-            </Col>
-          </Row>
-          <Row>
-            <Col span={11}>
-              <Form.Item
-                label="Remark"
-                name="remark"
-                rules={[
-                  {
-                    required: true,
-                    message: "please enter remarks",
-                  },
-                ]}
-              >
-                <Input.TextArea />
-              </Form.Item>
-            </Col>
-            <Col span={2} />
-            <Col span={11}>
-              <Form.Item
-                label="Document attachement"
-                name="doc"
-                getValueFromEvent={normFile}
-                valuePropName="fileList"
-              >
-                <Upload
-                  action="/leadService/api/v1/upload/uploadimageToFileSystem"
-                  listType="text"
-                  multiple={true}
-                >
-                  <Button size="small">
-                    <Icon icon="fluent:arrow-upload-20-filled" />
-                    Upload
-                  </Button>
-                </Upload>
-              </Form.Item>
-            </Col>
-          </Row>
-          <Row>
-            <Col span={11}></Col>
-          </Row>
+                    </Form.Item>
+                  </Flex>
+                </Col>
+              </Row>
+              <Row>
+                <Col span={11}>
+                  <Form.Item
+                    label="Professional fees"
+                    name="professionalFees"
+                    rules={[
+                      {
+                        required: true,
+                        message: "please enter professional fees.",
+                      },
+                    ]}
+                  >
+                    <InputNumber
+                      style={{ width: "100%" }}
+                      controls={false}
+                      prefix={
+                        <Icon icon="material-symbols:currency-rupee-rounded" />
+                      }
+                    />
+                  </Form.Item>
+                </Col>
+                <Col span={2} />
+                <Col span={11}>
+                  <Form.Item
+                    label="Professional gst"
+                    name="profesionalGst"
+                    rules={[
+                      {
+                        required: true,
+                        message: "please enter professional gst",
+                      },
+                    ]}
+                  >
+                    <InputNumber
+                      disabled
+                      style={{ width: "100%" }}
+                      controls={false}
+                      suffix={<Icon icon="material-symbols-light:percent" />}
+                    />
+                  </Form.Item>
+                </Col>
+              </Row>
+              <Row>
+                <Col span={11}>
+                  <Form.Item
+                    label="Government fees"
+                    name="govermentfees"
+                    rules={[
+                      {
+                        required: true,
+                        message: "please enter government fees.",
+                      },
+                    ]}
+                  >
+                    <InputNumber
+                      style={{ width: "100%" }}
+                      controls={false}
+                      prefix={
+                        <Icon icon="material-symbols:currency-rupee-rounded" />
+                      }
+                    />
+                  </Form.Item>
+                </Col>
+                <Col span={2} />
+                <Col span={11}>
+                  <Form.Item
+                    label="Government gst"
+                    name="govermentGst"
+                    rules={[
+                      {
+                        required: true,
+                        message: "please enter government gst",
+                      },
+                    ]}
+                  >
+                    <InputNumber
+                      disabled
+                      style={{ width: "100%" }}
+                      controls={false}
+                      suffix={<Icon icon="material-symbols-light:percent" />}
+                    />
+                  </Form.Item>
+                </Col>
+              </Row>
+              <Row>
+                <Col span={11}>
+                  <Form.Item
+                    label="Service charge"
+                    name="serviceCharge"
+                    rules={[
+                      {
+                        required: true,
+                        message: "please enter service charge.",
+                      },
+                    ]}
+                  >
+                    <InputNumber
+                      style={{ width: "100%" }}
+                      controls={false}
+                      prefix={
+                        <Icon icon="material-symbols:currency-rupee-rounded" />
+                      }
+                    />
+                  </Form.Item>
+                </Col>
+                <Col span={2} />
+                <Col span={11}>
+                  <Form.Item
+                    label="Service gst"
+                    name="serviceGst"
+                    rules={[
+                      {
+                        required: true,
+                        message: "please enter service gst.",
+                      },
+                    ]}
+                  >
+                    <InputNumber
+                      disabled
+                      style={{ width: "100%" }}
+                      controls={false}
+                      suffix={<Icon icon="material-symbols-light:percent" />}
+                    />
+                  </Form.Item>
+                </Col>
+              </Row>
+              <Row>
+                <Col span={11}>
+                  <Form.Item
+                    label="Other fees"
+                    name="otherFees"
+                    rules={[
+                      { required: true, message: "please enter other fees" },
+                    ]}
+                  >
+                    <InputNumber
+                      style={{ width: "100%" }}
+                      controls={false}
+                      prefix={
+                        <Icon icon="material-symbols:currency-rupee-rounded" />
+                      }
+                    />
+                  </Form.Item>
+                </Col>
+                <Col span={2} />
+                <Col span={11}>
+                  <Form.Item
+                    label="Other gst"
+                    name="otherGst"
+                    rules={[
+                      {
+                        required: true,
+                        message: "please enter other gst.",
+                      },
+                    ]}
+                  >
+                    <InputNumber
+                      disabled
+                      style={{ width: "100%" }}
+                      controls={false}
+                      suffix={<Icon icon="material-symbols-light:percent" />}
+                    />
+                  </Form.Item>
+                </Col>
+              </Row>
+              <Row>
+                <Col span={11}>
+                  <Form.Item
+                    label="Total amount"
+                    name="totalAmount"
+                    rules={[
+                      {
+                        required: true,
+                        message: "please enter all fees mentioned above",
+                      },
+                    ]}
+                  >
+                    <InputNumber
+                      prefix={
+                        <Icon icon="material-symbols:currency-rupee-rounded" />
+                      }
+                      disabled
+                      style={{ width: "100%" }}
+                      controls={false}
+                    />
+                  </Form.Item>
+                </Col>
+                <Col span={2} />
+                <Col span={11}>
+                  <Form.Item
+                    label="Payment date"
+                    name="paymentDate"
+                    rules={[
+                      {
+                        required: true,
+                        message: "please enter payment date.",
+                      },
+                    ]}
+                  >
+                    <DatePicker style={{ width: "100%" }} />
+                  </Form.Item>
+                </Col>
+              </Row>
+              <Row>
+                <Col span={11}>
+                  <Form.Item
+                    label="Remark"
+                    name="remark"
+                    rules={[
+                      {
+                        required: true,
+                        message: "please enter remarks",
+                      },
+                    ]}
+                  >
+                    <Input.TextArea />
+                  </Form.Item>
+                </Col>
+                <Col span={2} />
+                <Col span={11}>
+                  <Form.Item
+                    label="Document attachement"
+                    name="doc"
+                    getValueFromEvent={normFile}
+                    valuePropName="fileList"
+                  >
+                    <Upload
+                      action="/leadService/api/v1/upload/uploadimageToFileSystem"
+                      listType="text"
+                      multiple={true}
+                    >
+                      <Button size="small">
+                        <Icon icon="fluent:arrow-upload-20-filled" />
+                        Upload
+                      </Button>
+                    </Upload>
+                  </Form.Item>
+                </Col>
+              </Row>
+              <Row>
+                <Col span={11}></Col>
+              </Row>
+            </>
+          )}
         </Form>
       </Modal>
     </>

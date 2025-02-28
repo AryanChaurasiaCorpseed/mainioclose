@@ -234,6 +234,17 @@ export const createPaymentRegister = createAsyncThunk(
   }
 );
 
+export const createPurchaseOrder = createAsyncThunk(
+  "createPurchaseOrder",
+  async (data) => {
+    const response = await postQuery(
+      `/accountService/api/v1/paymentRegister/createPurchaseOrder`,
+      data
+    );
+    return response.data;
+  }
+);
+
 export const getAllPaymentRegister = createAsyncThunk(
   "getAllPaymentRegister",
   async () => {
