@@ -269,6 +269,11 @@ export const getAllConsultantByCompanyCount = createAsyncThunk(
   }
 );
 
+export const exportAllCompanyData=createAsyncThunk('exportAllCompanyData',async({userId,filterUserId})=>{
+  const response=await getQuery(`/leadService/api/v1/company/getAllCompanyForExport?userId=${userId}&filterUserId=${filterUserId}`)
+  return response.data
+})
+
 const CompnaySlice = createSlice({
   name: "company",
   initialState: {

@@ -1,66 +1,68 @@
-import React, { lazy, Suspense, useCallback, useEffect, useState } from "react"
-import TableOutlet from "../../../components/design/TableOutlet"
-import MainHeading from "../../../components/design/MainHeading"
-import { useDispatch, useSelector } from "react-redux"
+import React, { lazy, Suspense, useCallback, useEffect, useState } from "react";
+import TableOutlet from "../../../components/design/TableOutlet";
+import MainHeading from "../../../components/design/MainHeading";
+import { useDispatch, useSelector } from "react-redux";
 import {
+  exportAllCompanyData,
   getCompanyAction,
   searchCompany,
   updateCompanyAssignee,
   updateMultiCompanyAssignee,
   updateMultiTempCompanyAssignee,
-} from "../../../Toolkit/Slices/CompanySlice"
-import TableScalaton from "../../../components/TableScalaton"
-import SomethingWrong from "../../../components/usefulThings/SomethingWrong"
-import ColComp from "../../../components/small/ColComp"
-import { useParams } from "react-router-dom"
-import { getAllLeadUser } from "../../../Toolkit/Slices/LeadSlice"
+} from "../../../Toolkit/Slices/CompanySlice";
+import TableScalaton from "../../../components/TableScalaton";
+import SomethingWrong from "../../../components/usefulThings/SomethingWrong";
+import ColComp from "../../../components/small/ColComp";
+import { useParams } from "react-router-dom";
+import { getAllLeadUser } from "../../../Toolkit/Slices/LeadSlice";
 import {
   Button,
   Checkbox,
   Divider,
   Dropdown,
   Flex,
+  Form,
   Input,
   notification,
+  Popover,
   Select,
   Space,
   Tag,
   Tooltip,
   Typography,
-} from "antd"
-import OverFlowText from "../../../components/OverFlowText"
-import { Icon } from "@iconify/react"
-import { getHighestPriorityRole } from "../../Common/Commons"
-import { BTN_ICON_HEIGHT, BTN_ICON_WIDTH } from "../../../components/Constants"
-import CompanyHistory from "./CompanyHistory"
-import { CSVLink } from "react-csv"
-const CommonTable = lazy(() => import("../../../components/CommonTable"))
-const { Search } = Input
-const { Text } = Typography
+} from "antd";
+import OverFlowText from "../../../components/OverFlowText";
+import { Icon } from "@iconify/react";
+import { getHighestPriorityRole } from "../../Common/Commons";
+import { BTN_ICON_HEIGHT, BTN_ICON_WIDTH } from "../../../components/Constants";
+import CompanyHistory from "./CompanyHistory";
+import { CSVLink } from "react-csv";
+const CommonTable = lazy(() => import("../../../components/CommonTable"));
+const { Search } = Input;
+const { Text } = Typography;
 
 const MainCompanyPage = () => {
-  const dispatch = useDispatch()
-  const { userid } = useParams()
-  const currUser = useSelector((prev) => prev?.auth?.currentUser)
-  const leadUserNew = useSelector((state) => state.leads.getAllLeadUserData)
-  const currentRoles = useSelector((state) => state?.auth?.roles)
-  const allUsers = useSelector((state) => state.user.allUsers)
+  const dispatch = useDispatch();
+  const { userid } = useParams();
+  const [form] = Form.useForm();
+  const currUser = useSelector((prev) => prev?.auth?.currentUser);
+  const leadUserNew = useSelector((state) => state.leads.getAllLeadUserData);
+  const currentRoles = useSelector((state) => state?.auth?.roles);
+  const allUsers = useSelector((state) => state.user.allUsers);
   const { allCompnay, loadingCompany, errorCompany } = useSelector(
     (prev) => prev?.company
-  )
-  const [selectedRowKeys, setSelectedRowKeys] = useState([])
-  const [selectedRow, setSelectedRow] = useState([])
-  const [assigneeId, setAssigneeId] = useState(null)
-  const [assignedProcessing, setAssignedProcessing] = useState("")
-  const [dropdownData, setDropdownData] = useState([])
-  const [openDropdown, setOpenDropdown] = useState(false)
-  const [headerData, setHeaderData] = useState([])
-  const [tempAssigneeId, setTempAssigneeId] = useState(null)
+  );
+  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+  const [exportedData, setExportedData] = useState([]);
+  const [assigneeId, setAssigneeId] = useState(null);
+  const [assignedProcessing, setAssignedProcessing] = useState("");
+  const [tempAssigneeId, setTempAssigneeId] = useState(null);
   const [paginationData, setPaginationData] = useState({
     page: 1,
     size: 50,
-  })
-  const [filterUserId, setFilterUserId] = useState("")
+  });
+  const [filterUserId, setFilterUserId] = useState("");
+  const [openPopover, setOpenPopover] = useState(false);
 
   useEffect(() => {
     dispatch(
@@ -70,24 +72,23 @@ const MainCompanyPage = () => {
         size: paginationData?.size,
         filterUserId,
       })
-    )
-  }, [dispatch, currUser])
+    );
+  }, [dispatch, currUser]);
 
   useEffect(() => {
-    dispatch(getAllLeadUser(userid))
-  }, [userid, dispatch])
+    dispatch(getAllLeadUser(userid));
+  }, [userid, dispatch]);
 
   const onSelectChange = (newSelectedRowKeys, rowsData) => {
-    setSelectedRowKeys(newSelectedRowKeys)
-    setSelectedRow(rowsData)
-  }
+    setSelectedRowKeys(newSelectedRowKeys);
+  };
 
   const onSearchLead = (e, b) => {
-    dispatch(searchCompany({ inputText: e, userId: userid }))
+    dispatch(searchCompany({ inputText: e, userId: userid }));
     if (!b) {
-      dispatch(searchCompany({ inputText: "", userId: userid }))
+      dispatch(searchCompany({ inputText: "", userId: userid }));
     }
-  }
+  };
 
   const handlePagination = useCallback(
     (dataPage, size) => {
@@ -98,11 +99,11 @@ const MainCompanyPage = () => {
           size: size,
           filterUserId: filterUserId,
         })
-      )
-      setPaginationData({ size: size, page: dataPage })
+      );
+      setPaginationData({ size: size, page: dataPage });
     },
     [currUser, dispatch, filterUserId]
-  )
+  );
 
   const handleUpdateAssignee = useCallback(
     (assigneeId, companyId) => {
@@ -110,13 +111,13 @@ const MainCompanyPage = () => {
         companyId: companyId,
         assigneeId: assigneeId,
         currentUserId: userid,
-      }
+      };
       dispatch(updateCompanyAssignee(data))
         .then((response) => {
           if (response.meta.requestStatus === "fulfilled") {
             notification.success({
               message: "Assignee is updated successfully",
-            })
+            });
             dispatch(
               getCompanyAction({
                 id: currUser?.id,
@@ -124,17 +125,17 @@ const MainCompanyPage = () => {
                 size: paginationData?.size,
                 filterUserId,
               })
-            )
+            );
           } else {
-            notification.error({ message: "Something went wrong !." })
+            notification.error({ message: "Something went wrong !." });
           }
         })
         .catch(() => {
-          notification.error({ message: "Something went wrong !." })
-        })
+          notification.error({ message: "Something went wrong !." });
+        });
     },
     [dispatch, currUser, paginationData, filterUserId]
-  )
+  );
 
   const filterCompanyBasedOnUser = useCallback(
     (filterUserId) => {
@@ -146,12 +147,12 @@ const MainCompanyPage = () => {
             size: paginationData?.size,
             filterUserId,
           })
-        )
-        setFilterUserId(filterUserId)
+        );
+        setFilterUserId(filterUserId);
       }
     },
     [paginationData, dispatch, currUser]
-  )
+  );
 
   const tagsInTooltip = (data, type) => {
     return data?.map((items) => {
@@ -159,9 +160,9 @@ const MainCompanyPage = () => {
         <Tag className="slug-items-tooltip">
           {type === "lead" ? items?.leadNameame : items?.projectName}
         </Tag>
-      )
-    })
-  }
+      );
+    });
+  };
 
   const columns = [
     {
@@ -371,14 +372,14 @@ const MainCompanyPage = () => {
       checked: false,
       render: (_, props) => <CompanyHistory companyId={props.companyId} />,
     },
-  ]
+  ];
 
   const menuStyle = {
     boxShadow: "none",
-  }
+  };
 
   const updateMultiAssigneeForCompanies = useCallback(() => {
-    setAssignedProcessing("pending")
+    setAssignedProcessing("pending");
     dispatch(
       updateMultiCompanyAssignee({
         companyId: selectedRowKeys,
@@ -388,10 +389,10 @@ const MainCompanyPage = () => {
     )
       .then((resp) => {
         if (resp.meta.requestStatus === "fulfilled") {
-          setAssignedProcessing("success")
+          setAssignedProcessing("success");
           notification.success({
             message: "Companies assigned to user successfully",
-          })
+          });
           dispatch(
             getCompanyAction({
               id: currUser?.id,
@@ -399,22 +400,22 @@ const MainCompanyPage = () => {
               size: paginationData?.size,
               filterUserId,
             })
-          )
-          setSelectedRowKeys([])
-          setAssigneeId(null)
+          );
+          setSelectedRowKeys([]);
+          setAssigneeId(null);
         } else {
-          setAssignedProcessing("error")
-          notification.error({ message: "Something went wrong !." })
+          setAssignedProcessing("error");
+          notification.error({ message: "Something went wrong !." });
         }
       })
       .catch(() => {
-        setAssignedProcessing("error")
-        notification.error({ message: "Something went wrong !." })
-      })
-  }, [selectedRowKeys, assigneeId, dispatch, userid,currUser,filterUserId])
+        setAssignedProcessing("error");
+        notification.error({ message: "Something went wrong !." });
+      });
+  }, [selectedRowKeys, assigneeId, dispatch, userid, currUser, filterUserId]);
 
   const updateMultiTempAssigneeForCompanies = useCallback(() => {
-    setAssignedProcessing("pending")
+    setAssignedProcessing("pending");
     dispatch(
       updateMultiTempCompanyAssignee({
         companyId: selectedRowKeys,
@@ -424,10 +425,10 @@ const MainCompanyPage = () => {
     )
       .then((resp) => {
         if (resp.meta.requestStatus === "fulfilled") {
-          setAssignedProcessing("success")
+          setAssignedProcessing("success");
           notification.success({
             message: "Companies assigned to user successfully",
-          })
+          });
           dispatch(
             getCompanyAction({
               id: currUser?.id,
@@ -435,79 +436,83 @@ const MainCompanyPage = () => {
               size: paginationData?.size,
               filterUserId,
             })
-          )
-          setSelectedRowKeys([])
-          setTempAssigneeId(null)
+          );
+          setSelectedRowKeys([]);
+          setTempAssigneeId(null);
         } else {
-          setAssignedProcessing("error")
-          notification.error({ message: "Something went wrong !." })
+          setAssignedProcessing("error");
+          notification.error({ message: "Something went wrong !." });
         }
       })
       .catch(() => {
-        setAssignedProcessing("error")
-        notification.error({ message: "Something went wrong !." })
-      })
-  }, [selectedRowKeys, tempAssigneeId, dispatch, userid,currUser,filterUserId])
+        setAssignedProcessing("error");
+        notification.error({ message: "Something went wrong !." });
+      });
+  }, [
+    selectedRowKeys,
+    tempAssigneeId,
+    dispatch,
+    userid,
+    currUser,
+    filterUserId,
+  ]);
 
-  const exportedData = selectedRow?.map((item) => ({
-    Id: item?.companyId,
-    "Company name": item?.companyName,
-    Assignee: item?.assignee?.fullName,
-    "GST number": item?.gstNo,
-    "GST type": item?.gstType,
-    "Client name": item?.primaryContact?.name,
-    Projects: item?.project?.map((data) => data?.projectName),
-    Leads: item?.lead?.map((data) => data?.leadNameame),
-    Desigination: item?.primaryContact?.designation,
-    "Contact no.": item?.primaryContact?.contactNo,
-    Email: item?.primaryContact?.emails,
-    "Whatsapp no.": item?.primaryContact?.whatsappNo,
-    Address: item?.address,
-    City: item?.city,
-    State: item?.state,
-    Country: item?.country,
-    "Secondary address": item?.secAddress,
-    "Secondary city": item?.secCity,
-    "Secondary state": item?.secState,
-    "Secondary country": item?.seCountry,
-  }))
+  const headers = [
+    "Id",
+    "Company name",
+    "Assignee",
+    "GST number",
+    "GST type",
+    "Contact no.",
+    "Email",
+    "Address",
+    "City",
+    "State",
+    "Country",
+    "Secondary address",
+    "Secondary city",
+    "Secondary state",
+    "Secondary country",
+  ];
 
-  const columnDropDown = useCallback(
-    (handleSelectColumns) => {
-      const result = dropdownData?.map((item) => ({
-        label: (
-          <Checkbox
-            checked={item?.checked}
-            onChange={(e) => handleSelectColumns(!item?.checked, item?.title)}
-          >
-            {item?.title}
-          </Checkbox>
-        ),
-      }))
-      return result
+  const handleExportData = useCallback(
+    (values) => {
+      dispatch(
+        exportAllCompanyData({
+          userId: userid,
+          filterUserId: values?.filterUserId ? values?.filterUserId : "",
+        })
+      ).then((resp) => {
+        if (resp.meta.requestStatus === "fulfilled") {
+          const data = resp?.payload;
+          if (data?.length > 0) {
+            const exportedRecord = data?.map((item) => ({
+              Id: item?.companyId,
+              "Company name": item?.companyName,
+              Assignee: item?.assignee,
+              "GST number": item?.gstNo,
+              "GST type": item?.gstType,
+              "Contact no.": item?.clientContactNo,
+              Email: item?.clientContactEmail,
+              Address: item?.address,
+              City: item?.city,
+              State: item?.state,
+              Country: item?.country,
+              "Secondary address": item?.secAddress,
+              "Secondary city": item?.secCity,
+              "Secondary state": item?.secState,
+              "Secondary country": item?.seCountry,
+            }));
+
+            setExportedData(exportedRecord);
+            form.resetFields();
+            setOpenPopover(false);
+          }
+        }
+      });
     },
-    [dropdownData]
-  )
-
-  const handleSelectColumns = useCallback((e, key) => {
-    setDropdownData((prev) => {
-      let temp = [...prev]
-      let res = temp.map((ele) =>
-        ele.title === key ? { ...ele, checked: e } : ele
-      )
-      let result = res?.filter((col) => col.checked === true)
-      setHeaderData(result)
-      return res
-    })
-  }, [])
-
-  const handleOpenDropdown = useCallback(() => {
-    const res = [...columns]
-    let result = res?.filter((col) => col.checked === true)
-    setDropdownData(res)
-    setHeaderData(result)
-    setOpenDropdown(true)
-  }, [columns])
+    [userid, filterUserId, dispatch, form]
+  );
 
   return (
     <TableOutlet>
@@ -563,73 +568,68 @@ const MainCompanyPage = () => {
             />
           )}
         </div>
-        <Dropdown
-          disabled={selectedRow?.length === 0 ? true : false}
-          open={openDropdown}
-          // onOpenChange={(e) => setOpenDropdown(e)}
-          trigger={["click"]}
-          overlayClassName="global-drop-down"
-          menu={{ items: columnDropDown(handleSelectColumns) }}
-          dropdownRender={(menu) => (
-            <div className="dropdown-content">
-              <div
-                style={{
-                  height: "400px",
-                  overflow: "auto",
-                  borderRadius: "4px",
-                }}
-              >
-                {React.cloneElement(menu, {
-                  style: menuStyle,
-                })}
-              </div>
-              <Divider
-                style={{
-                  margin: 6,
-                  color: "lightgray",
-                }}
-              />
-              <div className="flex-justify-end">
-                <Space>
-                  <Button size="small" onClick={() => setOpenDropdown(false)}>
-                    Cancel
-                  </Button>
-                  <Button
-                    type="primary"
-                    size="small"
-                    onClick={() => {
-                      setOpenDropdown(false)
-                      setSelectedRow([])
-                      setSelectedRowKeys([])
-                    }}
-                  >
-                    <CSVLink
-                      className="text-white"
-                      data={exportedData}
-                      headers={
-                        headerData?.length > 0
-                          ? headerData?.map((column) => column.title)
+        {getHighestPriorityRole(currentRoles) === "ADMIN" && (
+          <Flex gap={4}>
+            <Popover
+              open={openPopover}
+              onOpenChange={(e) => setOpenPopover(e)}
+              trigger={"click"}
+              placement="bottomLeft"
+              overlayStyle={{ width: 400 }}
+              content={
+                <Form layout="vertical" form={form} onFinish={handleExportData}>
+                  <Form.Item label="Select user" name="filterUserId">
+                    <Select
+                      showSearch
+                      allowClear
+                      options={
+                        allUsers?.length > 0
+                          ? allUsers?.map((item) => ({
+                              label: item?.fullName,
+                              value: item?.id,
+                            }))
                           : []
                       }
-                      filename={"exported_data.csv"}
-                    >
-                      Export
-                    </CSVLink>
-                  </Button>
-                </Space>
-              </div>
-            </div>
-          )}
-        >
-          <Button size="small" onClick={handleOpenDropdown}>
-            <Icon
-              icon="fluent:arrow-upload-16-filled"
-              height={BTN_ICON_HEIGHT}
-              width={BTN_ICON_WIDTH}
-            />
-            Export
-          </Button>
-        </Dropdown>
+                      filterOption={(input, option) =>
+                        option.label.toLowerCase().includes(input.toLowerCase())
+                      }
+                    />
+                  </Form.Item>
+                  <Form.Item>
+                    <Button htmlType="submit" type="primary">
+                      Submit
+                    </Button>
+                  </Form.Item>
+                </Form>
+              }
+            >
+              <Button size="small">
+                <Icon
+                  icon="fluent:filter-24-filled"
+                  height={BTN_ICON_HEIGHT}
+                  width={BTN_ICON_WIDTH}
+                />
+                Filter export
+              </Button>
+            </Popover>
+
+            <CSVLink
+              className="text-white"
+              data={exportedData}
+              headers={headers}
+              filename={"companies.csv"}
+            >
+              <Button size="small">
+                <Icon
+                  icon="fluent:arrow-upload-16-filled"
+                  height={BTN_ICON_HEIGHT}
+                  width={BTN_ICON_WIDTH}
+                />
+                Export
+              </Button>
+            </CSVLink>
+          </Flex>
+        )}
       </Flex>
       <div className="mt-3">
         {loadingCompany && <TableScalaton />}
@@ -639,7 +639,7 @@ const MainCompanyPage = () => {
             <CommonTable
               data={allCompnay}
               columns={columns}
-              scroll={{ x: 3300, y: '63vh' }}
+              scroll={{ x: 3300, y: "63vh" }}
               rowSelection={true}
               onRowSelection={onSelectChange}
               selectedRowKeys={selectedRowKeys}
@@ -745,7 +745,7 @@ const MainCompanyPage = () => {
         )}
       </div>
     </TableOutlet>
-  )
-}
+  );
+};
 
-export default MainCompanyPage
+export default MainCompanyPage;

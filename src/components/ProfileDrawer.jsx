@@ -1,35 +1,37 @@
-import { Avatar, Button, Drawer, Space, Typography } from "antd"
-import React, { useCallback, useEffect, useState } from "react"
-import { useDispatch, useSelector } from "react-redux"
-import { logoutFun } from "../Toolkit/Slices/AuthSlice"
-import { useNavigate } from "react-router-dom"
-import { updateProfilePhoto } from "../Toolkit/Slices/UserProfileSlice"
-import { toast } from "react-toastify"
-import "./ProfileDrawer.scss"
-import { Icon } from "@iconify/react"
-import { Upload } from "antd"
-import ImgCrop from "antd-img-crop"
-const { Text } = Typography
+import { Avatar, Button, Drawer, Space, Typography } from "antd";
+import React, { useCallback, useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { logoutFun } from "../Toolkit/Slices/AuthSlice";
+import { useNavigate } from "react-router-dom";
+import { updateProfilePhoto } from "../Toolkit/Slices/UserProfileSlice";
+import { toast } from "react-toastify";
+import "./ProfileDrawer.scss";
+import { Icon } from "@iconify/react";
+import { Upload } from "antd";
+import ImgCrop from "antd-img-crop";
+import { persistor } from "../Toolkit/store";
+const { Text } = Typography;
 
 const ProfileDrawer = () => {
-  const navigate = useNavigate()
-  const dispatch = useDispatch()
-  const currentUserId = useSelector((state) => state.auth?.currentUser?.id)
-  const profilePhoto = useSelector((state) => state.profile.profilePhoto)
-  const currentUserProfile = useSelector((state) => state?.auth?.currentUser)
-  const [openModal, setOpenModal] = useState()
-  const [openDrawer, setOpenDrawer] = useState(false)
-  const [fileList, setFileList] = useState([])
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const currentUserId = useSelector((state) => state.auth?.currentUser?.id);
+  const profilePhoto = useSelector((state) => state.profile.profilePhoto);
+  const currentUserProfile = useSelector((state) => state?.auth?.currentUser);
+  const [openModal, setOpenModal] = useState();
+  const [openDrawer, setOpenDrawer] = useState(false);
+  const [fileList, setFileList] = useState([]);
 
   const logoutUser = () => {
     if (window.confirm("Are you sure for Logout?") === true) {
-      const key = localStorage.getItem("persist:root")
-      dispatch(logoutFun())
-      localStorage.removeItem(key)
-      navigate("/erp/login")
-      toast.success("Logout Succesfully")
+      dispatch(logoutFun());
+      localStorage.removeItem("persist:root");
+      navigate("/erp/login");
+      toast.success("Logout Succesfully");
+      localStorage.clear();
+      window.location.reload();
     }
-  }
+  };
 
   const onChange = useCallback(
     ({ fileList: newFileList }) => {
@@ -37,35 +39,35 @@ const ProfileDrawer = () => {
         const data = {
           userId: currentUserId,
           profilePhoto: newFileList?.[0]?.response,
-        }
-        dispatch(updateProfilePhoto(data))
-        setFileList(newFileList)
+        };
+        dispatch(updateProfilePhoto(data));
+        setFileList(newFileList);
       }
     },
     [currentUserId, dispatch]
-  )
+  );
 
   useEffect(() => {
     if (fileList?.[0]?.response) {
-      setOpenModal(false)
-      window.location.reload()
+      setOpenModal(false);
+      window.location.reload();
     }
-  }, [fileList])
+  }, [fileList]);
 
   const onPreview = async (file) => {
-    let src = file.url
+    let src = file.url;
     if (!src) {
       src = await new Promise((resolve) => {
-        const reader = new FileReader()
-        reader.readAsDataURL(file.originFileObj)
-        reader.onload = () => resolve(reader.result)
-      })
+        const reader = new FileReader();
+        reader.readAsDataURL(file.originFileObj);
+        reader.onload = () => resolve(reader.result);
+      });
     }
-    const image = new Image()
-    image.src = src
-    const imgWindow = window.open(src)
-    imgWindow?.document.write(image.outerHTML)
-  }
+    const image = new Image();
+    image.src = src;
+    const imgWindow = window.open(src);
+    imgWindow?.document.write(image.outerHTML);
+  };
 
   return (
     <>
@@ -147,7 +149,7 @@ const ProfileDrawer = () => {
         </div>
       </Drawer>
     </>
-  )
-}
+  );
+};
 
-export default ProfileDrawer
+export default ProfileDrawer;

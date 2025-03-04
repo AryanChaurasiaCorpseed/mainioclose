@@ -700,6 +700,7 @@ const LeadDetailsPage = ({ leadid }) => {
                       {complianceDocumentList?.map((item, idx) => (
                         <>
                           <Tag
+                          key={`${idx}compDoc`}
                             style={{ cursor: "pointer",display:'flex',alignItems:'center',gap:'8px' }}
                             onClick={() => {
                               setDocument(item?.name);

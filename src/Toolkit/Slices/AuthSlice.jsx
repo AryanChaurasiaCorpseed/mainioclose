@@ -68,7 +68,7 @@ export const AuthSlice = createSlice({
   reducers: {
     logoutFun: (state, action) => {
       state.isAuth = false
-      state.currentUser = null
+      state.currentUser = {}
     },
     handleLoadingState: (state, action) => {
       state.userLoading = action.payload
@@ -81,7 +81,6 @@ export const AuthSlice = createSlice({
       state.userLoading = "pending"
     })
     builder.addCase(getCurrentUser.fulfilled, (state, action) => {
-      console.log('JKWTrtohhgkjbjkhbvjh',action.payload)
       state.currentUser = action.payload
       state.jwt = action.payload.jwt
       state.roles = action.payload.roles
