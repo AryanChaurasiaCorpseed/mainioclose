@@ -177,7 +177,6 @@ const MainCompanyPage = () => {
       title: "Company name",
       fixed: "left",
       checked: true,
-      width: 250,
       render: (_, props) => (
         <OverFlowText linkText={true} to={`${props?.companyId}/details`}>
           {props?.companyName}
@@ -194,7 +193,7 @@ const MainCompanyPage = () => {
             size="small"
             showSearch
             style={{ width: "100%" }}
-            value={props?.assignee?.id}
+            value={props?.assigneeId}
             placeholder="select assignee"
             options={
               leadUserNew?.map((ele) => ({
@@ -223,106 +222,21 @@ const MainCompanyPage = () => {
       checked: false,
       render: (_, props) => <ColComp data={props?.gstType} />,
     },
-    // {
-    //   dataIndex: "primaryContact",
-    //   title: "Client name",
-    //   checked: false,
-    //   render: (_, record) => (
-    //     <OverFlowText>{record?.primaryContact?.name}</OverFlowText>
-    //   ),
-    // },
-    {
-      dataIndex: "projects",
-      title: "Projects",
-      checked: false,
-      render: (_, data) =>
-        data?.project?.length > 0 && data?.project?.length === 1 ? (
-          <OverFlowText>{data?.project?.[0]?.projectName}</OverFlowText>
-        ) : data?.project?.length >= 2 ? (
-          <div className="flex-vert-hori-center">
-            <OverFlowText>{data?.project?.[0]?.projectName} </OverFlowText>
-            <Tooltip
-              title={tagsInTooltip(data?.project)}
-              arrow={false}
-              style={{ display: "flex", alignItems: "center", gap: "4px" }}
-              overlayStyle={{ maxWidth: 800 }}
-            >
-              <Icon
-                icon="fluent:more-circle-24-regular"
-                height={BTN_ICON_HEIGHT + 8}
-                width={BTN_ICON_WIDTH + 8}
-              />
-            </Tooltip>
-          </div>
-        ) : (
-          "N/A"
-        ),
-    },
-    {
-      dataIndex: "leads",
-      title: "Leads",
-      checked: false,
-      render: (_, data) =>
-        data?.lead?.length > 0 && data?.lead?.length === 1 ? (
-          <OverFlowText>{data?.lead?.[0]?.leadNameame}</OverFlowText>
-        ) : data?.lead?.length >= 2 ? (
-          <div className="flex-vert-hori-center">
-            <OverFlowText>{data?.lead?.[0]?.leadNameame} </OverFlowText>
-            <Tooltip
-              title={tagsInTooltip(data?.lead, "lead")}
-              arrow={false}
-              style={{ display: "flex", alignItems: "center", gap: "4px" }}
-              overlayStyle={{ maxWidth: 800 }}
-            >
-              <Icon
-                icon="fluent:more-circle-24-regular"
-                height={BTN_ICON_HEIGHT + 8}
-                width={BTN_ICON_WIDTH + 8}
-              />
-            </Tooltip>
-          </div>
-        ) : (
-          "N/A"
-        ),
-    },
-    // {
-    //   dataIndex: "primarydesigination",
-    //   title: "Desigination",
-    //   checked: false,
-    //   render: (_, record) => (
-    //     <OverFlowText>{record?.primaryContact?.designation}</OverFlowText>
-    //   ),
-    // },
-    // {
-    //   dataIndex: "contactNo",
-    //   title: "Contact no.",
-    //   checked: false,
-    //   render: (_, record) => (
-    //     <OverFlowText>{record?.primaryContact?.contactNo}</OverFlowText>
-    //   ),
-    // },
-    // {
-    //   dataIndex: "emails",
-    //   title: "Email",
-    //   checked: false,
-    //   render: (_, record) => (
-    //     <OverFlowText>{record?.primaryContact?.emails}</OverFlowText>
-    //   ),
-    // },
-    // {
-    //   dataIndex: "whatsappNo",
-    //   title: "Whatsapp no.",
-    //   checked: false,
-    //   render: (_, record) => (
-    //     <OverFlowText>{record?.primaryContact?.whatsappNo}</OverFlowText>
-    //   ),
-    // },
-    // {
-    //   dataIndex: "address",
-    //   title: "Address",
-    //   checked: false,
-    //   render: (_, props) => <OverFlowText>{props?.address}</OverFlowText>,
-    // },
+
+    ...getHighestPriorityRole(currentRoles) === "ADMIN" ? [
+      {
+        dataIndex: "clientContactEmail",
+        title: "Client email",
+      },
+      {
+        dataIndex: "clientContactNo",
+        title: "Client contact",
+      },
+
+    ] : []
+    ,
+
+
     {
       dataIndex: "city",
       title: "City",
@@ -517,9 +431,8 @@ const MainCompanyPage = () => {
   return (
     <TableOutlet>
       <MainHeading
-        data={`All company (${
-          allCompnay?.[0]?.total === undefined ? 0 : allCompnay?.[0]?.total
-        })`}
+        data={`All company (${allCompnay?.[0]?.total === undefined ? 0 : allCompnay?.[0]?.total
+          })`}
       />
       <Flex justify="space-between" align="center">
         <div className="flex-verti-center-hori-start mt-2">
@@ -546,9 +459,9 @@ const MainCompanyPage = () => {
               options={
                 allUsers?.length > 0
                   ? allUsers?.map((item) => ({
-                      label: item?.fullName,
-                      value: item?.id,
-                    }))
+                    label: item?.fullName,
+                    value: item?.id,
+                  }))
                   : []
               }
               filterOption={(input, option) =>
@@ -578,16 +491,16 @@ const MainCompanyPage = () => {
               overlayStyle={{ width: 400 }}
               content={
                 <Form layout="vertical" form={form} onFinish={handleExportData}>
-                  <Form.Item label="Select user" name="filterUserId">
+                  <Form.Item label="Select user" name="filterUserId" rules={[{ required: true, message: 'please select user' }]}   >
                     <Select
                       showSearch
                       allowClear
                       options={
                         allUsers?.length > 0
-                          ? allUsers?.map((item) => ({
-                              label: item?.fullName,
-                              value: item?.id,
-                            }))
+                          ? [{ fullName: 'All', id: 'all' }, ...allUsers]?.map((item) => ({
+                            label: item?.fullName,
+                            value: item?.id,
+                          }))
                           : []
                       }
                       filterOption={(input, option) =>
@@ -639,7 +552,7 @@ const MainCompanyPage = () => {
             <CommonTable
               data={allCompnay}
               columns={columns}
-              scroll={{ x: 3300, y: "63vh" }}
+              scroll={{ x: 2000, y: "63vh" }}
               rowSelection={true}
               onRowSelection={onSelectChange}
               selectedRowKeys={selectedRowKeys}
@@ -669,9 +582,9 @@ const MainCompanyPage = () => {
                         options={
                           leadUserNew?.length > 0
                             ? leadUserNew?.map((ele) => ({
-                                label: ele?.fullName,
-                                value: ele?.id,
-                              }))
+                              label: ele?.fullName,
+                              value: ele?.id,
+                            }))
                             : []
                         }
                         onChange={(e) => setAssigneeId(e)}
@@ -708,9 +621,9 @@ const MainCompanyPage = () => {
                         options={
                           leadUserNew?.length > 0
                             ? leadUserNew?.map((ele) => ({
-                                label: ele?.fullName,
-                                value: ele?.id,
-                              }))
+                              label: ele?.fullName,
+                              value: ele?.id,
+                            }))
                             : []
                         }
                         onChange={(e) => setTempAssigneeId(e)}
