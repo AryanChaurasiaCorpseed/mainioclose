@@ -394,7 +394,7 @@ const MainCompanyPage = () => {
       dispatch(
         exportAllCompanyData({
           userId: userid,
-          filterUserId: values?.filterUserId ? values?.filterUserId : "",
+          filterUserId: values?.filterUserId === 'all' ? "" : values?.filterUserId,
         })
       ).then((resp) => {
         if (resp.meta.requestStatus === "fulfilled") {
