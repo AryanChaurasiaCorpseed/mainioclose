@@ -25,11 +25,8 @@ const ProfileDrawer = () => {
   const logoutUser = () => {
     if (window.confirm("Are you sure for Logout?") === true) {
       dispatch(logoutFun());
-      localStorage.removeItem("persist:root");
       navigate("/erp/login");
       toast.success("Logout Succesfully");
-      localStorage.clear();
-      window.location.reload();
     }
   };
 

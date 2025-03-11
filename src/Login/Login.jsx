@@ -1,70 +1,73 @@
-import React, { useCallback, useEffect, useState } from "react"
-import "./Login.scss"
-import { Link, useNavigate } from "react-router-dom"
-import { useDispatch } from "react-redux"
-import { toast } from "react-toastify"
-import "react-toastify/dist/ReactToastify.css"
+import React, { useCallback, useEffect, useState } from "react";
+import "./Login.scss";
+import { Link, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import {
   getCurrentUser,
   getDepartmentOfUser,
   handleLoadingState,
-} from "../Toolkit/Slices/AuthSlice"
-import { Button, Checkbox, Form, Input, notification, Typography } from "antd"
-import { Icon } from "@iconify/react"
-const { Text } = Typography
-toast.configure()
+} from "../Toolkit/Slices/AuthSlice";
+import { Button, Checkbox, Form, Input, notification, Typography } from "antd";
+import { Icon } from "@iconify/react";
+const { Text } = Typography;
+toast.configure();
 
 const Login = () => {
-  const dispatch = useDispatch()
-  const navigate = useNavigate()
-  const [loading, setLoading] = useState("")
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState("");
 
   useEffect(() => {
-    dispatch(handleLoadingState(""))
-  }, [dispatch])
+    dispatch(handleLoadingState(""));
+  }, [dispatch]);
 
   const handleLoginUsers = useCallback(
     (values) => {
-      setLoading("pending")
+      setLoading("pending");
       dispatch(getCurrentUser(values))
         .then((resp) => {
           if (resp.meta.requestStatus === "fulfilled") {
             if (resp?.payload?.id !== undefined) {
-              setLoading("fulfilled")
+              setLoading("fulfilled");
               dispatch(getDepartmentOfUser(resp?.payload?.id)).then(
                 (response) => {
                   if (resp?.payload?.roles?.includes("ADMIN")) {
-                    navigate(`/erp/${resp?.payload?.id}/dashboard/records`)
+                    navigate(`/erp/${resp?.payload?.id}/dashboard/records`);
                   } else {
                     if (response.payload?.department === "Procurement") {
-                      navigate(`/erp/${resp?.payload?.id}/vendors`)
+                      navigate(`/erp/${resp?.payload?.id}/vendors`);
                     }
                     if (response.payload?.department === "Human Resource") {
-                      navigate(`/erp/${resp?.payload?.id}/hr/userlist`)
+                      navigate(`/erp/${resp?.payload?.id}/hr/userlist`);
                     } else {
-                      navigate(`/erp/${resp?.payload?.id}/sales/leads`)
+                      navigate(`/erp/${resp?.payload?.id}/sales/leads`);
                     }
                   }
                 }
-              )
-              notification.success({ message: "User logged in successfully." })
+              );
+              notification.success({ message: "User logged in successfully." });
+              setTimeout(() => {
+                window.location.reload();
+              }, 2000);
             } else {
-              setLoading("ipRestricted")
-              notification.error({ message: "Ip address restricted ." })
+              setLoading("ipRestricted");
+              notification.error({ message: "Ip address restricted ." });
             }
           } else {
-            navigate(`/erp/login`)
-            setLoading("rejected")
-            notification.error({ message: "Something went wrong !." })
+            navigate(`/erp/login`);
+            setLoading("rejected");
+            notification.error({ message: "Something went wrong !." });
           }
         })
         .catch(() => {
-          setLoading("rejected")
-          notification.error({ message: "Something went wrong !." })
-        })
+          setLoading("rejected");
+          notification.error({ message: "Something went wrong !." });
+        });
     },
     [dispatch, navigate]
-  )
+  );
 
   return (
     <div className="cm-box bg-g-light container">
@@ -136,7 +139,7 @@ const Login = () => {
               Forget Password ?
             </Link>
           </Form.Item>
-          
+
           <Form.Item>
             <Button
               type="primary"
@@ -150,7 +153,7 @@ const Login = () => {
         </Form>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Login
+export default Login;

@@ -100,6 +100,7 @@ const SpinLoading = lazy(() => import("./components/SpinLoading"));
 
 function App() {
   const authStatus = useSelector((state) => state.auth.isAuth);
+  const userData = JSON.parse(localStorage.getItem("userDetail"));
 
   return (
     <ConfigProvider
@@ -256,7 +257,7 @@ function App() {
 
             <Route
               path="/erp"
-              element={authStatus ? <MainPage /> : <Navigate to="/erp/login" />}
+              element={userData ? <MainPage /> : <Navigate to="/erp/login" />}
             >
               <Route path=":userid/dashboard" element={<DashBoard />}>
                 <Route path="users" element={<DisplayDashboardUser />} />

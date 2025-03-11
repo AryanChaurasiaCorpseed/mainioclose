@@ -1,26 +1,72 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "./MainPage.scss";
 import SideBar from "./SideBar";
-import { Outlet, useParams } from "react-router";
+import { Outlet, useNavigate, useParams } from "react-router";
 import TopNav from "../components/TopNav";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { getDepartmentOfUser } from "../Toolkit/Slices/AuthSlice";
+import { getDepartmentOfUser, logoutFun } from "../Toolkit/Slices/AuthSlice";
 import { Layout, Menu, theme } from "antd";
 import { getAllLeadUser } from "../Toolkit/Slices/LeadSlice";
 const { Header, Sider, Content } = Layout;
 toast.configure();
 
+const MAX_INACTIVITY_TIME = 60 * 60 * 1000;
+const CHECK_INTERVAL = 1000;
+
 const MainPage = () => {
   const { userid } = useParams();
   const dispatch = useDispatch();
+  const navigate=useNavigate()
+  const intervalRef = useRef(null);
+  const lastActiveRef = useRef(Date.now());
   const items = SideBar();
   const [collapsed, setCollapsed] = useState(false);
 
   const {
     token: { colorBgContainer },
   } = theme.useToken();
+
+
+  const resetInactivityTimer = () => {
+    lastActiveRef.current = Date.now();
+  };
+
+  useEffect(() => {
+    const events = [
+      "mousemove",
+      "mousedown",
+      "keypress",
+      "scroll",
+      "touchstart",
+    ];
+    events.forEach((event) =>
+      window.addEventListener(event, resetInactivityTimer)
+    );
+
+    intervalRef.current = setInterval(() => {
+      const now = Date.now();
+      const timeSinceLastActivity = now - lastActiveRef.current;
+
+      if (timeSinceLastActivity >= MAX_INACTIVITY_TIME) {
+        dispatch(logoutFun());
+        navigate("/erp/login");
+        toast.success("Logout Succesfully");
+        lastActiveRef.current = Date.now();
+      }
+    }, CHECK_INTERVAL);
+
+    return () => {
+      events.forEach((event) =>
+        window.removeEventListener(event, resetInactivityTimer)
+      );
+      clearInterval(intervalRef.current);
+    };
+  }, []);
+
+
+
 
   useEffect(() => {
     dispatch(getDepartmentOfUser(userid));
