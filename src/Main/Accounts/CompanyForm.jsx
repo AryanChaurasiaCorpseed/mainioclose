@@ -347,6 +347,7 @@ const CompanyForm = () => {
                 editInfo={records}
                 edit={true}
                 selectedFilter={selectedFilter}
+                paginationData={paginationData}
               />
             ),
           },

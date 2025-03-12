@@ -50,6 +50,7 @@ const CompanyFormModal = ({
   editInfo,
   selectedFilter,
   detailView,
+  paginationData
 }) => {
   const [form] = Form.useForm();
   const dispatch = useDispatch();
@@ -86,12 +87,7 @@ const CompanyFormModal = ({
   const [openModal, setOpenModal] = useState(false);
   const [formLoading, setFormLoading] = useState("");
   const [gstMand, setGstMand] = useState("");
-  const [newPrimaryAddress, setNewPrimaryAddress] = useState(
-    Object.keys(companyDetails)?.length === 0 ? true : false
-  );
-  const [newSecondaryAddress, setNewSecondaryAddress] = useState(
-    Object.keys(companyDetails)?.length === 0 ? true : false
-  );
+
 
   const handlePanNumberChange = (e) => {
     const value = e.target.value;
@@ -144,10 +140,12 @@ const CompanyFormModal = ({
     if (editInfo?.id !== undefined) {
       dispatch(getAllMainIndustry());
       dispatch(getClientDesiginationList());
+      console.log('dfjshksjhkjfsdjksh', editInfo)
       dispatch(getCompanyDetailsById(editInfo?.id)).then((resp) => {
         if (resp.meta.requestStatus === "fulfilled") {
+          console.log('dfjshksjhkjfsdjksh 11', resp?.payload)
           let editData = resp?.payload;
-          dispatch(getSubIndustryByIndustryId(editData?.industry));
+          dispatch(getSubIndustryByIndustryId(editData?.industry?.id));
           dispatch(getSubSubIndustryBySubIndustryId(editData?.subIndustry));
           form.setFieldsValue({
             isPresent: editData?.isPresent,
@@ -343,7 +341,8 @@ const CompanyFormModal = ({
                 getAllCompanyByStatus({
                   id: userid,
                   status: selectedFilter,
-                  page,
+                  page: paginationData?.page,
+                  size: paginationData?.size,
                 })
               );
               notification.success({
@@ -367,8 +366,8 @@ const CompanyFormModal = ({
         values.leadId = singleLeadResponseData?.parent
           ? values?.leadId
           : data?.id
-          ? data?.id
-          : data?.leadId;
+            ? data?.id
+            : data?.leadId;
         if (Object.keys(companyDetails)?.length > 0) {
           values.isPresent = true;
         } else {
@@ -377,6 +376,8 @@ const CompanyFormModal = ({
         if (formData?.companyId) {
           values.companyId = companyDetails?.id;
         }
+
+        console.log('kdsjkjasgdkjgdjh', values)
         dispatch(createCompanyForm(values))
           .then((response) => {
             if (response.meta.requestStatus === "fulfilled") {
@@ -454,6 +455,10 @@ const CompanyFormModal = ({
             primaryContact: false,
             isUnit: false,
             secondaryContact: false,
+            // isSecondaryAddress: Object.keys(companyDetails)?.length > 0 ? false : true,
+            // isPrimaryAddress: Object.keys(companyDetails)?.length > 0 ? false : true,
+            isSecondaryAddress: false,
+            isPrimaryAddress: false,
           }}
         >
           {Object.keys(companyDetails)?.length > 0 ? (
@@ -496,9 +501,9 @@ const CompanyFormModal = ({
                 options={
                   singleLeadResponseData?.childLead?.length > 0
                     ? singleLeadResponseData?.childLead?.map((item) => ({
-                        label: item?.childLeadName,
-                        value: item?.childId,
-                      }))
+                      label: item?.childLeadName,
+                      value: item?.childId,
+                    }))
                     : []
                 }
                 filterOption={(input, option) =>
@@ -532,14 +537,14 @@ const CompanyFormModal = ({
             rules={
               gstMand === "Registered" || gstMand === ""
                 ? [
-                    {
-                      required: true,
-                      message: "",
-                    },
-                    {
-                      validator: validateGstNumber(dispatch),
-                    },
-                  ]
+                  {
+                    required: true,
+                    message: "",
+                  },
+                  {
+                    validator: validateGstNumber(dispatch),
+                  },
+                ]
                 : []
             }
           >
@@ -557,9 +562,9 @@ const CompanyFormModal = ({
               options={
                 allIndustry?.length > 0
                   ? allIndustry?.map((item) => ({
-                      label: item?.name,
-                      value: item?.id,
-                    }))
+                    label: item?.name,
+                    value: item?.id,
+                  }))
                   : []
               }
               filterOption={(input, option) =>
@@ -588,9 +593,9 @@ const CompanyFormModal = ({
               options={
                 subIndustryListById?.length > 0
                   ? subIndustryListById?.map((item) => ({
-                      label: item?.name,
-                      value: item?.id,
-                    }))
+                    label: item?.name,
+                    value: item?.id,
+                  }))
                   : []
               }
               filterOption={(input, option) =>
@@ -615,9 +620,9 @@ const CompanyFormModal = ({
               options={
                 subSubIndustryListById?.length > 0
                   ? subSubIndustryListById?.map((item) => ({
-                      label: item?.name,
-                      value: item?.id,
-                    }))
+                    label: item?.name,
+                    value: item?.id,
+                  }))
                   : []
               }
               filterOption={(input, option) =>
@@ -645,9 +650,9 @@ const CompanyFormModal = ({
               options={
                 industryDataListById?.length > 0
                   ? industryDataListById?.map((item) => ({
-                      label: item?.name,
-                      value: item?.id,
-                    }))
+                    label: item?.name,
+                    value: item?.id,
+                  }))
                   : []
               }
               filterOption={(input, option) =>
@@ -708,9 +713,9 @@ const CompanyFormModal = ({
                           options={
                             companyUnits?.length > 0
                               ? companyUnits?.map((item) => ({
-                                  label: item?.companyName,
-                                  value: item?.id,
-                                }))
+                                label: item?.companyName,
+                                value: item?.id,
+                              }))
                               : []
                           }
                           filterOption={(input, option) =>
@@ -753,9 +758,9 @@ const CompanyFormModal = ({
                   options={
                     allUsers?.length > 0
                       ? allUsers?.map((item) => ({
-                          label: item?.fullName,
-                          value: item?.id,
-                        }))
+                        label: item?.fullName,
+                        value: item?.id,
+                      }))
                       : []
                   }
                   filterOption={(input, option) =>
@@ -768,17 +773,7 @@ const CompanyFormModal = ({
           <Form.Item
             label="Pan number"
             name="panNo"
-            // rules={[
-            //   {
-            //     required: true,
-            //     message: "Please enter your PAN card number",
-            //   },
-            //   {
-            //     pattern: /^[A-Z0-9]{10}$/,
-            //     message:
-            //       "Invalid PAN card number, should not accept any special charcter ",
-            //   },
-            // ]}
+
           >
             <Input maxLength={10} onChange={handlePanNumberChange} />
           </Form.Item>
@@ -846,18 +841,7 @@ const CompanyFormModal = ({
                       <Input />
                     </Form.Item>
 
-                    {/* <Form.Item
-                      label="Desigination"
-                      name="primaryDesignation"
-                      rules={[
-                        {
-                          required: true,
-                          message: "please enter desigination",
-                        },
-                      ]}
-                    >
-                      <Input />
-                    </Form.Item> */}
+
                     <Form.Item
                       label="Desigination"
                       name="primaryDesignation"
@@ -874,9 +858,9 @@ const CompanyFormModal = ({
                         options={
                           desiginationList?.length > 0
                             ? desiginationList?.map((item) => ({
-                                label: item?.name,
-                                value: item?.id,
-                              }))
+                              label: item?.name,
+                              value: item?.id,
+                            }))
                             : []
                         }
                         filterOption={(input, option) =>
@@ -942,13 +926,13 @@ const CompanyFormModal = ({
                       options={
                         contactList?.length > 0
                           ? contactList?.map((item) => ({
-                              label: `${maskEmail(
-                                item?.emails
-                              )} || ${maskMobileNumber(item?.contactNo)} `,
-                              value: item?.id,
-                              email: item?.emails,
-                              contact: item?.contactNo,
-                            }))
+                            label: `${maskEmail(
+                              item?.emails
+                            )} || ${maskMobileNumber(item?.contactNo)} `,
+                            value: item?.id,
+                            email: item?.emails,
+                            contact: item?.contactNo,
+                          }))
                           : []
                       }
                       filterOption={(input, option) =>
@@ -966,63 +950,73 @@ const CompanyFormModal = ({
             )}
           </Form.Item>
 
-          <Form.Item label="Add new primary address">
+          <Form.Item label="Add new primary address" name='isPrimaryAddress'>
             <Switch
               size="small"
-              value={newPrimaryAddress}
-              checked={newPrimaryAddress}
-              disabled={Object.keys(companyDetails)?.length > 0 ? false : true}
-              onChange={(e) => setNewPrimaryAddress(e)}
+            // disabled={Object.keys(companyDetails)?.length > 0 ? true : false}
             />
           </Form.Item>
 
-          {newPrimaryAddress && (
-            <>
-              <Form.Item
-                label="Primary address"
-                name="address"
-                rules={[
-                  { required: true, message: "please enter the address" },
-                ]}
-              >
-                <Input.TextArea />
-              </Form.Item>
+          <Form.Item
+            shouldUpdate={(prevValues, currentValues) =>
+              prevValues.isPrimaryAddress !== currentValues.isPrimaryAddress
+            }
+            noStyle
+          >
+            {({ getFieldValue }) => (
+              <>
+                {getFieldValue("isPrimaryAddress") ? (
+                  <>
+                    <Form.Item
+                      label="Primary address"
+                      name="address"
+                      rules={[
+                        { required: true, message: "please enter the address" },
+                      ]}
+                    >
+                      <Input.TextArea />
+                    </Form.Item>
 
-              <Form.Item
-                label="City"
-                name="city"
-                rules={[{ required: true, message: "please enter the city" }]}
-              >
-                <Input />
-              </Form.Item>
+                    <Form.Item
+                      label="City"
+                      name="city"
+                      rules={[{ required: true, message: "please enter the city" }]}
+                    >
+                      <Input />
+                    </Form.Item>
 
-              <Form.Item
-                label="State"
-                name="state"
-                rules={[{ required: true, message: "please enter the state" }]}
-              >
-                <Input />
-              </Form.Item>
+                    <Form.Item
+                      label="State"
+                      name="state"
+                      rules={[{ required: true, message: "please enter the state" }]}
+                    >
+                      <Input />
+                    </Form.Item>
 
-              <Form.Item
-                label="Country"
-                name="country"
-                rules={[
-                  { required: true, message: "please enter the country" },
-                ]}
-              >
-                <Input />
-              </Form.Item>
+                    <Form.Item
+                      label="Country"
+                      name="country"
+                      rules={[
+                        { required: true, message: "please enter the country" },
+                      ]}
+                    >
+                      <Input />
+                    </Form.Item>
 
-              <Form.Item
-                label="PinCode"
-                name="primaryPinCode"
-                rules={[{ required: true, message: "please enter pincode" }]}
-              >
-                <Input />
-              </Form.Item>
-            </>
-          )}
+                    <Form.Item
+                      label="PinCode"
+                      name="primaryPinCode"
+                      rules={[{ required: true, message: "please enter pincode" }]}
+                    >
+                      <Input />
+                    </Form.Item>
+                  </>
+                ) : (
+                  null
+                )}
+              </>
+            )}
+          </Form.Item>
 
           <Divider style={{ color: "#cccccc" }} orientation="center">
             Secondary details
@@ -1112,9 +1106,9 @@ const CompanyFormModal = ({
                         options={
                           desiginationList?.length > 0
                             ? desiginationList?.map((item) => ({
-                                label: item?.name,
-                                value: item?.id,
-                              }))
+                              label: item?.name,
+                              value: item?.id,
+                            }))
                             : []
                         }
                         filterOption={(input, option) =>
@@ -1180,13 +1174,13 @@ const CompanyFormModal = ({
                       options={
                         contactList?.length > 0
                           ? contactList?.map((item) => ({
-                              label: `${maskEmail(
-                                item?.emails
-                              )} || ${maskMobileNumber(item?.contactNo)} `,
-                              value: item?.id,
-                              email: item?.emails,
-                              contact: item?.contactNo,
-                            }))
+                            label: `${maskEmail(
+                              item?.emails
+                            )} || ${maskMobileNumber(item?.contactNo)} `,
+                            value: item?.id,
+                            email: item?.emails,
+                            contact: item?.contactNo,
+                          }))
                           : []
                       }
                       filterOption={(input, option) =>
@@ -1204,39 +1198,52 @@ const CompanyFormModal = ({
             )}
           </Form.Item>
 
-          <Form.Item label="Add new secondary address">
+          <Form.Item label="Add new secondary address" name='isSecondaryAddress'>
             <Switch
               size="small"
-              value={newSecondaryAddress}
-              checked={newSecondaryAddress}
-              disabled={Object.keys(companyDetails)?.length > 0 ? false : true}
-              onChange={(e) => setNewSecondaryAddress(e)}
+            // disabled={Object.keys(companyDetails)?.length > 0 ? true : false}
             />
           </Form.Item>
 
-          {newSecondaryAddress && (
-            <>
-              <Form.Item label="Address" name="saddress">
-                <Input.TextArea />
-              </Form.Item>
 
-              <Form.Item label="City" name="scity">
-                <Input />
-              </Form.Item>
+          <Form.Item
+            shouldUpdate={(prevValues, currentValues) =>
+              prevValues.isSecondaryAddress !== currentValues.isSecondaryAddress
+            }
+            noStyle
+          >
+            {({ getFieldValue }) => (
+              <>
+                {getFieldValue("isSecondaryAddress") ? (
+                  <>
+                    <Form.Item label="Address" name="saddress">
+                      <Input.TextArea />
+                    </Form.Item>
 
-              <Form.Item label="State" name="sstate">
-                <Input />
-              </Form.Item>
+                    <Form.Item label="City" name="scity">
+                      <Input />
+                    </Form.Item>
 
-              <Form.Item label="Country" name="scountry">
-                <Input />
-              </Form.Item>
+                    <Form.Item label="State" name="sstate">
+                      <Input />
+                    </Form.Item>
 
-              <Form.Item label="PinCode" name="secondaryPinCode">
-                <Input />
-              </Form.Item>
-            </>
-          )}
+                    <Form.Item label="Country" name="scountry">
+                      <Input />
+                    </Form.Item>
+
+                    <Form.Item label="PinCode" name="secondaryPinCode">
+                      <Input />
+                    </Form.Item>
+                  </>
+                ) : (
+                  null
+                )}
+              </>
+            )}
+          </Form.Item>
+
+
           {edit && (
             <Form.Item
               label="Comment"
