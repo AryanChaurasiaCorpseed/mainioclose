@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import "./LeadDetailsPage.scss";
+import "./LeadDetailsPage.css";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -44,6 +44,7 @@ import { Icon } from "@iconify/react";
 import { playErrorSound, playSuccessSound } from "../../Common/Commons";
 import CompanyFormModal from "../../Accounts/CompanyFormModal";
 import LeadComments from "./LeadComments";
+import LeadCompany from "../Leads/LeadCompany";
 const { Text } = Typography;
 
 toast.configure();
@@ -735,6 +736,7 @@ const LeadDetailsPage = ({ leadid }) => {
                   >
                     Assign to same person
                   </Button>
+                  <LeadCompany data={singleLeadResponseData}/>
                   <CompanyFormModal
                     detailView={true}
                     data={singleLeadResponseData}

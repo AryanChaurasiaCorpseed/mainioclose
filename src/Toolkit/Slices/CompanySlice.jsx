@@ -274,6 +274,11 @@ export const exportAllCompanyData=createAsyncThunk('exportAllCompanyData',async(
   return response.data
 })
 
+export const createNewCompanyInLeads=createAsyncThunk('',async(data)=>{
+  const response=await postQuery(`/leadService/api/v1/company/createCompanyNew`,data)
+  return response.data
+})
+
 const CompnaySlice = createSlice({
   name: "company",
   initialState: {

@@ -1,15 +1,14 @@
 import axios from "axios";
-const persistRoot = localStorage.getItem("persist:root");
+const storageData = localStorage.getItem("userDetail");
 let localData = null;
-if (persistRoot) {
+if (storageData) {
   try {
-    const localData = JSON.parse(JSON.parse(persistRoot)?.auth);
-    console.log(localData);
+    localData = JSON.parse(storageData);
   } catch (error) {
     console.error("Error parsing JSON:", error);
   }
 } else {
-  console.warn("persist:root not found in localStorage");
+  console.warn("user detail not found in localStorage");
 }
 
 export const getQueryWithBody = (URL, data) => {

@@ -22,6 +22,8 @@ const SideBar = () => {
   );
   const currentUserId = useSelector((state) => state.auth?.currentUser?.id);
 
+  console.log('jfghjksdfhkjdhfdf',currentRoles)
+
   useEffect(() => {
     if (currentUserId !== undefined) {
       dispatch(getUserProfilePhoto(currentUserId));
