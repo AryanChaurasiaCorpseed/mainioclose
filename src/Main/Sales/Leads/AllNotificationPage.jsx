@@ -1,23 +1,25 @@
-import React, { useEffect } from "react"
-import { useParams } from "react-router-dom"
-import { useDispatch, useSelector } from "react-redux"
+import React, { useEffect } from "react";
+import { useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import {
   getAllNotification,
   updateNotification,
-} from "../../../Toolkit/Slices/NotificationSlice"
-import MainHeading from "../../../components/design/MainHeading"
-import CommonTable from "../../../components/CommonTable"
-import LeadsDetailsMainPage from "./LeadsDetailsMainPage"
+} from "../../../Toolkit/Slices/NotificationSlice";
+import MainHeading from "../../../components/design/MainHeading";
+import CommonTable from "../../../components/CommonTable";
+import LeadsDetailsMainPage from "./LeadsDetailsMainPage";
 
 const AllNotificationPage = () => {
-  const { userid } = useParams()
-  const allNotifications = useSelector((state) => state.notify.allNotifications)
-  const dispatch = useDispatch()
+  const { userid } = useParams();
+  const allNotifications = useSelector(
+    (state) => state.notify.allNotifications
+  );
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getAllNotification(userid))
-    dispatch(updateNotification(userid))
-  }, [userid, dispatch])
+    dispatch(getAllNotification(userid));
+    dispatch(updateNotification(userid));
+  }, [userid, dispatch]);
 
   const columns = [
     {
@@ -26,14 +28,14 @@ const AllNotificationPage = () => {
       width: 60,
       filterable: false,
       render: (_, props, index) => {
-        return <p className="mb-0">{index + 1}</p>
+        return <p className="mb-0">{index + 1}</p>;
       },
     },
     {
       dataIndex: "message",
       title: "Message",
       render: (_, props) => {
-        const notify = props?.view
+        const notify = props?.view;
         return props?.type === "lead" ? (
           <LeadsDetailsMainPage leadId={props?.leadId} data={props}>
             {props?.message}
@@ -42,14 +44,14 @@ const AllNotificationPage = () => {
           <p className={`mb-0 ${!notify ? "noti-view" : ""}`}>
             {props?.message}
           </p>
-        )
+        );
       },
     },
     {
       dataIndex: "notifyDate",
       title: "Date",
       render: (_, props) => {
-        const data = props?.notifyDate
+        const data = props?.notifyDate;
         return data === null || undefined ? (
           "NA"
         ) : (
@@ -58,25 +60,23 @@ const AllNotificationPage = () => {
             {new Date(props.notifyDate).getHours()}:
             {new Date(props.notifyDate).getMinutes()}
           </p>
-        )
+        );
       },
     },
-  ]
+  ];
 
   return (
-    <div className="small-box-padding">
-      <>
-        <MainHeading data={`All notification`} />
-        <div>
-          <CommonTable
-            data={allNotifications}
-            columns={columns}
-            scroll={{ y: 550 }}
-          />
-        </div>
-      </>
-    </div>
-  )
-}
+    <>
+      <MainHeading data={`All notification`} />
+      <div>
+        <CommonTable
+          data={allNotifications}
+          columns={columns}
+          scroll={{ y: 550 }}
+        />
+      </div>
+    </>
+  );
+};
 
-export default AllNotificationPage
+export default AllNotificationPage;

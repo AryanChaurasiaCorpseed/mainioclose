@@ -128,6 +128,11 @@ const CompanyForm = () => {
       render: (_, value) => <OverFlowText>{value?.companyName}</OverFlowText>,
     },
     {
+      title: "Lead id",
+      dataIndex: "leadsId",
+      render: (_, data) => <OverFlowText>{data?.lead?.id}</OverFlowText>,
+    },
+    {
       title: "Lead name",
       dataIndex: "leads",
       render: (_, data) => <OverFlowText>{data?.lead?.leadName}</OverFlowText>,
@@ -392,91 +397,9 @@ const CompanyForm = () => {
                       });
                     }}
                   >
-                    {/* <Icon
-                      icon="fluent:approvals-app-24-regular"
-                      height={BTN_ICON_HEIGHT}
-                      width={BTN_ICON_WIDTH}
-                    /> */}
                     Approval
                   </Button>
-                  {/* <Tooltip title="Approved" arrow={false}>
-                    <Button
-                      size="small" 
-                      type="text"
-                      disabled={value?.status === "approved"}
-                      onClick={() => {
-                        dispatch(
-                          updateStatusById({
-                            status: "approved",
-                            id: value?.id,
-                            userid: userid,
-                          })
-                        )
-                          .then((resp) => {
-                            if (resp.meta.requestStatus === "fulfilled") {
-                              notification.success({
-                                message: "Status update successfully",
-                              })
-                            } else {
-                              notification.error({
-                                message: "Something went wrong !.",
-                              })
-                            }
-                          })
-                          .catch(() => {
-                            notification.error({
-                              message: "Something went wrong !.",
-                            })
-                          })
-                      }}
-                    >
-                      <Icon
-                        icon="fluent:thumb-like-20-regular"
-                        height={BTN_ICON_HEIGHT}
-                        width={BTN_ICON_WIDTH}
-                        color={value?.status === "approved" ? "green" : ""}
-                      />
-                    </Button>
-                  </Tooltip>
-                  <Tooltip title="Disapproved" arrow={false}>
-                    <Button
-                      size="small"
-                      type="text"
-                      disabled={value?.status === "disapproved"}
-                      onClick={() => {
-                        dispatch(
-                          updateStatusById({
-                            status: "disapproved",
-                            id: value?.id,
-                            userid: userid,
-                          })
-                        )
-                          .then((resp) => {
-                            if (resp.meta.requestStatus === "fulfilled") {
-                              notification.success({
-                                message: "Status update successfully",
-                              })
-                            } else {
-                              notification.error({
-                                message: "Something went wrong !.",
-                              })
-                            }
-                          })
-                          .catch(() => {
-                            notification.error({
-                              message: "Something went wrong !.",
-                            })
-                          })
-                      }}
-                    >
-                      <Icon
-                        icon="fluent:thumb-dislike-20-regular"
-                        height={BTN_ICON_HEIGHT}
-                        width={BTN_ICON_WIDTH}
-                        color={value?.status === "disapproved" ? "red" : ""}
-                      />
-                    </Button>
-                  </Tooltip> */}
+                  
                 </>
               );
             },
