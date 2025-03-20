@@ -502,14 +502,14 @@ button:focus {
 
 .bell-box .bell-count {
   color: #fff;
-  font-size: 13px;
+  font-size: 10px;
   background-color: red;
-  height: 20px;
-  width: 20px;
+  height: 16px;
+  width: 16px;
   border-radius: 50%;
   position: absolute;
   top: -2px;
-  right: -5px;
+  right: -3px;
   /* font-weight: 700; */
   display: flex;
   justify-content: center;

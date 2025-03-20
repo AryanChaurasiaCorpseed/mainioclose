@@ -25,6 +25,7 @@ import MainHeading from "../../../components/design/MainHeading";
 import {
   Button,
   DatePicker,
+  Drawer,
   Flex,
   Input,
   notification,
@@ -46,6 +47,7 @@ import {
 } from "../../Common/Commons";
 import LeadsDetailsMainPage from "./LeadsDetailsMainPage";
 import dayjs from "dayjs";
+import AllNotificationPage from "./AllNotificationPage";
 const { Text, Title } = Typography;
 const { Search } = Input;
 const { RangePicker } = DatePicker;
@@ -75,6 +77,7 @@ const LeadsModule = () => {
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [searchText, setSearchText] = useState("");
   const [uploadedFile, setUploadedFile] = useState(null);
+  const [openNotificationDrawer, setOpenNotificationDrawer] = useState(false);
 
   const onSelectChange = (newSelectedRowKeys, rowsData) => {
     setSelectedRowKeys(newSelectedRowKeys);
@@ -712,14 +715,7 @@ const LeadsModule = () => {
               headers={headers}
               filename={"exported_data.csv"}
             >
-              <Button
-                size="small"
-                // onClick={() => {
-                //   setOpenDropdown(false);
-                //   setSelectedRow([]);
-                //   setSelectedRowKeys([]);
-                // }}
-              >
+              <Button size="small">
                 <Icon
                   icon="fluent:arrow-upload-16-filled"
                   height={BTN_ICON_HEIGHT}
@@ -776,12 +772,16 @@ const LeadsModule = () => {
           )}
 
           <LeadCreateModel />
-          <Link to={`notification`}>
+          <Button
+            type="default"
+            onClick={() => setOpenNotificationDrawer(true)}
+          >
+            Notification{" "}
             <div className="bell-box">
               <span className="bell-count">{notificationCount}</span>
-              <Icon icon="fluent:alert-24-regular" width="32" height="32" />
+              <Icon icon="fluent:alert-24-regular" width="24" height="24" />
             </div>
-          </Link>
+          </Button>
         </Flex>
       </div>
 
@@ -1025,6 +1025,14 @@ const LeadsModule = () => {
           </Spin>
         </Suspense>
       </div>
+      <Drawer
+        open={openNotificationDrawer}
+        onClose={() => setOpenNotificationDrawer(false)}
+        closeIcon={false}
+        width={"80%"}
+      >
+        <AllNotificationPage />
+      </Drawer>
     </div>
   );
 };
