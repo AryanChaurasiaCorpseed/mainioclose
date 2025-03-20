@@ -416,11 +416,9 @@ const LeadDetailsPage = ({ leadid }) => {
                 }
               />
               <Space size={4}>
-                <Button
-                  size="small"
-                  onClick={() => handleUpdateContact(item)}
-                >
-                  <Icon icon="fluent:edit-20-regular" />Edit
+                <Button size="small" onClick={() => handleUpdateContact(item)}>
+                  <Icon icon="fluent:edit-20-regular" />
+                  Edit
                 </Button>
                 {adminRole && (
                   <Popconfirm
@@ -428,7 +426,7 @@ const LeadDetailsPage = ({ leadid }) => {
                     description="Are you sure to delete this task?"
                     onConfirm={() => deleteContactFun(item.clientId)}
                   >
-                    <Button size="small" danger >
+                    <Button size="small" danger>
                       <Icon icon="fluent:delete-20-regular" /> Delete
                     </Button>
                   </Popconfirm>
@@ -536,7 +534,8 @@ const LeadDetailsPage = ({ leadid }) => {
                         size="small"
                         onClick={() => setUpdateLeadNameToggle(false)}
                       >
-                        <Icon icon="fluent:edit-20-regular" />Edit
+                        <Icon icon="fluent:edit-20-regular" />
+                        Edit
                       </Button>
                     </div>
                   </div>
@@ -586,26 +585,28 @@ const LeadDetailsPage = ({ leadid }) => {
                   </Text>
                 </div>
                 <Divider style={{ margin: "6px" }} />
-                <div className="lead-assignee-container">
-                  <Text className="heading-text">Update assignee</Text>
-                  <Select
-                    placeholder="Change assignee"
-                    size="small"
-                    showSearch
-                    style={{ width: "100%", margin: "6px 0px" }}
-                    value={assigneValue}
-                    options={
-                      userDataResponse?.map((ele) => ({
-                        label: ele?.fullName,
-                        value: ele?.id,
-                      })) || []
-                    }
-                    filterOption={(input, option) =>
-                      option.label.toLowerCase().includes(input.toLowerCase())
-                    }
-                    onChange={(e) => changeLeadAssignee(e)}
-                  />
-                </div>
+                {currentUserDetail?.department !== "Sales" && (
+                  <div className="lead-assignee-container">
+                    <Text className="heading-text">Update assignee</Text>
+                    <Select
+                      placeholder="Change assignee"
+                      size="small"
+                      showSearch
+                      style={{ width: "100%", margin: "6px 0px" }}
+                      value={assigneValue}
+                      options={
+                        userDataResponse?.map((ele) => ({
+                          label: ele?.fullName,
+                          value: ele?.id,
+                        })) || []
+                      }
+                      filterOption={(input, option) =>
+                        option.label.toLowerCase().includes(input.toLowerCase())
+                      }
+                      onChange={(e) => changeLeadAssignee(e)}
+                    />
+                  </div>
+                )}
                 <div className="flex-vert-hori-center">
                   <Icon icon="fluent:person-24-regular" />
                   <Text>
@@ -701,17 +702,27 @@ const LeadDetailsPage = ({ leadid }) => {
                       {complianceDocumentList?.map((item, idx) => (
                         <>
                           <Tag
-                          key={`${idx}compDoc`}
-                            style={{ cursor: "pointer",display:'flex',alignItems:'center',gap:'8px' }}
+                            key={`${idx}compDoc`}
+                            style={{
+                              cursor: "pointer",
+                              display: "flex",
+                              alignItems: "center",
+                              gap: "8px",
+                            }}
                             onClick={() => {
                               setDocument(item?.name);
                               setOpenDocumentModal(true);
                             }}
                             icon={
-                              <Icon icon="fluent:document-pdf-24-regular" height={18} width={18} color="red" />
+                              <Icon
+                                icon="fluent:document-pdf-24-regular"
+                                height={18}
+                                width={18}
+                                color="red"
+                              />
                             }
                           >
-                            Document {idx+1}
+                            Document {idx + 1}
                           </Tag>
                         </>
                       ))}
@@ -736,7 +747,7 @@ const LeadDetailsPage = ({ leadid }) => {
                   >
                     Assign to same person
                   </Button>
-                  <LeadCompany data={singleLeadResponseData}/>
+                  <LeadCompany data={singleLeadResponseData} />
                   <CompanyFormModal
                     detailView={true}
                     data={singleLeadResponseData}

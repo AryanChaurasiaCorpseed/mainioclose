@@ -880,6 +880,46 @@ export const searchCompaniesForEstimate = createAsyncThunk(
   }
 );
 
+export const searchCompaniesForCompany = createAsyncThunk(
+  "searchCompaniesForCompany",
+  async ({ searchText, userId, searchField }) => {
+    const response = await getQuery(
+      `/leadService/api/v1/company/companySearchByGstAndContactDetailsNew?searchNameAndGSt=${searchText}&userId=${userId}&fieldSearch=${searchField}`
+    );
+    return response.data;
+  }
+);
+
+export const getAllNewCompanies = createAsyncThunk(
+  "getAllNewCompanies",
+  async ({ userId, filterUserId, page, size }) => {
+    const response = await getQuery(
+      `/leadService/api/v1/company/getAllParentCompanyV2?userId=${userId}&filterUserId=${filterUserId}&page=${page}&size=${size}`
+    );
+    return response.data;
+  }
+);
+
+export const getGstDetailsByCompanyId = createAsyncThunk(
+  "getGstDetailsByCompanyId",
+  async (companyId) => {
+    const response = await getQuery(
+      `/leadService/api/v1/company/getGstAndStateByCompanyId?companyId=${companyId}`
+    );
+    return response.data;
+  }
+);
+
+export const getCompanyUnitsByStateAndCompanyId = createAsyncThunk(
+  "getCompanyUnitsByStateAndCompanyId",
+  async ({ companyId, state }) => {
+    const response = await getQuery(
+      `/leadService/api/v1/company/getCompanyByGstAndCompanyId?companyId=${companyId}&state=${state}`
+    );
+    return response.data;
+  }
+);
+
 export const LeadSlice = createSlice({
   name: "lead",
   initialState: {
@@ -937,7 +977,11 @@ export const LeadSlice = createSlice({
     vendorFilterationLoading: "",
     leadDetailLoading: "",
     proposalDetails: {},
-    companiesListForEstimate:[]
+    companiesListForEstimate: [],
+    seachCompniesList: [],
+    newCompaniesList: [],
+    companyGstDetailList: [],
+    companyUnitList:[]
   },
   reducers: {
     handleLoadingState: (state, action) => {
@@ -1390,9 +1434,7 @@ export const LeadSlice = createSlice({
       state.proposalDetails = {};
     });
 
-
-    builder.addCase(searchCompaniesForEstimate.pending, (state, action) => {
-    });
+    builder.addCase(searchCompaniesForEstimate.pending, (state, action) => {});
     builder.addCase(searchCompaniesForEstimate.fulfilled, (state, action) => {
       state.companiesListForEstimate = action?.payload;
     });
@@ -1400,8 +1442,38 @@ export const LeadSlice = createSlice({
       state.companiesListForEstimate = [];
     });
 
+    builder.addCase(searchCompaniesForCompany.pending, (state, action) => {});
+    builder.addCase(searchCompaniesForCompany.fulfilled, (state, action) => {
+      state.seachCompniesList = action?.payload;
+    });
+    builder.addCase(searchCompaniesForCompany.rejected, (state, action) => {
+      state.seachCompniesList = [];
+    });
+
+    builder.addCase(getAllNewCompanies.pending, (state, action) => {});
+    builder.addCase(getAllNewCompanies.fulfilled, (state, action) => {
+      state.newCompaniesList = action?.payload;
+    });
+    builder.addCase(getAllNewCompanies.rejected, (state, action) => {
+      state.newCompaniesList = [];
+    });
+
+    builder.addCase(getGstDetailsByCompanyId.pending, (state, action) => {});
+    builder.addCase(getGstDetailsByCompanyId.fulfilled, (state, action) => {
+      state.companyGstDetailList = action?.payload;
+    });
+    builder.addCase(getGstDetailsByCompanyId.rejected, (state, action) => {
+      state.companyGstDetailList = [];
+    });
 
 
+    builder.addCase(getCompanyUnitsByStateAndCompanyId.pending, (state, action) => {});
+    builder.addCase(getCompanyUnitsByStateAndCompanyId.fulfilled, (state, action) => {
+      state.companyUnitList = action?.payload;
+    });
+    builder.addCase(getCompanyUnitsByStateAndCompanyId.rejected, (state, action) => {
+      state.companyUnitList = [];
+    });
   },
 });
 export const {

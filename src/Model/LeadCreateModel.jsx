@@ -1,58 +1,72 @@
-import React, { useCallback, useEffect, useState } from "react"
-import "./Model.css"
-import { leadSource } from "../data/FakeData"
-import { useParams } from "react-router"
-import { Button, Form, Input, Modal, notification, Select } from "antd"
-import { useDispatch, useSelector } from "react-redux"
+import React, { useCallback, useEffect, useState } from "react";
+import "./Model.css";
+import { leadSource } from "../data/FakeData";
+import { useParams } from "react-router";
+import { Button, Form, Input, Modal, notification, Select } from "antd";
+import { useDispatch, useSelector } from "react-redux";
 import {
   createLeads,
   getAllLeadUsers,
   handleLoadingState,
-} from "../Toolkit/Slices/LeadSlice"
-import { getHighestPriorityRole } from "../Main/Common/Commons"
+} from "../Toolkit/Slices/LeadSlice";
+import { getHighestPriorityRole } from "../Main/Common/Commons";
 
 const LeadCreateModel = ({ leadByCompany, companyId }) => {
-  const [form] = Form.useForm()
-  const dispatch = useDispatch()
-  const { userid } = useParams()
-  const allLeadUser = useSelector((state) => state.leads.allLeadUsers)
-  const currentRoles = useSelector((state) => state?.auth?.roles)
-  const [openModal, setOpenModal] = useState(false)
+  const [form] = Form.useForm();
+  const dispatch = useDispatch();
+  const { userid } = useParams();
+  const allLeadUser = useSelector((state) => state.leads.allLeadUsers);
+  const currentRoles = useSelector((state) => state?.auth?.roles);
+  const currentUserDetail = useSelector(
+    (state) => state.auth.getDepartmentDetail
+  );
+  const [openModal, setOpenModal] = useState(false);
 
   useEffect(() => {
-    dispatch(getAllLeadUsers())
-    dispatch(handleLoadingState())
-  }, [dispatch])
+    dispatch(getAllLeadUsers());
+    dispatch(handleLoadingState());
+  }, [dispatch]);
+
+  const handleOpenModal = () => {
+    if (currentUserDetail?.department === "Sales") {
+      notification.warning({
+        message: "Please connect with Quality team to create lead",
+      });
+    } else {
+      setOpenModal(true);
+    }
+  };
 
   const handleFinish = useCallback(
     (values) => {
-      values.categoryId = "1"
-      values.createdById = userid
-      values.serviceId = "1"
-      values.industryId = "1"
-      values.assigneeId = getHighestPriorityRole(currentRoles)==='ADMIN'
-        ? values.assigneeId
-        : userid
+      values.categoryId = "1";
+      values.createdById = userid;
+      values.serviceId = "1";
+      values.industryId = "1";
+      values.assigneeId =
+        getHighestPriorityRole(currentRoles) === "ADMIN"
+          ? values.assigneeId
+          : userid;
       if (leadByCompany) {
-        values.companyId = companyId
+        values.companyId = companyId;
       }
       dispatch(createLeads(values)).then((resp) => {
         if (resp.meta.requestStatus === "fulfilled") {
-          setOpenModal(false)
-          window.location.reload()
+          setOpenModal(false);
+          window.location.reload();
         } else {
-          notification.error({ message: "Something went wrong !." })
+          notification.error({ message: "Something went wrong !." });
         }
-      })
+      });
     },
 
     [userid, dispatch, companyId, leadByCompany, currentRoles]
-  )
+  );
 
   return (
     <>
       <div className="team-model">
-        <Button type="primary" size="small" onClick={() => setOpenModal(true)}>
+        <Button type="primary" size="small" onClick={handleOpenModal}>
           Create lead
         </Button>
       </div>
@@ -193,7 +207,7 @@ const LeadCreateModel = ({ leadByCompany, companyId }) => {
         </Form>
       </Modal>
     </>
-  )
-}
+  );
+};
 
-export default LeadCreateModel
+export default LeadCreateModel;

@@ -1,18 +1,20 @@
 import {
   Button,
   Divider,
+  Flex,
   Form,
   Input,
   Modal,
   notification,
   Select,
   Switch,
+  Typography,
   Upload,
 } from "antd";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Icon } from "@iconify/react";
 import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import {
   getAllMainIndustry,
   getIndustryDataBySubSubIndustryId,
@@ -26,10 +28,12 @@ import {
   getCompanyByUnitId,
   getCompanyDetailsByGst,
   getContactById,
+  searchCompaniesForCompany,
 } from "../../../Toolkit/Slices/LeadSlice";
 import {
   createNewCompanyInLeads,
   getAllCompanyByStatus,
+  getAllCompanyType,
   getCompanyDetailsById,
   updateCompanyForm,
 } from "../../../Toolkit/Slices/CompanySlice";
@@ -46,13 +50,18 @@ import {
   getAllCountries,
   getAllStatesByCountryId,
 } from "../../../Toolkit/Slices/CommonSlice";
+const { Text } = Typography;
 
 const LeadCompany = ({ edit, data, editInfo, selectedFilter, detailView }) => {
   const [form] = Form.useForm();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { userid } = useParams();
   const companyDetails = useSelector(
     (state) => state?.leads?.companyDetailsById
+  );
+  const seachCompniesList = useSelector(
+    (state) => state.leads.seachCompniesList
   );
   const allUsers = useSelector((state) => state.user.allUsers);
   const companyUnits = useSelector((state) => state?.leads?.companyUnits);
@@ -62,6 +71,7 @@ const LeadCompany = ({ edit, data, editInfo, selectedFilter, detailView }) => {
   const singleLeadResponseData = useSelector(
     (state) => state.leads.singleLeadResponseData
   );
+  const companyTypeList = useSelector((state) => state.company.companyTypeList);
   const currentRoles = useSelector((state) => state?.auth?.roles);
   const contactList = useSelector((state) => state?.leads?.allContactList);
   const contactDetail = useSelector((state) => state?.leads?.contactDetail);
@@ -85,13 +95,31 @@ const LeadCompany = ({ edit, data, editInfo, selectedFilter, detailView }) => {
   );
   const [openModal, setOpenModal] = useState(false);
   const [formLoading, setFormLoading] = useState("");
-  const [gstMand, setGstMand] = useState("");
+  const [gstMand, setGstMand] = useState(false);
+  const [openDropdown, setOpenDropdown] = useState(false);
+  const [searchDetail, setSearchDetail] = useState({
+    searchText: "",
+    userId: userid,
+    searchField: "gstNumber",
+  });
+
+  useEffect(() => {
+    dispatch(getAllCompanyType());
+  }, [dispatch]);
 
   const handlePanNumberChange = (e) => {
     const value = e.target.value;
     const upperCaseValue = value.toUpperCase();
     const isValid = /^[A-Z0-9]+$/.test(upperCaseValue);
     form.setFieldsValue({ panNo: isValid ? upperCaseValue : value });
+  };
+
+  const handleSearchCompanies = () => {
+    dispatch(searchCompaniesForCompany(searchDetail)).then((res) => {
+      if (res.meta.requestStatus === "fulfilled") {
+        setOpenDropdown(true);
+      }
+    });
   };
 
   const handleButtonClick = useCallback(() => {
@@ -137,6 +165,10 @@ const LeadCompany = ({ edit, data, editInfo, selectedFilter, detailView }) => {
       return e;
     }
     return e?.fileList;
+  };
+
+  const handleMoveToUnits = (data) => {
+    navigate(`/erp/${userid}/sales/newcompanies/${data?.companyId}/details`);
   };
 
   const handleFinish = useCallback(
@@ -197,50 +229,77 @@ const LeadCompany = ({ edit, data, editInfo, selectedFilter, detailView }) => {
             primaryContact: false,
             isUnit: false,
             secondaryContact: false,
+            isConsultant: false,
           }}
         >
           <div className="form-grid-col-2">
-            <Form.Item
-              label="Company name"
-              name="companyName"
-              rules={[
-                { required: true, message: "please enter the company name" },
-              ]}
-            >
-              <Input />
+            <Form.Item label="Consultant" name={"isConsultant"}>
+              <Switch size="small" />
             </Form.Item>
+            <Flex style={{ width: "100%" }}>
+              <Form.Item
+                style={{ width: "75%" }}
+                label="Company name"
+                name="companyName"
+                rules={[
+                  { required: true, message: "please enter the company name" },
+                ]}
+              >
+                <Select
+                  showSearch
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      handleSearchCompanies();
+                    }
+                  }}
+                  onSearch={(e) =>
+                    setSearchDetail((prev) => ({
+                      ...prev,
+                      searchText: e,
+                    }))
+                  }
+                  open={openDropdown}
+                  onDropdownVisibleChange={(e) => setOpenDropdown(e)}
+                  options={
+                    seachCompniesList?.length > 0
+                      ? seachCompniesList?.map((item) => ({
+                          label: (
+                            <Flex justify="space-between" align="center">
+                              <Text>{item?.companyName}</Text>
+                              <Button
+                                size="small"
+                                onClick={() => handleMoveToUnits(item)}
+                              >
+                                Add unit
+                              </Button>
+                            </Flex>
+                          ),
+                          value: item?.companyId,
+                        }))
+                      : []
+                  }
+                />
+              </Form.Item>
+              <Form.Item label="." style={{ width: "20%" }}>
+                <Select
+                  style={{ width: "100px" }}
+                  value={searchDetail?.searchField}
+                  onChange={(e) =>
+                    setSearchDetail((prev) => ({ ...prev, searchField: e }))
+                  }
+                  options={[
+                    { label: "GST", value: "gstNumber" },
+                    { label: "Name", value: "searchNameAndGSt" },
+                    { label: "Contact no.", value: "contactNumber" },
+                    { label: "Email", value: "contactEmail" },
+                  ]}
+                />
+              </Form.Item>
+            </Flex>
 
             <Form.Item
-              label="Gst number"
-              name="gstNo"
-              rules={
-                gstMand === "Registered" || gstMand === ""
-                  ? [
-                      {
-                        required: true,
-                        message: "",
-                      },
-                      {
-                        validator: validateGstNumber(dispatch),
-                      },
-                    ]
-                  : []
-              }
-            >
-              <Input maxLength={15} />
-            </Form.Item>
-
-            <Form.Item
-              label="Company age"
-              name="companyAge"
-              rules={[{ required: true, message: "please enter company age" }]}
-            >
-              <Input />
-            </Form.Item>
-
-            <Form.Item
-              label="Gst type"
-              name="gstType"
+              label="Company type"
+              name="companyType"
               rules={[
                 { required: true, message: "please select the gst type" },
               ]}
@@ -248,14 +307,43 @@ const LeadCompany = ({ edit, data, editInfo, selectedFilter, detailView }) => {
               <Select
                 showSearch
                 allowClear
-                options={[
-                  { label: "Registered", value: "Registered" },
-                  { label: "Unregisterded", value: "Unregistered" },
-                  { label: "SE2", value: "SE2" },
-                  { label: "International", value: "International" },
-                ]}
-                onChange={(e) => setGstMand(e)}
+                options={
+                  companyTypeList?.length > 0
+                    ? companyTypeList?.map((item) => ({
+                        label: item?.name,
+                        value: item?.id,
+                        ...item,
+                      }))
+                    : []
+                }
+                onChange={(e, x) => setGstMand(x?.gstPresent)}
               />
+            </Form.Item>
+
+            {gstMand && (
+              <Form.Item
+                label="Gst number"
+                name="gstNo"
+                rules={[
+                  {
+                    required: true,
+                    message: "",
+                  },
+                  {
+                    validator: validateGstNumber(dispatch),
+                  },
+                ]}
+              >
+                <Input maxLength={15} />
+              </Form.Item>
+            )}
+
+            <Form.Item
+              label="Company age"
+              name="companyAge"
+              rules={[{ required: true, message: "please enter company age" }]}
+            >
+              <Input />
             </Form.Item>
 
             <Form.Item

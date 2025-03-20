@@ -95,6 +95,9 @@ import Groupvoucher from "./Main/Accounts/Organization/Group/Groupvoucher";
 import AccountEstimate from "./Main/Accounts/estimate/AccountEstimate";
 import AllInvoice from "./Main/Accounts/AllInvoice";
 import ManageSales from "./Main/Accounts/ManageSales";
+import NewCompany from "./Main/Sales/Leads/NewCompany";
+import CompanyDetailPage from "./Main/Sales/Leads/CompanyDetailPage";
+import NewCompanyUnits from "./Main/Sales/Leads/NewCompanyUnits";
 
 const SpinLoading = lazy(() => import("./components/SpinLoading"));
 
@@ -292,11 +295,11 @@ function App() {
               <Route path="/erp/:userid/sales" element={<SalesMod />}>
                 <Route path="inbox" element={<InboxPage />} />
                 <Route path="scalaton" element={<TableScalaton />} />
-                {/* <Route path=":id" element={<LeadDetailsPage />} /> */}
-
                 <Route path="oppurtities" element={<Opportunities />} />
-                {/* <Route path="company" element={<MainCompanyPage />} /> */}
                 <Route path="company" element={<MainComanyModule />} />
+                <Route path="newcompanies" element={<NewCompany />} />
+                <Route path="newcompanies/:companyId/details" element={<CompanyDetailPage />} />
+                <Route path="newcompanies/:companyId/details/:state/companyUnit" element={<NewCompanyUnits />} />
                 <Route path="project" element={<ProjectPage />} />
                 <Route
                   path="vendors-request"

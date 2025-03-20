@@ -269,15 +269,46 @@ export const getAllConsultantByCompanyCount = createAsyncThunk(
   }
 );
 
-export const exportAllCompanyData=createAsyncThunk('exportAllCompanyData',async({userId,filterUserId})=>{
-  const response=await getQuery(`/leadService/api/v1/company/getAllCompanyForExport?userId=${userId}&filterUserId=${filterUserId}`)
-  return response.data
-})
+export const exportAllCompanyData = createAsyncThunk(
+  "exportAllCompanyData",
+  async ({ userId, filterUserId }) => {
+    const response = await getQuery(
+      `/leadService/api/v1/company/getAllCompanyForExport?userId=${userId}&filterUserId=${filterUserId}`
+    );
+    return response.data;
+  }
+);
 
-export const createNewCompanyInLeads=createAsyncThunk('',async(data)=>{
-  const response=await postQuery(`/leadService/api/v1/company/createCompanyNew`,data)
-  return response.data
-})
+export const createNewCompanyInLeads = createAsyncThunk(
+  "createNewCompanyInLeads",
+  async (data) => {
+    const response = await postQuery(
+      `/leadService/api/v1/company/createCompanyNew`,
+      data
+    );
+    return response.data;
+  }
+);
+
+export const getAllCompanyType = createAsyncThunk(
+  "getAllCompanyType",
+  async (data) => {
+    const response = await getQuery(
+      `/leadService/api/v1/state/getAllCompanyType`
+    );
+    return response.data;
+  }
+);
+
+export const getHandleSearchCompanies = createAsyncThunk(
+  "getHandleSearchCompanies",
+  async ({ userId, searchNameAndGSt,type }) => {
+    const response = await getQuery(
+      `/leadService/api/v1/company/searchCompanyByNameAndGSTAndContactAndEmail?searchNameAndGSt=${searchNameAndGSt}&userId=${userId}&type=${type}`
+    );
+    return response.data;
+  }
+);
 
 const CompnaySlice = createSlice({
   name: "company",
@@ -305,6 +336,7 @@ const CompnaySlice = createSlice({
     consultantCompanyList: [],
     consultantLoading: "",
     consultantCompanyCount: 0,
+    companyTypeList: [],
   },
   reducers: {
     handleNextPagination: (state, action) => {
@@ -434,6 +466,18 @@ const CompnaySlice = createSlice({
       state.loading = "rejected";
     });
 
+
+    builder.addCase(getHandleSearchCompanies.pending, (state, action) => {
+      state.loading = "pending";
+    });
+    builder.addCase(getHandleSearchCompanies.fulfilled, (state, action) => {
+      state.allCompnay = action.payload;
+      state.loading = "success";
+    });
+    builder.addCase(getHandleSearchCompanies.rejected, (state, action) => {
+      state.loading = "rejected";
+    });
+
     builder.addCase(searchCompanyForm.pending, (state, action) => {
       state.loading = "pending";
     });
@@ -530,6 +574,18 @@ const CompnaySlice = createSlice({
         state.consultantCompanyCount = 0;
       }
     );
+
+    builder.addCase(getAllCompanyType.pending, (state, action) => {
+      state.consultantLoading = "pending";
+    });
+    builder.addCase(getAllCompanyType.fulfilled, (state, action) => {
+      state.companyTypeList = action.payload;
+      state.consultantLoading = "success";
+    });
+    builder.addCase(getAllCompanyType.rejected, (state, action) => {
+      state.consultantLoading = "rejected";
+      state.companyTypeList = [];
+    });
   },
 });
 

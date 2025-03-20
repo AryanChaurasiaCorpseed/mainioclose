@@ -24,17 +24,13 @@ import {
 import MainHeading from "../../../components/design/MainHeading";
 import {
   Button,
-  Checkbox,
   DatePicker,
-  Divider,
-  Dropdown,
   Flex,
   Input,
   notification,
   Popconfirm,
   Popover,
   Select,
-  Space,
   Spin,
   Typography,
   Upload,
@@ -76,19 +72,15 @@ const LeadsModule = () => {
   const [multibtn, setMultibtn] = useState("");
   const [leadDelLoading, setLeadDelLoading] = useState("");
   const [hideMUltiFilter, setHideMUltiFilter] = useState(false);
-  const [filterBtnNew, setFilterBtnNew] = useState(false);
-  const [openDropdown, setOpenDropdown] = useState(false);
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
-  const [selectedRow, setSelectedRow] = useState([]);
-  const [dropdownData, setDropdownData] = useState([]);
-  const [headerData, setHeaderData] = useState([]);
   const [searchText, setSearchText] = useState("");
   const [uploadedFile, setUploadedFile] = useState(null);
 
   const onSelectChange = (newSelectedRowKeys, rowsData) => {
     setSelectedRowKeys(newSelectedRowKeys);
-    setSelectedRow(rowsData);
   };
+
+  console.log("jkfdhgdkjgkjdhgdj", currentUserDetail);
 
   const { userid } = useParams();
   const dispatch = useDispatch();
@@ -459,30 +451,36 @@ const LeadsModule = () => {
         <Text>{new Date(data?.createDate).toLocaleDateString()}</Text>
       ),
     },
-    {
-      title: "Change assignee",
-      dataIndex: "assignee",
-      checked: false,
-      render: (_, data) => (
-        <Select
-          showSearch
-          size="small"
-          style={{ width: "100%" }}
-          value={adminRole ? data?.assignee?.id : ""}
-          placeholder="select assignee"
-          options={
-            leadUserNew?.map((ele) => ({
-              label: ele?.fullName,
-              value: ele?.id,
-            })) || []
-          }
-          filterOption={(input, option) =>
-            option.label.toLowerCase().includes(input.toLowerCase())
-          }
-          onChange={(e) => handleUpdateAssignee(e, data?.id)}
-        />
-      ),
-    },
+
+    ...(currentUserDetail?.department !== "Sales"
+      ? [
+          {
+            title: "Change assignee",
+            dataIndex: "assignee",
+            checked: false,
+            render: (_, data) => (
+              <Select
+                showSearch
+                size="small"
+                style={{ width: "100%" }}
+                value={adminRole ? data?.assignee?.id : ""}
+                placeholder="select assignee"
+                options={
+                  leadUserNew?.map((ele) => ({
+                    label: ele?.fullName,
+                    value: ele?.id,
+                  })) || []
+                }
+                filterOption={(input, option) =>
+                  option.label.toLowerCase().includes(input.toLowerCase())
+                }
+                onChange={(e) => handleUpdateAssignee(e, data?.id)}
+              />
+            ),
+          },
+        ]
+      : []),
+
     ...(adminRole
       ? [
           {
@@ -511,26 +509,20 @@ const LeadsModule = () => {
               />
             ),
           },
-          ...(adminRole
-            ? [
-                {
-                  title: "Created by",
-                  dataIndex: "createdBy",
-                  checked: true,
-                  render: (_, data) => (
-                    <OverFlowText>{data?.createdBy?.fullName}</OverFlowText>
-                  ),
-                },
-                {
-                  title: "Source",
-                  dataIndex: "source",
-                  checked: true,
-                  render: (_, data) => (
-                    <OverFlowText>{data?.source}</OverFlowText>
-                  ),
-                },
-              ]
-            : []),
+          {
+            title: "Created by",
+            dataIndex: "createdBy",
+            checked: true,
+            render: (_, data) => (
+              <OverFlowText>{data?.createdBy?.fullName}</OverFlowText>
+            ),
+          },
+          {
+            title: "Source",
+            dataIndex: "source",
+            checked: true,
+            render: (_, data) => <OverFlowText>{data?.source}</OverFlowText>,
+          },
           {
             title: "Create project",
             dataIndex: "project",

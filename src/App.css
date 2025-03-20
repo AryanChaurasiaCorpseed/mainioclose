@@ -972,6 +972,7 @@ select.form-control:not([size]):not([multiple]) {
   justify-content: flex-start;
   align-items: center;
   gap: 6px;
+  margin-bottom: 2px;
 }
 
 .heading-text {
