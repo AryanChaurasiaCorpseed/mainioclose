@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   exportAllCompanyData,
   getCompanyAction,
+  getHandleSearchCompanies,
   searchCompany,
   updateCompanyAssignee,
   updateMultiCompanyAssignee,
@@ -63,6 +64,11 @@ const MainCompanyPage = () => {
   });
   const [filterUserId, setFilterUserId] = useState("");
   const [openPopover, setOpenPopover] = useState(false);
+  const [searchDetail, setSearchDetail] = useState({
+    type: "name",
+    userId: userid,
+    searchNameAndGSt: "",
+  });
 
   useEffect(() => {
     dispatch(
@@ -88,6 +94,10 @@ const MainCompanyPage = () => {
     if (!b) {
       dispatch(searchCompany({ inputText: "", userId: userid }));
     }
+  };
+
+  const handleSearchCompany = () => {
+    dispatch(getHandleSearchCompanies(searchDetail));
   };
 
   const handlePagination = useCallback(
@@ -154,16 +164,6 @@ const MainCompanyPage = () => {
     [paginationData, dispatch, currUser]
   );
 
-  const tagsInTooltip = (data, type) => {
-    return data?.map((items) => {
-      return (
-        <Tag className="slug-items-tooltip">
-          {type === "lead" ? items?.leadNameame : items?.projectName}
-        </Tag>
-      );
-    });
-  };
-
   const columns = [
     {
       dataIndex: "companyId",
@@ -223,20 +223,18 @@ const MainCompanyPage = () => {
       render: (_, props) => <ColComp data={props?.gstType} />,
     },
 
-    ...getHighestPriorityRole(currentRoles) === "ADMIN" ? [
-      {
-        dataIndex: "clientContactEmail",
-        title: "Client email",
-      },
-      {
-        dataIndex: "clientContactNo",
-        title: "Client contact",
-      },
-
-    ] : []
-    ,
-
-
+    ...(getHighestPriorityRole(currentRoles) === "ADMIN"
+      ? [
+          {
+            dataIndex: "clientContactEmail",
+            title: "Client email",
+          },
+          {
+            dataIndex: "clientContactNo",
+            title: "Client contact",
+          },
+        ]
+      : []),
     {
       dataIndex: "city",
       title: "City",
@@ -287,10 +285,6 @@ const MainCompanyPage = () => {
       render: (_, props) => <CompanyHistory companyId={props.companyId} />,
     },
   ];
-
-  const menuStyle = {
-    boxShadow: "none",
-  };
 
   const updateMultiAssigneeForCompanies = useCallback(() => {
     setAssignedProcessing("pending");
@@ -394,7 +388,8 @@ const MainCompanyPage = () => {
       dispatch(
         exportAllCompanyData({
           userId: userid,
-          filterUserId: values?.filterUserId === 'all' ? "" : values?.filterUserId,
+          filterUserId:
+            values?.filterUserId === "all" ? "" : values?.filterUserId,
         })
       ).then((resp) => {
         if (resp.meta.requestStatus === "fulfilled") {
@@ -431,24 +426,55 @@ const MainCompanyPage = () => {
   return (
     <TableOutlet>
       <MainHeading
-        data={`All company (${allCompnay?.[0]?.total === undefined ? 0 : allCompnay?.[0]?.total
-          })`}
+        data={`All company (${
+          allCompnay?.[0]?.total === undefined ? 0 : allCompnay?.[0]?.total
+        })`}
       />
       <Flex justify="space-between" align="center">
         <div className="flex-verti-center-hori-start mt-2">
-          <Search
-            size="small"
-            onSearch={onSearchLead}
-            style={{ width: "220px" }}
-            placeholder="search"
-            onChange={(e) =>
-              !e.target.value
-                ? dispatch(searchCompany({ inputText: "", userId: userid }))
-                : ""
-            }
-            enterButton="search"
-            prefix={<Icon icon="fluent:search-24-regular" />}
-          />
+          <Space.Compact>
+            <Input
+              placeholder="Search"
+              value={searchDetail?.searchNameAndGSt}
+              allowClear
+              onClear={() =>
+                dispatch(
+                  getCompanyAction({
+                    id: currUser?.id,
+                    page: paginationData?.page,
+                    size: paginationData?.size,
+                    filterUserId,
+                  })
+                )
+              }
+              prefix={<Icon icon="fluent:search-24-regular" />}
+              onChange={(e) =>
+                setSearchDetail((prev) => ({
+                  ...prev,
+                  searchNameAndGSt: e.target.value,
+                }))
+              }
+              onPressEnter={handleSearchCompany}
+            />
+            <Select
+              value={searchDetail?.type}
+              options={[
+                { label: "Name", value: "name" },
+                { label: "Email", value: "email" },
+                { label: "GST no.", value: "gstNo" },
+                { label: "Contact no.", value: "contactNo" },
+              ]}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  handleSearchCompany();
+                }
+              }}
+              onChange={(e) =>
+                setSearchDetail((prev) => ({ ...prev, type: e }))
+              }
+            />
+          </Space.Compact>
+
           {getHighestPriorityRole(currentRoles) === "ADMIN" && (
             <Select
               showSearch
@@ -459,9 +485,9 @@ const MainCompanyPage = () => {
               options={
                 allUsers?.length > 0
                   ? allUsers?.map((item) => ({
-                    label: item?.fullName,
-                    value: item?.id,
-                  }))
+                      label: item?.fullName,
+                      value: item?.id,
+                    }))
                   : []
               }
               filterOption={(input, option) =>
@@ -491,16 +517,22 @@ const MainCompanyPage = () => {
               overlayStyle={{ width: 400 }}
               content={
                 <Form layout="vertical" form={form} onFinish={handleExportData}>
-                  <Form.Item label="Select user" name="filterUserId" rules={[{ required: true, message: 'please select user' }]}   >
+                  <Form.Item
+                    label="Select user"
+                    name="filterUserId"
+                    rules={[{ required: true, message: "please select user" }]}
+                  >
                     <Select
                       showSearch
                       allowClear
                       options={
                         allUsers?.length > 0
-                          ? [{ fullName: 'All', id: 'all' }, ...allUsers]?.map((item) => ({
-                            label: item?.fullName,
-                            value: item?.id,
-                          }))
+                          ? [{ fullName: "All", id: "all" }, ...allUsers]?.map(
+                              (item) => ({
+                                label: item?.fullName,
+                                value: item?.id,
+                              })
+                            )
                           : []
                       }
                       filterOption={(input, option) =>
@@ -545,117 +577,107 @@ const MainCompanyPage = () => {
         )}
       </Flex>
       <div className="mt-3">
-        {loadingCompany && <TableScalaton />}
-        {errorCompany && <SomethingWrong />}
-        {allCompnay && !loadingCompany && !errorCompany && (
-          <Suspense fallback={<TableScalaton />}>
-            <CommonTable
-              data={allCompnay}
-              columns={columns}
-              scroll={{ x: 2000, y: "63vh" }}
-              rowSelection={true}
-              onRowSelection={onSelectChange}
-              selectedRowKeys={selectedRowKeys}
-              rowKey={(record) => record?.companyId}
-              pagination={true}
-              page={paginationData?.page}
-              pageSize={paginationData?.size}
-              totalCount={allCompnay?.[0]?.total}
-              handlePagination={handlePagination}
-              footerContent={
-                <div className={`bottom-line`}>
-                  <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "center",
-                      gap: 12,
-                    }}
-                  >
-                    <Flex gap={8}>
-                      <Select
-                        showSearch
-                        allowClear
-                        size="small"
-                        style={{ width: 200 }}
-                        value={assigneeId}
-                        placeholder="select user"
-                        options={
-                          leadUserNew?.length > 0
-                            ? leadUserNew?.map((ele) => ({
+        <Suspense fallback={<TableScalaton />}>
+          <CommonTable
+            data={allCompnay}
+            columns={columns}
+            scroll={{ x: 2000, y: "63vh" }}
+            rowSelection={true}
+            onRowSelection={onSelectChange}
+            selectedRowKeys={selectedRowKeys}
+            rowKey={(record) => record?.companyId}
+            pagination={true}
+            page={paginationData?.page}
+            pageSize={paginationData?.size}
+            totalCount={allCompnay?.[0]?.total}
+            handlePagination={handlePagination}
+            footerContent={
+              <div className={`bottom-line`}>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    gap: 12,
+                  }}
+                >
+                  <Flex gap={8}>
+                    <Select
+                      showSearch
+                      allowClear
+                      size="small"
+                      style={{ width: 200 }}
+                      value={assigneeId}
+                      placeholder="select user"
+                      options={
+                        leadUserNew?.length > 0
+                          ? leadUserNew?.map((ele) => ({
                               label: ele?.fullName,
                               value: ele?.id,
                             }))
-                            : []
-                        }
-                        onChange={(e) => setAssigneeId(e)}
-                        onClear={() => setAssigneeId(null)}
-                        filterOption={(input, option) =>
-                          option.label
-                            .toLowerCase()
-                            .includes(input.toLowerCase())
-                        }
-                      />
-                      <Button
-                        type="primary"
-                        disabled={
-                          selectedRowKeys?.length === 0 && !assigneeId
-                            ? true
-                            : false
-                        }
-                        onClick={updateMultiAssigneeForCompanies}
-                        size="small"
-                      >
-                        {assignedProcessing === "pending"
-                          ? "Loading..."
-                          : "Send"}
-                      </Button>
-                    </Flex>
-                    <Flex gap={8}>
-                      <Select
-                        showSearch
-                        allowClear
-                        size="small"
-                        style={{ width: 200 }}
-                        value={tempAssigneeId}
-                        placeholder="select temporary user"
-                        options={
-                          leadUserNew?.length > 0
-                            ? leadUserNew?.map((ele) => ({
+                          : []
+                      }
+                      onChange={(e) => setAssigneeId(e)}
+                      onClear={() => setAssigneeId(null)}
+                      filterOption={(input, option) =>
+                        option.label.toLowerCase().includes(input.toLowerCase())
+                      }
+                    />
+                    <Button
+                      type="primary"
+                      disabled={
+                        selectedRowKeys?.length === 0 && !assigneeId
+                          ? true
+                          : false
+                      }
+                      onClick={updateMultiAssigneeForCompanies}
+                      size="small"
+                    >
+                      {assignedProcessing === "pending" ? "Loading..." : "Send"}
+                    </Button>
+                  </Flex>
+                  <Flex gap={8}>
+                    <Select
+                      showSearch
+                      allowClear
+                      size="small"
+                      style={{ width: 200 }}
+                      value={tempAssigneeId}
+                      placeholder="select temporary user"
+                      options={
+                        leadUserNew?.length > 0
+                          ? leadUserNew?.map((ele) => ({
                               label: ele?.fullName,
                               value: ele?.id,
                             }))
-                            : []
-                        }
-                        onChange={(e) => setTempAssigneeId(e)}
-                        onClear={() => setTempAssigneeId(null)}
-                        filterOption={(input, option) =>
-                          option.label
-                            .toLowerCase()
-                            .includes(input.toLowerCase())
-                        }
-                      />
-                      <Button
-                        type="primary"
-                        disabled={
-                          selectedRowKeys?.length === 0 && !assigneeId
-                            ? true
-                            : false
-                        }
-                        onClick={updateMultiTempAssigneeForCompanies}
-                        size="small"
-                      >
-                        {assignedProcessing === "pending"
-                          ? "Loading..."
-                          : "Update temp assignee"}
-                      </Button>
-                    </Flex>
-                    <Text>Selected rows: {selectedRowKeys?.length}</Text>
-                  </div>
+                          : []
+                      }
+                      onChange={(e) => setTempAssigneeId(e)}
+                      onClear={() => setTempAssigneeId(null)}
+                      filterOption={(input, option) =>
+                        option.label.toLowerCase().includes(input.toLowerCase())
+                      }
+                    />
+                    <Button
+                      type="primary"
+                      disabled={
+                        selectedRowKeys?.length === 0 && !assigneeId
+                          ? true
+                          : false
+                      }
+                      onClick={updateMultiTempAssigneeForCompanies}
+                      size="small"
+                    >
+                      {assignedProcessing === "pending"
+                        ? "Loading..."
+                        : "Update temp assignee"}
+                    </Button>
+                  </Flex>
+                  <Text>Selected rows: {selectedRowKeys?.length}</Text>
                 </div>
-              }
-            />
-          </Suspense>
-        )}
+              </div>
+            }
+          />
+        </Suspense>
       </div>
     </TableOutlet>
   );

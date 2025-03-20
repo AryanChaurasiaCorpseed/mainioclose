@@ -22,7 +22,7 @@ const SideBar = () => {
   );
   const currentUserId = useSelector((state) => state.auth?.currentUser?.id);
 
-  console.log('jfghjksdfhkjdhfdf',currentRoles)
+  console.log("jfghjksdfhkjdhfdf", currentRoles);
 
   useEffect(() => {
     if (currentUserId !== undefined) {
@@ -137,6 +137,14 @@ const SideBar = () => {
                     },
                     {
                       label: (
+                        <Link to={`${userid}/sales/newcompanies`}>
+                          New company
+                        </Link>
+                      ),
+                      key: "newcompanies",
+                    },
+                    {
+                      label: (
                         <Link to={`${userid}/sales/project`}>Project</Link>
                       ),
                       key: "project",
@@ -212,6 +220,12 @@ const SideBar = () => {
               {
                 label: <Link to={`${userid}/sales/company`}>Company</Link>,
                 key: "company",
+              },
+              {
+                label: (
+                  <Link to={`${userid}/sales/newcompanies`}>New company</Link>
+                ),
+                key: "newcompanies",
               },
               {
                 label: <Link to={`${userid}/sales/project`}>Project</Link>,
