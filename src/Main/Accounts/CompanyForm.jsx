@@ -172,7 +172,7 @@ const CompanyForm = () => {
       title: "Desigination",
       dataIndex: "desigination",
       render: (_, data) => (
-        <OverFlowText>{data?.primaryDesignation}</OverFlowText>
+        <OverFlowText>{data?.primaryDesignation?.name}</OverFlowText>
       ),
     },
     {
@@ -235,7 +235,7 @@ const CompanyForm = () => {
     {
       title: "S Desigination",
       dataIndex: "secondarydesigination",
-      render: (_, data) => <ColComp data={data?.secondaryDesignation} />,
+      render: (_, data) => <ColComp data={data?.secondaryDesignation?.name} />,
     },
     {
       title: "SContact number",
