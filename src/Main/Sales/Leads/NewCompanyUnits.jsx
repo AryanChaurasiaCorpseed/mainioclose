@@ -15,12 +15,13 @@ import {
   getCompanyLeadsAction,
   getCompanyProjectAction,
 } from "../../../Toolkit/Slices/CompanySlice";
+import AddCompanyInGstAndUnit from "./AddCompanyInGstAndUnit";
 const { Text } = Typography;
 
 const NewCompanyUnits = () => {
   const dispatch = useDispatch();
   const { state, companyId } = useParams();
-  const companuUnitList = useSelector((state) => state.leads.companyUnitList);
+  const companyUnitList = useSelector((state) => state.leads.companyUnitList);
   const [openDrawer, setOpenDrawer] = useState(false);
   const [searchText, setSearchText] = useState("");
   const [filteredData, setFilteredData] = useState([]);
@@ -32,16 +33,16 @@ const NewCompanyUnits = () => {
         state: state,
       })
     );
-  }, []);
+  }, [dispatch,companyId,state]);
 
   useEffect(() => {
-    setFilteredData(companuUnitList);
-  }, [companuUnitList]);
+    setFilteredData(companyUnitList);
+  }, [companyUnitList]);
 
   const handleSearch = (e) => {
     const value = e.target.value;
     setSearchText(value);
-    const filtered = companuUnitList?.result?.filter((item) =>
+    const filtered = companyUnitList?.result?.filter((item) =>
       Object.values(item)?.some((val) =>
         String(val)?.toLowerCase()?.includes(value?.toLowerCase())
       )
@@ -150,6 +151,7 @@ const NewCompanyUnits = () => {
             placeholder="search"
             style={{ width: "25%" }}
           />
+          <AddCompanyInGstAndUnit />
         </Flex>
         <CommonTable
           data={filteredData}

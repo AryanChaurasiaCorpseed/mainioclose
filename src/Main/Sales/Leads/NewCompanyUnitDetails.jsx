@@ -78,11 +78,11 @@ const NewCompanyUnitDetails = () => {
           </Text>
         </Flex>
         <Flex gap={8}>
-          <Text type="secondary">Contatct</Text>
+          <Text type="secondary">Contact</Text>
           <Text type="secondary">:</Text>
           <Text>
-            {companyDetailByUnitId?.secondaryContact
-              ? companyDetailByUnitId?.secondaryContact
+            {companyDetailByUnitId?.secondaryContact?.contactNo
+              ? companyDetailByUnitId?.secondaryContact?.contactNo
               : "NA"}
           </Text>
         </Flex>

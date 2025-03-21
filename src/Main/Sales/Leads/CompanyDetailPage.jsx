@@ -1,24 +1,34 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  getCompanyUnitsByStateAndCompanyId,
   getGstDetailsByCompanyId,
 } from "../../../Toolkit/Slices/LeadSlice";
 import { Link, useParams } from "react-router-dom";
-import { Flex, Input, Typography } from "antd";
+import {
+  Button,
+  Flex,
+  Form,
+  Input,
+  Modal,
+  notification,
+  Typography,
+} from "antd";
 import { Icon } from "@iconify/react";
 import CommonTable from "../../../components/CommonTable";
-import ColComp from "../../../components/small/ColComp";
+import AddCompanyInGstAndUnit from "./AddCompanyInGstAndUnit";
+import { addConsultantInGST } from "../../../Toolkit/Slices/CompanySlice";
 const { Text } = Typography;
 
 const CompanyDetailPage = () => {
   const dispatch = useDispatch();
+  const [form] = Form.useForm();
   const { userid, companyId } = useParams();
   const companyGstDetailList = useSelector(
     (state) => state.leads.companyGstDetailList
   );
   const [searchText, setSearchText] = useState("");
   const [filteredData, setFilteredData] = useState([]);
+  const [openModal, setOpenModal] = useState(false);
 
   useEffect(() => {
     dispatch(getGstDetailsByCompanyId(companyId));
@@ -49,23 +59,40 @@ const CompanyDetailPage = () => {
       width: 80,
     },
     {
-      dataIndex: "gstNo",
-      title: "GST number",
+      dataIndex: "state",
+      title: "State",
       render: (_, props) => (
         <Link
           className="link-heading"
           to={`/erp/${userid}/sales/newcompanies/${companyId}/details/${props?.state}/companyUnit`}
         >
-          {props?.gstNo}
+          {props?.state}
         </Link>
       ),
     },
 
     {
-      dataIndex: "state",
-      title: "State",
+      dataIndex: "gstNo",
+      title: "GST number",
     },
   ];
+
+  const handleFinish = (values) => {
+    values.companyId = companyId;
+    dispatch(addConsultantInGST())
+      .then((resp) => {
+        if (resp.meta.requestStatus === "fulfilled") {
+          notification.success({ message: "Consultant added successfully !." });
+          setOpenModal(false);
+          form.resetFields();
+        } else {
+          notification.error({ message: "Something went wrong !." });
+        }
+      })
+      .catch((err) =>
+        notification.error({ message: "Something went wrong !." })
+      );
+  };
 
   return (
     <>
@@ -87,6 +114,10 @@ const CompanyDetailPage = () => {
             placeholder="search"
             style={{ width: "25%" }}
           />
+          <Flex gap={8}>
+            <Button type="primary" onClick={()=>setOpenModal(true)}>Add consultant</Button>
+            <AddCompanyInGstAndUnit gstField={true} />
+          </Flex>
         </Flex>
         <CommonTable
           data={filteredData}
@@ -95,6 +126,37 @@ const CompanyDetailPage = () => {
           rowKey={(record) => record?.parentCompanyId}
         />
       </Flex>
+      <Modal
+        title="Add consultant"
+        open={openModal}
+        onClose={() => setOpenModal(false)}
+        onCancel={() => setOpenModal(false)}
+        okText="Submit"
+        onOk={() => form.submit()}
+      >
+        <Form layout="vertical" onFinish={handleFinish} form={form}>
+          <Form.Item
+            label="Name"
+            name="name"
+            rules={[{ required: true, message: "please enter your name" }]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item label="Contact" name="originalContact">
+            <Input />
+          </Form.Item>
+          <Form.Item
+            label="Email"
+            name="originalEmail"
+            rules={[{ type: "email" }]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item label="Address" name="address">
+            <Input.TextArea />
+          </Form.Item>
+        </Form>
+      </Modal>
     </>
   );
 };

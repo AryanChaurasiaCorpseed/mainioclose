@@ -98,6 +98,7 @@ import ManageSales from "./Main/Accounts/ManageSales";
 import NewCompany from "./Main/Sales/Leads/NewCompany";
 import CompanyDetailPage from "./Main/Sales/Leads/CompanyDetailPage";
 import NewCompanyUnits from "./Main/Sales/Leads/NewCompanyUnits";
+import CompanySearch from "./Main/Accounts/CompanySearch";
 
 const SpinLoading = lazy(() => import("./components/SpinLoading"));
 
@@ -338,6 +339,10 @@ function App() {
                 <Route
                   path="companyForm"
                   element={<MainCompanyFormPage role={"sales"} />}
+                />
+                <Route
+                  path="companySearch"
+                  element={<CompanySearch />}
                 />
 
                 <Route path="organizations" element={<MainOrganizationPage />}>

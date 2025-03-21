@@ -302,9 +302,41 @@ export const getAllCompanyType = createAsyncThunk(
 
 export const getHandleSearchCompanies = createAsyncThunk(
   "getHandleSearchCompanies",
-  async ({ userId, searchNameAndGSt,type }) => {
+  async ({ userId, searchNameAndGSt, type }) => {
     const response = await getQuery(
       `/leadService/api/v1/company/searchCompanyByNameAndGSTAndContactAndEmail?searchNameAndGSt=${searchNameAndGSt}&userId=${userId}&type=${type}`
+    );
+    return response.data;
+  }
+);
+
+export const addCompanyInGst = createAsyncThunk(
+  "addCompanyInGst",
+  async (data) => {
+    const response = await putQuery(
+      `/leadService/api/v1/company/addGstUnitInCompany`,
+      data
+    );
+    return response.data;
+  }
+);
+
+export const addConsultantInGST = createAsyncThunk(
+  "addConsultantInGST",
+  async (data) => {
+    const response = await postQuery(
+      `/leadService/api/v1/company/addConsultantUnitInCompany`,
+      data
+    );
+    return response.data;
+  }
+);
+
+export const searchCompaniesForAccountTeam = createAsyncThunk(
+  "",
+  async ({ searchNameAndGSt, userId, fieldSearch }) => {
+    const response = await getQuery(
+      `/leadService/api/v1/company/companySearchByAccountTeam?searchNameAndGSt=${searchNameAndGSt}&userId=${userId}&fieldSearch=${fieldSearch}`
     );
     return response.data;
   }
@@ -337,6 +369,7 @@ const CompnaySlice = createSlice({
     consultantLoading: "",
     consultantCompanyCount: 0,
     companyTypeList: [],
+    companiesSearchListForAccTeam: [],
   },
   reducers: {
     handleNextPagination: (state, action) => {
@@ -466,7 +499,6 @@ const CompnaySlice = createSlice({
       state.loading = "rejected";
     });
 
-
     builder.addCase(getHandleSearchCompanies.pending, (state, action) => {
       state.loading = "pending";
     });
@@ -585,6 +617,21 @@ const CompnaySlice = createSlice({
     builder.addCase(getAllCompanyType.rejected, (state, action) => {
       state.consultantLoading = "rejected";
       state.companyTypeList = [];
+    });
+
+    builder.addCase(searchCompaniesForAccountTeam.pending, (state, action) => {
+      state.consultantLoading = "pending";
+    });
+    builder.addCase(
+      searchCompaniesForAccountTeam.fulfilled,
+      (state, action) => {
+        state.companiesSearchListForAccTeam = action.payload;
+        state.consultantLoading = "success";
+      }
+    );
+    builder.addCase(searchCompaniesForAccountTeam.rejected, (state, action) => {
+      state.consultantLoading = "rejected";
+      state.companiesSearchListForAccTeam = [];
     });
   },
 });

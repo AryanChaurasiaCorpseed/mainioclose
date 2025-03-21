@@ -51,6 +51,18 @@ const NewCompanyLeadsDetail = () => {
       checked: false,
       render: (_, props) => <ColComp data={props?.email} />,
     },
+    {
+      dataIndex: "assigneeName",
+      title: "Assignee name",
+      checked: false,
+      render: (_, props) => <ColComp data={props?.assigneeName} />,
+    },
+    {
+      dataIndex: "assigneeEmail",
+      title: "Assignee email",
+      checked: false,
+      render: (_, props) => <ColComp data={props?.assigneeEmail} />,
+    },
     
     {
       dataIndex: "description",

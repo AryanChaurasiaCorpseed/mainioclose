@@ -1096,3 +1096,9 @@ select.form-control:not([size]):not([multiple]) {
 .ck-editor__editable {
   min-height: 300px !important;
 }
+
+.grid-container-2-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr; 
+  gap: 10px;
+}

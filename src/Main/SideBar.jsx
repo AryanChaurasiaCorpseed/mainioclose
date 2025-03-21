@@ -135,14 +135,14 @@ const SideBar = () => {
                       ),
                       key: "company",
                     },
-                    // {
-                    //   label: (
-                    //     <Link to={`${userid}/sales/newcompanies`}>
-                    //       New company
-                    //     </Link>
-                    //   ),
-                    //   key: "newcompanies",
-                    // },
+                    {
+                      label: (
+                        <Link to={`${userid}/sales/newcompanies`}>
+                          New company
+                        </Link>
+                      ),
+                      key: "newcompanies",
+                    },
                     {
                       label: (
                         <Link to={`${userid}/sales/project`}>Project</Link>
@@ -221,12 +221,12 @@ const SideBar = () => {
                 label: <Link to={`${userid}/sales/company`}>Company</Link>,
                 key: "company",
               },
-              // {
-              //   label: (
-              //     <Link to={`${userid}/sales/newcompanies`}>New company</Link>
-              //   ),
-              //   key: "newcompanies",
-              // },
+              {
+                label: (
+                  <Link to={`${userid}/sales/newcompanies`}>New company</Link>
+                ),
+                key: "newcompanies",
+              },
               {
                 label: <Link to={`${userid}/sales/project`}>Project</Link>,
                 key: "project",
@@ -409,6 +409,15 @@ const SideBar = () => {
                 ),
                 key: "companyForm",
               },
+              {
+                label: (
+                  <Link to={`/erp/${userid}/account/companySearch`}>
+                    {" "}
+                    Company search
+                  </Link>
+                ),
+                key: "companySearch",
+              },
               // {
               //   key: "ledger",
               //   label: (
@@ -507,6 +516,15 @@ const SideBar = () => {
                   </Link>
                 ),
                 key: "companyForm",
+              },
+              {
+                label: (
+                  <Link to={`/erp/${userid}/account/companySearch`}>
+                    {" "}
+                    Company search
+                  </Link>
+                ),
+                key: "companySearch",
               },
               {
                 key: "organizations",
