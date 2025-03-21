@@ -240,10 +240,7 @@ const LeadCompany = ({ edit, data, editInfo, selectedFilter, detailView }) => {
               <Form.Item
                 style={{ width: "75%" }}
                 label="Company name"
-                name="companyName"
-                rules={[
-                  { required: true, message: "please enter the company name" },
-                ]}
+                name=""
               >
                 <Select
                   showSearch
@@ -263,19 +260,19 @@ const LeadCompany = ({ edit, data, editInfo, selectedFilter, detailView }) => {
                   options={
                     seachCompniesList?.length > 0
                       ? seachCompniesList?.map((item) => ({
-                          label: (
-                            <Flex justify="space-between" align="center">
-                              <Text>{item?.companyName}</Text>
-                              <Button
-                                size="small"
-                                onClick={() => handleMoveToUnits(item)}
-                              >
-                                Add unit
-                              </Button>
-                            </Flex>
-                          ),
-                          value: item?.companyId,
-                        }))
+                        label: (
+                          <Flex justify="space-between" align="center">
+                            <Text>{item?.companyName}</Text>
+                            <Button
+                              size="small"
+                              onClick={() => handleMoveToUnits(item)}
+                            >
+                              Add unit
+                            </Button>
+                          </Flex>
+                        ),
+                        value: item?.companyId,
+                      }))
                       : []
                   }
                 />
@@ -296,6 +293,9 @@ const LeadCompany = ({ edit, data, editInfo, selectedFilter, detailView }) => {
                 />
               </Form.Item>
             </Flex>
+            <Form.Item label='Company name' name='name' rules={[{ required: true, message: 'please enter company name' }]}>
+              <Input />
+            </Form.Item>
 
             <Form.Item
               label="Company type"
@@ -310,10 +310,10 @@ const LeadCompany = ({ edit, data, editInfo, selectedFilter, detailView }) => {
                 options={
                   companyTypeList?.length > 0
                     ? companyTypeList?.map((item) => ({
-                        label: item?.name,
-                        value: item?.id,
-                        ...item,
-                      }))
+                      label: item?.name,
+                      value: item?.id,
+                      ...item,
+                    }))
                     : []
                 }
                 onChange={(e, x) => setGstMand(x?.gstPresent)}
@@ -359,9 +359,9 @@ const LeadCompany = ({ edit, data, editInfo, selectedFilter, detailView }) => {
                 options={
                   allIndustry?.length > 0
                     ? allIndustry?.map((item) => ({
-                        label: item?.name,
-                        value: item?.id,
-                      }))
+                      label: item?.name,
+                      value: item?.id,
+                    }))
                     : []
                 }
                 filterOption={(input, option) =>
@@ -390,9 +390,9 @@ const LeadCompany = ({ edit, data, editInfo, selectedFilter, detailView }) => {
                 options={
                   subIndustryListById?.length > 0
                     ? subIndustryListById?.map((item) => ({
-                        label: item?.name,
-                        value: item?.id,
-                      }))
+                      label: item?.name,
+                      value: item?.id,
+                    }))
                     : []
                 }
                 filterOption={(input, option) =>
@@ -421,9 +421,9 @@ const LeadCompany = ({ edit, data, editInfo, selectedFilter, detailView }) => {
                 options={
                   subSubIndustryListById?.length > 0
                     ? subSubIndustryListById?.map((item) => ({
-                        label: item?.name,
-                        value: item?.id,
-                      }))
+                      label: item?.name,
+                      value: item?.id,
+                    }))
                     : []
                 }
                 filterOption={(input, option) =>
@@ -451,9 +451,9 @@ const LeadCompany = ({ edit, data, editInfo, selectedFilter, detailView }) => {
                 options={
                   industryDataListById?.length > 0
                     ? industryDataListById?.map((item) => ({
-                        label: item?.name,
-                        value: item?.id,
-                      }))
+                      label: item?.name,
+                      value: item?.id,
+                    }))
                     : []
                 }
                 filterOption={(input, option) =>
@@ -559,9 +559,9 @@ const LeadCompany = ({ edit, data, editInfo, selectedFilter, detailView }) => {
                           options={
                             desiginationList?.length > 0
                               ? desiginationList?.map((item) => ({
-                                  label: item?.name,
-                                  value: item?.id,
-                                }))
+                                label: item?.name,
+                                value: item?.id,
+                              }))
                               : []
                           }
                           filterOption={(input, option) =>
@@ -627,13 +627,13 @@ const LeadCompany = ({ edit, data, editInfo, selectedFilter, detailView }) => {
                         options={
                           contactList?.length > 0
                             ? contactList?.map((item) => ({
-                                label: `${maskEmail(
-                                  item?.emails
-                                )} || ${maskMobileNumber(item?.contactNo)} `,
-                                value: item?.id,
-                                email: item?.emails,
-                                contact: item?.contactNo,
-                              }))
+                              label: `${maskEmail(
+                                item?.emails
+                              )} || ${maskMobileNumber(item?.contactNo)} `,
+                              value: item?.id,
+                              email: item?.emails,
+                              contact: item?.contactNo,
+                            }))
                             : []
                         }
                         filterOption={(input, option) =>
@@ -677,10 +677,10 @@ const LeadCompany = ({ edit, data, editInfo, selectedFilter, detailView }) => {
                 options={
                   countryList?.length > 0
                     ? countryList?.map((item) => ({
-                        label: item?.name,
-                        value: item?.name,
-                        id: item?.id,
-                      }))
+                      label: item?.name,
+                      value: item?.name,
+                      id: item?.id,
+                    }))
                     : []
                 }
                 onChange={(e, x) => {
@@ -702,10 +702,10 @@ const LeadCompany = ({ edit, data, editInfo, selectedFilter, detailView }) => {
                 options={
                   statesList?.length > 0
                     ? statesList?.map((item) => ({
-                        label: item?.name,
-                        value: item?.name,
-                        id: item?.id,
-                      }))
+                      label: item?.name,
+                      value: item?.name,
+                      id: item?.id,
+                    }))
                     : []
                 }
                 onChange={(e, x) => dispatch(getAllCitiesByStateId(x?.id))}
@@ -725,9 +725,9 @@ const LeadCompany = ({ edit, data, editInfo, selectedFilter, detailView }) => {
                 options={
                   citiesList?.length > 0
                     ? citiesList?.map((item) => ({
-                        label: item?.name,
-                        value: item?.name,
-                      }))
+                      label: item?.name,
+                      value: item?.name,
+                    }))
                     : []
                 }
                 filterOption={(input, option) =>
@@ -819,9 +819,9 @@ const LeadCompany = ({ edit, data, editInfo, selectedFilter, detailView }) => {
                           options={
                             desiginationList?.length > 0
                               ? desiginationList?.map((item) => ({
-                                  label: item?.name,
-                                  value: item?.id,
-                                }))
+                                label: item?.name,
+                                value: item?.id,
+                              }))
                               : []
                           }
                           filterOption={(input, option) =>
@@ -887,13 +887,13 @@ const LeadCompany = ({ edit, data, editInfo, selectedFilter, detailView }) => {
                         options={
                           contactList?.length > 0
                             ? contactList?.map((item) => ({
-                                label: `${maskEmail(
-                                  item?.emails
-                                )} || ${maskMobileNumber(item?.contactNo)} `,
-                                value: item?.id,
-                                email: item?.emails,
-                                contact: item?.contactNo,
-                              }))
+                              label: `${maskEmail(
+                                item?.emails
+                              )} || ${maskMobileNumber(item?.contactNo)} `,
+                              value: item?.id,
+                              email: item?.emails,
+                              contact: item?.contactNo,
+                            }))
                             : []
                         }
                         filterOption={(input, option) =>
@@ -928,9 +928,9 @@ const LeadCompany = ({ edit, data, editInfo, selectedFilter, detailView }) => {
                 options={
                   countryList?.length > 0
                     ? countryList?.map((item) => ({
-                        label: item?.name,
-                        value: item?.name,
-                      }))
+                      label: item?.name,
+                      value: item?.name,
+                    }))
                     : []
                 }
                 onChange={(e, x) => {
@@ -948,9 +948,9 @@ const LeadCompany = ({ edit, data, editInfo, selectedFilter, detailView }) => {
                 options={
                   statesList?.length > 0
                     ? statesList?.map((item) => ({
-                        label: item?.name,
-                        value: item?.name,
-                      }))
+                      label: item?.name,
+                      value: item?.name,
+                    }))
                     : []
                 }
                 onChange={(e, x) => dispatch(getAllCitiesByStateId(x?.id))}
@@ -966,9 +966,9 @@ const LeadCompany = ({ edit, data, editInfo, selectedFilter, detailView }) => {
                 options={
                   citiesList?.length > 0
                     ? citiesList?.map((item) => ({
-                        label: item?.name,
-                        value: item?.name,
-                      }))
+                      label: item?.name,
+                      value: item?.name,
+                    }))
                     : []
                 }
                 filterOption={(input, option) =>
