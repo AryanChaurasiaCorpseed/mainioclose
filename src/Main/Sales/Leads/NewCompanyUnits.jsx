@@ -11,7 +11,10 @@ import {
   getCompanyByUnitId,
   getCompanyUnitsByStateAndCompanyId,
 } from "../../../Toolkit/Slices/LeadSlice";
-import { getCompanyProjectAction } from "../../../Toolkit/Slices/CompanySlice";
+import {
+  getCompanyLeadsAction,
+  getCompanyProjectAction,
+} from "../../../Toolkit/Slices/CompanySlice";
 const { Text } = Typography;
 
 const NewCompanyUnits = () => {
@@ -29,7 +32,7 @@ const NewCompanyUnits = () => {
         state: state,
       })
     );
-  },[]);
+  }, []);
 
   useEffect(() => {
     setFilteredData(companuUnitList);
@@ -47,8 +50,9 @@ const NewCompanyUnits = () => {
   };
 
   const handleOnCLick = (data) => {
-      dispatch(getCompanyByUnitId(data?.companyId));
-      dispatch(getCompanyProjectAction({id:data?.companyId}));
+    dispatch(getCompanyByUnitId(data?.companyId));
+    dispatch(getCompanyProjectAction({ id: data?.companyId }));
+    dispatch(getCompanyLeadsAction({ id: data?.companyId }));
     setOpenDrawer(true);
   };
 

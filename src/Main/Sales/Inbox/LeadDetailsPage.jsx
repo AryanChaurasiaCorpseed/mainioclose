@@ -445,7 +445,7 @@ const LeadDetailsPage = ({ leadid }) => {
       spinning={leadDetailLoading === "pending" ? true : false}
     >
       {Object.keys(singleLeadResponseData)?.length > 0 ? (
-        <div className="lead-details cm-padding-one">
+        <div className="cm-padding-one lead-details">
           <Row gutter={16}>
             <Col span={9}>
               <div className="left-lead-section">
@@ -747,7 +747,7 @@ const LeadDetailsPage = ({ leadid }) => {
                   >
                     Assign to same person
                   </Button>
-                  <LeadCompany data={singleLeadResponseData} />
+                  {/* <LeadCompany data={singleLeadResponseData} /> */}
                   <CompanyFormModal
                     detailView={true}
                     data={singleLeadResponseData}
